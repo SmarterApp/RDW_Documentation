@@ -1,6 +1,8 @@
-# Architecture 
+## Architecture 
 
-## Overview
+**Intended Audience**: This document describes the overall architecture of the Reporting Data Warehouse (RDW). It includes a discussion of the various applications, data flow, deployment philosophy, etc.
+
+### Overview
 
 The RDW is divided into sub-systems based on data, performance and scalability requirements. These include:
 
@@ -18,7 +20,7 @@ The RDW uses other systems from the SBAC Open Test System environment, including
 ![RDW Overview](rdw-overview.png)
 
 
-## Applications
+### Applications
 
 To make deployment easier, all the RDW applications have been containerized. The orchestration of the applications is handled with Kubernetes. The current deployment is in **AWS** so kops is used to configure the many resources needed by the cluster.The deployment takes advantage of the AWS ecosystem including the following technologies:
 * **Aurora**. High performance Amazon version of MySQL. Backs both the data warehouse and the reporting data mart.

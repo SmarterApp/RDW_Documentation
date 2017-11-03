@@ -2,7 +2,9 @@
 
 **NOTE: please avoid putting environment-specific details _especially secrets and sensitive information_ in this document.**
 
-This document contains instructions for monitoring the data warehouse. This includes:
+**Intended Audience**: this document provides information for monitoring the Reporting Data Warehouse. Operations and system administrators will find it useful.
+
+Monitoring RDW applications includes monitoring:
 
 * Database. 
 * Logging.
@@ -61,6 +63,7 @@ WHERE i.content = 1 AND i.status < 0 AND s.name IN
    'UNAUTHORIZED',
    'UNKNOWN_ASMT',
    'UNKNOWN_SCHOOL')
+ORDER BY created DESC
 ```
 The above query can be further refined to keep only interesting statuses.
 

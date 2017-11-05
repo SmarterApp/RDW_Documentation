@@ -129,6 +129,41 @@ SELECT timestampdiff(SECOND, created, updated) runtime_in_sec
 
 If migrates are taking longer than expected, or if the monitoring shows a consistent increase in run time over time the system is degrading. Refer to [Troubleshooting][1] for instructions on diagnosing the situation. Although not urgent, this will affect the timeliness of the reporting data.
 
+#### System Use By Date
+
+Management may find it useful to report on system use by date, showing the increasing adoption over time. This is done in the data warehouse database where all data enters the system. First, create some date sequence views using the beginning of the overall testing window, `2017-09-07`, as the start:
+
+```sql
+CREATE VIEW digits AS SELECT 0 AS digit UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9;
+CREATE VIEW numbers AS SELECT ones.digit + tens.digit * 10 + hundreds.digit * 100 AS number FROM digits as ones, digits as tens, digits as hundreds;
+CREATE VIEW dates AS SELECT SUBDATE(CURRENT_DATE(), number) AS date FROM numbers;
+-- prod is now a collection of all dates from start of production to today 
+CREATE VIEW prod as SELECT date FROM dates WHERE date BETWEEN '2017-09-07' AND CURRENT_DATE() ORDER BY date;
+```
+
+Now it is easy to do by-date queries:
+
+```sql
+-- exams updated by date
+SELECT p.date, IFNULL(s.count, 0) count FROM prod p 
+  LEFT JOIN (SELECT DATE(updated) date, COUNT(*) count FROM exam WHERE updated > '2017-09-07' and deleted = 0 GROUP BY DATE(updated)) s ON s.date=p.date
+  ORDER BY p.date; 
+  
+-- cumulative unique schools (may be a bit slow)
+SELECT p.date, count(DISTINCT sub.sid) FROM prod p 
+  LEFT JOIN (SELECT DATE(e.updated) date, es.school_id sid FROM exam e JOIN exam_student es ON es.id = e.exam_student_id WHERE e.updated > '2017-09-07' and e.deleted = 0) sub
+    ON sub.date <= p.date
+  GROUP BY p.date
+  ORDER BY p.date;
+  
+-- cumulative unique students (may be a bit slow)
+SELECT p.date, count(DISTINCT sub.sid) FROM prod p 
+  LEFT JOIN (SELECT DATE(e.updated) date, es.student_id sid FROM exam e JOIN exam_student es ON es.id = e.exam_student_id WHERE e.updated > '2017-09-07' and e.deleted = 0) sub
+    ON sub.date <= p.date
+  GROUP BY p.date
+  ORDER BY p.date; 
+```
+
 ### Logging
 
 #### Log Collection

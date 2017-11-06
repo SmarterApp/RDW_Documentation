@@ -460,6 +460,7 @@ Exam requests and cannot be updated later:
 * grade
 * subject 
 * sub-type (ICA, IAB or Summative)
+
 An attempt to update any of the above data elements will result in the "PROCESSED" status and the message stating that 
 it was rejected.
 

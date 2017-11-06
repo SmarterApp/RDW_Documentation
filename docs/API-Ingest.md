@@ -454,7 +454,14 @@ curl -X POST --header "Authorization:Bearer {access_token}" -F file=@accommodati
         
 ### Package Endpoints
 End-points for submitting assessment package data. This is data authored by Smarter Balanced that describes the 
-assessments, items and other test details. 
+assessments, items and other test details. This end point can be used to either import new packages or update existing 
+ones. When an assessment is created, the following data elements are considered critical in properly parsing incoming 
+Exam requests and cannot be updated later:
+* grade
+* subject 
+* sub-type (ICA, IAB or Summative)
+An attempt to update any of the above data elements will result in the "PROCESSED" status and the message stating that 
+it was rejected.
 
 #### Create Package Import Request
 Accepts payloads in the Smarter Balanced Assessment Tabulator format. This is a CSV format produced by the internal
@@ -514,8 +521,13 @@ curl -X POST --header "Authorization:Bearer {access_token}" --header "Content-Ty
 ```bash
 curl -X POST --header "Authorization:Bearer {access_token}" -F file=@2017-2018.csv https://import-service/packages/imports
 ``` 
-        
-        
+##### Check Package Import Request result
+To check the status of the import use Get Import Request. Imports with "PROCESSED" status will include a messages 
+describing actions taken. An example of the response: 
+```
+"Assessments processed: 7, created: 5, updated: 1, rejected: 1".
+```
+              
 ### Task Endpoints
 There are a few tasks that are configured to run periodically (typically once a day). These end-points allow those
 tasks to be manually triggered on demand. These end-points are part of the actuator framework so they are exposed on

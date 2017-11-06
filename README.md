@@ -24,10 +24,10 @@ RDW is a suite of applications with lots of moving parts. These documents provid
 ## Project Links
 RDW is separated into multiple project repositories. Each repo has documentation for building and testing.
 
-1. [Ingest](https://github.com/SmarterApp/RDW_Ingest)
-1. [Reporting](https://github.com/SmarterApp/RDW_Reporting) 
-1. [Common](https://github.com/SmarterApp/RDW_Common)
-1. [Schema](https://github.com/SmarterApp/RDW_Schema)
+1. [Ingest](https://github.com/SmarterApp/RDW_Ingest) is the primary data store for the system and is responsible for accepting and processing most data coming into the system.
+1. [Reporting](https://github.com/SmarterApp/RDW_Reporting) is the UI (and supporting stack) for end-users to view test results.
+1. [Common](https://github.com/SmarterApp/RDW_Common) is a collection of modules shared by multiple projects.
+1. [Schema](https://github.com/SmarterApp/RDW_Schema) has scripts for creating the various database schemas.
 
 
 ## License

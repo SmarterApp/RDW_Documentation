@@ -3,11 +3,7 @@ The Reporting Data Warehouse (RDW) is a repository for SBAC test results where t
 
 **Intended Audience**: this document serves as a convenient entry point to all things RDW. Anybody interested in developing, deploying or maintaining the RDW project should start here. That includes developers, operations, system administrators, tier 3 support, etc.
 
-* TODO - clean up Runbook + Monitoring + Troubleshooting
-    * Runbook should be mostly configuration; do we need multiple "chapters"?
-    * Monitoring
-    * Troubleshooting - perhaps two: flowchart-style "what's the problem", and a scenario-based (problem specific) guide 
-* TODO - update README.md in other projects to reference this one
+Before updating resources in this project, please reference [Contributing](CONTRIBUTING.md).
 
 ## Overview Links
 RDW is a suite of applications with lots of moving parts. These documents provide additional information for understanding, deploying and maintaining them.

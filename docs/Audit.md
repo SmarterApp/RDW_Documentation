@@ -24,7 +24,7 @@ The intended audience should be familiar with database technology and querying a
 ### What is audited?
 The warehouse audits entity state changes for exams and student information.
 
-Warehouse Exam Tables:
+Warehouse tables audited:
 
 | Table                        | Description                                 | Entity Type | Ingest State Changes        |
 |------------------------------|---------------------------------------------|-------------|-----------------------------|
@@ -32,10 +32,12 @@ Warehouse Exam Tables:
 | exam_available_accommodation | One record per exam available accommodation | Child       | Create, Delete              |
 | exam_claim_score             | One record per exam claim                   | Child       | Create, Update              |
 | exam_item                    | One record per exam item                    | Child       | Create, Update, Delete      |
+| student                      | One record per student                      | Parent      | Create, Update, Soft Delete |
+| student_ethnicity            | One record per student ethnicity            | Child       | Create, Delete              |
 
 
 ### Where is audit data stored?
-Each exam table has an 'audit_...' table that records the state change for each row.  The audit tables contain the state of the row before the change.
+Each audited table has an 'audit_...' table that records the state change for each row.  The audit tables contain the state of the row before the change.
 In addition to the columns from the table being audited, each audit_ table has the following columns:
 
 - **id**: Unique ID
@@ -53,11 +55,13 @@ MySQL triggers are used to capture audit_ records.  Each table being audited has
 | audit_exam_available_accommodation | exam_available_accommodation | Delete                         |
 | audit_exam_claim_score             | exam_claim_score             | Update                         |
 | audit_exam_item                    | exam_item                    | Update, Delete                 |
+| audit_student                      | student                      | Update, Soft Delete(as update) |
+| audit_student_ethnicity            | student_ethnicity            | Delete                         |
 
 ### How can audit data be queried?
 Sample queries are provided for analysing audit data combining the warehouse import table, the table being audited, the audit_ table and joining other relations in the warehouse for lookup values.
 
-##### Exam
+#### Exam
 
 **Finding modifications to a students exams**
 The following query outputs one row for each modified exam for one student.  It includes the count of modifications and the date of the last change.
@@ -355,3 +359,244 @@ ORDER BY acc_audit.exam_id, acc_audit.action_date DESC;
 9 rows in set (0.00 sec)
 ```
 
+#### Student
+
+**Finding modified students**
+The following query outputs one row for each modified student.  It includes the count of modifications and the date of the last change.
+
+The where clause can be changed to include different sets students.
+
+```mysql
+SELECT
+  s.ssid,
+  COALESCE(s.first_name, '') first_name,
+  COALESCE(s.middle_name, '') middle_name,
+  COALESCE(s.last_or_surname, '') last_or_surname,
+  COUNT(1) student_update_count,
+  MAX(ast.audited) last_update
+FROM student s
+JOIN audit_student ast ON s.id = ast.student_id
+GROUP BY s.id;
+```
+
+```text
++---------+------------+-------------+-----------------+----------------------+----------------------------+
+| ssid    | first_name | middle_name | last_or_surname | student_update_count | last_update                |
++---------+------------+-------------+-----------------+----------------------+----------------------------+
+| SSID001 | Gladys     | Ruth        | Williams        |                    6 | 2017-11-10 09:26:31.858088 |
+| SSID002 | Joe        |             | Smith           |                    1 | 2017-11-10 09:23:01.576030 |
+| SSID003 | Mark       |             | Anderson        |                    1 | 2017-11-10 09:25:21.846849 |
++---------+------------+-------------+-----------------+----------------------+----------------------------+
+3 rows in set (0.00 sec)
+```
+
+**Finding modifications to students**
+The following query outputs one row for each student.  It includes the count of modifications and the date of the last change.
+Students with no modifications have a `student_update_count` of `0`.
+
+The where clause can be changed to include different sets students.
+
+```mysql
+SELECT
+  s.ssid,
+  COALESCE(s.first_name, '') first_name,
+  COALESCE(s.middle_name, '') middle_name,
+  COALESCE(s.last_or_surname, '') last_or_surname,
+  SUM(CASE WHEN ast.student_id IS NOT NULL THEN 1 ELSE 0 END) student_update_count,
+  MAX(ast.audited) last_update
+FROM student s
+LEFT JOIN audit_student ast ON s.id = ast.student_id
+GROUP BY s.id;
+```
+
+```text
++---------+------------+-------------+-----------------+----------------------+----------------------------+
+| ssid    | first_name | middle_name | last_or_surname | student_update_count | last_update                |
++---------+------------+-------------+-----------------+----------------------+----------------------------+
+| SSID001 | Gladys     | Ruth        | Williams        |                    6 | 2017-11-10 09:26:31.858088 |
+| SSID002 | Joe        |             | Smith           |                    1 | 2017-11-10 09:23:01.576030 |
+| SSID003 | Mark       |             | Anderson        |                    1 | 2017-11-10 09:25:21.846849 |
+| SSID004 | Linda      |             | Smart           |                    0 | NULL                       |
++---------+------------+-------------+-----------------+----------------------+----------------------------+
+4 rows in set (0.00 sec)
+```
+
+**Finding modifications to students in a date range**
+The following query outputs one row for each modification to a student within a date range.
+
+```mysql
+SELECT
+  s.ssid,
+  COALESCE(s.first_name, '') first_name,
+  COALESCE(s.middle_name, '') middle_name,
+  COALESCE(s.last_or_surname, '') last_or_surname,
+  COUNT(1) student_update_count,
+  MAX(ast.audited) last_update
+FROM student s
+JOIN audit_student ast ON s.id = ast.student_id
+WHERE ast.audited BETWEEN '2017-11-10 09:24:00' AND '2017-11-10 09:26:00'
+GROUP BY s.id;
+```
+
+```text
++---------+------------+-------------+-----------------+----------------------+----------------------------+
+| ssid    | first_name | middle_name | last_or_surname | student_update_count | last_update                |
++---------+------------+-------------+-----------------+----------------------+----------------------------+
+| SSID001 | Gladys     | Ruth        | Williams        |                    2 | 2017-11-10 09:25:21.681122 |
+| SSID003 | Mark       |             | Anderson        |                    1 | 2017-11-10 09:25:21.846849 |
++---------+------------+-------------+-----------------+----------------------+----------------------------+
+2 rows in set (0.00 sec)
+```
+
+**Student audit trail**
+The following query lists the details of student modifications in addition to the current state.
+
+The query can be modified to display different or all columns.  The where clause can be modified, such as, to include multiple students or all students in a school.
+
+```mysql
+SELECT
+  s.student_id,
+  s.ssid,
+  s.first_name,
+  s.middle_name,
+  s.last_or_surname,
+  s.student_import_id import,
+  i.creator import_creator,
+  s.updated,
+  s.action,
+  s.birthday,
+  sch.name current_school
+FROM (
+       SELECT
+         id student_id,
+         ssid,
+         COALESCE(s.first_name, '') first_name,
+         COALESCE(s.middle_name, '') middle_name,
+         COALESCE(s.last_or_surname, '') last_or_surname,
+         update_import_id AS student_import_id,
+         'current' AS action,
+         updated,
+         birthday,
+         inferred_school_id
+       FROM student s
+       WHERE import_id != update_import_id
+             AND s.id IN ( SELECT id FROM student WHERE ssid IN ('SSID001') )
+       UNION ALL
+       SELECT
+         student_id,
+         ssid,
+         COALESCE(s.first_name, '') first_name,
+         COALESCE(s.middle_name, '') middle_name,
+         COALESCE(s.last_or_surname, '') last_or_surname,
+         update_import_id AS student_import_id,
+         CASE WHEN import_id = update_import_id THEN 'original' ELSE action END action,
+         updated,
+         birthday,
+         inferred_school_id
+       FROM audit_student s
+       WHERE s.student_id IN ( SELECT id FROM student WHERE s.ssid IN ('SSID001') )
+     ) s
+JOIN import i ON s.student_import_id = i.id
+LEFT JOIN school sch ON s.inferred_school_id = sch.id
+ORDER BY s.student_id, s.updated DESC;
+```
+
+```text
++------------+---------+------------+-------------+-----------------+--------+--------------------+----------------------------+----------+------------+----------------------------+
+| student_id | ssid    | first_name | middle_name | last_or_surname | import | import_creator     | updated                    | action   | birthday   | current_school             |
++------------+---------+------------+-------------+-----------------+--------+--------------------+----------------------------+----------+------------+----------------------------+
+|          1 | SSID001 | Gladys     | Ruth        | Williams        |     19 | dwtest@example.com | 2017-11-10 09:26:31.858088 | current  | 2001-06-23 | Kingbird Koala Junior High |
+|          1 | SSID001 | Gladys     | Ruth        | Williams        |     16 | dwtest@example.com | 2017-11-10 09:25:21.681122 | update   | 2001-09-23 | Kingbird Koala Junior High |
+|          1 | SSID001 | Gladys     | Ruth        | Durrant         |     15 | dwtest@example.com | 2017-11-10 09:24:11.604717 | update   | 2001-06-23 | Llama Sabrewing HS         |
+|          1 | SSID001 | Gladys     | Ruth        | Durrant         |     13 | dwtest@example.com | 2017-11-10 09:23:01.498262 | update   | 2001-06-23 | Llama Sabrewing HS         |
+|          1 | SSID001 | Gladys     |             | Durrant         |     12 | dwtest@example.com | 2017-11-10 09:21:51.427089 | update   | 2001-06-23 | Llama Sabrewing HS         |
+|          1 | SSID001 | Gladys     |             | Durrant         |     10 | dwtest@example.com | 2017-11-10 09:20:41.278709 | update   | 2001-06-23 | Llama Sabrewing HS         |
+|          1 | SSID001 | Gladys     |             | Durrant         |      6 | dwtest@example.com | 2017-11-10 09:19:31.054923 | original | 2001-06-23 | Llama Sabrewing HS         |
++------------+---------+------------+-------------+-----------------+--------+--------------------+----------------------------+----------+------------+----------------------------+
+7 rows in set (0.00 sec)
+```
+**Ethnicity audit trail for students**
+Each child table audit trail can be queried in a similar manner.  The following example is for the student_ethnicity child table.  Student currently has one child table.
+
+The query can be modified to display different or all columns.  The where clause can be modified, such as, to include multiple students or all students in a school.
+
+
+```mysql
+SELECT
+  eth_audit.*,
+  s.ssid,
+  CONCAT(s.last_or_surname, ', ', first_name) student
+FROM (
+       SELECT
+         students.student_id,
+         i.created action_date,
+         students.action,
+         i.id import_id,
+         i.creator,
+         ' ' ethnicity
+       FROM (
+              SELECT
+                s.id student_id,
+                s.update_import_id,
+                'current' AS action
+              FROM student s
+              WHERE s.id IN ( SELECT id FROM student WHERE ssid IN ('SSID001') )
+              UNION ALL
+              SELECT
+                ast.student_id,
+                ast.update_import_id,
+                ast.action
+              FROM audit_student ast
+              WHERE ast.student_id IN ( SELECT id FROM student WHERE ssid IN ('SSID001') )
+            ) students
+       JOIN import i ON students.update_import_id = i.id
+       UNION ALL
+       SELECT
+         eth_events.student_id,
+         eth_events.updated action_date,
+         eth_events.action,
+         ' ' import_id,
+         ' ' creator,
+         eth.code ethnicity
+       FROM (
+              SELECT
+                se.student_id,
+                se.ethnicity_id,
+                'create' action,
+                se.created AS updated
+              FROM student_ethnicity se
+              WHERE se.student_id IN ( SELECT id FROM student WHERE ssid IN ('SSID001') )
+              UNION ALL
+              SELECT
+                ase.student_id,
+                ase.ethnicity_id,
+                ase.action,
+                ase.audited AS updated
+              FROM audit_student_ethnicity ase
+              WHERE ase.student_id IN ( SELECT id FROM student WHERE ssid IN ('SSID001') )
+            ) eth_events
+       JOIN ethnicity eth ON eth_events.ethnicity_id = eth.id
+     ) eth_audit
+JOIN student s ON eth_audit.student_id = s.id
+ORDER BY eth_audit.student_id, eth_audit.action_date DESC;
+```
+
+```text
++------------+----------------------------+---------+-----------+--------------------+---------------------------+---------+------------------+
+| student_id | action_date                | action  | import_id | creator            | ethnicity                 | ssid    | student          |
++------------+----------------------------+---------+-----------+--------------------+---------------------------+---------+------------------+
+|          1 | 2017-11-10 09:26:31.820510 | current | 19        | dwtest@example.com |                           | SSID001 | Williams, Gladys |
+|          1 | 2017-11-10 09:25:21.629421 | update  | 16        | dwtest@example.com |                           | SSID001 | Williams, Gladys |
+|          1 | 2017-11-10 09:24:11.606506 | create  |           |                    | HispanicOrLatinoEthnicity | SSID001 | Williams, Gladys |
+|          1 | 2017-11-10 09:24:11.561458 | update  | 15        | dwtest@example.com |                           | SSID001 | Williams, Gladys |
+|          1 | 2017-11-10 09:23:01.500648 | delete  |           |                    | BlackOrAfricanAmerican    | SSID001 | Williams, Gladys |
+|          1 | 2017-11-10 09:23:01.443541 | update  | 13        | dwtest@example.com |                           | SSID001 | Williams, Gladys |
+|          1 | 2017-11-10 09:21:51.448647 | create  |           |                    | White                     | SSID001 | Williams, Gladys |
+|          1 | 2017-11-10 09:21:51.448647 | create  |           |                    | Filipino                  | SSID001 | Williams, Gladys |
+|          1 | 2017-11-10 09:21:51.371817 | update  | 12        | dwtest@example.com |                           | SSID001 | Williams, Gladys |
+|          1 | 2017-11-10 09:20:41.242122 | update  | 10        | dwtest@example.com |                           | SSID001 | Williams, Gladys |
+|          1 | 2017-11-10 09:19:31.080708 | create  |           |                    | Asian                     | SSID001 | Williams, Gladys |
+|          1 | 2017-11-10 09:19:31.000597 | update  | 6         | dwtest@example.com |                           | SSID001 | Williams, Gladys |
++------------+----------------------------+---------+-----------+--------------------+---------------------------+---------+------------------+
+12 rows in set (0.00 sec)
+```

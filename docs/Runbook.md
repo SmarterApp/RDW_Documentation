@@ -1,21 +1,124 @@
-## Runbook
+# Runbook
 
 **Intended Audience**: the runbook describes behavior and configuration options of the various applications in the Reporting Data Warehouse (RDW). Operations, system administration, and tier 3 support will find it useful.
 
-### Migrate Reporting
-"Migrate reporting" service moves data from the warehouse to the reporting database.
+1. [Common Conventions](#common)
+1. [Import Service](#import-service)
+1. [Package Processor](#package-processor)
+1. [Exam Processor](#exam-processor)
+1. [Group Processor](#group-processor)
+1. [Migrate Reporting](#migrate-reporting)
+1. [Migrate OLAP](#migrate-olap)
+1. [Task Service](#task-service)
 
-The process is controlled by the `warehouse.import` table and the `reporting.migrate` table.
-The service pulls data in two steps, first from `warehouse` to `staging`, and then from `staging` to `reporting`.
+<a name="common"></a>
+## Common Service Conventions
+All the applications in the RDW share common conventions and behaviors. This consistency across services makes maintaining the system less prone to error.
 
-The migration process is scheduled to run periodically on service start up. In each period, data is processed in batches until there is no full batch remaining. A batch is defined by a continuous sequence of import ids with status 1 (PROCESSED). 
+* **Dockerized**. They have been built to run in containers managed by an orchestration framework like Kubernetes.  
+* **Java 8**. (non-issue since JDK is part of the docker image?)
+* **Spring Boot**. 
+    * [Configuration][1] and [Common Properties][2]. 
+    * [Actuator end-points][3]. 
+    * Logging. 
+    * what else? 
+* 
 
-The service start up parameters that are worth noting:
-- ```--migrate.batch.delay=300000``` - a sleep time time in milliseconds.
-- ```--migrate.batch.size=1000``` - a number of import ids migrated in one chunk/iteration.
+#### Configuration
+As [Spring Boot][1] applications, the configuration settings for all applications come from:
 
-The service is not built to be horizontally scalable. Starting more than one migrate reporting 
-unpredictable behavior. The batch size can be adjusted for performance; it is a trade off between size and overall throughput. Because the database is the limiting resource, the effect may not be large. As an example, in a particular staging environment adjusting the batch size from 1000 to 2000 increased overall migrate rate by 33% (from 33/s to 44/s).
+* **Built-in defaults**. All applications have built-in defaults for everything except secrets (e.g. credentials).
+* **Environment variables**. These may be used to override any default setting. However, they are used primarily to configure the environment profile and configuration server settings.
+* **Command Line Options**. These may be used to override nay default setting. In a container orchestration framework, these are seldom used.
+* **Configuration server**. There is a central configuration server that all applications use to get environment-specific settings. Properties served up by the configuration server may be encrypted, protecting environment secrets. 
+
+TODO - document how to encrypt secrets and use them in configuration
+TODO - ?document how `spring.profiles` can be used with configuration server?
+
+##### Properties
+* `logging.level` - TODO: figure out how to document this generically
+* `server.port=8008`
+* `server.tomcat.max-connections=2`
+* `server.tomcat.max-threads=2`
+* `spring.datasource.url` - TODO: figure out how to document this generically
+
+
+<a name="import-service"></a>
+## Import Service
+The import service is the REST end-point for submitting data to the system. It is responsible for archiving all imported data and then passing the work, via message queue, to payload processors. It uses OAuth2 for client validation. It is horizontally scalable for HA and overall throughput. A single process can handle a few dozen clients with an average latency of 200-300ms per request. 
+
+##### Properties
+* `archive.root`
+* `archive.cloud.aws.credentials.accessKey`
+* `archive.cloud.aws.credentials.secretKey`
+* `archive.cloud.aws.region.static`
+* `security.oauth2.token-info-url` - there should be a placeholder in the URL for the token being validated, `{access_token}`
+* `spring.datasource.url-server`
+* `spring.datasource.username`
+* `spring.datasource.password`
+* `spring.rabbitmq.host`
+* `spring.rabbitmq.username`
+* `spring.rabbitmq.password`
+
+
+<a name="package-processor"></a>
+## Package Processor
+The package processor processes assessment packages, organizations and accommodations submitted to the system. It is responsible for parsing and validating the data before writing it to the data warehouse. Due to infrequent demand this processor has not been designed for high concurrency and only a single instance should be run.
+
+##### Properties
+* `spring.datasource.url-server`
+* `spring.datasource.username`
+* `spring.datasource.password`
+* `spring.rabbitmq.host`
+* `spring.rabbitmq.username`
+* `spring.rabbitmq.password`
+
+
+<a name="exam-processor"></a>
+## Exam Processor
+This processor handles parsing, validating and writing test results to the data warehouse. It is horizontally scalable with each process handling 20-30 exams/sec.
+
+##### Properties
+* `spring.datasource.url-server`
+* `spring.datasource.username`
+* `spring.datasource.password`
+* `spring.rabbitmq.host`
+* `spring.rabbitmq.username`
+* `spring.rabbitmq.password`
+
+
+<a name="group-processor"></a>
+## Group Processor
+This processor handles parsing, validating and writing student group information to the data warehouse. It is horizontally scalable but a single process can handle a large volume of data, and group changes are relatively infrequent. Unlike other processors it must access the archive store directly (instead of getting its data from the message queue).
+
+##### Properties
+* `archive.root`
+* `archive.cloud.aws.credentials.accessKey`
+* `archive.cloud.aws.credentials.secretKey`
+* `archive.cloud.aws.region.static`
+* `spring.datasource.url-server`
+* `spring.datasource.username`
+* `spring.datasource.password`
+* `spring.rabbitmq.host`
+* `spring.rabbitmq.username`
+* `spring.rabbitmq.password`
+
+
+<a name="migrate-reporting"></a>
+## Migrate Reporting
+The migrate reporting service moves data from the warehouse to the reporting database. The service is not built to be horizontally scalable. Having more than one migrate reporting process will result in unpredictable behavior. 
+
+The process is controlled by the `warehouse.import` table and the `reporting.migrate` table. The service pulls data in two steps, first from `warehouse` to `staging`, and then from `staging` to `reporting`. Data is migrated based on import status (PROCESSED) and created/updated timestamps. The migration process is scheduled to run periodically. In each period, data is processed in batches until there is no full batch remaining.  
+
+##### Properties
+* `migrate.batch.delay=60000`: time in milliseconds between migrate periods.
+* `migrate.batch.size=2000`: a number of import ids migrated in one chunk/iteration. The batch size can be adjusted for performance; it is a trade off between size and overall throughput. Because the database is the limiting resource, the effect may not be large. As an example, in a particular staging environment adjusting the batch size from 1000 to 2000 increased overall migrate rate by 33% (from 33/s to 44/s).
+* `spring.reporting_datasource.url-server`
+* `spring.reporting_datasource.username`
+* `spring.reporting_datasource.password`
+* `spring.warehouse_datasource.url-server`
+* `spring.warehouse_datasource.username`
+* `spring.warehouse_datasource.password`
 
 #### Maintenance Guidelines
 
@@ -106,6 +209,47 @@ mysql> select * from reporting.migrate order by id desc limit 1;
 mysql> update reporting.migrate set status=-10, message='manually abandoned, fixed problem' where id=1443;
 ```
 
+<a name="migrate-olap"></a>
+## Migrate OLAP
+The migrate OLAP service is responsible for migrating data from the data warehouse to the aggregate reporting OLAP database.
+
+
+<a name="taks-service"></a>
+## Task Service
+This service is responsible for executing scheduled tasks. Currently this includes:* Synchronizing organization data from ART (daily).* Generating an import reconciliation report (daily).
+* Resubmitting unprocessed data (daily).Only a single instance should be run since the task execution uses a simple, uncoordinated, time-based strategy.
+
+##### Properties
+Properties for synchronizing organization data from ART:
+* `task.update-organizations.cron=0 0 10 * * *`
+* `task.update-organizations.state=CA`
+* `task.update-organizations.art-client.districts-url`
+* `task.update-organizations.art-client.groups-of-schools-url`
+* `task.update-organizations.art-client.schools-url`
+* `task.update-organizations.art-client.status-url`
+* `task.update-organizations.art-client.oauth2.access-token-uri`
+* `task.update-organizations.art-client.oauth2.client-id`
+* `task.update-organizations.art-client.oauth2.client-secret`
+* `task.update-organizations.art-client.oauth2.username`
+* `task.update-organizations.art-client.oauth2.password`
+* `task.update-organizations.import-service-client.organizations-imports-url`
+* `task.update-organizations.import-service-client.status-url`
+* `task.update-organizations.import-service-client.oauth2.access-token-uri`
+* `task.update-organizations.import-service-client.oauth2.client-id`
+* `task.update-organizations.import-service-client.oauth2.client-secret`
+* `task.update-organizations.import-service-client.oauth2.username`
+* `task.update-organizations.import-service-client.oauth2.password`
+
+Properties for reconciliation report:
+* `task.send-reconciliation-report.cron=0 0 12 * * *`
+* `task.send-reconciliation-report.query`
+* `task.send-reconciliation-report.senders` - TODO: depends on type of sender
+
+
+---
+[1]: https://docs.spring.io/spring-boot/docs/1.5.2.RELEASE/reference/htmlsingle/#boot-features-external-config
+[2]: https://docs.spring.io/spring-boot/docs/1.5.2.RELEASE/reference/htmlsingle/#common-application-properties
+[3]: https://docs.spring.io/spring-boot/docs/1.5.2.RELEASE/reference/htmlsingle/#production-ready-endpoints
  
 
 			 

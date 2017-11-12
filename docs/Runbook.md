@@ -29,7 +29,7 @@ As [Spring Boot][1] applications, the configuration settings for all application
 
 * **Built-in defaults**. All applications have built-in defaults for everything except secrets (e.g. credentials).
 * **Environment variables**. These may be used to override any default setting. However, they are used primarily to configure the environment profile and configuration server settings.
-* **Command Line Options**. These may be used to override nay default setting. In a container orchestration framework, these are seldom used.
+* **Command Line Options**. These may be used to override any default setting. In a container orchestration framework, these are seldom used.
 * **Configuration server**. There is a central configuration server that all applications use to get environment-specific settings. Properties served up by the configuration server may be encrypted, protecting environment secrets. 
 
 TODO - document how to encrypt secrets and use them in configuration
@@ -217,7 +217,8 @@ The migrate OLAP service is responsible for migrating data from the data warehou
 <a name="taks-service"></a>
 ## Task Service
 This service is responsible for executing scheduled tasks. Currently this includes:* Synchronizing organization data from ART (daily).* Generating an import reconciliation report (daily).
-* Resubmitting unprocessed data (daily).Only a single instance should be run since the task execution uses a simple, uncoordinated, time-based strategy.
+* Resubmitting unprocessed data (daily).
+Only a single instance should be run since the task execution uses a simple, uncoordinated, time-based strategy.
 
 ##### Properties
 Properties for synchronizing organization data from ART:

@@ -49,7 +49,7 @@ TODO - ?document how `spring.profiles` can be used with configuration server?
 The import service is the REST end-point for submitting data to the system. It is responsible for archiving all imported data and then passing the work, via message queue, to payload processors. It uses OAuth2 for client validation. It is horizontally scalable for HA and overall throughput. A single process can handle a few dozen clients with an average latency of 200-300ms per request. 
 
 #### Configuration
-The [Annotated Configuration](config/rdw-ingest-import-service) describes the properties and their effects.
+The [Annotated Configuration](config/rdw-ingest-import-service.yml) describes the properties and their effects.
 
 
 <a name="package-processor"></a>

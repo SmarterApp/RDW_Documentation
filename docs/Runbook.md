@@ -60,13 +60,10 @@ The [Annotated Configuration](../config/rdw-ingest-import-service.yml) describes
 ## Package Processor
 The package processor processes assessment packages, organizations and accommodations submitted to the system. It is responsible for parsing and validating the data before writing it to the data warehouse. Due to infrequent demand this processor has not been designed for high concurrency and only a single instance should be run.
 
-##### Properties
-* `spring.datasource.url-server`
-* `spring.datasource.username`
-* `spring.datasource.password`
-* `spring.rabbitmq.host`
-* `spring.rabbitmq.username`
-* `spring.rabbitmq.password`
+![Package Processor](package-processor.png)
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-ingest-package-processor.yml) describes the properties and their effects.
 
 
 <a name="exam-processor"></a>

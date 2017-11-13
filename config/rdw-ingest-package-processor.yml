@@ -1,0 +1,67 @@
+# Annotated configuration for RDW Package Processor
+#
+# The spring application name is rdw-ingest-package-processor so this file should be named
+# rdw-ingest-package-processor.yml when served by the configuration server.
+#
+# Properties that have a reasonable default value are commented out.
+# Other properties are not commented out and must be provided.
+
+# The actuator end-point is on a different port with no security because it is expected to be
+# exposed only in a private subnet. Use the default settings unless you really know what you
+# are doing.
+management:
+#  security:
+#    enabled: false
+server:
+#  port: 8080
+#  tomcat:
+#    max-connections: 2
+#    max-threads: 2
+
+# SBAC assessment validation settings.
+# These are used to do basic validation of assessments and test results.
+# The default settings should be good.
+sbac:
+#  scaleScore:
+#    min: 1500
+#    max: 3500
+#  thetaScore:
+#    min: -5
+#    max: 5
+#  itemScore:
+#    min: -1
+#    max: 20
+
+# Spring application configuration.
+spring:
+
+  # Datasource configuration.
+  # NOTE: this section changed between 1.0 and 1.1.
+  # Use defaults for most of the settings except server, username and password.
+  # The url-server should be set to the host and port, e.g. localhost:3306 or
+  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+  # The password should be encrypted.
+  datasource:
+#    url: "\
+#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:warehouse}\
+#      ?useSSL=${spring.datasource.use-ssl:false}\
+#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
+#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
+#      "
+    url-server:
+    username:
+    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    driverClassName: com.mysql.jdbc.Driver
+#    initialize: false
+#    maxActive: 10
+#    initialSize: 4
+
+  # RabbitMQ configuration.
+  # There are no default values. The host must be set based on the orchestration environment
+  # e.g. rabbit-service, with appropriate username and password. The password should be encrypted.
+  rabbitmq:
+    host:
+    username:
+    password:

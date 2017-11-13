@@ -1,6 +1,8 @@
 # Runbook
 
-**Intended Audience**: the runbook describes behavior and configuration options of the various applications in the Reporting Data Warehouse (RDW). Operations, system administration, and tier 3 support will find it useful.
+**Intended Audience**: the runbook describes behavior and configuration options of the various applications in the [Reporting Data Warehouse](../README.md) (RDW). Operations, system administration, and tier 3 support will find it useful.
+
+### Table of Contents
 
 1. [Common Conventions](#common)
 1. [Import Service](#import-service)
@@ -47,6 +49,8 @@ TODO - ?document how `spring.profiles` can be used with configuration server?
 <a name="import-service"></a>
 ## Import Service
 The import service is the REST end-point for submitting data to the system. It is responsible for archiving all imported data and then passing the work, via message queue, to payload processors. It uses OAuth2 for client validation. It is horizontally scalable for HA and overall throughput. A single process can handle a few dozen clients with an average latency of 200-300ms per request. 
+
+![Import Service](import-service.png)
 
 #### Configuration
 The [Annotated Configuration](../config/rdw-ingest-import-service.yml) describes the properties and their effects.

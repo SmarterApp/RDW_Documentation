@@ -1,6 +1,6 @@
 ## Architecture 
 
-**Intended Audience**: This document describes the overall architecture of the Reporting Data Warehouse (RDW). It includes a discussion of the various applications, data flow, deployment philosophy, etc.
+**Intended Audience**: This document describes the overall architecture of the [Reporting Data Warehouse](../README.md) (RDW). It includes a discussion of the various applications, data flow, deployment philosophy, etc.
 
 ### Overview
 

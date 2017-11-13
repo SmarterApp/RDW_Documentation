@@ -68,15 +68,12 @@ The [Annotated Configuration](../config/rdw-ingest-package-processor.yml) descri
 
 <a name="exam-processor"></a>
 ## Exam Processor
-This processor handles parsing, validating and writing test results to the data warehouse. It is horizontally scalable with each process handling 20-30 exams/sec.
+This processor handles parsing, validating and writing test results to the data warehouse. It also extracts student information from the test results, creating and updating them as necessary. It is horizontally scalable with each process handling 20-30 exams/sec.
 
-##### Properties
-* `spring.datasource.url-server`
-* `spring.datasource.username`
-* `spring.datasource.password`
-* `spring.rabbitmq.host`
-* `spring.rabbitmq.username`
-* `spring.rabbitmq.password`
+![Exam Processor](exam-processor.png)
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-ingest-exam-processor.yml) describes the properties and their effects.
 
 
 <a name="group-processor"></a>

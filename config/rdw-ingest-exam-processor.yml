@@ -1,7 +1,7 @@
-# Annotated configuration for RDW Package Processor
+# Annotated configuration for RDW Exam Processor
 #
-# The spring application name is rdw-ingest-package-processor so this file should be named
-# rdw-ingest-package-processor.yml when served by the configuration server.
+# The spring application name is rdw-ingest-exam-processor so this file should be named
+# rdw-ingest-exam-processor.yml when served by the configuration server.
 #
 # Properties that have a reasonable default value are commented out.
 # Other properties are not commented out and must be provided.
@@ -55,8 +55,9 @@ spring:
 #    validationQuery: SELECT 1
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
-#    maxActive: 10
-#    initialSize: 4
+#    maxActive: 12
+#    initialSize: 6
+#    maxWait: 10000
 
   # RabbitMQ configuration.
   # There are no default values. The host must be set based on the orchestration environment

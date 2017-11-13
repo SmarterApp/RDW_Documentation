@@ -32,33 +32,24 @@ As [Spring Boot][1] applications, the configuration settings for all application
 * **Command Line Options**. These may be used to override any default setting. In a container orchestration framework, these are seldom used.
 * **Configuration server**. There is a central configuration server that all applications use to get environment-specific settings. Properties served up by the configuration server may be encrypted, protecting environment secrets. 
 
+There are settings for the configuration server that all the applications use. These are generally set using environment variables in the orchestration framwork, for example: 
+
+```bash
+CONFIG_SERVICE_ENABLED=true
+CONFIG_SERVICE_LABEL=master
+CONFIG_SERVICE_URL=http://configuration-service
+```
+
 TODO - document how to encrypt secrets and use them in configuration
 TODO - ?document how `spring.profiles` can be used with configuration server?
-
-##### Properties
-* `logging.level` - TODO: figure out how to document this generically
-* `server.port=8008`
-* `server.tomcat.max-connections=2`
-* `server.tomcat.max-threads=2`
-* `spring.datasource.url` - TODO: figure out how to document this generically
 
 
 <a name="import-service"></a>
 ## Import Service
 The import service is the REST end-point for submitting data to the system. It is responsible for archiving all imported data and then passing the work, via message queue, to payload processors. It uses OAuth2 for client validation. It is horizontally scalable for HA and overall throughput. A single process can handle a few dozen clients with an average latency of 200-300ms per request. 
 
-##### Properties
-* `archive.root`
-* `archive.cloud.aws.credentials.accessKey`
-* `archive.cloud.aws.credentials.secretKey`
-* `archive.cloud.aws.region.static`
-* `security.oauth2.token-info-url` - there should be a placeholder in the URL for the token being validated, `{access_token}`
-* `spring.datasource.url-server`
-* `spring.datasource.username`
-* `spring.datasource.password`
-* `spring.rabbitmq.host`
-* `spring.rabbitmq.username`
-* `spring.rabbitmq.password`
+#### Configuration
+The [Annotated Configuration](config/rdw-ingest-import-service) describes the properties and their effects.
 
 
 <a name="package-processor"></a>

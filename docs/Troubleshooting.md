@@ -79,6 +79,7 @@ aws configure
 - [Duplicate Schools](#duplicate-schools)
 - [Invalid Student Group](#invalid-group)
 - [Empty Student Report](#empty-report)
+- [Can't See Student Group](#missing-student-group)
 
 <a name="state-schools"></a>
 #### Organization Sync - Improperly configured schools 
@@ -404,3 +405,73 @@ name, "Awesome Academy" and that the incident happened yesterday. All the initia
 There is no grade 11 exam data, it is grade 12. The user will have to specify grade 12 when requesting the report.
 But that's not possible. So this is clearly a bug: the system should use the assessment grade when filtering results
 for the printed report.
+
+<a name="missing-student-group"></a>
+#### Can't See Student Group
+Screen shots show that a student group was successfully uploaded but the teacher in the group does not see the student group when they login. We know a few things:
+* School is Riverdale High, 10754081035575
+* User is krathburn@fubar.org (yeah, okay i changed that)
+
+* First, get the school id
+    ```sql
+    select * from school where natural_id='10754081035575';
++-------+-------------+----------------+----------------+---
+| id    | district_id | natural_id     | name           | im
++-------+-------------+----------------+----------------+---
+| 13070 |        1016 | 10754081035575 | Riverdale High | ...  
++-------+-------------+----------------+----------------+---    
+    ```
+* Does student group exist? 
+    ```sql
+    select * from student_group where school_id=13070;
++-------+------------------------------+-----------+-------------+------------+--------+---------+----------------------------+-----------+------------------+---------+----------------------------+
+| id    | name                         | school_id | school_year | subject_id | active | creator | created                    | import_id | update_import_id | deleted | updated                    |
++-------+------------------------------+-----------+-------------+------------+--------+---------+----------------------------+-----------+------------------+---------+----------------------------+
+| 42791 | ChavezP3                     |     13070 |        2018 |          2 |      1 | NULL    | 2017-11-01 16:03:53.058082 |   2774667 |          2774667 |       0 | 2017-11-01 16:03:53.058082 |
+| 42794 | CurwickP11thgrade            |     13070 |        2018 |          2 |      1 | NULL    | 2017-11-01 16:10:58.099894 |   2775278 |          2775278 |       0 | 2017-11-01 16:10:58.099894 |
+| 43404 | DistrictELApractice11thgrade |     13070 |        2018 |          2 |      1 | NULL    | 2017-11-01 23:02:46.545053 |   2797758 |          2797758 |       0 | 2017-11-01 23:02:46.545053 |
+| 60917 | REStestP3                    |     13070 |        2018 |          2 |      1 | NULL    | 2017-11-09 23:23:48.340152 |   3060753 |          3060753 |       0 | 2017-11-09 23:23:48.340152 |
++-------+------------------------------+-----------+-------------+------------+--------+---------+----------------------------+-----------+------------------+---------+----------------------------+
+4 rows in set (0.00 sec)
+
+    ```
+* That matches the screen shot provided by the administrator. The group of interest is the DistrictELApractice11thgrade, id=43404. We know this because of hints in the JIRA ticket and the CSV provided. Let's check the membership of that group:
+    ```sql
+select * from user_student_group where student_group_id=43404;
++------------------+-----------------------+
+| student_group_id | user_login            |
++------------------+-----------------------+
+|            43404 | cstilson@fubar.org    |
+|            43404 | dsimpson@fubar.org    |
+|            43404 | ginadaniels@fubar.org |
+|            43404 | jmoore@fubar.org      |
+|            43404 | jpercell@fubar.org    |
+|            43404 | mallein@fubar.org     |
+|            43404 | mlocke@fubar.org      |
+|            43404 | skirk@fubar.org       |
++------------------+-----------------------+    
+    ``` 
+* This matches the CSV provided in the JIRA, except one user is missing. Given what we know about the processing of the CSV this doesn't make sense. Let's see what was actually uploaded to the system. We need the digest for the file so we can find it in S3. For student group upload that requires an extra join:
+    ```sql
+select * from import i join upload_student_group_batch b on b.id=i.batch where i.id=2797758 \G
+*************************** 1. row ***************************
+         id: 2797758
+     status: 1
+    content: 5
+contentType: group batch
+     digest: 13070
+      batch: 2839
+    creator: NULL
+    created: 2017-11-01 23:02:44.947794
+    updated: 2017-11-01 23:02:46.682500
+    message: NULL
+         id: 2839
+     digest: 9A462BCD48E9AB16999F3D52EC6C5DA1
+     status: 1
+    creator: briancurwick@rjusd.org
+    created: 2017-11-01 23:02:42.088673
+    updated: 2017-11-01 23:02:46.708171
+    message: 
+   filename: DistrictELApractice11thgrade.csv    
+    ``` 
+* Retrieving the file from S3 shows a CSV file that is not the same as the sample, specifically the rows for that 9th user are not in it. User error. 

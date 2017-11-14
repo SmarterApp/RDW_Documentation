@@ -456,25 +456,25 @@ Screen shots show that a student group was successfully uploaded but the teacher
 * This matches the CSV provided in the JIRA, except one user is missing. Given what we know about the processing of the CSV this doesn't make sense. Let's see what was actually uploaded to the system. We need the digest for the file so we can find it in S3. For student group upload that requires an extra join:
 
     ```sql
-select * from import i join upload_student_group_batch b on b.id=i.batch where i.id=2797758 \G
-*************************** 1. row ***************************
-         id: 2797758
-     status: 1
-    content: 5
-contentType: group batch
-     digest: 13070
-      batch: 2839
-    creator: NULL
-    created: 2017-11-01 23:02:44.947794
-    updated: 2017-11-01 23:02:46.682500
-    message: NULL
-         id: 2839
-     digest: 9A462BCD48E9AB16999F3D52EC6C5DA1
-     status: 1
-    creator: briancurwick@rjusd.org
-    created: 2017-11-01 23:02:42.088673
-    updated: 2017-11-01 23:02:46.708171
-    message: 
-   filename: DistrictELApractice11thgrade.csv    
+    select * from import i join upload_student_group_batch b on b.id=i.batch where i.id=2797758 \G
+    *************************** 1. row ***************************
+             id: 2797758
+         status: 1
+        content: 5
+    contentType: group batch
+         digest: 13070
+          batch: 2839
+        creator: NULL
+        created: 2017-11-01 23:02:44.947794
+        updated: 2017-11-01 23:02:46.682500
+        message: NULL
+             id: 2839
+         digest: 9A462BCD48E9AB16999F3D52EC6C5DA1
+         status: 1
+        creator: briancurwick@rjusd.org
+        created: 2017-11-01 23:02:42.088673
+        updated: 2017-11-01 23:02:46.708171
+        message: 
+       filename: DistrictELApractice11thgrade.csv    
     ``` 
 * Retrieving the file from S3 shows a CSV file that is not the same as the sample, specifically the rows for that 9th user are not in it. User error. 

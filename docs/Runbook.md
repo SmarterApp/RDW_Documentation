@@ -12,6 +12,7 @@
 1. [Migrate Reporting](#migrate-reporting)
 1. [Migrate OLAP](#migrate-olap)
 1. [Task Service](#task-service)
+1. [UI Runbook](Runbook.UI.md)
 
 <a name="common"></a>
 ## Common Service Conventions
@@ -205,9 +206,12 @@ The migrate OLAP service is responsible for migrating data from the data warehou
 
 <a name="taks-service"></a>
 ## Task Service
-This service is responsible for executing scheduled tasks. Currently this includes:* Synchronizing organization data from ART (daily).* Generating an import reconciliation report (daily).
+This service is responsible for executing scheduled tasks. Currently this includes:
+* Synchronizing organization data from ART (daily).
+* Generating an import reconciliation report (daily).
 * Resubmitting unprocessed data (daily).
-Only a single instance should be run since the task execution uses a simple, uncoordinated, time-based strategy.
+
+Only a single instance should be run since the task execution uses a simple, uncoordinated, time-based strategy.
 
 ##### Properties
 Properties for synchronizing organization data from ART:

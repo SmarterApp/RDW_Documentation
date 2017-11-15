@@ -208,8 +208,21 @@ Rows matched: 1  Changed: 1  Warnings: 0
 <a name="reconciliation-report"></a>
 #### Reconciliation Report
 
-This shouldn't be necessary or even desired once things are working but when we were testing things it was handy to
-trigger the reconciliation report without waiting for the scheduled time; post to the actuator endpoint:
+The most common issue with the reconciliation report is a mismatch in counts. The monitoring document describes, in detail, versions of queries for looking at import status. For a system that is generally running fine it is simplest to do this to get to the heart of the problem:
+
+```sql
+mysql> SELECT count(*) cnt, message FROM import WHERE content=1 AND status<0 GROUP BY message;
++-----+------------------------------------------------------------------------------------------------------------+
+| cnt | message                                                                                                    |
++-----+------------------------------------------------------------------------------------------------------------+
+|  10 | unable to find a school with natural id [37103710136085]                                                   |
++-----+------------------------------------------------------------------------------------------------------------+
+```
+
+The reconciliation report and/or the complaint about any discrepancy will usually have information to follow-up on the issue. Resolve the issue (usually by adding the school to ART and forcing the updateOrganization task to run see [Unknown School](#unknown-school).
+
+This shouldn't be necessary or even desired once things are working but when we were testing things it was handy to trigger the reconciliation report without waiting for the scheduled time; post to the actuator endpoint:
+
 ```text
 apk -v --update add curl
 curl -X POST http://localhost:8008/reconciliationReport
@@ -219,6 +232,7 @@ curl -X POST http://localhost:8008/reconciliationReport
 #### Unprocessed Test Result - UNKNOWN_SCHOOL
 
 There is a monitoring query that returns the count of imports by status. Running that query recently produced this:
+
 ```bash
 mysql> select name, count(*) count from import join import_status on import.status=import_status.id group by status;
 +----------------+---------+
@@ -229,6 +243,7 @@ mysql> select name, count(*) count from import join import_status on import.stat
 +----------------+---------+
 ```
 Now what? First, look at the import records that triggered the unknown school to get additional details:
+
 ```text
 # UNKNOWN_SCHOOL = -6 which can be seen in the import_status table
 mysql> select distinct message from import where status = -6;
@@ -242,22 +257,24 @@ mysql> select id, digest, message from import where status = -6 limit 1 \G
      digest: 18B972210FEB91F3DDC545CB4CA5B33B
     message: unable to find a school with natural id [30665226130553]
 ```
-You can retrieve the actual TRT payload by either hitting the import API end-point or by navigating to S3. The data
-is partitioned in S3 using the content type and first two pairs of characters in the `digest`. In this case it will 
-be s3://archive/EXAM/18/B9/18B972210FEB91F3DDC545CB4CA5B33B. Viewing the TRT, the school info:
-District: (30665220000000, Garden Grove Unified), School: (30665226130553, Spectrum Center - Rossier Elementary).
+You can retrieve the actual TRT payload by either hitting the import API end-point or by navigating to S3. The data is partitioned in S3 using the content type and first two pairs of characters in the `digest`. In this case it will be s3://archive/EXAM/18/B9/18B972210FEB91F3DDC545CB4CA5B33B. Viewing the TRT, the school info: `District: (30665220000000, Garden Grove Unified), School: (30665226130553, Spectrum Center - Rossier Elementary)`.
 
 Resolving the missing school is beyond the scope of this document. Once the missing school is in ART ...
 
 Force the organization sync task to run by poking the task service:
+
 ```bash
 curl -X POST http://localhost:8008/updateOrganizations
 ```
 
-After that completes, trigger a resubmit of data by hitting the import API. This requires ASMTDATALOAD credentials so
-set the ACCESS_TOKEN and then:
+After that completes, trigger a resubmit of data by hitting the import API. This requires ASMTDATALOAD credentials so set the ACCESS_TOKEN and then:
+
 ```bash
-curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" https://import-service/exams/imports/resubmit?status=UNKNOWN_SCHOOL
+$ ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=dwtest@example.com&password=password&client_id=rdw&client_secret=rdw-secret' 'https://sso.smarterbalanced.org:443/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token' `
+$ echo $ACCESS_TOKEN
+a0e7a6fc-a5df-4bd6-94c6-f8a9355374db
+
+$ curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" https://import-service/exams/imports/resubmit?status=UNKNOWN_SCHOOL
 ```
 
 <a name="duplicate-schools"></a>

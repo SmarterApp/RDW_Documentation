@@ -2,6 +2,27 @@
 
 **NOTE: please avoid putting environment-specific details _especially secrets and sensitive information_ in this document.**
 
+### Table of Contents
+
+* Kubernetes
+    * [Jump Server](#jump-server)
+    * [Working With Nodes](#working-with-nodes)
+    * [Working With Pods](#working-with-pods)
+* Specific Issues
+    * [Improperly configured schools](#state-schools)
+    * [Migrate](#migrate)
+    * [Reconciliation Report](#reconciliation-report)
+    * [Unknown School](#unknown-school)
+    * [Duplicate Schools](#duplicate-schools)
+    * [Invalid Student Group](#invalid-group)
+    * [Empty Student Report](#empty-report)
+    * [Can't See Student Group](#missing-student-group)
+
+### Kubernetes
+
+<a name="jump-server"></a>
+#### Jump Server
+
 All work is done from a properly configured workstation, bastion or jump server. It is assumed that `kubectl` is configured appropriately. Typically this involves using kops to export the kubecfg, e.g.
 
 ```bash
@@ -10,6 +31,7 @@ kops export kubecfg cfgname --state s3://kops-state-store
 ```
 It is also assumed that a mysql client with connectivity to the databases is installed.
 
+<a name="working-with-nodes"></a>
 #### Working With Nodes
 
 Although it is seldom needed, you can ssh into the nodes, which are just EC2 instances.
@@ -17,9 +39,11 @@ Although it is seldom needed, you can ssh into the nodes, which are just EC2 ins
 ssh -i ~/.ssh/ssh-dev.pem admin@34.212.27.241 
 ```
 
+<a name="working-with-pods"></a>
 #### Working With Pods
 
 Most diagnostic work will be done by interacting with pods. You can get a list of pods (example elided for brevity):
+
 ```bash
 kubectl get po
 NAME                                            READY     STATUS    RESTARTS   AGE
@@ -31,13 +55,14 @@ rabbit-deployment-2895814383-gjqcd              1/1       Running   0          1
 ```
 
 The simplest diagnostic is to look at a pod's logs, either downloading them or tailing them:
+
 ```bash
 kubectl logs migrate-reporting-deployment-3157337915-34zqn > migrate.log
 kubectl logs -f migrate-reporting-deployment-3157337915-34zqn
 ```
 
-To get a pod's diagnostic status, you'll need two sessions: one to port-forward and the other to curl. One way to do
-this is to use `screen`:
+To get a pod's diagnostic status, you'll need two sessions: one to port-forward and the other to curl. One way to do this is to use `screen`:
+
 ```bash
 screen
 kubectl port-forward migrate-reporting-deployment-3157337915-34zqn 8008
@@ -51,16 +76,17 @@ curl http://localhost:8008/configprops
 ```
 
 You can start a shell in a pod but know that these are thin Alpine images. You'll likely need to install any utility you need. Messing with an image isn't a good long-term idea but it can get you through troubleshooting. For example, suppose you want to try hitting an image's own status end-point from within the image:
+
 ```bash
-kubectl exec migrate-reporting-deployment-3157337915-34zqn -it /bin/sh
-apk update
-apk add curl jq
-curl http://localhost:8008/health | jq .
+$ kubectl exec migrate-reporting[k8s-randomization] -it /bin/sh
+# apk -v --update add curl jq
+# curl http://localhost:8008/health | jq .
 ```
 
 Whenever a `curl` command is presented in this document it is assumed one of these two techniques is being used.
 
 In one debugging session we wanted to run the AWS CLI from within a pod. No stable aws-cli apk so:
+
 ```bash
 apk -v --update add python py-pip groff less mailcap 
 pip install --upgrade awscli s3cmd python-magic
@@ -72,39 +98,36 @@ aws configure
 
 ### Specific Issues
 
-- [Improperly configured schools](#state-schools)
-- [Migrate](#migrate)
-- [Reconciliation Report](#reconciliation-report)
-- [Unknown School](#unknown-school)
-- [Duplicate Schools](#duplicate-schools)
-- [Invalid Student Group](#invalid-group)
-- [Empty Student Report](#empty-report)
-- [Can't See Student Group](#missing-student-group)
-
 <a name="state-schools"></a>
 #### Organization Sync - Improperly configured schools 
 
 > NOTE: this particular example has been resolved by making the school processing ignore such schools.
 > However, the diagnostic steps have been retained to demonstrate the problem-solving techniques.
 
-The system periodically gets organization data from ART and imports it. This is done by the task service and is 
-configured to run at night once a day. To see how it is doing, inspect the log for the task service:
+The system periodically gets organization data from ART and imports it. This is done by the task service and is configured to run at night once a day. To see how it is doing, inspect the log for the task service:
+
 ```bash
 # find task-service pod then tail the log
 kubectl get po | grep task
 kubectl logs -f task-server-deployment-1565566610-xfsml
 ```
+
 You should see something like:
+
 ```text
 2017-08-19 04:00:00.001  INFO 1 --- [pool-1-thread-1] onsConfiguration$UpdateOrganizationsTask : Scheduled task triggered: Update Organizations
 2017-08-19 04:01:05.437  INFO 1 --- [pool-1-thread-1] o.o.r.i.t.s.i.RestImportServiceClient    : posted organizations import, id: 11, status: ACCEPTED
 ```
+
 But you may also see indications of a problem, something like:
+
 ```text
 2017-08-20 04:00:00.000  INFO 1 --- [pool-1-thread-1] onsConfiguration$UpdateOrganizationsTask : Scheduled task triggered: Update Organizations
 2017-08-20 04:00:11.275  WARN 1 --- [pool-1-thread-1] o.o.r.i.t.s.i.RestImportServiceClient    : organization import not accepted, id: 11, status: BAD_DATA
 ```
+
 At this point you can use either the database to inspect import record 11, or look at the package processor log.
+
 ```bash
 # use mysql to query import table in warehouse
 mysql> select id, digest, message from import where id=11;
@@ -112,17 +135,19 @@ mysql> select id, digest, message from import where id=11;
 kubectl get po | grep package
 kubectl logs -f package-processor-deployment-1539920652-2pdrj
 ```
+
 Here is a snippet of the error message:
+
 ```json
 {"messages":[
   {"elementName":"54721570000000 district","value":"CA","error":"unknown district [CA]"},
   {"elementName":"54722640000000 district","value":"CA","error":"unknown district [CA]"},
   ...
 ```
-It looks like a number of schools are parented by a state. You can see the payload by looking in the S3 archive bucket.
-Using the digest value from the mysql command above: the archive layout uses the first characters of the digest to 
-partition the files. In this case the digest is `0B01C47442601FFC20E090D476A20983` so we are looking for the file 
+
+It looks like a number of schools are parented by a state. You can see the payload by looking in the S3 archive bucket. Using the digest value from the mysql command above: the archive layout uses the first characters of the digest to partition the files. In this case the digest is `0B01C47442601FFC20E090D476A20983` so we are looking for the file 
 `s3://archive/0B/01/0B01C47442601FFC20E090D476A20983`. Indeed, in the file we see something like:
+
 ```json
 {
     "id" : "5489fdd4e4b08780969fc317",
@@ -146,11 +171,10 @@ partition the files. In this case the digest is `0B01C47442601FFC20E090D476A2098
 
 The migrate service is responsible for moving data from the data warehouse to the reporting data mart. 
 
-As a Spring Boot application, the migrate reporting service can be paused/resumed. This will temporarily suspend 
-the migrate task which may be desired to perform upgrades, etc. Note that this is independent of the migrate service
-disabling itself when an error occurs. Simply POST an empty body to `pause` or `resume` end-point.
+As a Spring Boot application, the migrate reporting service can be paused/resumed. This will temporarily suspend the migrate task which may be desired to perform upgrades, etc. Note that this is independent of the migrate service disabling itself when an error occurs. Simply POST an empty body to `pause` or `resume` end-point.
 
 To see the current status of the migrate service:
+
 ```bash
 curl http://localhost:8008/status
 {
@@ -167,6 +191,7 @@ curl http://localhost:8008/status
 ```
 
 To pause the migrate service:
+
 ```bash
 curl -X POST http://localhost:8008/pause
 true
@@ -185,12 +210,8 @@ curl http://localhost:8008/status
 }
 ```
 
-The migrate reporting service will disable itself if there is an error during processing. You can see this by
-getting the status (see above) which will contain `"lifecycle": "running,disabled"`. Once the cause of the problem
-has been resolved the service can be enabled by adjusting the status of the most recent migrate task in the 
-reporting database. Connect with your favorite SQL client using a write-enabled account and change the status
-to `-10` setting a message to explain. Note: if the status of the most recent migrate entry is not `10` or `-20` 
-there is something else wrong, please contact a system administrator to help.
+The migrate reporting service will disable itself if there is an error during processing. You can see this by getting the status (see above) which will contain `"lifecycle": "running,disabled"`. Once the cause of the problem has been resolved the service can be enabled by adjusting the status of the most recent migrate task in the reporting database. Connect with your favorite SQL client using a write-enabled account and change the status to `-10` setting a message to explain. Note: if the status of the most recent migrate entry is not `10` or `-20` there is something else wrong, please contact a system administrator to help.
+
 ```bash
 mysql> select * from reporting.migrate order by id desc limit 1;
 +------+--------+--------+-----------------+----------------+----------------------------+----------------------------+---------+
@@ -219,13 +240,14 @@ mysql> SELECT count(*) cnt, message FROM import WHERE content=1 AND status<0 GRO
 +-----+------------------------------------------------------------------------------------------------------------+
 ```
 
-The reconciliation report and/or the complaint about any discrepancy will usually have information to follow-up on the issue. Resolve the issue (usually by adding the school to ART and forcing the updateOrganization task to run see [Unknown School](#unknown-school).
+The reconciliation report and/or the complaint about any discrepancy will usually have information to follow-up on the issue. Resolve the issue (usually by adding the school to ART and forcing the updateOrganization task to run see [Unknown School](#unknown-school)).
 
-This shouldn't be necessary or even desired once things are working but when we were testing things it was handy to trigger the reconciliation report without waiting for the scheduled time; post to the actuator endpoint:
+This shouldn't be necessary or even desired once things are working but when we were testing things it was handy to **trigger the reconciliation report** without waiting for the scheduled time; post to the actuator endpoint:
 
 ```text
-apk -v --update add curl
-curl -X POST http://localhost:8008/reconciliationReport
+$ kubectl exec task-server[k8s-randomization] -it /bin/sh
+# apk -v --update add curl
+# curl -X POST http://localhost:8008/reconciliationReport
 ```
 
 <a name="unknown-school"></a>
@@ -264,17 +286,18 @@ Resolving the missing school is beyond the scope of this document. Once the miss
 Force the organization sync task to run by poking the task service:
 
 ```bash
-curl -X POST http://localhost:8008/updateOrganizations
+$ kubectl exec task-server[k8s-randomization] -it /bin/sh
+# curl -X POST http://localhost:8008/updateOrganizations
 ```
 
-After that completes, trigger a resubmit of data by hitting the import API. This requires ASMTDATALOAD credentials so set the ACCESS_TOKEN and then:
+After that completes, trigger a resubmit of data by hitting the import API. This requires ASMTDATALOAD credentials so set the ACCESS_TOKEN and then (jump server works fine but these commands can be executed from any internet-enabled machine):
 
 ```bash
 $ ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=dwtest@example.com&password=password&client_id=rdw&client_secret=rdw-secret' 'https://sso.smarterbalanced.org:443/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token' `
 $ echo $ACCESS_TOKEN
 a0e7a6fc-a5df-4bd6-94c6-f8a9355374db
 
-$ curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" https://import-service/exams/imports/resubmit?status=UNKNOWN_SCHOOL
+$ curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" https://import.smarterbalanced.org/exams/imports/resubmit?status=UNKNOWN_SCHOOL
 ```
 
 <a name="duplicate-schools"></a>

@@ -13,11 +13,12 @@ RDW is a suite of applications with lots of moving parts. These documents provid
 1. [Runbook](docs/Runbook.md)
 1. [Monitoring](docs/Monitoring.md)
 1. [Troubleshooting](docs/Troubleshooting.md)
+1. [Deployment](docs/Deployment.AWS.md)
 1. [Performance Tuning for Aurora](docs/PerformanceTuning.Aurora.md)
 1. [Performance Tuning for Redshift](docs/PerformanceTuning.Redshift.md)
 1. [API - Ingest](docs/API-Ingest.md)
 
-## Project Links
+## Project Repositories
 RDW is separated into multiple project repositories. Each repo has documentation for building and testing.
 
 1. [Ingest](https://github.com/SmarterApp/RDW_Ingest) is the primary data store for the system and is responsible for accepting and processing most data coming into the system.

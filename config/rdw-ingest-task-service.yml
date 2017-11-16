@@ -1,0 +1,132 @@
+# Annotated configuration for RDW Task Service
+#
+# The spring application name is rdw-ingest-task-service so this file should be
+# named rdw-ingest-task-service.yml when served by the configuration server.
+#
+# Properties that have a reasonable default value are commented out.
+# Other properties are not commented out and must be provided.
+
+# The actuator end-point is on a different port with no security because it is expected to be
+# exposed only in a private subnet. Use the default settings unless you really know what you
+# are doing.
+management:
+#  security:
+#    enabled: false
+server:
+#  port: 8008
+#  tomcat:
+#    max-connections: 2
+#    max-threads: 2
+
+# Spring application configuration.
+spring:
+  # Datasource configuration.
+  # NOTE: this section changed between 1.0 and 1.1.
+  # Use defaults for most of the settings except server, username and password.
+  # The url-server should be set to the host and port, e.g. localhost:3306 or
+  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+  # The password should be encrypted.
+  datasource:
+#    url: "\
+#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:warehouse}\
+#      ?useSSL=${spring.datasource.use-ssl:false}\
+#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
+#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
+#      "
+    url-server:
+    username:
+    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    driverClassName: com.mysql.jdbc.Driver
+#    initialize: false
+#    maxActive: 10
+#    initialSize: 4
+
+# Task configuration.
+# By default, all tasks are disabled.
+# The cron syntax is slightly different than standard linux cron syntax. The pattern is a list
+# of six single space-separated fields: representing second, minute, hour, day, month, weekday.
+# Month and weekday names can be given as the first three letters of the English names.
+# Example patterns:
+#   0 0 10 * * *           10 AM every day
+#   0 0 * * * *            the top of every hour of every day
+#   */10 * * * * *         every ten seconds
+#   0 0 8-10 * * *         8, 9 and 10 o'clock of every day
+#   0 0 6,19 * * *         6:00 AM and 7:00 PM every day
+#   0 0/30 8-10 * * *      8:00, 8:30, 9:00, 9:30, 10:00 and 10:30 every day
+#   0 0 9-17 * * MON-FRI   on the hour nine-to-five weekdays
+#   0 0 0 25 12 ?          every Christmas Day at midnight
+# Note that all times are in GMT.
+
+task:
+  # Reconciliation Report configuration.
+  send-reconciliation-report:
+    cron: 0 0 12 * * *
+    query: status=PROCESSED&after=-PT24H
+    # This sample has many senders for illustration purposes. In a real deployment it is likely
+    # there will be a single sender (and, perhaps the log sender for monitoring/diagnostics).
+    senders:
+      - type: log
+      - type: archive
+        root: file:///tmp/
+        # The S3 archive sender has the same configuration options as an archive service. The
+        # root should be the protocol and bucket, e.g. s3://my-archive-bucket. The AWS access key
+        # should be for a programmatic AWS user. The secretKey should be encrypted. The sse
+        # setting is optional and should correspond to the S3 bucket settings.
+      - type: archive
+        root:
+        cloud:
+          aws:
+            credentials:
+              access-key:
+              secret-key:
+            region:
+              static: us-west-2
+            sse: AES256
+      - type: ftp
+        server:
+        username:
+        password:
+
+  # Update Organizations configuration
+  update-organizations:
+    cron: 0 0 8 * * *
+    state: CA
+    art-client:
+      groups-of-districts-url: https://art.smarterbalanced.org/rest/groupofdistrict?stateAbbreviation={state}&pageSize=1000
+      districts-url: https://art.smarterbalanced.org/rest/district?stateAbbreviation={state}&pageSize=5000
+      groups-of-schools-url: https://art.smarterbalanced.org/rest/groupofinstitution?stateAbbreviation={state}&pageSize=1000
+      schools-url: https://art.smarterbalanced.org/rest/institution?stateAbbreviation={state}&pageSize=20000
+      status-url: https://art.smarterbalanced.org/rest/status
+      # The credentials should be for a user that has access to the ART REST API
+      oauth2:
+        access-token-uri: https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac
+        client-id:
+        client-secret:
+        username:
+        password:
+    import-service-client:
+      organizations-imports-url: http://import-service/organizations/imports
+      status-url: http://import-status-service/status
+      # The credentials should be for a user that has ASMTDATALOAD privileges for the import REST API
+      oauth2:
+        access-token-uri: https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac
+        client-id:
+        client-secret:
+        username:
+        password:
+
+  # Resubmit Unprocessed Exams configuration
+  resubmit-unprocessed-imports:
+    cron: 0 0 10 * * *
+    import-service-client:
+      exams-imports-url: http://import-service/exams/imports/resubmit
+      status-url: http://import-status-service/status
+      # The credentials should be for a user that has ASMTDATALOAD privileges for the import REST API
+      oauth2:
+        access-token-uri: https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac
+        client-id:
+        client-secret:
+        username:
+        password:

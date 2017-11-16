@@ -34,7 +34,6 @@ sbac:
 
 # Spring application configuration.
 spring:
-
   # Datasource configuration.
   # NOTE: this section changed between 1.0 and 1.1.
   # Use defaults for most of the settings except server, username and password.

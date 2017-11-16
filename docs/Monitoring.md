@@ -80,6 +80,22 @@ SELECT count(*) FROM import WHERE status = 0 AND updated > (CURRENT_TIMESTAMP + 
 ```
 If there are slow imports please refer to [Troubleshooting][1] to resolve. Although not urgent, this will affect the timeliness of the reporting data.
 
+#### Monitor Time-To-Warehouse
+Test results include the completed-at timestamp. Using the import create time we can calculate the time it takes for the test delivery and scoring system to get the results to the warehouse.
+
+```sql
+SELECT
+  CASE WHEN last_24_hours.id IS NOT NULL THEN timestampdiff(HOUR, completed_at, created) ELSE timestampdiff(DAY, completed_at, created) END AS delay,
+  CASE WHEN last_24_hours.id IS NOT NULL THEN 'hour' ELSE 'day' END AS bucket,
+  count(*) cnt
+FROM
+  (SELECT id FROM exam WHERE timestampdiff(HOUR, completed_at, created) < 24 AND deleted = 0 AND school_year=2018) AS last_24_hours
+  RIGHT JOIN exam e ON e.id = last_24_hours.id
+WHERE e.deleted = 0 and e.school_year=2018
+GROUP BY delay, bucket
+ORDER BY bucket DESC, delay;
+```
+
 #### Monitor Migrate Failures
 The migrate process is managed by the “migrate-reporting” service. The service records its status into the table. For all possible migrate statuses please refer to `migrate_status` table:
 

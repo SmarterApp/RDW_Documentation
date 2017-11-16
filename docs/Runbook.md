@@ -35,7 +35,7 @@ As [Spring Boot][1] applications, the configuration settings for all application
 * **Command Line Options**. These may be used to override any default setting. In a container orchestration framework, these are seldom used.
 * **Configuration server**. There is a central configuration server that all applications use to get environment-specific settings. Properties served up by the configuration server may be encrypted, protecting environment secrets. 
 
-There are settings for the configuration server that all the applications use. These are generally set using environment variables in the orchestration framwork, for example: 
+There are settings that all the applications use to bootstrap to the configuration server. These are generally set using environment variables in the orchestration framwork, for example: 
 
 ```bash
 CONFIG_SERVICE_ENABLED=true
@@ -79,36 +79,26 @@ The [Annotated Configuration](../config/rdw-ingest-exam-processor.yml) describes
 
 <a name="group-processor"></a>
 ## Group Processor
-This processor handles parsing, validating and writing student group information to the data warehouse. It is horizontally scalable but a single process can handle a large volume of data, and group changes are relatively infrequent. Unlike other processors it must access the archive store directly (instead of getting its data from the message queue).
+This processor handles parsing, validating and writing student group information to the data warehouse. It is horizontally scalable but a single process can handle a large volume of data (because most of the work is being done by the database itself), and group changes are relatively infrequent. Unlike other processors it must access the archive store directly (instead of getting its data from the message queue). It also uses Aurora's native ability to load directly from S3 to avoid copying data excessively.
 
-##### Properties
-* `archive.root`
-* `archive.cloud.aws.credentials.accessKey`
-* `archive.cloud.aws.credentials.secretKey`
-* `archive.cloud.aws.region.static`
-* `spring.datasource.url-server`
-* `spring.datasource.username`
-* `spring.datasource.password`
-* `spring.rabbitmq.host`
-* `spring.rabbitmq.username`
-* `spring.rabbitmq.password`
+![Group Processor](group-processor.png)
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-ingest-group-processor.yml) describes the properties and their effects.
 
 
 <a name="migrate-reporting"></a>
 ## Migrate Reporting
 The migrate reporting service moves data from the warehouse to the reporting database. The service is not built to be horizontally scalable. Having more than one migrate reporting process will result in unpredictable behavior. 
 
-The process is controlled by the `warehouse.import` table and the `reporting.migrate` table. The service pulls data in two steps, first from `warehouse` to `staging`, and then from `staging` to `reporting`. Data is migrated based on import status (PROCESSED) and created/updated timestamps. The migration process is scheduled to run periodically. In each period, data is processed in batches until there is no full batch remaining.  
+![Migrate Reporting](migrate-reporting.png)
 
-##### Properties
-* `migrate.batch.delay=60000`: time in milliseconds between migrate periods.
-* `migrate.batch.size=2000`: a number of import ids migrated in one chunk/iteration. The batch size can be adjusted for performance; it is a trade off between size and overall throughput. Because the database is the limiting resource, the effect may not be large. As an example, in a particular staging environment adjusting the batch size from 1000 to 2000 increased overall migrate rate by 33% (from 33/s to 44/s).
-* `spring.reporting_datasource.url-server`
-* `spring.reporting_datasource.username`
-* `spring.reporting_datasource.password`
-* `spring.warehouse_datasource.url-server`
-* `spring.warehouse_datasource.username`
-* `spring.warehouse_datasource.password`
+#### Configuration
+The [Annotated Configuration](../config/rdw-ingest-migrate-reporting.yml) describes the properties and their effects.
+
+#### Gruesome Details
+
+The process is controlled by the `warehouse.import` table and the `reporting.migrate` table. The service pulls data in two steps, first from `warehouse` to `staging`, and then from `staging` to `reporting`. Data is migrated based on import status (PROCESSED) and created/updated timestamps. The migration process is scheduled to run periodically. In each period, data is processed in batches until there is no full batch remaining.  
 
 #### Maintenance Guidelines
 
@@ -209,35 +199,14 @@ The migrate OLAP service is responsible for migrating data from the data warehou
 This service is responsible for executing scheduled tasks. Currently this includes:
 * Synchronizing organization data from ART (daily).
 * Generating an import reconciliation report (daily).
-* Resubmitting unprocessed data (daily).
+* Resubmitting unprocessed test results (daily).
 
 Only a single instance should be run since the task execution uses a simple, uncoordinated, time-based strategy.
 
-##### Properties
-Properties for synchronizing organization data from ART:
-* `task.update-organizations.cron=0 0 10 * * *`
-* `task.update-organizations.state=CA`
-* `task.update-organizations.art-client.districts-url`
-* `task.update-organizations.art-client.groups-of-schools-url`
-* `task.update-organizations.art-client.schools-url`
-* `task.update-organizations.art-client.status-url`
-* `task.update-organizations.art-client.oauth2.access-token-uri`
-* `task.update-organizations.art-client.oauth2.client-id`
-* `task.update-organizations.art-client.oauth2.client-secret`
-* `task.update-organizations.art-client.oauth2.username`
-* `task.update-organizations.art-client.oauth2.password`
-* `task.update-organizations.import-service-client.organizations-imports-url`
-* `task.update-organizations.import-service-client.status-url`
-* `task.update-organizations.import-service-client.oauth2.access-token-uri`
-* `task.update-organizations.import-service-client.oauth2.client-id`
-* `task.update-organizations.import-service-client.oauth2.client-secret`
-* `task.update-organizations.import-service-client.oauth2.username`
-* `task.update-organizations.import-service-client.oauth2.password`
+![Task Service](task-service.png)
 
-Properties for reconciliation report:
-* `task.send-reconciliation-report.cron=0 0 12 * * *`
-* `task.send-reconciliation-report.query`
-* `task.send-reconciliation-report.senders` - TODO: depends on type of sender
+#### Configuration
+The [Annotated Configuration](../config/rdw-ingest-task-service.yml) describes the properties and their effects.
 
 
 ---

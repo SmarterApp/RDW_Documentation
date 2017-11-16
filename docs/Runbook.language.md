@@ -1,15 +1,14 @@
-## Runbook - Reporting UI
+## Runbook - Language Support
 
-This document contains information on configuring the UI applications used to display and query information within the reporting datamart.
+**Intended Audience**: this document contains information for configuring language support for the UI applications and generated reports. Operations and system administration may find it useful.
 
 ### Language Installation
-By default all UI and report-processor applications ship with English as an available, embedded language.  
-Installing additional languages requires both configuration changes and translation message files to be made available to the applications.
+By default all UI and report-processor applications ship with English as an available, embedded language. Installing additional languages requires both configuration changes and translation message files to be made available to the applications.
 
 #### Reporting Webapp UI Language Installation
 Adding an available language to the reporting webapp UI involves two steps:
 1. Provide a translation JSON file containing the additional language's webapp translations.  
-The English source of the messages required can be found [here.](https://github.com/SmarterApp/RDW_Reporting/blob/develop/webapp/src/main/webapp/src/assets/i18n/en.json)
+The English source of the messages required can be found [here](https://github.com/SmarterApp/RDW_Reporting/blob/develop/webapp/src/main/webapp/src/assets/i18n/en.json).
 A translated version for a particular language should be named using the ISO-standard two-character language code and be placed in the external configuration repository at the location configured below.
 (Example: `es.json` for Spanish language translations.)
 2. Configuring the application to announce the both the presence and location of additional languages.

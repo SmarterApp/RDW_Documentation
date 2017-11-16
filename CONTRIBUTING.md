@@ -21,3 +21,4 @@ Bored? Here's some stuff you can do ...
     * Group Processor chapter
     * Task Service chapter
 * Troubleshooting - perhaps two: flowchart-style "what's the problem", and a scenario-based (problem specific) guide 
+* Reporting. All the work done so far has focused on ingest processes. We need to document the reporting app, admin app and related processes.

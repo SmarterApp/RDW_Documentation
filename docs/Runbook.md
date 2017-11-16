@@ -12,7 +12,11 @@
 1. [Migrate Reporting](#migrate-reporting)
 1. [Migrate OLAP](#migrate-olap)
 1. [Task Service](#task-service)
-1. [UI Runbook](Runbook.UI.md)
+
+### Other Resources
+
+1. [Import and Migrate](Runbook.migrate.md)
+1. [Language Support](Runbook.language.md)
 
 <a name="common"></a>
 ## Common Service Conventions
@@ -95,7 +99,7 @@ Data is migrated based on import status (PROCESSED) and created/updated timestam
 
 ![Migrate Reporting](migrate-reporting.png)
 
-The migrate service is controlled by two conditions: the user-controlled run state and the system-generated enabled state. The status end-points can be used to see the current status and pause/resume the service. Please refer to [Troubleshooting](Troubleshooting.md#migrate) for more details.
+The migrate service is controlled by two conditions: the user-controlled run state and the system-generated enabled state. The status end-points can be used to see the current status and pause/resume the service. Please refer to [Troubleshooting Migrate](Troubleshooting.md#migrate) for more details.
 
 #### Configuration
 The [Annotated Configuration](../config/rdw-ingest-migrate-reporting.yml) describes the properties and their effects.

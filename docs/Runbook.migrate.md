@@ -51,8 +51,8 @@ Data shall be ingested into the system using the import mechanism where availabl
 * Update data in the tables of entity type CODES.
 * Insert an entry into import table with the ‘CODES’ content type:
 ```sql
-mysql>USE warehouse;
-mysql>INSERT INTO import(status, content, contentType, digest) VALUES (1, 3, 'initial load', 'initial load');
+mysql> USE warehouse;
+mysql> INSERT INTO import(status, content, contentType, digest) VALUES (1, 3, 'initial load', 'initial load');
 ```
 * The migrate will pick this up. It will migrate all tables from this category.
 
@@ -61,24 +61,24 @@ mysql>INSERT INTO import(status, content, contentType, digest) VALUES (1, 3, 'in
 ```sql
 mysql> USE warehouse;
 mysql> INSERT INTO import (status, content, contentType, digest, creator) VALUES (0, 5, 'text/plain', left(uuid(), 8), 'dwtest@example.com');
-mysql> SELECT LAST_INSERT_ID() into @IMPORT_ID;
+mysql> SELECT LAST_INSERT_ID() into @importid;
 ```
 * Make data modifications.
 * When you are done, update the main table with the import id value: 
-    * If you are creating a new main entity, set both `import_id` and `update_import_id` to the same value, @IMPORT_ID.
-    * If you are modifying an existing main entity or making any changes to the child tables, set the main table `update_import_id` to the @IMPORT_ID.
-    * If you are deleting a main entity, set its `deleted ` flag to 1 and `update_import_id` to @IMPORT_ID.
+    * If you are creating a new main entity, set both `import_id` and `update_import_id` to the same value, `@importid`.
+    * If you are modifying an existing main entity or making any changes to the child tables, set the main table `update_import_id` to the `@importid`.
+    * If you are deleting a main entity, set its `deleted ` flag to 1 and `update_import_id` to `@importid`.
 * To complete the process, change the status of the import to 1:
 ```sql
 # trigger migration
-mysql> UPDATE import SET status = 1 WHERE id = @IMPORT_ID;
+mysql> UPDATE import SET status = 1 WHERE id = @importid;
 ```
 
 #### Modify more than one main table and its children
 While the process is the same as modifying one main table, there are a few things to note:
 * The import ids should be created in the order of the main tables dependencies. Here is the hierarchy starting for the least dependent:
     * CODES
-    * ORGANIZATION,PACKAGES
-    * GROUPS, EXAMS
+    * ORGANIZATION, PACKAGE
+    * GROUPS, EXAM
 * The same import id could be reused for multiple main entities of the same content type. Keep in mind that this drives the number of records being migrated at once. It is recommended to keep this number relatively low.
 			 

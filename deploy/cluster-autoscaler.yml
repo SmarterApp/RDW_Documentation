@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cluster-autoscaler
+  namespace: kube-system
+  labels:
+    k8s-app: cluster-autoscaler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: cluster-autoscaler
+  template:
+    metadata:
+      labels:
+        k8s-app: cluster-autoscaler
+    spec:
+      containers:
+        - name: cluster-autoscaler
+          image: gcr.io/google_containers/cluster-autoscaler:v0.5.4
+          resources:
+            requests:
+              cpu: 100m
+              memory: 600Mi
+            limits:
+              cpu: 200m
+              memory: 600Mi
+          command:
+            - ./cluster-autoscaler
+            - --v=4
+            - --stderrthreshold=0
+            - --cloud-provider=aws
+            - --skip-nodes-with-local-storage=false
+            - --nodes=4:6:nodes.rdw-prod.rdw.smarterbalanced.org
+          env:
+            - name: AWS_REGION
+              value: us-west-2
+          volumeMounts:
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs/ca-certificates.crt
+              readOnly: true
+      volumes:
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs/ca-certificates.crt
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      tolerations:
+        - key: "node-role.kubernetes.io/master"
+          effect: NoSchedule

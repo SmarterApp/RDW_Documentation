@@ -1,0 +1,45 @@
+# this is a super-simple rabbitmq deployment; no clustering, etc.; in default namespace to test that
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbit-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5672
+    name: ampq
+  - port: 15672
+    name: ui
+  selector:
+    app: rabbit
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rabbit-deployment
+spec:
+  template:
+    metadata:
+      labels:
+        app: rabbit
+    spec:
+      containers:
+      - name: rabbit
+        image: rabbitmq:3-management
+        ports:
+        - containerPort: 5672
+          name: ampq
+        - containerPort: 15672
+          name: ui
+        resources:
+          requests:
+            cpu: 250m
+            memory: 1G
+          limits:
+            cpu: 500m
+            memory: 2G
+        env:
+        - name: RABBITMQ_MEMORY_LIMIT
+          value: "{absolute, \"2GB\"}"
+        - name: RABBITMQ_DISK_LIMIT
+          value: "\"20GB\""

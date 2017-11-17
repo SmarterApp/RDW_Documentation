@@ -1,0 +1,50 @@
+# wkhtmltopdf service
+apiVersion: v1
+kind: Service
+metadata:
+  name: wkhtmltopdf-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    app: wkhtmltopdf
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: wkhtmltopdf-deployment
+spec:
+  replicas: 4
+  revisionHistoryLimit: 1
+  minReadySeconds: 10
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
+  template:
+    metadata:
+      labels:
+        app: wkhtmltopdf
+    spec:
+      containers:
+      - name: wkhtmltopdf
+        image: smarterbalanced/wkhtmltopdf-image:3.1.0
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -ec
+            - ps -ae | grep gunicorn
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          failureThreshold: 3
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 500m
+            memory: 300M
+          limits:
+            cpu: 500m
+            memory: 400M

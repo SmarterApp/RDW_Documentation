@@ -1,0 +1,62 @@
+# super-simple configuration-service deployment; in default namespace to test that
+apiVersion: v1
+kind: Service
+metadata:
+  name: configuration-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8888
+  selector:
+    app: configuration
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: configuration-deployment
+spec:
+  template:
+    metadata:
+      labels:
+        app: configuration
+    spec:
+      containers:
+      - name: configuration
+        image: smarterbalanced/configuration-service:3.1.0.RELEASE
+        readinessProbe:
+          httpGet:
+            path: /health.json
+            port: 8888
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        ports:
+        - containerPort: 8888
+        resources:
+          requests:
+            cpu: 100m
+            memory: 250M
+          limits:
+            cpu: 200m
+            memory: 600M
+        env:
+        - name: JAVA_OPTS
+          value: "-Xmx256m"
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: CONFIG_SERVICE_REPO
+          value: "https://github.com/RDW_Config_Opus.git"
+        - name: GIT_USER
+          value: "rdw-opus"
+        - name: GIT_PASSWORD
+          value: "password"
+        - name: ENCRYPT_KEY
+          value: "random-thing"
+        - name: SPRING_RABBITMQ_ADDRESSES
+          value: "rabbit-service:5672"
+        - name: SPRING_RABBITMQ_USERNAME
+          value: "guest"
+        - name: SPRING_RABBITMQ_PASSWORD
+          value: "guest"

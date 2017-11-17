@@ -1,0 +1,1974 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Accessibility xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+	<!-- MASTER RESOURCE FAMILY -->
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+
+	<MasterResourceFamily>
+
+		<SingleSelectResource>
+			<Code>AmericanSignLanguage</Code>
+			<Order>1</Order>
+			<DefaultSelection/>
+			<ResourceType>Accommodation</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>American Sign Language</Label>
+				<Description>Some students who are deaf or hard of hearing and who typically use ASL may need this accommodation when accessing text-based content in the assessment. The use of this accommodation may result in the student needing additional overall time to complete the assessment. For many students who are deaf or hard of hearing, viewing signs is the only way to access information presented orally. It is important to note, however, that some students who are hard of hearing will be able to listen to information presented orally if provided with appropriate amplification and a setting in which extraneous sounds do not interfere with clear presentation of the audio presentation in a listening test. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_ASL0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Do not show ASL videos</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_ASL1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Show ASL videos</Label>
+					<Message>ELA PTs do not have listening stimuli</Message>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>ColorContrast</Code>
+			<Order>2</Order>
+			<DefaultSelection>TDS_CC0</DefaultSelection>
+			<ResourceType>DesignatedSupport</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Color Choices</Label>
+				<Description>Students with attention difficulties may need this support for viewing the test when digitally- provided color contrasts do not meet their needs. Some students with visual impairments or other print disabilities (including learning disabilities) also may need this support. Choice of colors should be informed by evidence of those colors that meet the student’s needs. Enable students to adjust screen background or font color, based on student needs or preferences. This may include reversing the colors for the entire interface or choosing the color of font and background. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_CC0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Black on White</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_CCInvert</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Reverse Contrast</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_CCMagenta</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Black on Rose</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_CCMedGrayLtGray</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Medium Gray on Light Gray</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_CCYellowB</Code>
+				<Order>5</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Yellow on Blue</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>ClosedCaptioning</Code>
+			<Order>3</Order>
+			<ResourceType>Accommodation</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Closed Captioning</Label>
+				<Description>Students who are deaf or hard of hearing and who typically access information presented via audio by reading words that appear in synchrony with the audio presentation may need this support to access audio content. For many students who are deaf or hard of hearing, viewing words (sometimes in combination with reading lips and ASL) is how they access information presented orally. It is important to note, however, that some students who are hard of hearing will be able to listen to information presented orally if provided with appropriate amplification and a setting in which extraneous sounds do not interfere with clear presentation of the audio presentation in a listening test. (EMBEDDED)",
+					"options": [</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_ClosedCap0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Closed Captioning Not Available</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_ClosedCap1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Closed Captioning Available</Label>
+					<Message>ELA PTs do not have listening stimuli</Message>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Language</Code>
+			<Order>4</Order>
+			<DefaultSelection>ENU</DefaultSelection>
+			<Text>
+				<Language>eng</Language>
+				<Label>Language</Label>
+			</Text>
+			<Selection>
+				<Code>ENU</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>ESN</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Spanish (Stacked Translation)</Label>
+					<Description>For students whose primary language is not English and who use dual language supports in the classroom, use of the stacked (dual language) translation may be appropriate. Students participate in the assessment regardless of the language. This support will increase reading load and cognitive load. The use of this support may result in the student needing additional overall time to complete the assessment. Use of this support will likely also require separate setting or extra time. (EMBEDDED)</Description>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>BrailleType</Code>
+			<Order>5</Order>
+			<DefaultSelection>TDS_BT0</DefaultSelection>
+			<ResourceType>Accomodation</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Braille Type</Label>
+				<Description>Students with visual impairments may read text via braille. Tactile overlays and graphics also may be used to assist the student in accessing content through touch. Refreshable braille is available only for ELA because Nemeth Code is not available via refreshable braille. For math, braille will be presented via embosser; embosser-created braille can be used for ELA also. The type of braille presented to the student (contracted or non-contracted) is set in TIDE, or state’s comparable platform. The use of this accommodation may result in the student needing additional overall time to complete the assessment. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_BT0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>No Braille</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_BT_EXN</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>EBAE - Uncontracted - Nemeth Math</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_BT_ECN</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>EBAE - Contracted - Nemeth Math</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_BT_EXT</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>EBAE - Uncontracted - UEB Math</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_BT_ECT</Code>
+				<Order>5</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>EBAE - Contracted - UEB Math</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_BT_UXN</Code>
+				<Order>6</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>UEB - Uncontracted - Nemeth Math</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_BT_UCN</Code>
+				<Order>7</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>UEB - Contracted - Nemeth Math</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_BT_UXT</Code>
+				<Order>8</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>UEB - Uncontracted - UEB Math</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_BT_UCT</Code>
+				<Order>9</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>UEB - Contracted - UEB Math</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Masking</Code>
+			<Order>6</Order>
+			<ResourceType>DesignatedSupport</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Masking</Label>
+				<Description>Students with attention difficulties may need to mask content not of immediate need or that may be distracting during the assessment. This support also may be needed by students with print disabilities (including learning disabilities) or visual impairments. Masking allows students to hide and reveal individual answer options, as well as all navigational buttons and menus. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_Masking0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Masking Not Available</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_Masking1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Masking Available</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>PermissiveMode</Code>
+			<Order>7</Order>
+			<ResourceType>Accommodation</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Permissive Mode</Label>
+				<Description>Allows assistive technology software such as screen readers, magnifiers, etc. to be run on the computer. When disabled, only the secure web browser is allowed to run.</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_PM0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Permissive Mode Disabled</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PM1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Permissive Mode Enabled</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>PrintOnDemand</Code>
+			<Order>8</Order>
+			<ResourceType>Accommodation</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Print On Demand</Label>
+				<Description>Some students with disabilities may need paper copies of either passages/stimuli and/or items. A very small percentage of students should need this accommodation. The use of this accommodation may result in the student needing additional time to complete the assessment. Use of this support will likely also require separate setting or extra time. (NON-EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_PoD0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>No Print On Demand applied</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Stim</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Stimuli</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Item</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Items</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Stim&amp;TDS_PoD_Item</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Stimuli and Items</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>PrintSize</Code>
+			<Order>9</Order>
+			<DefaultSelection>TDS_PS_L0</DefaultSelection>
+			<Text>
+				<Language>eng</Language>
+				<Label>Zoom</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_PS_L0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>No default zoom applied</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PS_L1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Level 1</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PS_L2</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Level 2</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PS_L3</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Level 3</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PS_L4</Code>
+				<Order>5</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Level 4</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>StreamlinedInterface</Code>
+			<Order>10</Order>
+			<DefaultSelection>TDS_SLM0</DefaultSelection>
+			<ResourceType>Accommodation</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Streamlined Interface</Label>
+				<Description>Layout with stimulus displayed above and items displayed below. All tool and navigation buttons are on the bottom of the screen. Important: The streamlined interface is not intended to be tablet compatible.</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_SLM0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Standard</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_SLM1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Streamlined</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>TexttoSpeech</Code>
+			<Order>11</Order>
+			<ResourceType>Accommodation</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Text to Speech</Label>
+				<Description>Students who are struggling readers may need assistance accessing the assessment by having all or portions of the assessment read aloud. This support also may be needed by students with reading-related disabilities, or by students who are blind and do not yet have adequate braille skills. This support will likely be confusing and may impede the performance of students who do not regularly have the support during instruction. Students who use text-to-speech will need headphones unless tested individually in a separate setting. Use of this support will likely also require separate setting or extra time. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_TTS0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>No Text to Speech applied</Label>
+					<Description>This accommodation is appropriate for a very small number of students (estimated to be approximately 1–2% of students with disabilities participating in a general assessment). For students in grades 3–5, text-to- speech will not be an available accommodation. Content experts agree that this accommodation should not be provided during these grades because it would compromise the construct being measured. For students in grades 6–8 and 11, text- to-speech is available as an accommodation for students whose need is documented in an IEP or 504 plan. Reports can be run to indicate the percent of students who had access to text-to-speech on reading test passages. Students who use text-to-speech will need headphones unless tested individually in a separate setting. Use of this support will likely also require separate setting or extra time. (EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Item </Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Items Only</Label>
+					<Description>This accommodation is appropriate for a very small number of students (estimated to be approximately 1–2% of students with disabilities participating in a general assessment). For students in grades 3–5, text-to- speech will not be an available accommodation. Content experts agree that this accommodation should not be provided during these grades because it would compromise the construct being measured. For students in grades 6–8 and 11, text- to-speech is available as an accommodation for students whose need is documented in an IEP or 504 plan. Reports can be run to indicate the percent of students who had access to text-to-speech on reading test passages. Students who use text-to-speech will need headphones unless tested individually in a separate setting. Use of this support will likely also require separate setting or extra time. (EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Stim</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Stimuli Only</Label>
+					<Description>This accommodation is appropriate for a very small number of students (estimated to be approximately 1–2% of students with disabilities participating in a general assessment). For students in grades 3–5, text-to- speech will not be an available accommodation. Content experts agree that this accommodation should not be provided during these grades because it would compromise the construct being measured. For students in grades 6–8 and 11, text- to-speech is available as an accommodation for students whose need is documented in an IEP or 504 plan.  Reports can be run to indicate the percent of students who had access to text-to-speech on reading test passages. Students who use text-to-speech will need headphones unless tested individually in a separate setting. Use of this support will likely also require separate setting or extra time. (EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Stim&amp;TDS_TTS_Item</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Stimuli and Items</Label>
+					<Description>This accommodation is appropriate for a very small number of students (estimated to be approximately 1–2% of students with disabilities participating in a general assessment). For students in grades 3–5, text-to- speech will not be an available accommodation. Content experts agree that this accommodation should not be provided during these grades because it would compromise the construct being measured. For students in grades 6–8 and 11, text- to-speech is available as an accommodation for students whose need is documented in an IEP or 504 plan. Reports can be run to indicate the percent of students who had access to text-to-speech on reading test passages. Students who use text-to-speech will need headphones unless tested individually in a separate setting. Use of this support will likely also require separate setting or extra time. (EMBEDDED)</Description>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Translation</Code>
+			<Order>12</Order>
+			<ResourceType>DesignatedSupport</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Translation</Label>
+				<Description>Students who have limited English language skills (whether or not designated as ELLs or ELLs with disabilities) can use the translation glossary for specific items. The use of this support may result in the student needing additional overall time to complete the assessment. Use of this support will likely also require separate setting or extra time. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_WL_Glossary</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_ArabicGloss</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Arabic</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_CantoneseGloss</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Cantonese</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_ESNGlossary</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Spanish</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_KoreanGloss</Code>
+				<Order>5</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Korean</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_MandarinGloss</Code>
+				<Order>6</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Mandarin</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_PunjabiGloss</Code>
+				<Order>7</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Punjabi</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_RussianGloss</Code>
+				<Order>8</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Russian</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_TagalGloss</Code>
+				<Order>9</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Filipino (Ilokano and Tagalog)</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_UkrainianGloss</Code>
+				<Order>10</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Ukrainian</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_VietnameseGloss</Code>
+				<Order>11</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Vietnamese</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_ArabicGloss&amp;TDS_WL_Glossary</Code>
+				<Order>12</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Arabic &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_CantoneseGloss&amp;TDS_WL_Glossary</Code>
+				<Order>13</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Cantonese &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_ESNGlossary&amp;TDS_WL_Glossary</Code>
+				<Order>14</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Spanish &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_KoreanGloss&amp;TDS_WL_Glossary</Code>
+				<Order>15</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Korean &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_MandarinGloss&amp;TDS_WL_Glossary</Code>
+				<Order>16</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Mandarin &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_PunjabiGloss&amp;TDS_WL_Glossary</Code>
+				<Order>17</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Punjabi &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_RussianGloss&amp;TDS_WL_Glossar</Code>
+				<Order>18</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Russian &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_TagalGloss&amp;TDS_WL_Glossary</Code>
+				<Order>19</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Filipino (Ilokano and Tagalog) and English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_UkrainianGloss&amp;TDS_WL_Glossary</Code>
+				<Order>20</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Ukrainian &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_VietnameseGloss&amp;TDS_WL_Glossary</Code>
+				<Order>21</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Vietnamese &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL0</Code>
+				<Order>22</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>No language translation applied</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Breaks</Code>
+			<Order>13</Order>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Breaks</Label>
+				<Description>The number of items per session can be flexibly defined based on the student’s need. Breaks of more than 20 minutes will prevent the student from returning to items already attempted by the student. There is no limit on the number of breaks that a student might be given. The use of this universal tool may result in the student needing additional overall time to complete the assessment.</Description>
+			</Text>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Calculator</Code>
+			<Order>14</Order>
+			<DefaultSelection>TDS_CalcBasic</DefaultSelection>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Calculator</Label>
+				<Description>An on-screen digital calculator can be accessed for calculator-allowed items when students click on the calculator button. This tool is available only with the specific items for which the Smarter Balanced Item Specificationsindicated that it would be  appropriate. When the embedded calculator, as presented for all students, is not appropriate for a student (for example, for a student who is blind), the student may use the calculator offered with assistive technology devices (such as a talking calculator or a braille calculator). (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_CalcBasic</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Calculator on</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_Calc0</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Calculator off</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>DigitalNotepad</Code>
+			<Order>15</Order>
+			<DefaultSelection>TDS_SCNotepad</DefaultSelection>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Digital Notepad</Label>
+				<Description>This tool is used for making notes about an item. The digital notepad is item specific and is available through the end of the test segment. Notes are not saved when the student moves on to the next segment or after a break of more than 20 minutes. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_SCNotepad</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Notepad on</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_SC0</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Notepad off</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>EnglishDictionary</Code>
+			<Order>16</Order>
+			<DefaultSelection>TDS_Dict_SD4</DefaultSelection>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>English Dictionary</Label>
+				<Description>An English dictionary may be available for the full write portion of an ELA performance task, pending contractual discussions. A full write is the second part of a performance task. The use of this universal tool may result in the student needing additional overall time to complete the assessment.</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_Dict_SD4</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Merriam Websters School Dictionary on</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_Dict0</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Merriam Websters School Dictionary off</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>EnglishGlossary</Code>
+			<Order>17</Order>
+			<DefaultSelection>TDS_WL_Glossary</DefaultSelection>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>English Glossary</Label>
+				<Description>Grade and context-appropriate definitions of specific construct-irrelevant terms are shown in English on the screen via a pop-up window. The student can access the embedded glossary by clicking on any of the pre-selected terms. The use of this accommodation may result in the student needing additional overall time to complete the assessment. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_WL_Glossary</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>English Glossary on</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL0</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>English Glossary off</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>ExpandablePassages</Code>
+			<Order>18</Order>
+			<DefaultSelection>TDS_ExpandablePassages1</DefaultSelection>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Expandable Passages</Label>
+				<Description>Each passage or stimulus can be expanded so that it takes up a larger portion of the screen. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_ExpandablePassages1</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Expandable Passages on</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_ExpandablePassages0</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Expandable Passages off</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>GlobalNotes</Code>
+			<Order>19</Order>
+			<DefaultSelection>TDS_GN1</DefaultSelection>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Global Notes</Label>
+				<Description>Global notes is a notepad that is available for ELA performance tasks in which students complete a full write. A full write is the second part of a performance task. The student clicks on the notepad icon for the notepad to appear. During the ELA performance tasks, the notes are retained from segment to segment so that the student may go back to the notes even though the student is not able to go back to specific items in the previous segment. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_GN1</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Global Notes on</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_GN0</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Global Notes off</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Highlighter</Code>
+			<Order>20</Order>
+			<DefaultSelection>TDS_Highlight1</DefaultSelection>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Highlighter</Label>
+				<Description>A digital tool for marking desired text, item questions, item answers, or parts of these with a color. Highlighted text remains available throughout each test segment. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_Highlight1</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Highlight on</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_Highlight0</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Highlight off</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>KeyboardNavigation</Code>
+			<Order>21</Order>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Keyboard Navigation</Label>
+				<Description>Navigation throughout text can be accomplished by using a keyboard. (EMBEDDED)</Description>
+			</Text>
+
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>MarkforReview</Code>
+			<Order>22</Order>
+			<DefaultSelection>TDS_MfR1</DefaultSelection>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Mark for Review</Label>
+				<Description>Allows students to flag items for future review during the assessment. Markings are not saved when the student moves on to the next segment or after a break of more than 20 minutes. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_MfR1</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Mark for review on</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_MfR0</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Mark for review off</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>MathTools</Code>
+			<Order>23</Order>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Math Tools</Label>
+				<Description>These digital tools (i.e., embedded ruler, embedded protractor) are used for measurements related to math items. They are available only with the specific items for which the Smarter Balanced Item Specifications indicate that one or more of these tools would be appropriate. (EMBEDDED)</Description>
+			</Text>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>SpellCheck</Code>
+			<Order>24</Order>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Spell Check</Label>
+				<Description>Writing tool for checking the spelling of words in student-generated responses. Spell check only gives an indication that a word is misspelled; it does not provide the correct spelling. This tool is available only with the specific items for which the Smarter Balanced Item Specifications indicated that it would be appropriate. Spell check is bundled with other embedded writing tools for all performance task full writes (planning, drafting, revising, and editing). A full write is the second part of a performance task. (EMBEDDED)</Description>
+			</Text>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Strikethrough</Code>
+			<Order>25</Order>
+			<DefaultSelection>TDS_ST1</DefaultSelection>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Strikethrough</Label>
+				<Description>Allows users to cross out answer options. If an answer option is an image, a strikethrough line will not appear, but the image will be grayed out. (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_ST1</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Strikethrough on</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_ST0</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Strikethrough off</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>WritingTools</Code>
+			<Order>26</Order>
+			<DefaultSelection>TDS_ITM1</DefaultSelection>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Writing Tools</Label>
+				<Description>Selected writing tools (i.e., bold, italic, bullets, undo/redo) are available for all student-generated responses. (Also see spell check.) (EMBEDDED)</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_ITM1</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Item tools on</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_ITM0</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Item tools off</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Zoom</Code>
+			<Order>27</Order>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Zoom</Label>
+				<Description>A tool for making text or other graphics in a window or frame appear larger on the screen. The default font size for all tests is 14 pt. The student can make text nd graphics larger by clicking the Zoom In button. The student can click the Zoom Out button to return to the default or smaller print size. When using the zoom feature, the student only changes the size of text and graphics on the current screen. To increase the default print size of the entire test (from 1.5X to 3.0X default size), the print size must be set for the student in the Administration and Registration Tool (ART), or member’s comparable platform), or set by the test administrator prior to the start of the test. This is the only feature that test administrators can set. The use of this universal tool may result in the student needing additional overall time to complete the assessment. (EMBEDDED)</Description>
+			</Text>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>ScratchPaper</Code>
+			<Order>28</Order>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Scratch Paper</Label>
+				<Description>Scratch paper to make notes, write computations, or record responses may be made available. Only plain paper or lined paper is appropriate for ELA. Graph paper is required beginning in sixth grade and can be used on all math assessments. A student can use an assistive technology device for scratch paper as long as the device is consistent with the child’s IEP and acceptable to the member. CAT: All scratch paper must be collected and securely destroyed at the end of each CAT assessment session to maintain test security. Performance Tasks: For mathematics and ELA performance tasks, if a student needs to take the performance task in more than one session, scratch paper may be collected at the end of each session, securely stored, and made available to the student at the next performance task testing session. Once the student completes the performance task, the scratch paper must be collected and securely destroyed to maintain test security.</Description>
+			</Text>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Thesaurus</Code>
+			<Order>29</Order>
+			<DefaultSelection>TDS_TH_TA</DefaultSelection>
+			<ResourceType>Universal</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Thesaurus</Label>
+				<Description>A thesaurus contains synonyms of terms while a student interacts with text included in the assessment. A full write is the second part of a performance task. The use of this universal tool may result in the student needing additional overall time to complete the assessment.</Description>
+			</Text>
+			<Selection>
+				<Code>TDS_TH_TA</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Merriam Websters Intermediate Thesaurus on</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_TH0</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Merriam Websters Intermediate Thesaurus off</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>IllustrationGlossary</Code>
+			<Order>30</Order>
+			<Text>
+				<Language>eng</Language>
+				<Label>Illustration Glossary</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_ILG0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Do not show Illustration Glossary</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_ILG1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Show Illustration Glossary</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<MultiSelectResource>
+			<Code>NonEmbeddedDesignatedSupports</Code>
+			<Order>31</Order>
+			<DefaultSelection>NEDS0</DefaultSelection>
+			<ResourceType>DesignatedSupport</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Non-Embedded Designated Supports</Label>
+			</Text>
+			<Selection>
+				<Code>NEDS0</Code>
+				<Order>1</Order>
+				<MutuallyExclusive/>
+				<Text>
+					<Language>eng</Language>
+					<Label>Non-Embedded Designated Supports not selected</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_BD</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Bilingual Dictionary</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CC</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Color Contrast</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CO</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Color Overlay</Label>
+					<Description>Students with attention difficulties may need this support to view test content. This support also may be needed by some students with visual impairments or other print disabilities (including learning disabilities). Choice of color should be informed by evidence of those colors that meet the student’s needs. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_Mag</Code>
+				<Order>5</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Magnification</Label>
+					<Description>Students used to viewing enlarged text or graphics, or navigation buttons may need magnification to comfortably view content. This support also may meet the needs of students with visual impairments and other print disabilities. The use of this designated support may result in the student needing additional overall time to complete the assessment. Use of this support will likely also require separate setting or extra time. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_NoiseBuf</Code>
+				<Order>6</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Noise buffers</Label>
+					<Description>Student wears equipment to reduce environmental noises. Students may have these testing variations if regularly used in the classroom. Students who use noise buffers will need headphones unless tested individually in a separate setting. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items</Code>
+				<Order>7</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Read Aloud Items-English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli</Code>
+				<Order>8</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Read Aloud PT Stimuli-English</Label>
+					<Description>This accommodation is appropriate for a very small number of students (estimated to be approximately 1–2% of students with disabilities participating in a general assessment). For students in grades 3–5, read aloud will not be an available accommodation. Content experts agree that this accommodation should not be provided during these grades because it would compromise the construct being measured. For students in grades 6–8 and 11, read aloud is available as an accommodation for students whose need is documented in an IEP or 504 plan. Reports can be run to indicate the percent of students who had access to read aloud on reading test passages. Readers should be provided to students on an individual basis – not to a group of students. A student should have the option of asking a reader to slow down or repeat text. Use of this support will likely also require separate setting or extra time. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items_ESN</Code>
+				<Order>9</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Read Aloud Items-Spanish</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli_ESN</Code>
+				<Order>10</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Read Aloud PT Stimuli-Spanish</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SC_Items</Code>
+				<Order>11</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Scribe Items (Non-Writing)</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SS</Code>
+				<Order>12</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Separate Setting</Label>
+					<Description>Students who are easily distracted (or may distract others) in the presence of other students, for example, may need an alternate location to be able to take the assessment. The separate setting may be in a different room that allows them to work individually or among a smaller group, or in the same room but in a specific location (for example, away from windows, doors, or pencil sharpeners, in a study carrel, near the teacher’s desk, or in the front of a classroom). Some students may benefit from being in an environment that allows for movement, such as being able to walk around. In some instances, students may need to interact with instructional or test content outside of school, such as in a hospital or their home. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TArabic</Code>
+				<Order>13</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Arabic</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TCantonese</Code>
+				<Order>14</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Cantonese</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TFilipino</Code>
+				<Order>15</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Filipino (Ilokano and Tagalog)</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TKorean</Code>
+				<Order>16</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Korean</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TMandarin</Code>
+				<Order>17</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Mandarin</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TPunjabi</Code>
+				<Order>18</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Punjabi</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TRussianGta</Code>
+				<Order>19</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Russian</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TSpanish</Code>
+				<Order>20</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Spanish</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TUkrainian</Code>
+				<Order>21</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Ukrainian</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TVietnamese</Code>
+				<Order>22</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Vietnamese</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TransDirs</Code>
+				<Order>23</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Translated test directions</Label>
+					<Description>Students who have limited English language skills can use the translated directions support. This support should only be used for students who are proficient readers in the other language and not proficient in English. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SimpDirs</Code>
+				<Order>24</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Simplified test directions</Label>
+					<Description>The test administrator simplifies or paraphrases the test directions found in the test administration manual according to the Simplified Test Directions guidelines. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+		</MultiSelectResource>
+
+		<MultiSelectResource>
+			<Code>NonEmbeddedAccommodations</Code>
+			<Order>32</Order>
+			<DefaultSelection>NEA0</DefaultSelection>
+			<ResourceType>Accommodation</ResourceType>
+			<Text>
+				<Language>eng</Language>
+				<Label>Non-Embedded Accommodations</Label>
+			</Text>
+			<Selection>
+				<Code>NEA0</Code>
+				<Order>1</Order>
+				<MutuallyExclusive/>
+				<Text>
+					<Language>eng</Language>
+					<Label>Non-Embedded Accommodations not selected</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_AR</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Alternate Response Options</Label>
+					<Description>Students with some physical disabilities (including both fine motor and gross motor skills) may need to use the alternate response options accommodation. Some alternate response options are external devices that must be plugged in and be compatible with the assessment delivery platform. Use of this support will likely also require separate setting or extra time. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_RA_Stimuli</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Read Aloud CAT Reading Passages</Label>
+					<Description>This accommodation is appropriate for a very small number of students (estimated to be approximately 1–2% of students with disabilities participating in a general assessment). For students in grades 3–5, read aloud will not be an available accommodation. Content experts agree that this accommodation should not be provided during these grades because it would compromise the construct being measured. For students in grades 6–8 and 11, read aloud is available as an accommodation for students whose need is documented in an IEP or 504 plan. Reports can be run to indicate the percent of students who had access to read aloud on reading test passages. Readers should be provided to students on an individual basis – not to a group of students. A student should have the option of asking a reader to slow down or repeat text. Use of this support will likely also require separate setting or extra time. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_SC_WritItems</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Scribe Items (Writing)</Label>
+					<Description>Students who have documented significant motor or processing difficulties, or who have had a recent injury (such as a broken hand or arm) that makes it difficult to produce responses may need to dictate their responses to a human, who then records the students’ responses verbatim. The use of this accommodation may result in the student needing overall additional time to complete the assessment. For many of these students, dictating to a human scribe is the only way to demonstrate their composition skills. It is important that these students be able to develop planning notes via the human scribe, and to view what they produce while composing via dictation to the scribe. Use of this support will likely also require separate setting or extra time. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_STT</Code>
+				<Order>5</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Speech-to-Text</Label>
+					<Description>Students who have motor or processing disabilities (such as dyslexia) or who have had a recent injury (such as a broken hand or arm) that make it difficult to produce text or commands using computer keys may need alternative ways to work with computers. Students will need to be familiar with the software, and have had many opportunities to use it prior to testing. Speech-to-text software requires that the student go back through all generated text to correct errors in transcription, including use of writing conventions; thus, prior experience with this accommodation is essential. If students use their own assistive technology devices, all assessment content should be deleted from these devices after the test for security purposes. For many of these students, using voice recognition software is the only way to demonstrate their composition skills. Still, use of speech-to-text does require that students know writing conventions and that they have the review and editing skills required of students who enter text via the computer keyboard. It is important that students who use speech-to-text also be able to develop planning notes via speech-to-text, and to view what they produce while composing via speech-to-text. Use of this support will likely also require separate setting or extra time. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_Abacus</Code>
+				<Order>6</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Abacus</Label>
+					<Description>Some students with visual impairments who typically use an abacus may use an abacus in place of using scratch paper. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_Calc</Code>
+				<Order>7</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Calculator</Label>
+					<Description>Students with visual impairments who are unable to use the embedded calculator for calculator-allowed items will be able to use the calculator that they typically use, such as a braille calculator or a talking calculator. Test administrators should ensure that the calculator is available only for designated calculator items. (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_MT</Code>
+				<Order>8</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Multiplication Table</Label>
+					<Description>For students with a documented and persistent calculation disability (i.e., dyscalculia). (NON-EMBEDDED)</Description>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_NumTbl</Code>
+				<Order>9</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>100s Number Table</Label>
+					<Description>A paper-based table listing numbers from 1–100 available from Smarter Balanced for reference.</Description>
+				</Text>
+			</Selection>
+		</MultiSelectResource>
+
+		<EditResource>
+			<Code>Other</Code>
+			<Order>33</Order>
+			<Text>
+				<Language>eng</Language>
+				<Label>Other</Label>
+			</Text>
+		</EditResource>
+
+	</MasterResourceFamily>
+
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+	<!-- RESOURCE FAMILY FOR ELA ALL GRADES -->
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+
+	<ResourceFamily>
+
+		<Subject>
+			<Code>ELA</Code>
+			<Name>English Language Arts</Name>
+		</Subject>
+		<Grade>03</Grade>
+		<Grade>04</Grade>
+		<Grade>05</Grade>
+		<Grade>06</Grade>
+		<Grade>07</Grade>
+		<Grade>08</Grade>
+		<Grade>09</Grade>
+		<Grade>10</Grade>
+		<Grade>11</Grade>
+		<Grade>12</Grade>
+
+		<!-- Eliminate Spanish -->
+		<SingleSelectResource>
+			<Code>Language</Code>
+			<Selection>
+				<Code>ENU</Code>
+			</Selection>
+			<!--
+			<Selection>
+				<Code>ESN</Code>
+			</Selection>
+			-->
+		</SingleSelectResource>
+
+		<!-- Select the no braille type as default -->
+		<SingleSelectResource>
+			<Code>BrailleType</Code>
+			<Selection>
+				<Code>TDS_BT0</Code>
+			</Selection>
+		</SingleSelectResource>
+
+		<!-- Change some labels -->
+		<SingleSelectResource>
+			<Code>PrintOnDemand</Code>
+			<Selection>
+				<Code>TDS_PoD0</Code>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Stim</Code>
+				<Text>
+					<Language>eng</Language>
+					<!-- <Label>Stimuli</Label> -->
+					<Label>PT Stimuli and CAT Reading Passages</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Item</Code>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Stim&amp;TDS_PoD_Item</Code>
+				<Text>
+					<Language>eng</Language>
+					<!-- <Label>Stimuli and Items</Label> -->
+					<Label>PT Stimuli and CAT Reading Passages and Items</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<!-- Change some labels-->
+		<SingleSelectResource>
+			<Code>TexttoSpeech</Code>
+			<Selection>
+				<Code>TDS_TTS0</Code>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Item </Code>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Stim</Code>
+				<Text>
+					<Language>eng</Language>
+					<!-- <Label>Stimuli Only</Label> -->
+					<Label>PT Stimuli and CAT Reading Passages Only</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Stim&amp;TDS_TTS_Item</Code>
+				<Text>
+					<Language>eng</Language>
+					<!-- <Label>Stimuli and Items</Label> -->
+					<Label>PT Stimuli and CAT Reading Passages and Items</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<!-- Eliminate all the glossaries except for English and None -->
+		<SingleSelectResource>
+			<Code>Translation</Code>
+			<Selection>
+				<Code>TDS_WL0</Code>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_Glossary</Code>
+			</Selection>
+		</SingleSelectResource>
+
+		<!-- "Eliminate" Illustration Glossary by getting rid of all its options. It will still be present so that the columns are consistent, but will not be selectable -->
+		<SingleSelectResource>
+			<Code>IllustrationGlossary</Code>
+			<Disabled/>
+		</SingleSelectResource>
+
+		<!-- Eliminate two Read Aloud Spanish codes and all glossaries -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedDesignatedSupports</Code>
+			<Selection>
+				<Code>NEDS0</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_BD</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CC</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CO</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_Mag</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_NoiseBuf</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli</Code>
+			</Selection>
+			<!--
+      <Selection>
+        <Code>NEDS_RA_Items_ESN</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_RA_Stimuli_ESN</Code>
+      </Selection>
+       -->
+			<Selection>
+				<Code>NEDS_SC_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SS</Code>
+			</Selection>
+			<!--
+      <Selection>
+        <Code>NEDS_TArabic</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TCantonese</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TFilipino</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TKorean</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TMandarin</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TPunjabi</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TRussianGta</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TSpanish</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TUkrainian</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TVietnamese</Code>
+      </Selection>
+      -->
+			<Selection>
+				<Code>NEDS_TransDirs</Code>
+			</Selection>
+		</MultiSelectResource>
+
+		<MultiSelectResource>
+			<Code>NonEmbeddedAccommodations</Code>
+			<Selection>
+				<Code>NEA0</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_AR</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_SC_WritItems</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_STT</Code>
+			</Selection>
+		</MultiSelectResource>
+
+	</ResourceFamily>
+
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+	<!-- RESOURCE FAMILY FOR math GRADE 3 -->
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+
+	<ResourceFamily>
+
+		<Subject>
+			<Code>MATH</Code>
+			<Name>Mathematics</Name>
+		</Subject>
+		<Grade>03</Grade>
+
+		<!-- "Eliminate" Closed Captioning by getting rid of all its options. It will still be present
+         so that the columns are consistent, but will not be selectable -->
+		<SingleSelectResource>
+			<Code>ClosedCaptioning</Code>
+			<Disabled/>
+		</SingleSelectResource>
+
+		<!-- Eliminate Bilingual Dictionary -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedDesignatedSupports</Code>
+			<Selection>
+				<Code>NEDS0</Code>
+			</Selection>
+			<!--
+			<Selection>
+				<Code>NEDS_BD</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEDS_CC</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CO</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_Mag</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_NoiseBuf</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SC_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SS</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TArabic</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TCantonese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TFilipino</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TKorean</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TMandarin</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TPunjabi</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TRussianGta</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TSpanish</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TUkrainian</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TVietnamese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TransDirs</Code>
+			</Selection>
+		</MultiSelectResource>
+
+		<!-- Eliminate several options -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedAccommodations</Code>
+			<Selection>
+				<Code>NEA0</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_AR</Code>
+			</Selection>
+			<!--
+			<Selection>
+				<Code>NEA_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_SC_WritItems</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEA_STT</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_Abacus</Code>
+			</Selection>
+			<!--
+			<Selection>
+				<Code>NEA_Calc</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_MT</Code>
+			</Selection>
+			-->
+
+		</MultiSelectResource>
+
+	</ResourceFamily>
+
+
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+	<!-- RESOURCE FAMILY FOR math GRADE 4-5 -->
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+
+	<ResourceFamily>
+
+		<Subject>
+			<Code>MATH</Code>
+			<Name>Mathematics</Name>
+		</Subject>
+		<Grade>04</Grade>
+		<Grade>05</Grade>
+
+		<!-- "Eliminate" Closed Captioning by getting rid of all its options. It will still be present
+         so that the columns are consistent, but will not be selectable -->
+		<SingleSelectResource>
+			<Code>ClosedCaptioning</Code>
+			<Disabled/>
+		</SingleSelectResource>
+
+		<!-- Eliminate Bilingual Dictionary -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedDesignatedSupports</Code>
+			<Selection>
+				<Code>NEDS0</Code>
+			</Selection>
+			<!--
+			<Selection>
+				<Code>NEDS_BD</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEDS_CC</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CO</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_Mag</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_NoiseBuf</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SC_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SS</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TArabic</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TCantonese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TFilipino</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TKorean</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TMandarin</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TPunjabi</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TRussianGta</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TSpanish</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TUkrainian</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TVietnamese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TransDirs</Code>
+			</Selection>
+		</MultiSelectResource>
+
+		<!-- Eliminate several options -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedAccommodations</Code>
+			<Selection>
+				<Code>NEA0</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_AR</Code>
+			</Selection>
+			<!--
+			<Selection>
+				<Code>NEA_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_SC_WritItems</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEA_STT</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_Abacus</Code>
+			</Selection>
+			<!--
+			<Selection>
+				<Code>NEA_Calc</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEA_MT</Code>
+			</Selection>
+
+		</MultiSelectResource>
+
+	</ResourceFamily>
+
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+	<!-- RESOURCE FAMILY FOR math GRADE 6-11 -->
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+
+	<ResourceFamily>
+
+		<Subject>
+			<Code>MATH</Code>
+			<Name>Mathematics</Name>
+		</Subject>
+		<Grade>06</Grade>
+		<Grade>07</Grade>
+		<Grade>08</Grade>
+		<Grade>09</Grade>
+		<Grade>10</Grade>
+		<Grade>11</Grade>
+
+		<!-- "Eliminate" Closed Captioning by getting rid of all its options. It will still be present
+         so that the columns are consistent, but will not be selectable -->
+		<SingleSelectResource>
+			<Code>ClosedCaptioning</Code>
+			<Disabled/>
+		</SingleSelectResource>
+
+		<!-- Eliminate Bilingual Dictionary -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedDesignatedSupports</Code>
+			<Selection>
+				<Code>NEDS0</Code>
+			</Selection>
+			<!--
+			<Selection>
+				<Code>NEDS_BD</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEDS_CC</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CO</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_Mag</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_NoiseBuf</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SC_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SS</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TArabic</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TCantonese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TFilipino</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TKorean</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TMandarin</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TPunjabi</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TRussianGta</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TSpanish</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TUkrainian</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TVietnamese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TransDirs</Code>
+			</Selection>
+		</MultiSelectResource>
+
+		<!-- Eliminate several options -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedAccommodations</Code>
+			<Selection>
+				<Code>NEA0</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_AR</Code>
+			</Selection>
+			<!--
+			<Selection>
+				<Code>NEA_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_SC_WritItems</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEA_STT</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_Abacus</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_Calc</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_MT</Code>
+			</Selection>
+
+		</MultiSelectResource>
+
+	</ResourceFamily>
+
+</Accessibility>

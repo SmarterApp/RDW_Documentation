@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: migrate-reporting-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8008
+  selector:
+    app: migrate-reporting
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: migrate-reporting-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  template:
+    metadata:
+      labels:
+        app: migrate-reporting
+    spec:
+      containers:
+      - name: migrate-reporting
+        image: smarterbalanced/rdw-ingest-migrate-reporting:1.0.0-RELEASE
+        readinessProbe:
+          httpGet:
+            path: /health.json
+            port: 8008
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          timeoutSeconds: 10
+          failureThreshold: 3
+        resources:
+          requests:
+            cpu: 200m
+            memory: 1G
+          limits:
+            cpu: 300m
+            memory: 1G
+        env:
+        - name: CONFIG_SERVICE_URL
+          value: "http://configuration-service"
+        - name: CONFIG_SERVICE_ENABLED
+          value: "true"
+        ports:
+        - containerPort: 8008

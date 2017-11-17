@@ -13,7 +13,7 @@ RDW is a suite of applications with lots of moving parts. These documents provid
 1. [Runbook](docs/Runbook.md)
 1. [Monitoring](docs/Monitoring.md)
 1. [Troubleshooting](docs/Troubleshooting.md)
-1. [Deployment](docs/Deployment.AWS.md)
+1. [Deployment](deploy/Deployment.AWS.md)
 1. [Performance Tuning for Aurora](docs/PerformanceTuning.Aurora.md)
 1. [Performance Tuning for Redshift](docs/PerformanceTuning.Redshift.md)
 1. [API - Ingest](docs/API-Ingest.md)

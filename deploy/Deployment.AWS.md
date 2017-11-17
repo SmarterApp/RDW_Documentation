@@ -1,15 +1,18 @@
 ## Deployment Checklist
 
-**NOTE: please avoid putting environment-specific details _especially secrets and sensitive information_ in this document.**
-
 **Intended Audience**: this document provides a detailed checklist for deploying the Reporting Data Warehouse (RDW) applications in an AWS environment. Operations and system administrators will find it useful.
 
-> Although these are generic instructions, having an example makes it easier to document and understand. Throughout this document we'll use `opus` as the sample environment name; this might correspond to `staging` or `production` in the real world. We'll use `sbac.org` as the domain/organization. Any other ids, usernames or other system-generated values are products of the author's imagination. The reader is strongly encouraged to use their own consistent naming conventions.
+> Although these are generic instructions, having an example makes it easier to document and understand. Throughout this document we'll use `opus` as the sample environment name; this might correspond to `staging` or `production` in the real world. We'll use `sbac.org` as the domain/organization. Any other ids, usernames or other system-generated values are products of the author's imagination. The reader is strongly encouraged to use their own consistent naming conventions. **Avoid putting real environment-specific details _especially secrets and sensitive information_ in this document.**
 
 **TODO - the keystore instructions (for reporting and admin) seem partial, perhaps missing some details?**
 
 **TODO - instructions for creating OpenAM oauth2 agent client id/password?**
 
+### Table Of Contents
+* [Reference](#reference)
+* [Checklist](#checklist)
+
+<a name="reference"></a>
 ### Summary / Reference
 This section records all details that will facilitate configuration and maintenance of the system. It should be filled in as the deployment checklist is worked.
 
@@ -69,7 +72,7 @@ This section records all details that will facilitate configuration and maintena
     * end-point: admin.sbac.org
     * ELB id: [aws-randomization]
 
-
+<a name="checklist"></a>
 ### Checklist
 
 * [ ] Deployment Repository. This is the source repository that will store your deployment documentation and the kubernetes specifications for the applications. This must be a private repository since it contains credentials and other sensitive information. 
@@ -80,12 +83,12 @@ This section records all details that will facilitate configuration and maintena
 * [ ] Configuration Repository. This is the source repository that will store the application configuration files. This must be a private repository as it will contain some sensitive credentials (note that most credentials will be one-way hashed even in the private repository). 
     * Create repository with name like RDW_Config_Opus
     * Copy the files from the config folder to the repo and commit them.
-    * Create a separater user that has read access to the repository.
+    * Create a user that has read access to the repository.
     * *Record the repository URL and username/password in the reference.*
 * [ ] Prepare AWS
     * [ ] Create an AWS account. All the RDW services will run in this account. 
         * *Record the account and signin link in the reference.*
-    * [ ] Create a hosted zone in Route53. 
+    * [ ] Create a hosted zone in Route53 using console or CLI.
         ```bash
         aws route53 create-hosted-zone --name rdw.sbac.org --caller-reference 2014-04-01 --hosted-zone-config Comment="RDW"
         ```
@@ -162,9 +165,10 @@ This section records all details that will facilitate configuration and maintena
             * `aws ec2 describe-availability-zones --output table` to test configuration
             * `export KOPS_STATE_STORE=s3://kops-rdw-opus-state-store` - add to bash profile
             * `kops export kubecfg rdw-opus.sbac.org` - perhaps add to bash profile
-* [ ] SBAC Application Prerequisites. These are non-RDW applications that are maintained as part of the SBAC ecosystem. They run independently of RDW and are definitely not part of the Kubernetes cluster.
+* [ ] SBAC Application Prerequisites. These are non-RDW applications that are maintained as part of the SBAC ecosystem. They run independently of RDW and are not part of the Kubernetes cluster.
     * [ ] SSO. 
-        * *Record the host in the reference.*
+        * Create OpenAM OAuth2 client.
+        * *Record the host and client info in the reference.*
     * [ ] ART. 
         * [ ] Create ingest user for the task service user. This is used by the task service to fetch organization information from ART and submit it to the import service. As such it should have `Administrator`, `State Coordinator` and `ASMTDATALOAD` roles at the state level for `CA`.
         * *Record ART host and username/password in the reference.*
@@ -184,7 +188,7 @@ This section records all details that will facilitate configuration and maintena
             * `GROUP_WRITE` - `GROUP_ADMIN`
             * `INDIVIDUAL_PII_READ` - `PII`
     * [ ] IRiS. 
-        * Follow directions in IRIS.md.
+        * Follow directions for setting up [IRiS](IRIS.AWS.md).
         * *Record IRiS hosts, IRiS ELB and IRiS EFS in the reference.*
 * [ ] Create Kubernetes cluster.
     1. Create versioned S3 bucket for storing configuration using console or CLI. 
@@ -447,15 +451,9 @@ This section records all details that will facilitate configuration and maintena
         ```bash
         curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@accommodations.xml https://import.sbac.org/accommodations/imports
         ```
-    1. Load assessment packages. Note that most assessments for 2015-2016 are reused from 2014-2015 so the 2015-2016 files are small or empty.
+    1. Load assessment packages. These are created by the tabulator; they are not provided here because they are propietary in nature. For each file:
         ```bash
-        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018.IAB.csv https://import.sbac.org/packages/imports
-        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018.ICA.csv https://import.sbac.org/packages/imports
-        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2015-2016.IAB.csv https://import.sbac.org/packages/imports
-        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2016-2017.IAB.csv https://import.sbac.org/packages/imports
-        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2016-2017.ICA.csv https://import.sbac.org/packages/imports
-        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2014-2015.IAB.csv https://import.sbac.org/packages/imports
-        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2014-2015.ICA.csv https://import.sbac.org/packages/imports
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018.csv https://import.sbac.org/packages/imports
         ```
     1. Load organizations. Wait for the daily sync to occur or, to trigger the update-organization task to run immediately, use port-forwarding or shell into the task-service pod to POST to the task end-point:
         ```bash

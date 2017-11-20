@@ -13,7 +13,7 @@ CODES | administration_condition, common_core_standard, grade, completeness, eth
 CODES | accommodation, accommodation_translation | Ingested using the [Import Service API](https://github.com/SmarterApp/RDW_Ingest/blob/develop/import-service/API.md) and [SBAC Accessbility Accomodataion Configuration](https://github.com/SmarterApp/AccessibilityAccommodationConfigurations/tree/RDW_DataWarehouse).
 PACKAGE | **asmt**, asmt_score, item, item_common_core_standard, item_other_target | Ingested using the Import Service API and the output from the tabulator.
 ORGANIZATION | **school**, school_group, district, district_group | Uploaded by the Update Organizations task.
-EXAM | **exam**, student, exam_student, exam_item, exam_available_accommodation, exam_claim_score | Ingested from TRTs.
+EXAM | **exam**, student, exam_item, exam_available_accommodation, exam_claim_score | Ingested from TRTs.
 GROUPS | **student_group**, student, student_group_membership, user_student_group | Uploaded via Group Management API. For `student` only student SSID is available from this source.
 
 #### Import table and Import ID

@@ -1,6 +1,6 @@
 ## Runbook - Import and Migrate
 
-**Intended Audience**: this document contains information on how data is handled for import and migrate. Operations and system administration may find this useful to deal with manually adjusting or cleaning up data. 
+**Intended Audience**: this document contains information on how data is handled for import and migrate in the Reporting Data Warehouse (RDW). Operations and system administration may find this useful to deal with manually adjusting or cleaning up data. 
 
 ### Warehouse
 The warehouse database contains data from different data sources. Every data element loaded into the warehouse is associated with an **import content type** (defined in `import_content` table) and has an **import id**. 
@@ -22,14 +22,16 @@ The `import` table is the main control table for importing the data. In order fo
 
 - **import_id**: id of the import record that created this entity and all its children.
 - **update_import_id**: last import id that modified this entity or any of its children. For the newly created entity `update_import_id` and `import_id` are the same. Removing a child entry is considered an update to the main entity.
+- **created**: timestamp when content was created.
+- **updated**: timestamp when content was last updated.
 - **deleted**: a ‘soft’ delete flag.
 
 Tables of the content type CODES are different in a sense that there is no ‘main’ table. Changes to any of these tables are tracked via the same import content type.
 
 ### Reporting Database and Migrate Process
-Reporting DB is the data source for the customer facing Reporting Data Warehouse web site. Data must never be manually loaded or modified in this DB. Instead they must be migrated from the warehouse. 
+The reporting database is the data source for the customer-facing RDW web site. Data must never be manually loaded or modified in this database. Instead they must be migrated from the warehouse. 
 
-There is a minimum set of the ‘core’ tables that are created as part of the initial schema and are not supported for modifications:
+There are core tables that are created as part of the initial schema and are not supported for modifications:
 
 - asmt_type
 - subject
@@ -37,17 +39,18 @@ There is a minimum set of the ‘core’ tables that are created as part of the 
 - exam_claim_score_mapping
 - migrate
 
-The `migrate` table is the main control table for the migrate. It has the last successfully imported import id from the warehouse. The migrate process is managed by the “migrate-reporting” service.  
+The `migrate` table is the main control table for the migrate. It stores the migrate status and the timestamp range of content handled by each migrate job. The migrate process is managed by the “migrate-reporting” service.  
 
 ### Create/Update Data
-Data shall be ingested into the system using the import mechanism where available. However, there may be rare situations where data must be created or updated manually. In these situations the workflow is:
+Data shall be ingested into the system using the import mechanism where available. However, there may be rare situations where data must be created or updated manually. In these situations the general workflow is:
 1. Create an import record to associate with the changes.
-2. Make the changes, setting the import_id or update_import_id.
-3. Mark the import record as `PROCESSED` to trigger the migrate process.
+1. Make the content changes, setting the import_id or update_import_id to match.
+1. Verify a good distribution of `updated` times for content.
+1. Mark the import record as `PROCESSED` to trigger the migrate process.
 
-> Only data changes are support, never make structural table changes.
+> Only data changes are supported, **never** make structural table changes.
 
-#### Modify any code tables
+#### Modify any CODES tables
 * Update data in the tables of entity type CODES.
 * Insert an entry into import table with the ‘CODES’ content type:
 ```sql
@@ -63,7 +66,7 @@ mysql> USE warehouse;
 mysql> INSERT INTO import (status, content, contentType, digest, creator) VALUES (0, 5, 'text/plain', left(uuid(), 8), 'dwtest@example.com');
 mysql> SELECT LAST_INSERT_ID() into @importid;
 ```
-* Make data modifications.
+* Make the content data modifications.
 * When you are done, update the main table with the import id value: 
     * If you are creating a new main entity, set both `import_id` and `update_import_id` to the same value, `@importid`.
     * If you are modifying an existing main entity or making any changes to the child tables, set the main table `update_import_id` to the `@importid`.
@@ -72,6 +75,29 @@ mysql> SELECT LAST_INSERT_ID() into @importid;
 ```sql
 # trigger migration
 mysql> UPDATE import SET status = 1 WHERE id = @importid;
+```
+
+#### Modify lots of content
+Because the migrate process handles many import records in a single iteration, it is important to **not** associate too much content with a single import record. The safest rule is 1 import record per 1 content record; in some situations you may associate a few (3-10) content records with a single import record. 
+
+The migrate process also uses timestamp ranges to partition work. If you are modifying lots of content, make sure all your import and content records have different times associated with them. This can be done by explicitly setting the created/updated fields for the import records, adding microsecond offsets to separate the values, for example:
+```sql
+-- tweak import record timestamps to have different values
+SELECT max(id) into @maxImportId from import;
+UPDATE import
+SET status = 1,
+  created = DATE_ADD(created, INTERVAL (@maxImportId -id)  MICROSECOND),
+  updated = DATE_ADD(updated, INTERVAL (@maxImportId -id)  MICROSECOND)
+WHERE status = 0
+      and content = 1
+      and batch = 'mybatch';
+      
+-- use the import timestamps to set the the content timestamps
+UPDATE exam e JOIN import i ON i.id = e.update_import_id
+SET e.updated = i.updated
+WHERE i.status = 1
+      and content = 1
+      and batch = 'mybatch';
 ```
 
 #### Modify more than one main table and its children

@@ -5,7 +5,7 @@ The Reporting Data Warehouse (RDW) is a repository for SBAC test results where t
 
 Before updating resources in this project, please reference [Contributing](CONTRIBUTING.md).
 
-## Overview Links
+## Document Links
 RDW is a suite of applications with lots of moving parts. These documents provide additional information for understanding, deploying and maintaining them.
 
 1. [Main README (this file)](README.md)
@@ -13,7 +13,7 @@ RDW is a suite of applications with lots of moving parts. These documents provid
 1. [Runbook](docs/Runbook.md)
 1. [Monitoring](docs/Monitoring.md)
 1. [Troubleshooting](docs/Troubleshooting.md)
-1. [Deployment](deploy/Deployment.AWS.md)
+1. [Deployment Checklist](deploy/Deployment.AWS.md)
 1. [Performance Tuning for Aurora](docs/PerformanceTuning.Aurora.md)
 1. [Performance Tuning for Redshift](docs/PerformanceTuning.Redshift.md)
 1. [API - Ingest](docs/API-Ingest.md)

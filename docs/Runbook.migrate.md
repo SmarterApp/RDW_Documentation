@@ -90,14 +90,14 @@ SET status = 1,
   updated = DATE_ADD(updated, INTERVAL (@maxImportId -id)  MICROSECOND)
 WHERE status = 0
       and content = 1
-      and batch = 'mybatch';
+      and batch = 'mybatch-2017-10-08';
       
 -- use the import timestamps to set the the content timestamps
 UPDATE exam e JOIN import i ON i.id = e.update_import_id
 SET e.updated = i.updated
 WHERE i.status = 1
       and content = 1
-      and batch = 'mybatch';
+      and batch = 'mybatch-2017-10-08';
 ```
 
 #### Modify more than one main table and its children
@@ -106,5 +106,5 @@ While the process is the same as modifying one main table, there are a few thing
     * CODES
     * ORGANIZATION, PACKAGE
     * GROUPS, EXAM
-* The same import id could be reused for multiple main entities of the same content type. Keep in mind that this drives the number of records being migrated at once. It is recommended to keep this number relatively low.
+* The same import id may be reused for multiple main entities of the same content type. As described above, do not associate more than a few content records with a single import record.
 			 

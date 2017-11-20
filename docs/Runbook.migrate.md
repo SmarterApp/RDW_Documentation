@@ -1,6 +1,6 @@
 ## Runbook - Import and Migrate
 
-**Intended Audience**: this document contains information on how data is handled for import and migrate in the Reporting Data Warehouse (RDW). Operations and system administration may find this useful to deal with manually adjusting or cleaning up data. 
+**Intended Audience**: this document contains information on how data is handled for import and migrate in the [Reporting Data Warehouse](../README.md) (RDW). Additional runbook information is available for [Import](#import-service) and [Migrate](#migrate-reporting). Operations and system administration may find this useful to deal with manually adjusting or cleaning up data. 
 
 ### Warehouse
 The warehouse database contains data from different data sources. Every data element loaded into the warehouse is associated with an **import content type** (defined in `import_content` table) and has an **import id**. 

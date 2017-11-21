@@ -16,6 +16,7 @@ ORGANIZATION | **school**, school_group, district, district_group | Uploaded by 
 EXAM | **exam**, student, exam_item, exam_available_accommodation, exam_claim_score | Ingested from TRTs.
 GROUPS | **student_group**, student, student_group_membership, user_student_group | Uploaded via Group Management API. For `student` only student SSID is available from this source.
 
+<a name="import-id"></a>
 #### Import table and Import ID
 
 The `import` table is the main control table for importing the data. In order for the system to function properly any data modifications **must** be recorded in the `import` table. Each content type has a main table associated with it, which is listed as the first table on the table list above, and "child" tables. The main tables have 3 common columns:
@@ -39,8 +40,9 @@ There are core tables that are created as part of the initial schema and are not
 - exam_claim_score_mapping
 - migrate
 
-The `migrate` table is the main control table for the migrate. It stores the migrate status and the timestamp range of content handled by each migrate job. The migrate process is managed by the “migrate-reporting” service.  
-
+The `migrate` table is the main control table for the migrate. It stores the migrate status and the timestamp range of content handled by each migrate job. The migrate process is managed by the “migrate-reporting” service.
+  
+<a name="create-update"></a>
 ### Create/Update Data
 Data shall be ingested into the system using the import mechanism where available. However, there may be rare situations where data must be created or updated manually. In these situations the general workflow is:
 1. Create an import record to associate with the changes.
@@ -77,6 +79,7 @@ mysql> SELECT LAST_INSERT_ID() into @importid;
 mysql> UPDATE import SET status = 1 WHERE id = @importid;
 ```
 
+<a name="modify-lots-of-content"></a>
 #### Modify lots of content
 Because the migrate process handles many import records in a single iteration, it is important to **not** associate too much content with a single import record. The safest rule is 1 import record per 1 content record; in some situations you may associate a few (3-10) content records with a single import record. 
 
@@ -107,3 +110,6 @@ While the process is the same as modifying one main table, there are a few thing
     * ORGANIZATION, PACKAGE
     * GROUPS, EXAM
 * The same import id may be reused for multiple main entities of the same content type. As described above, do not associate more than a few content records with a single import record.
+
+### Other Resources
+* [Bulk Delete Exams](Runbook.BulkDeleteExams.md) - more concrete examples on how to delete exams. 

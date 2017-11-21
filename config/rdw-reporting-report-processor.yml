@@ -69,6 +69,18 @@ app:
 #      page-size: Letter
 #      zoom: 0.75
 
+
+# Spring application configuration.
+spring:
+  # RabbitMQ configuration.
+  # There are no default values. The host must be set based on the orchestration environment
+  # e.g. rabbit-service, with appropriate username and password. The password should be encrypted.
+  rabbitmq:
+    host:
+    username:
+    password:
+
+
 # Stale report cleanup task configuration.
 # By default, this task is disabled; uncomment and set cron to enable.
 # The cron syntax is slightly different than standard linux cron syntax. The pattern is a list
@@ -89,3 +101,18 @@ task:
 #    cron: 0 0 8 * * *
 #    max-report-lifetime-days: 30
 #    max-random-minutes: 20
+
+# Tenant configuration.
+# These are tenant-specific customizations.
+tenant:
+  # By default the system does not allow users to see test results from institutions outside their
+  # permissions. Setting this property true allows users to see all test results for students
+  # regardless of where the test was administered, if they have PII for the student.
+#  transfer-access-enabled: false
+
+  # Location of translation files (optional).
+  # There is no default value. To use the central configuration server the value will be like
+  # "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
+  # Details for this property are covered in the language runbook.
+#  translation-location:
+

@@ -74,6 +74,13 @@ app:
   reportservice:
     url:
 
+  # Installed language configuration (optional).
+  # These are lists of available languages, not including english (which is always available).
+  # Details for these properties are covered in the language runbook.
+#  report-languages:
+#  ui-languages:
+
+
 # IRiS resource configuration.
 # Certain IRiS resource files are used to display rubric/exemplars. These will typically be
 # stored in a mounted file system so the root will be like "file:///itembank/items/" and the
@@ -127,14 +134,6 @@ server:
 # Spring application configuration
 spring:
 
-  # RabbitMQ configuration.
-  # There are no default values. The host must be set based on the orchestration environment
-  # e.g. rabbit-service, with appropriate username and password. The password should be encrypted.
-  rabbitmq:
-    host:
-    username:
-    password:
-
   # Session cache configuration.
   # The default is to not cache session data. To enable caching (using redis), set the
   # session.store-type to "redis" and set the redis values
@@ -143,3 +142,31 @@ spring:
   redis:
     host:
     port:
+
+# Tenant configuration.
+# These are tenant-specific customizations.
+tenant:
+  # By default the system does not allow users to see test results from institutions outside their
+  # permissions. Setting this property true allows users to see all test results for students
+  # regardless of where the test was administered, if they have PII for the student.
+#  transfer-access-enabled: false
+
+  # Location of translation files (optional).
+  # There is no default value. To use the central configuration server the value will be like
+  # "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
+  # Details for this property are covered in the language runbook.
+#  translation-location:
+
+# Netflix zuul configuration.
+# Default values should be fine.
+#zuul:
+#  set-content-length: true
+#  FormBodyWrapperFilter:
+#    pre: disable
+#  host:
+#    socket-timeout-millis: 100000
+#  routes:
+#    iris:
+#      path: /iris/**
+#      url: ${app.iris.url}
+#      stripPrefix: true

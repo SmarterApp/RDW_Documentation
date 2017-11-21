@@ -1,6 +1,10 @@
 # Runbook
 
-**Intended Audience**: the runbook describes behavior and configuration options of the various applications in the [Reporting Data Warehouse](../README.md) (RDW). Operations, system administration, and tier 3 support will find it useful.
+**Intended Audience**: the runbook describes behavior and configuration options of the various applications in the [Reporting Data Warehouse](../README.md) (RDW). Operations, system administration, developers, and tier 3 support may find it useful.
+
+**TODO - rabbitmq?**
+
+**TODO - configuration server?**
 
 ### Table of Contents
 
@@ -51,8 +55,9 @@ CONFIG_SERVICE_LABEL=master
 CONFIG_SERVICE_URL=http://configuration-service
 ```
 
-TODO - document how to encrypt secrets and use them in configuration
-TODO - ?document how `spring.profiles` can be used with configuration server?
+**TODO - document how to encrypt secrets and use them in configuration**
+
+**TODO - ?document how `spring.profiles` can be used with configuration server?**
 
 
 <a name="import-service"></a>

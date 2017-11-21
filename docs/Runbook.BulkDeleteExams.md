@@ -1,13 +1,15 @@
 ## Bulk Delete Exams
 
-**Intended Audience**:  this document provides instructions for bulk deleting exams from the Reporting Data Warehouse. Knowledge of SQL and access to the production data warehouse is required.
+**Intended Audience**: This document provides instructions for bulk deleting exams from the Reporting Data Warehouse. Knowledge of SQL and access to the production data warehouse is required.
+Operations will find this useful if and only if a bulk delete operation is required.
 
 Deleting exams includes:
 * marking exams as deleted in the warehouse
 * migrating (propagating) the changes to the reporting data mart(s)
 
 > **NOTE**: Modifying a large volume of data needs to be done with the consideration of how data is [migrated](Runbook.migrate.md#modify-lots-of-content).
-> Since migrating this changes may take time, it is **strongly advisable to perform this task during the maintenance window, and while the Ingest service is paused**.   
+> Since migrating this changes may take time, it is **strongly advisable to perform this task during the maintenance window, and while the system is quiescent 
+and the exam processors are paused.**.   
 
 ### Other Resources
 1. [Import and Migrate](Runbook.migrate.md) - Operations and system administration may find this useful with manually adjusting or cleaning up data.
@@ -34,7 +36,7 @@ exam_available_accommodation |Opportunity's Accommodations | Depends on [SBAC Ac
 exam_claim_score |Opportunity's claims ScaleScore and PerformanceLevel data| Depends on the subject being pre-configured with its claim scores.
 
 ### Marking exams as deleted in the warehouse (aka soft-delete)
-As defined in [Import and Migrate](Runbook.migrate.md#import-id), to soft-delete exams in the warehouse a corresponding `exam` record must be marked with the `delete = 1`.
+As defined in [Import and Migrate](Runbook.migrate.md#import-id), to soft-delete exams in the warehouse a corresponding `exam` record must be marked with `deleted = 1`.
    
 ### Migrating (propagating) the changes to the reporting data mart(s)
 As defined in [Import and Migrate](Runbook.migrate.md#create-update), the data updates must adhere to the defined pattern in order for the migrate process to propagate the changes to the data mart(s). 

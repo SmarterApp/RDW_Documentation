@@ -151,12 +151,12 @@ The [Annotated Configuration](../config/rdw-reporting-report-processor.yml) desc
 
 <a name="reporting-webapp"></a>
 ## PDF Generator
-This application converts HTML to PDF. It is used by the report processor. It is horizontally scalable and many instances should be run to deal with reporting load. Note the PDF generator is not a Spring Boot application, it is ...
+This application converts HTML to PDF. It is used by the report processor. It is horizontally scalable and many instances should be run to deal with reporting load. Note the PDF generator is not a Spring Boot application: it doesn't use the central configuration server, it doesn't have the same actuator end-points, and logging is different.
 
 ![PDF Generator](pdf-generator.png)
 
 #### Configuration
-The PDF generator does **not** use the central configuration server. It can be configured ... TODO
+There are no configuration options for the PDF generator.
 
 
 <a name="admin-webapp"></a>

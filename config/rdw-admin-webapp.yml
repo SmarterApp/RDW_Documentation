@@ -1,0 +1,128 @@
+# Annotated configuration for RDW Admin Web App.
+#
+# The spring application name is rdw-admin-webapp so this file should be named
+# rdw-admin-webapp.yml when served by the configuration server.
+#
+# Properties that have a reasonable default value are commented out.
+# Other properties are not commented out and must be provided.
+
+# The actuator end-point is on a different port with no security because it is
+# expected to be exposed only in a private subnet.
+management:
+#  port: 8008
+#  security:
+#    enabled: false
+#  health:
+#    redis:
+#      enabled: false
+
+# Application configuration
+app:
+#  state:
+#    code: CA
+
+  # Link to reporting webapp, this should be the public URL, e.g. https://reporting.smarterbalanced.org/
+  home-url:
+
+  # Google analytics configuration (optional).
+  # To enable analytics, set this property.
+  analytics:
+#    trackingId: ${rdw.admin.analytics.trackingId:}
+
+# Archive configuration
+# Student group upload payloads are archived. Although the location may be a local file system the
+# preferred solution is to write to AWS S3, which requires credentials. For S3, the root should be
+# the protocol and the bucket, e.g. s3://my-archive-bucket. The AWS access key should be for a
+# programmatic AWS user. The secretKey should be encrypted. The bucket should be in the same
+# region as the deployment (to reduce costs).
+# There are no default values for these properties and they must be provided.
+archive:
+  root:
+  cloud:
+    aws:
+      credentials:
+        accessKey:
+        secretKey:
+      region:
+        auto: false
+        static: us-west-2
+
+# Permission service configuration
+# endpoint is probably the public URL, e.g. https://perm.smarterbalanced.org/rest
+permissionservice:
+#  component: Reporting
+  endpoint:
+
+# SAML/SSO configuration
+# The setting of these properties is covered in more detail in the deployment guide.
+# The keystore path will be a binary configuration, e.g. 'binary-${spring.cloud.config.uri}/*/*/master/rdw-reporting.jks'
+# IDP metadata URL example: 'https://sso.smarterbalanced.org/auth/saml2/jsp/exportmetadata.jsp?realm=/sbac'.
+# The passwords should be encrypted.
+saml:
+  key-store-file:
+  key-store-password:
+  private-key-entry-alias:
+  private-key-entry-password:
+  idp-metadata-url:
+  sp-entity-id:
+  # SAML settings when hosting behind a load balancer or reverse proxy
+  # To use this, set enabled to true and set the hostname, e.g. admin.smarterbalanced.org
+  load-balance:
+    enabled: false
+#    scheme: https
+    hostname:
+#    context-path: /
+#    port: 8080
+#    include-server-port: false
+
+# Server configuration.
+# Use the defaults unless you really know what you're doing.
+server:
+#  port: 8080
+#  tomcat:
+#    max-connections: 0
+#    max-threads: 4
+#    accept-count: 10
+#  compression:
+#    enabled: true
+#    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,text/csv
+
+# Spring application configuration
+spring:
+
+  # Datasource configuration.
+  # NOTE: this section changed between 1.0 and 1.1.
+  # Use defaults for most of the settings, except server, username and password.
+  # The url-server should be set to the host and port, e.g. localhost:3306 or
+  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+  datasource:
+#    url: "\
+#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:warehouse}\
+#      ?useSSL=${spring.datasource.use-ssl:false}\
+#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
+#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
+#      "
+    url-server:
+    username:
+    password:
+#    driverClassName: com.mysql.jdbc.Driver
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    initialize: false
+
+  # RabbitMQ configuration.
+  # There are no default values. The host must be set based on the orchestration environment
+  # e.g. rabbit-service, with appropriate username and password. The password should be encrypted.
+  rabbitmq:
+    host:
+    username:
+    password:
+
+  # Session cache configuration.
+  # The default is to not cache session data. To enable caching (using redis), set the
+  # session.store-type to "redis" and set the redis values
+  session:
+    store-type:
+  redis:
+    host:
+    port:

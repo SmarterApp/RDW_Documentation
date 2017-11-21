@@ -12,6 +12,10 @@
 1. [Migrate Reporting](#migrate-reporting)
 1. [Migrate OLAP](#migrate-olap)
 1. [Task Service](#task-service)
+1. [Reporting Web App](#reporting-webapp)
+1. [Report Processor](#report-processor)
+1. [PDF Generator](#pdf-generator)
+1. [Admin Web App](#admin-webapp)
 
 ### Other Resources
 
@@ -123,6 +127,46 @@ Only a single instance should be run since the task execution uses a simple, unc
 
 #### Configuration
 The [Annotated Configuration](../config/rdw-ingest-task-service.yml) describes the properties and their effects.
+
+
+<a name="reporting-webapp"></a>
+## Reporting Web App
+This is the main reporting web application used by customers. It is horizontally scalable with each process handling 2000-3000 concurrent users (this deployment is expected to have up to 15000 concurrent users).
+
+![Reporting Web App](reporting-webapp.png)
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-reporting-webapp.yml) describes the properties and their effects.
+
+
+<a name="report-processor"></a>
+## Report Processor
+This processor generates PDF reports. It is horizontally scalable and many instances should be run to deal with reporting load.
+
+![Report Processor](report-processor.png)
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-reporting-report-processor.yml) describes the properties and their effects.
+
+
+<a name="reporting-webapp"></a>
+## PDF Generator
+This application converts HTML to PDF. It is used by the report processor. It is horizontally scalable and many instances should be run to deal with reporting load. Note the PDF generator is not a Spring Boot application, it is ...
+
+![PDF Generator](pdf-generator.png)
+
+#### Configuration
+The PDF generator does **not** use the central configuration server. It can be configured ... TODO
+
+
+<a name="admin-webapp"></a>
+## Admin Web App
+This web application is used by customers to manage student groups. It is horizontally scalable with each process handling ??? concurrent users. Because student group management is infrequent, # instances should be sufficient.
+
+![Admin Web App](admin-webapp.png)
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-admin-webapp.yml) describes the properties and their effects.
 
 
 ---

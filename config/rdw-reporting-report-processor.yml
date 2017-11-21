@@ -1,0 +1,91 @@
+# Annotated configuration for RDW Report Processor.
+#
+# The spring application name is rdw-reporting-report-processor so this file should be named
+# rdw-reporting-report-processor.yml when served by the configuration server.
+#
+# Properties that have a reasonable default value are commented out.
+# Other properties are not commented out and must be provided.
+
+# The actuator end-point is on a different port with no security because it is expected to be
+# exposed only in a private subnet. Use the default settings unless you really know what you
+# are doing.
+management:
+#  port: 8008
+#  security:
+#    enabled: false
+server:
+#  port: 8080
+
+# Application configuration
+app:
+#  state:
+#    code: CA
+
+  # Report archive configuration.
+  # Although the location may be a local file system the preferred solution is to write to AWS S3,
+  # which requires credentials. For S3, the root should be the protocol and the bucket, e.g. s3://my-archive-bucket.
+  # The AWS access key should be for a programmatic AWS user. The secretKey should be encrypted.
+  # The bucket should be in the same region as the deployment (to reduce costs).
+  # There are no default values for these properties and they must be provided.
+  archive:
+    root:
+    cloud:
+      aws:
+        credentials:
+          accessKey:
+          secretKey:
+        region:
+          auto: false
+          static: us-west-2
+
+  # Datasource configuration.
+  # NOTE: this section changed between 1.0 and 1.1.
+  # Use defaults for most of the settings, except server, username and password.
+  # The url-server should be set to the host and port, e.g. localhost:3306 or
+  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+  datamart:
+    datasource:
+#      url: "\
+#        jdbc:mysql://${app.datamart.datasource.url-server:localhost:3306}/${app.datamart.datasource.url-schema:reporting}\
+#        ?useSSL=${app.datamart.datasource.use-ssl:false}\
+#        &useLegacyDatetimeCode=${app.datamart.datasource.use-legacy-datetime-code:false}\
+#        &characterEncoding=${app.datamart.datasource.character-encoding:utf8}\
+#        &useCompression=${app.datamart.datasource.use-compression:true}\
+#        "
+      url-server:
+      username:
+      password:
+#      testWhileIdle: true
+#      validationQuery: SELECT 1
+#      driverClassName: com.mysql.jdbc.Driver
+#      initialize: false
+
+  # PDF Generator configuration.
+  # URL should be the internal (private) route which is typically resolved by the orchestration
+  # framework's DNS and should include port as necessary, e.g. http://wkhtmltopdf-service:8082.
+  wkhtmltopdf:
+    url:
+#    options:
+#      page-size: Letter
+#      zoom: 0.75
+
+# Stale report cleanup task configuration.
+# By default, this task is disabled; uncomment and set cron to enable.
+# The cron syntax is slightly different than standard linux cron syntax. The pattern is a list
+# of six single space-separated fields: representing second, minute, hour, day, month, weekday.
+# Month and weekday names can be given as the first three letters of the English names.
+# Example patterns:
+#   0 0 10 * * *           10 AM every day
+#   0 0 * * * *            the top of every hour of every day
+#   */10 * * * * *         every ten seconds
+#   0 0 8-10 * * *         8, 9 and 10 o'clock of every day
+#   0 0 6,19 * * *         6:00 AM and 7:00 PM every day
+#   0 0/30 8-10 * * *      8:00, 8:30, 9:00, 9:30, 10:00 and 10:30 every day
+#   0 0 9-17 * * MON-FRI   on the hour nine-to-five weekdays
+#   0 0 0 25 12 ?          every Christmas Day at midnight
+# Note that all times are in GMT, regardless of the system's timezone setting.
+task:
+#  remove-stale-reports:
+#    cron: 0 0 8 * * *
+#    max-report-lifetime-days: 30
+#    max-random-minutes: 20

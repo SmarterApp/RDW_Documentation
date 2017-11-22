@@ -45,7 +45,7 @@ As defined in [Import and Migrate](Runbook.migrate.md#create-update), the data u
 
 #### Before executing the scripts
 1. Stop Exam Processors.
-2. Execute [validation queries](https://github.com/SmarterApp/RDW_Schema/validation-scripts) to reconcile warehouse and reporting data mart(s).
+2. Execute [validation script](https://github.com/SmarterApp/RDW_Schema/blob/develop/validation/README.md) to reconcile warehouse and reporting data mart(s).
 3. Check if warehouse auditing is enabled and turn it off if you do not want this action to be audited.
 ```sql 
 # to check
@@ -58,23 +58,36 @@ mysql> UPDATE setting SET value = 'FALSE' WHERE name = 'AUDIT_TRIGGER_ENABLE';
 4. Find and copy one of the queries that matches your rules for the delete.
 
 4.1 Delete based on the test administration year
-
+```sql 
+SELECT id FROM exam WHERE school_year = 2010;  -- replace with your administration year
+```
 4.2 Delete based on the date range of when the test result was completed
-
+```sql 
+SELECT id FROM exam WHERE completed_at >= '2017-03-15 09:12:14.729000' AND completed_at <= '2017-03-15 09:12:14.729000'  -- replace with your completed at dates
+```
 4.3 Delete based on a specific school
-
+```sql 
+SELECT e.id FROM exam e JOIN school s ON s.id = e.school_id WHERE s.natural_id = 'school_natural_id_here'; -- replace with your school id
+```
 4.4 Delete based on a specific assessment
-
+```sql 
+SELECT e.id FROM exam e JOIN asmt a ON a.id = e.asmt_id WHERE a.natural_id = 'asmt_natural_id_here'; -- replace with your assessment id
+```
 4.5 Delete based on the manner of administration (Standardized or Nonstandardized)
-
+```sql 
+SELECT e.id FROM exam e JOIN administration_condition a ON a.id = e.administration_condition_id WHERE a.code = 'SD'; -- use 'SD' for Standardized and 'NS' for Nonstandardized
+```
 4.6 Delete based on the Valid/Invalid
+```sql 
+SELECT e.id FROM exam e JOIN administration_condition a ON a.id = e.administration_condition_id WHERE a.code = 'Valid'; -- use 'Valid' for Valid and 'IN' for Invalid
+```
 
-5. Open [SQL Script for Bulk Delete Exams](https://github.com/SmarterApp/RDW_Schema/bulk_delete_exam.sql) and replace the placeholder in STEP 1 with the copied query.
+5. Open [SQL Script for Bulk Delete Exams](https://github.com/SmarterApp/RDW_Schema/blob/develop/warehouse/sql/bulk_delete_exam.sql) and replace the placeholder in STEP 1 with the copied query.
 Continue with the steps in this SQL file.
 6. Verify that migrate(s) is/are running and wait for them to complete.
 
 ### Post-validating exam deletion
-8. Execute [validation queries](https://github.com/SmarterApp/RDW_Schema/validation-scripts) to reconcile warehouse and reporting data mart(s). 
+8. Execute validation script (from step 2 above) to reconcile warehouse and reporting data mart(s). 
 9. Re-enable auditing if it was turned off in the steps above.
 10. Re-start Exam Processors.
 
@@ -88,12 +101,66 @@ Purging exams includes:
 * purging exam auditing data.
 * purging exam from the warehouse.
 
-
-### Purging from data mart
+### Purging from reporting data mart
 If exams were deleted using soft-delete and migration (see above) there is no need to do this: the system has already deleted the records in the data mart.
+
+To delete exams bypassing the soft-delete step, follow instructions for [Purging from data warehouse](#purging-from-warehouse). Skip step 3.3 since `reporting` data mart does not have this table.
+
+### Purging from OLAP data mart
 (TODO)
 
 ### Purging exam auditing data in the warehouse
 (TODO)
 
+<a name="purging-from-warehouse"></a>
 ### Purging from data warehouse
+
+This assumes you know exam rules for delete. **Below example purges soft-deleted exams.**
+
+#### Before purging the data
+ 
+1. Count the number of records be deleted and verify it this matches your expectations.
+```sql 
+SELECT count(*)  FROM exam WHERE deleted = 1;
+```
+2. Count the number of records that should be left after you purge the data. Save this number for post-validation.
+```sql 
+SELECT count(*) FROM exam WHERE deleted != 1;
+```
+3. Delete exams related data: 
+> **NOTE 1**: This deletes all data in one transaction. For a very large volume it is recommended to follow the approach defined in the bulk delete:
+>  Each step should be repeated for every table below:
+> 1. load exam ids to delete into a staging table
+> 1. partition the staging table
+> 1. delete by one partition at a time
+
+> **NOTE 2**: This leaves out import records.
+
+3.1 Delete items:
+```sql 
+DELETE ei FROM exam_item ei
+  JOIN exam e ON e.id = ei.exam_id
+WHERE e.deleted = 1;
+```
+3.2 Delete available accommodations:
+```sql 
+DELETE eaa FROM exam_available_accommodation eaa
+  JOIN exam e ON e.id = eaa.exam_id
+WHERE e.deleted = 1;
+```
+3.3 Delete claim scores:
+```sql 
+DELETE ecs FROM exam_claim_score ecs
+  JOIN exam e ON e.id = ecs.exam_id
+WHERE e.deleted = 1;
+```
+4. Delete exams:
+```sql
+DELETE e FROM exam e WHERE e.deleted = 1;
+```
+
+### Post-validating exam deletion
+5. Count the number of records and compare it to the count from the step 2 above. The numbers must match.
+```sql 
+SELECT count(*) FROM exam;
+```

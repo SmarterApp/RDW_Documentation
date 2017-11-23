@@ -41,7 +41,8 @@ There are core tables that are created as part of the initial schema and are not
 - migrate
 
 The `migrate` table is the main control table for the migrate. It stores the migrate status and the timestamp range of content handled by each migrate job. The migrate process is managed by the “migrate-reporting” service.
-  
+The service migrates data in chunks using **created** and **updated** timestamps in the `master` tables. The starting and ending timestamps for each chunk are derived from the **import** table.
+
 <a name="create-update"></a>
 ### Create/Update Data
 Data shall be ingested into the system using the import mechanism where available. However, there may be rare situations where data must be created or updated manually. In these situations the general workflow is:

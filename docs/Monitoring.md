@@ -13,6 +13,8 @@ Monitoring RDW applications includes monitoring:
 ### Database 
 There are a number of tables that provide useful information about the state of the system.
 
+Should we add a reference to a newly created validation script?
+
 #### Import Status
 As data is accepted into the system an import record is created. Once the data is processed the status of the import record is updated to reflect success or a number of different error conditions. Monitoring the import table will catch any such issues. A query against the warehouse that counts all failures:
 

@@ -69,7 +69,7 @@ The import service is the REST end-point for submitting data to the system. It i
 #### Configuration
 The [Annotated Configuration](../config/rdw-ingest-import-service.yml) describes the properties and their effects.
 
-
+Just a comment: I am not sure if there is a better way to handle it, but I am struggling with the duplicate information because we have to keep it in synch. 
 <a name="package-processor"></a>
 ## Package Processor
 The package processor processes assessment packages, organizations and accommodations submitted to the system. It is responsible for parsing and validating the data before writing it to the data warehouse. Due to infrequent demand this processor has not been designed for high concurrency and only a single instance should be run.

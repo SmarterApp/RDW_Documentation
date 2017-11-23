@@ -266,6 +266,8 @@ curl -X POST --header "Authorization:Bearer {access_token}" -F file=@winterICA.1
   https://import-service/exams/imports
 ```
   
+Should we say something about update/delete exams?
+
 #### Resubmit Exams
 The system accepts and stores import payloads regardless of processing status. For imports with certain problems like 
 an unknown school or assessment, the import may be "replayed" once the underlying cause is resolved. For example, if
@@ -385,7 +387,8 @@ End-points for submitting accommodations data. This is data authored by Smarter 
 accessibility features available during testing. 
 
 #### Create Accommodation Import Request
-Accepts payloads in the Smarter Balanced [Accessibility Configuration Specification][2] format.
+Accepts payloads in the Smarter Balanced [Accessibility Configuration Specification][2] format. 
+This end point can be used to either import new accommodation configuration or update the existing ones.
 
 There are two ways of posting content: with a raw body of type `application/xml` or form-data (file upload).
 
@@ -453,7 +456,7 @@ curl -X POST --header "Authorization:Bearer {access_token}" -F file=@accommodati
 ``` 
         
 ### Package Endpoints
-End-points for submitting assessment package data. This is data authored by Smarter Balanced that describes the 
+End-points for submitting assessment package data in a CSV format (tabulator output). This is data authored by Smarter Balanced that describes the 
 assessments, items and other test details. This end point can be used to either import new packages or update existing 
 ones. When an assessment is created, the following data elements are considered critical in properly parsing incoming 
 Exam requests and cannot be updated later:

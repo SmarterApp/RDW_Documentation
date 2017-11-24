@@ -45,7 +45,7 @@ As defined in [Import and Migrate](Runbook.migrate.md#create-update), the data u
 
 #### Before executing the scripts
 1. Stop Exam Processors.
-2. Execute [validation script](https://github.com/SmarterApp/RDW_Schema/blob/develop/validation/README.md) to reconcile warehouse and reporting data mart(s).
+2. Execute validation script to reconcile warehouse and reporting data mart(s). The script could be found in [RDW_Schema](https://github.com/SmarterApp/RDW_Schema) under the `validation` folder.
 3. Check if warehouse auditing is enabled and turn it off if you do not want this action to be audited.
 ```sql 
 # to check
@@ -82,7 +82,7 @@ SELECT e.id FROM exam e JOIN administration_condition a ON a.id = e.administrati
 SELECT e.id FROM exam e JOIN administration_condition a ON a.id = e.administration_condition_id WHERE a.code = 'Valid'; -- use 'Valid' for Valid and 'IN' for Invalid
 ```
 
-5. Open [SQL Script for Bulk Delete Exams](https://github.com/SmarterApp/RDW_Schema/blob/develop/warehouse/sql/bulk_delete_exam.sql) and replace the placeholder in STEP 1 with the copied query.
+5. Open SQL script for bulk delete exams (found in [RDW_Schema](https://github.com/SmarterApp/RDW_Schema) under the `warehouse` folder) and replace the placeholder in STEP 1 with the copied query.
 Continue with the steps in this SQL file.
 6. Verify that migrate(s) is/are running and wait for them to complete.
 

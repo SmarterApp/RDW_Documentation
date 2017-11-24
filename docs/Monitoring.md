@@ -6,9 +6,18 @@
 
 Monitoring RDW applications includes monitoring:
 
-* Database. 
-* Logging.
-* Application Status.
+* [Database](#database)
+    * [Import Status](#import-status)
+    * [Monitor Ingest Speed](#monitor-ingest-speed)
+    * [Monitor Time-To-Warehouse](#monitor-time-to-warehouse) 
+    * [Validate Migrate Data Integrity](#validate-migrate-data-integrity)
+    * [Monitor Migrate Failures](#monitor-migrate-failures)
+    * [Monitor Migrate Rate](#monitor-migrate-rate)
+    * [System Use By Date](#system-use-by-date)
+* [Logging](#logging)
+    * [Log Collection](#log-collection)
+    * [Log Messages](#log-messages)
+* [Application Status](#application-status)
 
 ### Database 
 There are a number of tables that provide useful information about the state of the system.
@@ -96,6 +105,9 @@ GROUP BY delay, bucket
 ORDER BY bucket DESC, delay;
 ```
 
+#### Validate Migrate Data Integrity
+There is a script that reports on data discrepancies between the data warehouse and the reporting data mart(s). Detailed instructions for running that scripts and interpreting the results can be found in [RDW_Schema](https://github.com/SmarterApp/RDW_Schema) under the `validation` folder.
+
 #### Monitor Migrate Failures
 The migrate process is managed by the “migrate-reporting” service. The service records its status into the table. For all possible migrate statuses please refer to `migrate_status` table:
 
@@ -112,7 +124,7 @@ If there are failures refer to [Troubleshooting][1] to resolve.
 
 **This condition requires immediate attention since new test results will not be visible in the reporting application until it is resolved**.
  
-#### Monitor Migrate Speed
+#### Monitor Migrate Rate
 The  “migrate-reporting” service continuously migrates newly imported data from `warehouse` to `reporting`. The data is moved in batches defined by the `migrate`'s `first_at` and `last_at` timestamps. Each batch is different and hence the processing time will vary, but in general it is expected to take less than a minute.
 
 To establish an average speed of the migrate for a particular installation, check the processing speed of the successful migrates on any given day:

@@ -212,7 +212,7 @@ curl --header "Authorization:Bearer {access_token}" https://import-service/impor
 End-points for submitting exams aka test results.
 
 #### Create Exam Import Request
-Accepts payloads in Test Result Transmission ([TRT][3]) format, creating new exam import requests. 
+Accepts payloads in Test Result Transmission ([TRT][3]) format, creating new exam import requests. Based on the data in the TRT this may result in an exam being created, updated or deleted. Exams are identified using the opportunity id and assessment id. If an incoming exam is not found in the system one will be added. If a matching exam already exists, it will be updated or, if the new status is `reset`, it will be deleted.
 
 There are two ways of posting exam content: with a raw body of type `application/xml` or form-data (file upload).
 
@@ -267,11 +267,7 @@ curl -X POST --header "Authorization:Bearer {access_token}" -F file=@winterICA.1
 ```
   
 #### Resubmit Exams
-The system accepts and stores import payloads regardless of processing status. For imports with certain problems like 
-an unknown school or assessment, the import may be "replayed" once the underlying cause is resolved. For example, if
-the missing school is added to the system, all affected exams can be resubmitted, without requiring the client to 
-re-post the data. Note that this is meant as an operational utility; if it is being used regularly there are probably
-fundamental data flow issues. 
+The system accepts and stores import payloads regardless of processing status. For imports with certain problems like an unknown school or assessment, the import may be "replayed" once the underlying cause is resolved. For example, if the missing school is added to the system, all affected exams can be resubmitted, without requiring the client to re-post the data. Note that this is meant as an operational utility; if it is being used regularly there are probably fundamental data flow issues. 
 
 * Host: import service
 * URL: `/exams/imports/resubmit`
@@ -303,10 +299,7 @@ curl -X POST --header "Authorization:Bearer {access_token}" https://import-servi
 End-points for submitting organization data; this includes districts, schools, and groups of institutions. 
 
 #### Create Organization Import Request
-Accepts JSON payload, compatible with the format produced by ART. The payload should contain all the organization
-data necessary to resolve all contents; for example, if a school is in a group under a district, all three must
-be present in the payload. The payload must be valid JSON but the exact structure doesn't matter a lot: the system
-will parse the payload looking for the required fields: `entityType`, `entityId`, `entityName`, `parentEntityId`. 
+Accepts JSON payload, compatible with the format produced by ART. The payload should contain all the organization data necessary to resolve all contents; for example, if a school is in a group under a district, all three must be present in the payload. The payload must be valid JSON but the exact structure doesn't matter a lot: the system will parse the payload looking for the required fields: `entityType`, `entityId`, `entityName`, `parentEntityId`. 
 
 There are two ways of posting content: with a raw body of type `application/json` or form-data (file upload).
 
@@ -453,16 +446,12 @@ curl -X POST --header "Authorization:Bearer {access_token}" -F file=@accommodati
 ``` 
         
 ### Package Endpoints
-End-points for submitting assessment package data. This is data authored by Smarter Balanced that describes the 
-assessments, items and other test details. This end point can be used to either import new packages or update existing 
-ones. When an assessment is created, the following data elements are considered critical in properly parsing incoming 
-Exam requests and cannot be updated later:
+End-points for submitting assessment package data in CSV format (tabulator output). This is data authored by Smarter Balanced that describes the assessments, items and other test details. This end point can be used to either import new packages or update existing ones. When an assessment is created, the following data elements are considered critical in properly parsing incoming Exam requests and cannot be updated later:
 * grade
 * subject 
 * sub-type (ICA, IAB or Summative)
 
-An attempt to update any of the above data elements will result in the "PROCESSED" status and the message stating that 
-it was rejected.
+An attempt to update any of the above data elements will result in the "PROCESSED" status and the message stating that it was rejected.
 
 #### Create Package Import Request
 Accepts payloads in the Smarter Balanced Assessment Tabulator format. This is a CSV format produced by the internal

@@ -17,6 +17,7 @@ RDW is a suite of applications with lots of moving parts. These documents provid
 1. [Performance Tuning for Aurora](docs/PerformanceTuning.Aurora.md)
 1. [Performance Tuning for Redshift](docs/PerformanceTuning.Redshift.md)
 1. [API - Ingest](docs/API-Ingest.md)
+1. [Auditing](docs/Audit.md)
 
 ## Project Repositories
 RDW is separated into multiple project repositories. Each repo has documentation for building and testing.

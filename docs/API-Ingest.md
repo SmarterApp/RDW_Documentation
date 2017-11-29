@@ -7,6 +7,16 @@ This document describes the service end-points for the ingest services.
 * The task service has task trigger end-points. 
 * All services have diagnostic end-points. 
 
+Quick Links:
+1. [Authentication and Authorization](#authentication-and-authorization)
+1. [Import Endpoints](#import-endpoints)
+1. [Exam Endpoints](#exam-endpoints)
+1. [Organization Endpoints](#organization-endpoints)
+1. [Accommodations Endpoints](#accommodations-endpoints)
+1. [Package Endpoints](#package-endpoints)
+1. [Task Endpoints](#task-endpoints)
+1. [Status Endpoints](#status-endpoints)
+
 ### Authentication and Authorization
 The import service requires an OAuth2 access token for the data loading end-points. This is a password grant token requested from the OpenAM server by a trusted client for a user of the system (the permissions are associated with the user). 
 

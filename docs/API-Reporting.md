@@ -2,17 +2,15 @@
 
 **Intended Audience**: this document describes the programming interface for the reporting services of the [Reporting Data Warehouse](../README.md). Operations and system adminstration will find it useful for the diagnostic and task end-points.
 
-This document describes the service end-points for the reporting services.
-* The report processor has a task trigger end-point. 
-* All services have diagnostic end-points. 
-
-> There are many more end-points in the reporting services. Most are intended to be consumed by the reporting UI, so are not documented here. 
+This document describes the service end-points for the reporting services. *Note: there are many more end-points in the reporting services but most are intended to be consumed by the reporting UI, so are not documented here.*
+1. [Task Endpoints](#task-endpoints)
+1. [Status Endpoints](#status-endpoints)
         
 ### Task Endpoints
-The report processor has a task configured to run periodically (typically once a day). This end-point is part of the actuator framework so it is exposed on a separate port (8008) which is typically kept behind a firewall in a private network. No authentication is required.
+The report processor has a task configured to run periodically (typically once a day). This end-point allows that task to be manually triggered on demand. This end-point is part of the actuator framework so it is exposed on a separate port (8008) which is typically kept behind a firewall in a private network. No authentication is required.
 
 #### Remove Stale Reports Task
-This task removes old user reports. This is typically scheduled to happen once a day in the wee hours, removing any reports that are more than 30 days old.
+This task removes old user reports. This is typically scheduled to happen once a day in the wee hours, removing any reports that are more than 30 days old. To trigger an immediate execution:
 
 * Host: report processor
 * URL: `/removeStaleReports`

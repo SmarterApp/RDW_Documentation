@@ -1,6 +1,6 @@
 ## API - Ingest
 
-**Intended Audience**: this document describes the programming interface for the ingest services. Operations and system adminstration will find it useful for the configuration data loading end-points and the diagnostic and task service end-points. Third party providers of test results will find it useful for the data loading end-points.
+**Intended Audience**: this document describes the programming interface for the ingest services of the [Reporting Data Warehouse](../README.md). Operations and system adminstration will find it useful for the configuration data loading end-points and the diagnostic and task service end-points. Third party providers of test results will find it useful for the data loading end-points.
 
 This document describes the service end-points for the ingest services.
 * The import service has data loading end-points.

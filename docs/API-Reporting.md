@@ -1,6 +1,6 @@
 ## API - Reporting
 
-**Intended Audience**: this document describes the programming interface for the reporting services. Operations and system adminstration will find it useful for the diagnostic and task end-points.
+**Intended Audience**: this document describes the programming interface for the reporting services of the [Reporting Data Warehouse](../README.md). Operations and system adminstration will find it useful for the diagnostic and task end-points.
 
 This document describes the service end-points for the reporting services.
 * The report processor has a task trigger end-point. 

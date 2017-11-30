@@ -34,11 +34,13 @@ Warehouse tables audited:
 | exam_item                    | One record per exam item                    | Child       | Create, Update, Delete      |
 | student                      | One record per student                      | Parent      | Create, Update, Soft Delete |
 | student_ethnicity            | One record per student ethnicity            | Child       | Create, Delete              |
+| student_group                | One record per student group                | Parent      | Create, Update, Soft Delete |
+| student_group_membership     | One record per student membership in group  | Child       | Create, Delete              |
+| user_student_group           | One record per user with access to group    | Child       | Create, Delete              |
 
 
 ### Where is audit data stored?
-Each audited table has an 'audit_...' table that records the state change for each row.  The audit tables contain the state of the row before the change.
-In addition to the columns from the table being audited, each audit_ table has the following columns:
+Each audited table has an `audit_...` table that records the state change for each row.  The audit tables contain the state of the row before the change.  In addition to the columns from the table being audited, each audit_ table has the following columns:
 
 - **id**: Unique ID
 - **action**: delete or update
@@ -57,6 +59,9 @@ MySQL triggers are used to capture audit_ records.  Each table being audited has
 | audit_exam_item                    | exam_item                    | Update, Delete                 |
 | audit_student                      | student                      | Update, Soft Delete(as update) |
 | audit_student_ethnicity            | student_ethnicity            | Delete                         |
+| audit_student_group                | student_group                | Update, Soft Delete(as update) |
+| audit_student_group_membership     | student_group_membership     | Delete                         |
+| audit_user_student_group           | user_student_group           | Delete                         |
 
 ### How can audit data be queried?
 Sample queries are provided for analysing audit data combining the warehouse import table, the table being audited, the audit_ table and joining other relations in the warehouse for lookup values.

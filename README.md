@@ -16,8 +16,7 @@ RDW is a suite of applications with lots of moving parts. These documents provid
 1. [Deployment Checklist](deploy/Deployment.AWS.md)
 1. [Performance Tuning for Aurora](docs/PerformanceTuning.Aurora.md)
 1. [Performance Tuning for Redshift](docs/PerformanceTuning.Redshift.md)
-1. [API - Ingest](docs/API-Ingest.md)
-1. [API - Reporting](docs/API-Reporting.md)
+1. [API](docs/API.md)
 1. [Auditing](docs/Audit.md)
 
 ## Project Repositories

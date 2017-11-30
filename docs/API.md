@@ -1,10 +1,10 @@
-## API - Ingest
+## API
 
-**Intended Audience**: this document describes the programming interface for the ingest services of the [Reporting Data Warehouse](../README.md). Operations and system adminstration will find it useful for the configuration data loading end-points and the diagnostic and task service end-points. Third party providers of test results will find it useful for the data loading end-points.
+**Intended Audience**: this document describes the programming interface for the ingest and reporting services of the [Reporting Data Warehouse](../README.md). Operations and system adminstration will find it useful for the configuration data loading end-points and the diagnostic and task service end-points. Third party providers of test results will find it useful for the data loading end-points.
 
-This document describes the service end-points for the ingest services.
+This document describes the service end-points for the ingest and reporting services. *Note: there are many more end-points in the reporting services but most are intended to be consumed by the reporting UI, so are not documented here.*
 * The import service has data loading end-points.
-* The task service has task trigger end-points. 
+* The task and report processor services have task trigger end-points. 
 * All services have diagnostic end-points. 
 
 Quick Links:
@@ -109,17 +109,11 @@ curl https://openam/auth/oauth2/tokeninfo?access_token=20b55fc2-1b84-4412-8149-8
 ```
 
 ### Import Endpoints
-The import service provides the end-points for submitting data to the system. The import requests are processed and 
-migrated to the reporting data mart. Import payloads are hashed and duplicate content is detected, returning any 
-previous import request for the given content. Thus submitting a payload a second time will safely no-op and return 
-the current status of the previous import.
+The import service provides the end-points for submitting data to the system. The import requests are processed and migrated to the reporting data mart. Import payloads are hashed and duplicate content is detected, returning any previous import request for the given content. Thus submitting a payload a second time will safely no-op and return the current status of the previous import.
 
-All data submissions result in an import being created. Thus a POST to `/exams/imports` will create an `import` 
-resource which can be accessed at `/imports/{id}` (note that `exams` is not in the path). These are the end-points
-for query imports.
+All data submissions result in an import being created. Thus a POST to `/exams/imports` will create an `import` resource which can be accessed at `/imports/{id}` (note that `exams` is not in the path). These are the end-points for query imports.
  
-All end-points require a valid token, the examples use `{access_token}` as a placeholder. The token must provide 
-the `ASMTDATALOAD` role at the client or state level.
+All end-points require a valid token, the examples use `{access_token}` as a placeholder. The token must provide the `ASMTDATALOAD` role at the client or state level.
 
 #### Get Import Request
 This end-point may be used to get the current status of an import request.
@@ -187,8 +181,7 @@ curl --header "Authorization:Bearer {access_token}" https://import-service/impor
 ```
 
 #### Get Import Payload Properties
-This end-point may be used to get the payload properties for an import request. This can be useful because not all
-the properties for an import are stored in the data warehouse, some are archived only with the payload.
+This end-point may be used to get the payload properties for an import request. This can be useful because not all the properties for an import are stored in the data warehouse, some are archived only with the payload.
 
 * Host: import service
 * URL: `/imports/{id}/payload/properties`
@@ -384,13 +377,10 @@ curl -X POST --header "Authorization:Bearer {access_token}" -F file=@ART.json ht
     
     
 ### Accommodations Endpoints
-End-points for submitting accommodations data. This is data authored by Smarter Balanced that describes the various
-accessibility features available during testing. 
+End-points for submitting accommodations data. This is data authored by Smarter Balanced that describes the various accessibility features available during testing. 
 
 #### Create Accommodation Import Request
-Accepts payloads in the Smarter Balanced [Accessibility Configuration Specification][2] format.
-
-There are two ways of posting content: with a raw body of type `application/xml` or form-data (file upload).
+Accepts payloads in the Smarter Balanced [Accessibility Configuration Specification][2] format. There are two ways of posting content: with a raw body of type `application/xml` or form-data (file upload).
 
 * Host: import service
 * URL: `/accommodations/imports`
@@ -522,20 +512,16 @@ curl -X POST --header "Authorization:Bearer {access_token}" --header "Content-Ty
 curl -X POST --header "Authorization:Bearer {access_token}" -F file=@2017-2018.csv https://import-service/packages/imports
 ``` 
 ##### Check Package Import Request result
-To check the status of the import use Get Import Request. Imports with "PROCESSED" status will include a messages 
-describing actions taken. An example of the response: 
+To check the status of the import use Get Import Request. Imports with "PROCESSED" status will include a messages describing actions taken. An example of the response: 
 ```
 "Assessments processed: 7, created: 5, updated: 1, rejected: 1".
 ```
               
 ### Task Endpoints
-There are a few tasks that are configured to run periodically (typically once a day). These end-points allow those
-tasks to be manually triggered on demand. These end-points are part of the actuator framework so they are exposed on
-a separate port (8008) which is typically kept behind a firewall in a private network. No authentication is required. 
+There are a few tasks that are configured to run periodically (typically once a day). These end-points allow those tasks to be manually triggered on demand. These end-points are part of the actuator framework so they are exposed on a separate port (8008) which is typically kept behind a firewall in a private network. No authentication is required. 
 
 #### Update Organizations Task
-The update organization task retrieves all schools from ART and posts them to the import service. This is typically
-scheduled to happen every day in the wee hours. To trigger an immediate execution: 
+The update organization task retrieves all schools from ART and posts them to the import service. This is typically scheduled to happen every day in the wee hours. To trigger an immediate execution: 
 
 * Host: task service
 * URL: `/updateOrganizations`
@@ -547,10 +533,21 @@ scheduled to happen every day in the wee hours. To trigger an immediate executio
 curl -X POST http://localhost:8008/updateOrganizations
 ```
 
+#### Remove Stale Reports Task
+This task removes old user reports. This is typically scheduled to happen once a day in the wee hours, removing any reports that are more than 30 days old. To trigger an immediate execution:
+
+* Host: report processor
+* URL: `/removeStaleReports`
+* Method: `POST`
+* Success Response:
+  * Code: 200
+* Sample Call:
+```bash
+curl -X POST http://localhost:8008/removeStaleReports
+```
+
 ### Status Endpoints
-End-points for querying the status of the system. These are intended primarily for operations but can be useful when
-initially connecting to the system. These end-points are exposed on a separate port (8008) which is typically kept 
-behind a firewall in a private network. No authentication is required.
+End-points for querying the status of the system. These are intended primarily for operations but can be useful when initially connecting to the system. These end-points are exposed on a separate port (8008) which is typically kept behind a firewall in a private network. No authentication is required.
 
 #### Get Diagnostic Status
 This end-point may be used to get the status of a service.
@@ -577,9 +574,8 @@ curl http://localhost:8008/status?level=2
 ```
 
 #### Actuator Endpoints
-As Spring Boot applications there are a number of `actuator` end-points that provide information about the status and
-configuration of the system. See [Actuator Endpoints][1] for a full (technical) description of these end-points. Like 
-the status end-point these are exposed on a separate port (8008) and do not require authentication. 
+As Spring Boot applications there are a number of `actuator` end-points that provide information about the status and configuration of the system. See [Actuator Endpoints][1] for a full (technical) description of these end-points. Like the status end-point these are exposed on a separate port (8008) and do not require authentication. 
+
 A list of the most useful:
 * Host: any RDW service
 * URL:

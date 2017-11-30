@@ -34,11 +34,13 @@ Warehouse tables audited:
 | exam_item                    | One record per exam item                    | Child       | Create, Update, Delete      |
 | student                      | One record per student                      | Parent      | Create, Update, Soft Delete |
 | student_ethnicity            | One record per student ethnicity            | Child       | Create, Delete              |
+| student_group                | One record per student group                | Parent      | Create, Update, Soft Delete |
+| student_group_membership     | One record per student membership in group  | Child       | Create, Delete              |
+| user_student_group           | One record per user with access to group    | Child       | Create, Delete              |
 
 
 ### Where is audit data stored?
-Each audited table has an 'audit_...' table that records the state change for each row.  The audit tables contain the state of the row before the change.
-In addition to the columns from the table being audited, each audit_ table has the following columns:
+Each audited table has an `audit_...` table that records the state change for each row.  The audit tables contain the state of the row before the change.  In addition to the columns from the table being audited, each audit_ table has the following columns:
 
 - **id**: Unique ID
 - **action**: delete or update
@@ -57,6 +59,9 @@ MySQL triggers are used to capture audit_ records.  Each table being audited has
 | audit_exam_item                    | exam_item                    | Update, Delete                 |
 | audit_student                      | student                      | Update, Soft Delete(as update) |
 | audit_student_ethnicity            | student_ethnicity            | Delete                         |
+| audit_student_group                | student_group                | Update, Soft Delete(as update) |
+| audit_student_group_membership     | student_group_membership     | Delete                         |
+| audit_user_student_group           | user_student_group           | Delete                         |
 
 ### How can audit data be queried?
 Sample queries are provided for analysing audit data combining the warehouse import table, the table being audited, the audit_ table and joining other relations in the warehouse for lookup values.
@@ -66,7 +71,7 @@ Sample queries are provided for analysing audit data combining the warehouse imp
 **Finding modifications to a students exams**
 The following query outputs one row for each modified exam for one student.  It includes the count of modifications and the date of the last change.
 
-The where clause can be changed to include multiple students.
+The `WHERE` clause can be changed to include multiple students.
 
 ```mysql
 SELECT
@@ -129,7 +134,7 @@ GROUP BY e.id
 ```
 
 **Listing all exams for one student with update count**
-The following query outputs one row for each exam for one student with a count of modifications and the date of the most recent update.
+The following query outputs one row for each exam for one student with a count of modifications and the date of the most recent update.  If the exam has not been modified `exam_update_count` is zero.
 
 ```mysql
 SELECT
@@ -163,7 +168,7 @@ GROUP BY e.id
 **Exam audit trail**
 The following query lists the details of exam modifications in addition to the current state.
 
-The query can be modified to display different or all columns.  The where clause can be modified, such as, to include multiple exams or all exams for a student.
+The query can be modified to display different or all columns.  The `WHERE` clause can be modified, such as, to include multiple exams or all exams for a student.
 
 ```mysql
 SELECT
@@ -277,7 +282,7 @@ ORDER BY e.exam_id, e.updated DESC;
 **Accommodation audit trail for exams**
 Each child table audit trail can be queried in a similar manner.  The following example is for the exam_available_accommodation child table.
 
-The query can be modified to display different or all columns.  The where clause can be modified, such as, to include multiple exams or all exams for a student.
+The query can be modified to display different or all columns.  The `WHERE` clause can be modified, such as, to include multiple exams or all exams for a student.
 
 
 ```mysql
@@ -364,7 +369,7 @@ ORDER BY acc_audit.exam_id, acc_audit.action_date DESC;
 **Finding modified students**
 The following query outputs one row for each modified student.  It includes the count of modifications and the date of the last change.
 
-The where clause can be changed to include different sets students.
+A `WHERE` clause can be added to filter students.
 
 ```mysql
 SELECT
@@ -394,7 +399,7 @@ GROUP BY s.id;
 The following query outputs one row for each student.  It includes the count of modifications and the date of the last change.
 Students with no modifications have a `student_update_count` of `0`.
 
-The where clause can be changed to include different sets students.
+A `WHERE` clause can be added to filter students.
 
 ```mysql
 SELECT
@@ -451,7 +456,7 @@ GROUP BY s.id;
 **Student audit trail**
 The following query lists the details of student modifications in addition to the current state.
 
-The query can be modified to display different or all columns.  The where clause can be modified, such as, to include multiple students or all students in a school.
+The query can be modified to display different or all columns.  The `WHERE` clause can be modified, such as, to include multiple students or all students in a school.
 
 ```mysql
 SELECT
@@ -516,9 +521,9 @@ ORDER BY s.student_id, s.updated DESC;
 7 rows in set (0.00 sec)
 ```
 **Ethnicity audit trail for students**
-Each child table audit trail can be queried in a similar manner.  The following example is for the student_ethnicity child table.  Student currently has one child table.
+Each child table audit trail can be queried in a similar manner.  The following example is for the `student_ethnicity` child table.  Student currently has one child table.
 
-The query can be modified to display different or all columns.  The where clause can be modified, such as, to include multiple students or all students in a school.
+The query can be modified to display different or all columns.  The `WHERE` clause can be modified, such as, to include multiple students or all students in a school.
 
 
 ```mysql
@@ -599,4 +604,254 @@ ORDER BY eth_audit.student_id, eth_audit.action_date DESC;
 |          1 | 2017-11-10 09:19:31.000597 | update  | 6         | dwtest@example.com |                           | SSID001 | Williams, Gladys |
 +------------+----------------------------+---------+-----------+--------------------+---------------------------+---------+------------------+
 12 rows in set (0.00 sec)
+```
+
+#### Student Groups
+
+**Finding modified student groups**
+The following query outputs one row for each modified student_group.  It includes the count of modifications and the date of the last change.
+
+A `WHERE` clause can be added to filter results.
+
+```mysql
+SELECT
+  sg.id group_id,
+  sg.name group_name,
+  sch.name school,
+  sg.school_year,
+  COALESCE(sub.code, '') subject,
+  count(1) update_count,
+  MAX(asg.audited) last_update
+FROM student_group sg
+JOIN audit_student_group asg ON sg.id = asg.student_group_id
+LEFT JOIN subject sub ON sg.subject_id = sub.id
+JOIN school sch ON sg.school_id = sch.id
+GROUP BY sg.id;
+```
+
+```text
++----------+-----------------+----------------------+-------------+---------+--------------+----------------------------+
+| group_id | group_name      | school               | school_year | subject | update_count | last_update                |
++----------+-----------------+----------------------+-------------+---------+--------------+----------------------------+
+|        1 | StudentGroup001 | Test School TS000001 |        2018 | Math    |            3 | 2017-11-29 05:39:10.050177 |
+|        2 | StudentGroup002 | Test School TS000001 |        2018 | Math    |            2 | 2017-11-29 05:39:10.050177 |
+|        4 | StudentGroup004 | Test School TS000002 |        2018 |         |            1 | 2017-11-29 05:38:00.006242 |
++----------+-----------------+----------------------+-------------+---------+--------------+----------------------------+
+3 rows in set (0.00 sec)
+```
+
+**Finding modifications to student groups**
+The following query outputs one row for each student_group.  It includes the count of modifications and the date of the last change.
+Students with no modifications have a `update_count` of `0`.
+
+A `WHERE` clause can be added to filter results.
+
+```mysql
+SELECT
+  sg.id group_id,
+  sg.name group_name,
+  sch.name school,
+  sg.school_year,
+  COALESCE(sub.code, '') subject,
+  SUM(CASE WHEN asg.student_group_id IS NOT NULL THEN 1 ELSE 0 END) update_count,
+  MAX(asg.audited) last_update
+FROM student_group sg
+LEFT JOIN audit_student_group asg ON sg.id = asg.student_group_id
+LEFT JOIN subject sub ON sg.subject_id = sub.id
+JOIN school sch ON sg.school_id = sch.id
+GROUP BY sg.id;
+```
+
+```text
++----------+-----------------+----------------------+-------------+---------+--------------+----------------------------+
+| group_id | group_name      | school               | school_year | subject | update_count | last_update                |
++----------+-----------------+----------------------+-------------+---------+--------------+----------------------------+
+|        1 | StudentGroup001 | Test School TS000001 |        2018 | Math    |            3 | 2017-11-29 05:39:10.050177 |
+|        2 | StudentGroup002 | Test School TS000001 |        2018 | Math    |            2 | 2017-11-29 05:39:10.050177 |
+|        3 | StudentGroup003 | Test School TS000002 |        2018 |         |            0 | NULL                       |
+|        4 | StudentGroup004 | Test School TS000002 |        2018 |         |            1 | 2017-11-29 05:38:00.006242 |
+|        6 | StudentGroup005 | Test School TS000005 |        2018 |         |            0 | NULL                       |
++----------+-----------------+----------------------+-------------+---------+--------------+----------------------------+
+5 rows in set (0.00 sec)
+```
+
+**Finding modifications to student groups in a date range**
+The following query outputs one row for each modification to a student_group within a date range.
+
+```mysql
+SELECT
+  sg.id group_id,
+  sg.name group_name,
+  sch.name school,
+  sg.school_year,
+  COALESCE(sub.code, '') subject,
+  count(1) update_count,
+  MAX(asg.audited) last_update
+FROM student_group sg
+JOIN audit_student_group asg ON sg.id = asg.student_group_id
+LEFT JOIN subject sub ON sg.subject_id = sub.id
+JOIN school sch ON sg.school_id = sch.id
+WHERE asg.audited BETWEEN '2017-11-29 05:37:00' AND '2017-11-29 05:38:00'
+GROUP BY sg.id;
+```
+
+```text
++----------+-----------------+----------------------+-------------+---------+--------------+----------------------------+
+| group_id | group_name      | school               | school_year | subject | update_count | last_update                |
++----------+-----------------+----------------------+-------------+---------+--------------+----------------------------+
+|        1 | StudentGroup001 | Test School TS000001 |        2018 | Math    |            1 | 2017-11-29 05:37:59.986354 |
+|        2 | StudentGroup002 | Test School TS000001 |        2018 | Math    |            1 | 2017-11-29 05:37:59.986354 |
++----------+-----------------+----------------------+-------------+---------+--------------+----------------------------+
+2 rows in set (0.00 sec)
+```
+
+**Student group audit trail**
+The following query lists the details of student group modifications in addition to the current state.
+
+The query can be modified to display different or all columns.  The `WHERE` clause can be modified, such as, to include multiple student groups or all student groups in a district.
+
+```mysql
+SELECT
+  sg.student_group_id group_id,
+  sg.name group_name,
+  sch.name school,
+  sg.school_year,
+  COALESCE(sub.code, '') subject,
+  sg.deleted,
+  sg.active,
+  sg.group_import_id import,
+  i.creator import_creator,
+  sg.updated,
+  sg.action
+FROM (
+       SELECT
+         sg.id student_group_id,
+         sg.name,
+         sg.school_id,
+         sg.school_year,
+         sg.subject_id,
+         sg.deleted,
+         sg.active,
+         update_import_id AS group_import_id,
+         'current' AS action,
+         sg.updated
+       FROM student_group sg
+       WHERE import_id != update_import_id
+             AND sg.name IN ('StudentGroup001')
+       UNION ALL
+       SELECT
+         asg.student_group_id,
+         asg.name,
+         asg.school_id,
+         asg.school_year,
+         asg.subject_id,
+         asg.deleted,
+         asg.active,
+         update_import_id AS group_import_id,
+         CASE WHEN import_id = update_import_id THEN 'original' ELSE action END action,
+         updated
+       FROM audit_student_group asg
+       WHERE asg.name IN ('StudentGroup001')
+     ) sg
+JOIN import i ON sg.group_import_id = i.id
+LEFT JOIN school sch ON sg.school_id = sch.id
+LEFT JOIN subject sub ON sg.subject_id = sub.id
+ORDER BY sg.student_group_id, sg.updated DESC;
+```
+
+```text
++----------+-----------------+----------------------+-------------+---------+---------+--------+--------+----------------+----------------------------+----------+
+| group_id | group_name      | school               | school_year | subject | deleted | active | import | import_creator | updated                    | action   |
++----------+-----------------+----------------------+-------------+---------+---------+--------+--------+----------------+----------------------------+----------+
+|        1 | StudentGroup001 | Test School TS000001 |        2018 | Math    |       0 |      1 |      6 | NULL           | 2017-11-29 05:39:10.050177 | current  |
+|        1 | StudentGroup001 | Test School TS000001 |        2018 | Math    |       0 |      1 |      4 | NULL           | 2017-11-29 05:37:59.986354 | update   |
+|        1 | StudentGroup001 | Test School TS000001 |        2018 | ELA     |       0 |      1 |      2 | NULL           | 2017-11-29 05:36:49.895244 | update   |
+|        1 | StudentGroup001 | Test School TS000001 |        2018 | ELA     |       0 |      1 |      1 | NULL           | 2017-01-01 09:00:00.000000 | original |
++----------+-----------------+----------------------+-------------+---------+---------+--------+--------+----------------+----------------------------+----------+
+4 rows in set (0.00 sec)
+```
+**Student membership audit trail**
+Each child table audit trail can be queried in a similar manner.  For student_groups the child tables are `student_group_membership` and `user_student_group`.  The following example is for `student_group_membership`.  
+
+The query can be modified to display different or all columns.  The `WHERE` clauses can be modified, such as, to include multiple student_groups or all student_groups in a district.
+
+
+```mysql
+SELECT
+  membership_audit.*,
+  COALESCE(s.ssid, '') ssid,
+  COALESCE(CONCAT(s.last_or_surname, ', ', first_name), '') student,
+  sg.name group_name
+FROM (
+       SELECT
+         groups.student_group_id,
+         i.created action_date,
+         groups.action,
+         i.id import_id,
+         i.creator,
+         ' ' student_id
+       FROM (
+              SELECT
+                sg.id student_group_id,
+                sg.update_import_id,
+                'current' AS action
+              FROM student_group sg
+              WHERE sg.name IN ('StudentGroup001')
+              UNION ALL
+              SELECT
+                asg.student_group_id,
+                asg.update_import_id,
+                asg.action
+              FROM audit_student_group asg
+              WHERE asg.name IN ('StudentGroup001')
+            ) groups
+       JOIN import i ON groups.update_import_id = i.id
+       UNION ALL
+       SELECT
+         student_events.student_group_id,
+         student_events.updated action_date,
+         student_events.action,
+         ' ' import_id,
+         ' ' creator,
+         student_events.student_id
+       FROM (
+              SELECT
+                sgm.student_group_id,
+                sgm.student_id,
+                'create' action,
+                sgm.created AS updated
+              FROM student_group_membership sgm
+              WHERE sgm.student_group_id IN ( SELECT id FROM student_group WHERE student_group.name IN ('StudentGroup001') )
+              UNION ALL
+              SELECT
+                asgm.student_group_id,
+                asgm.student_id,
+                asgm.action,
+                asgm.audited AS updated
+              FROM audit_student_group_membership asgm
+              WHERE asgm.student_group_id IN ( SELECT id FROM student_group WHERE student_group.name IN ('StudentGroup001') )
+            ) student_events
+     ) membership_audit
+JOIN student_group sg ON membership_audit.student_group_id = sg.id
+Left JOIN student s ON membership_audit.student_id = s.id
+ORDER BY membership_audit.student_group_id, membership_audit.action_date DESC;
+```
+
+```text
++------------------+----------------------------+---------+-----------+---------+------------+---------+------------------+-----------------+
+| student_group_id | action_date                | action  | import_id | creator | student_id | ssid    | student          | group_name      |
++------------------+----------------------------+---------+-----------+---------+------------+---------+------------------+-----------------+
+|                1 | 2017-11-29 05:39:10.054242 | create  |           |         | 2          | SSID002 | Smith, Joe       | StudentGroup001 |
+|                1 | 2017-11-29 05:39:10.053335 | delete  |           |         | 6          | SSID006 | Gray, Carol      | StudentGroup001 |
+|                1 | 2017-11-29 05:39:10.045542 | current | 6         | NULL    |            |         |                  | StudentGroup001 |
+|                1 | 2017-11-29 05:37:59.991001 | create  |           |         | 4          | SSID004 | Smart, Linda     | StudentGroup001 |
+|                1 | 2017-11-29 05:37:59.991001 | create  |           |         | 5          | SSID005 | Bennett, Donna   | StudentGroup001 |
+|                1 | 2017-11-29 05:37:59.990122 | delete  |           |         | 3          | SSID003 | Anderson, Mark   | StudentGroup001 |
+|                1 | 2017-11-29 05:37:59.990122 | delete  |           |         | 2          | SSID002 | Smith, Joe       | StudentGroup001 |
+|                1 | 2017-11-29 05:37:59.982200 | update  | 4         | NULL    |            |         |                  | StudentGroup001 |
+|                1 | 2017-11-29 05:36:49.900632 | create  |           |         | 1          | SSID001 | Williams, Gladys | StudentGroup001 |
+|                1 | 2017-11-29 05:36:49.887226 | update  | 2         | NULL    |            |         |                  | StudentGroup001 |
+|                1 | 2017-11-29 05:36:19.109393 | update  | 1         | NULL    |            |         |                  | StudentGroup001 |
++------------------+----------------------------+---------+-----------+---------+------------+---------+------------------+-----------------+
+11 rows in set (0.00 sec)
 ```

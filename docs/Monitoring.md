@@ -205,7 +205,7 @@ The applications log messages at different log levels depending on the severity 
 
 Log messages are grouped in a package hierarchy by area of functionality. For example, the package for log messages coming from ingest processes is `org.opentestsystem.rdw.ingest.processor`, while the one for Spring Boot functionality is `org.springframework.boot`. The log level may be set at any level of granularity using that package hierarchy. This provides very precise control of the messages that are emitted. The log level is set in the configuration file.
 
-> Note: in the log file, the logger package is often abbreviated with one letter per level for brevity. For example `org.opentestsystem.rdw.ingest.processor.ExamProcessorConfiguration` may look be `o.o.r.i.p.ExamProcessorConfiguration`.
+> Note: in the log file, the logger package is often abbreviated with one letter per level for brevity. For example `org.opentestsystem.rdw.ingest.processor.ExamProcessorConfiguration` may be `o.o.r.i.p.ExamProcessorConfiguration`.
 
 As an example, there is an `INFO` message emitted every 5 minutes by Spring configuration. Although useful during initial configuration, this message just fills the log. To disable it, we can set the log level for that component higher than `INFO`:
 

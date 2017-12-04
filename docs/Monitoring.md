@@ -15,6 +15,7 @@ Monitoring RDW applications includes monitoring:
     * [Monitor Migrate Rate](#monitor-migrate-rate)
     * [System Use By Date](#system-use-by-date)
 * [Logging](#logging)
+    * [Log Level](#log-level)
     * [Log Collection](#log-collection)
     * [Log Messages](#log-messages)
 * [Application Status](#application-status)
@@ -194,8 +195,85 @@ SELECT p.date, count(DISTINCT sub.sid) FROM prod p
 
 ### Logging
 
+#### Log Level
+The applications log messages at different log levels depending on the severity of the message (the default log level is `INFO`):
+
+* `ERROR` - an error the application can't properly deal with; requires immediate attention
+* `WARN` - a problem that the application handled but deserves attention
+* `INFO` - messages about the normal operation of the application
+* `DEBUG` - messages that provide additional information for diagnosing issues
+
+Log messages are grouped in a hierarchy by area of functionality. For example, the "namespace" for log messages coming from ingest processes is `org.opentestsystem.rdw.ingest.processor`, while the one for Spring Boot functionality is `org.springframework.boot`. The log level may be set at any level of granularity using that hierarchy. This provides very precise control of the messages that are emitted. The log level is set in the configuration file.
+
+As an example, there is an `INFO` message emitted every 5 minutes by Spring configuration. Although useful during initial configuration, this message just fills the log. To disable it, we can set the log level for that component higher than `INFO`:
+
+```yml
+logging:
+  level:
+    # this outputs a couple INFO messages every 5 minutes, which just fills the log
+    org.springframework.cloud.config.client.ConfigServicePropertySourceLocator: warn
+```
+
+For another example, suppose we suspect a problem with message delivery in the ingest system. To make the logging of all ingest processing more verbose, set the log level to `DEBUG`:
+
+```yml
+logging:
+  level:
+    # make ingest logging output more verbose
+    org.opentestsystem.rdw.ingest.processor: debug
+```
+
+##### Logger Endpoints
+Spring Boot applications expose logger controls via the actuator end-points. To get all the known loggers in the system:
+
+```bash
+$ curl http://localhost:8008/loggers
+{
+  "levels": [
+    "OFF",
+    "ERROR",
+    "WARN",
+    "INFO",
+    "DEBUG",
+    "TRACE"
+  ],
+  "loggers": {
+    "ROOT": {
+      "configuredLevel": "INFO",
+      "effectiveLevel": "INFO"
+    },
+    "com": {
+      "effectiveLevel": "INFO"
+    },
+    ...
+    "org.opentestsystem": {
+      "effectiveLevel": "INFO"
+    },
+    "org.opentestsystem.rdw": {
+      "effectiveLevel": "INFO"
+    },
+    "org.opentestsystem.rdw.common": {
+      "effectiveLevel": "INFO"
+    },
+    ...    
+```
+
+To get/set the setting for a specific logger:
+
+```bash
+$ curl http://localhost:8008/loggers/org.opentestsystem.rdw.ingest.processor
+{"effectiveLevel":"INFO"}
+
+$ curl -X POST -H 'Content-Type: application/json' -d '{"configuredLevel": "DEBUG"}' http://localhost:8008/loggers/org.opentestsystem.rdw.ingest.processor
+
+$ curl http://localhost:8008/loggers/org.opentestsystem.rdw.ingest.processor
+{"configuredLevel":"DEBUG","effectiveLevel":"DEBUG"}
+```
+
+Note that setting the log level via the actuator end-point will be in effect only for the currently running process. Other instances of the process will not be affected, and restarting the process will revert back to the configured log levels.
+
 #### Log Collection
-The approach is to use fluentd on the nodes to tail logs and forward entries to a central service like Elasticsearch. If you ask six developers how to install and configure fluentd in a kubernetes cluster you'll get between nine and twelve different answers. If you want to do a little reading:
+The approach is to use fluentd on the nodes to tail logs and forward entries to a central service like Elasticsearch. If you ask six developers how to install and configure fluentd in a kubernetes cluster you'll get a dozen different answers. If you want to do a little reading:
 
 * [Overview of Kubernetes logging](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 * [Kubernetes logging with Elasticsearch/Kibana](https://kubernetes.io/docs/tasks/debug-application-cluster/logging-elasticsearch-kibana/)

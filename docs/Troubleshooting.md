@@ -16,7 +16,8 @@
     * [Duplicate Schools](#duplicate-schools)
     * [Invalid Student Group](#invalid-group)
     * [Empty Student Report](#empty-report)
-    * [Can't See Student Group](#missing-student-group)
+    * [Missing Student Group](#missing-student-group)
+    * [Can't See Student Group](#missing-student-group-one-user)
 
 ### Kubernetes
 
@@ -507,7 +508,62 @@ But that's not possible. So this is clearly a bug: the system should use the ass
 for the printed report.
 
 <a name="missing-student-group"></a>
-#### Can't See Student Group
+#### Missing Student Group
+A user complained that they were uploading student group CSV files successfully but that the groups are not appearing.
+* User is melissa@fubar.org
+
+Let's see if the uploads are in there:
+```sql
+select * from upload_student_group_batch sgb where sgb.creator='mespi5@lausd.net' and sgb.status=1;
++------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
+| id   | digest                           | status | creator          | created                    | updated                    | message | filename            |
++------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
+|  924 | 91038F3D58C079FC446EEE6C7EF49035 |      1 | mespi5@lausd.net | 2017-10-19 04:09:35.985610 | 2017-10-19 04:09:36.509949 |         | kenastondone.csv    |
+|  984 | 49E2C7AB31A78B7D310771F191589E1D |      1 | mespi5@lausd.net | 2017-10-19 20:22:40.659808 | 2017-10-19 20:22:40.887697 |         | done2.csv           |
+...
+| 8709 | 487EE591DCDE5C245CC90F8F13F5F327 |      1 | mespi5@lausd.net | 2017-11-30 06:10:07.019702 | 2017-11-30 06:10:07.218732 |         | maxwellnew4.csv     |
+| 8710 | 2BC77BF6CD1F8BEAF61C4AEB9346EA79 |      1 | mespi5@lausd.net | 2017-11-30 06:12:36.422368 | 2017-11-30 06:12:39.371562 |         | Mancilla7.csv       |
++------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
+44 rows in set (0.01 sec)
+```
+
+Yup, looks good. So, are there any student groups associated with any of those records?
+```sql
+select sgb.id, sgb.digest, sgb.creator, sgb.filename, count(sg.id) as groups from upload_student_group_batch sgb
+  join import i on i.content=5 and sgb.id = i.batch
+  join student_group sg on sg.import_id=i.id
+where sgb.creator='mespi5@lausd.net' and sgb.status=1
+group by sgb.id;
+Empty set (0.05 sec)
+```
+
+Yikes, that's not good. Let's try that another way:
+```sql
+select sgb.* from upload_student_group_batch sgb
+  left outer join import i on i.content=5 and i.batch = sgb.id
+where sgb.status=1 and sgb.creator='mespi5@lausd.net'
+  and i.id is null;
++------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
+| id   | digest                           | status | creator          | created                    | updated                    | message | filename            |
++------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
+|  924 | 91038F3D58C079FC446EEE6C7EF49035 |      1 | mespi5@lausd.net | 2017-10-19 04:09:35.985610 | 2017-10-19 04:09:36.509949 |         | kenastondone.csv    |
+|  984 | 49E2C7AB31A78B7D310771F191589E1D |      1 | mespi5@lausd.net | 2017-10-19 20:22:40.659808 | 2017-10-19 20:22:40.887697 |         | done2.csv           |
+...
+| 8708 | FD2DFBAC33E9A2DBB3ECE4F12EE99DBD |      1 | mespi5@lausd.net | 2017-11-30 06:08:52.794912 | 2017-11-30 06:08:53.042526 |         | Keuper6.csv         |
+| 8709 | 487EE591DCDE5C245CC90F8F13F5F327 |      1 | mespi5@lausd.net | 2017-11-30 06:10:07.019702 | 2017-11-30 06:10:07.218732 |         | maxwellnew4.csv     |
+| 8710 | 2BC77BF6CD1F8BEAF61C4AEB9346EA79 |      1 | mespi5@lausd.net | 2017-11-30 06:12:36.422368 | 2017-11-30 06:12:39.371562 |         | Mancilla7.csv       |
++------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
+44 rows in set, 65535 warnings (1.43 sec)
+```
+
+That confirms that the files were processed "successfully" but no student groups were created. Using the `digest` values, we can inspect the files. Looking closely at the files, it is apparent that the newline character is `0x0D` aka `CR` aka `\r`. Our parser doesn't know how to deal with that, it is expecting `\n` (aka `0x0A` aka `LF`) or `\r\n` to be the newline. 
+
+Ask the user to switch to that by saving in Windows CSV format.
+
+Might also file a JIRA to properly handle the various newline characters.
+
+<a name="missing-student-group-one-user"></a>
+#### One User Can't See Student Group
 Screen shots show that a student group was successfully uploaded but the teacher in the group does not see the student group when they login. We know a few things:
 * School is Riverdale High, 10754081035575
 * User is krathburn@fubar.org (yeah, okay i changed that)

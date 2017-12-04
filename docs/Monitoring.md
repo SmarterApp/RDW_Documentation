@@ -203,7 +203,9 @@ The applications log messages at different log levels depending on the severity 
 * `INFO` - messages about the normal operation of the application
 * `DEBUG` - messages that provide additional information for diagnosing issues
 
-Log messages are grouped in a hierarchy by area of functionality. For example, the "namespace" for log messages coming from ingest processes is `org.opentestsystem.rdw.ingest.processor`, while the one for Spring Boot functionality is `org.springframework.boot`. The log level may be set at any level of granularity using that hierarchy. This provides very precise control of the messages that are emitted. The log level is set in the configuration file.
+Log messages are grouped in a package hierarchy by area of functionality. For example, the package for log messages coming from ingest processes is `org.opentestsystem.rdw.ingest.processor`, while the one for Spring Boot functionality is `org.springframework.boot`. The log level may be set at any level of granularity using that package hierarchy. This provides very precise control of the messages that are emitted. The log level is set in the configuration file.
+
+> Note: in the log file, the logger package is often abbreviated with one letter per level for brevity. For example `org.opentestsystem.rdw.ingest.processor.ExamProcessorConfiguration` may look be `o.o.r.i.p.ExamProcessorConfiguration`.
 
 As an example, there is an `INFO` message emitted every 5 minutes by Spring configuration. Although useful during initial configuration, this message just fills the log. To disable it, we can set the log level for that component higher than `INFO`:
 
@@ -299,7 +301,7 @@ What we did:
         "AWS": "*"
       },
       "Action": "es:*",
-      "Resource": "arn:aws:es:us-west-2:269146879732:domain/rdw-qa/*",
+      "Resource": "arn:aws:es:region:id:domain/rdw-qa/*",
       "Condition": {
         "IpAddress": {
           "aws:SourceIp": "172.31.0.0/16"
@@ -312,7 +314,7 @@ What we did:
         "AWS": "*"
       },
       "Action": "es:*",
-      "Resource": "arn:aws:es:us-west-2:269146879732:domain/rdw-qa/*",
+      "Resource": "arn:aws:es:region:id:domain/rdw-qa/*",
       "Condition": {
         "IpAddress": {
           "aws:SourceIp": [
@@ -325,16 +327,16 @@ What we did:
 }
 ```
 1. Note ES settings:
-    * Endpoint: https://search-rdw-qa-ocdbui57wpdryyx25hhvlh44fe.us-west-2.es.amazonaws.com
-    * Domain ARN: arn:aws:es:us-west-2:269146879732:domain/rdw-qa
-    * Kibana: https://search-rdw-qa-ocdbui57wpdryyx25hhvlh44fe.us-west-2.es.amazonaws.com/_plugin/kibana/
+    * Endpoint: https://search-rdw-qa-[AWS-randomization]
+    * Domain ARN: arn:aws:es:region:id:domain/rdw-qa
+    * Kibana: https://search-rdw-qa-[AWS-randomization]/_plugin/kibana/
 1. Test:
 ```bash
-$ curl https://search-rdw-qa-ocdbui57wpdryyx25hhvlh44fe.us-west-2.es.amazonaws.com
+$ curl https://search-rdw-qa-[AWS-randomization]
 {
   "name" : "YbZyaKb",
-  "cluster_name" : "269146879732:rdw-qa",
-  "cluster_uuid" : "1OOuXtMvQCGkKAYhgGhHKQ",
+  "cluster_name" : "id:rdw-qa",
+  "cluster_uuid" : "...",
   "version" : {
     "number" : "5.5.2",
     "build_hash" : "b2f0c09",

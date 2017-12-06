@@ -11,6 +11,7 @@
 ### Table Of Contents
 * [Reference](#reference)
 * [Checklist](#checklist)
+* [Updating Applications](#updating-applications)
 
 <a name="reference"></a>
 ### Summary / Reference
@@ -462,3 +463,15 @@ This section records all details that will facilitate configuration and maintena
         apk add curl
         curl -X POST http://localhost:8008/updateOrganizations
         ```
+        
+### Updating Applications
+When software updates are available, use the rollout capability of Kubernetes to deploy it.
+1. Determine the images needed for the update. Consider that the ingest and reporting applications may be on different release cycles, and certain applications may have patch releases.
+1. Update the deployment specs to reflect the changes. Specifically change the container images.
+1. Make any corresponding changes to the configuration files served by the configuration server.
+1. Either apply the modified spec OR directly update the image. This will be repeated for all affected applications but a single example:
+    ```bash
+    kubectl apply -f import-service.yml
+    OR
+    kubectl set image deployment import-deployment api="smarterbalanced/rdw-ingest-import-service:1.2.3-RELEASE"
+    ```

@@ -18,6 +18,7 @@
     * [Empty Student Report](#empty-report)
     * [Missing Student Group](#missing-student-group)
     * [Can't See Student Group](#missing-student-group-one-user)
+    * [Item Viewer](#item-viewer)
 
 ### Kubernetes
 
@@ -634,3 +635,23 @@ Screen shots show that a student group was successfully uploaded but the teacher
        filename: DistrictELApractice11thgrade.csv    
     ``` 
 * Retrieving the file from S3 shows a CSV file that is not the same as the sample, specifically the rows for that 9th user are not in it. User error. 
+
+
+<a name="item-viewer"></a>
+#### Item Viewer
+When the user views the detail of a test item they are being presented with proxied content from IRiS. Although a full troubleshooting guide for IRiS doesn't belong here, there is at least one issue that RDW users run into: items not rendering because IRiS has gotten grumpy. This can often be fixed by forcing IRiS to reload its content. First, confirm that the IRiS logs have telltale exceptions.
+```bash
+$ ssh iris
+$ sudo su
+# view /var/log/tomcat/student/student.log
+...
+01:53:55.373 [http-bio-8080-exec-120176] ERROR tds.blackbox.web.handlers.TDSHandler - No content found by id I-200-83838
+tds.blackbox.ContentRequestException: No content found by id I-200-83838
+...
+```
+If there are a lot of such messages, force IRiS to reload:
+```bash
+$ curl http://localhost:8080/iris/Pages/API/content/reload
+```
+
+For additional IRiS documentation please refer to [IRiS in RDW](../deploy/IRIS.AWS.md) and [TDS IRIS](https://github.com/SmarterApp/TDS_IRIS).

@@ -1,6 +1,25 @@
 ## Auditing
 This document describes auditing in RDW and provides sample queries for analysing audit data.
 
+### Table of Contents
+
+* [Intended Audience](#intended-audience)
+* [Terminology](#terminology)
+* [What is audited?](#what-is-audited)
+* [Where is audit data stored?](#where-is-audit-data-stored)
+* [How can audit data be queried?](#how-can-audit-data-be-queried)
+    * [Query Exam](#query-exam)
+    * [Query Student](#query-student)
+    * [Query Student Groups](#query-student-groups)
+* [How can the audit trail be cleared?](#how-can-the-audit-trail-be-cleared)
+    * [Clear a specific student record](#clear-a-specific-student-record)
+    * [Clear all exams for a specific student](#clear-all-exams-for-a-specific-student)
+    * [Clear a specific exam record](#clear-a-specific-exam-record)
+    * [Clear all exams for a school](#clear-all-exams-for-a-school)
+    * [Clear all exams for a specific assessment](#clear-all-exams-for-a-specific-assessment)
+    * [Clear a specific student group](#clear-a-specific-student-group)
+    * [Clear all student groups for a specific school](#clear-all-student-groups-for-a-specific-school)
+
 ### Intended Audience
 The intended audience should be familiar with database technology and querying a database with SQL.
 - **System and Database Administrators**: This document provides administrators information on what is audited in the warehouse and where it is stored.
@@ -19,7 +38,7 @@ The intended audience should be familiar with database technology and querying a
   - **Soft Delete**: A request to delete an entity from the warehouse that is being audited is updated with it's deleted flag set to true.  This is audited as an update.
 - **Modification**: update, delete and soft delete state changes
 - **Import**:  All inflows of data to the warehouse create an import record that stores attributes of the inflow including a timestamp and the authorized user.
-  
+
 
 ### What is audited?
 The warehouse audits entity state changes for exams and student information.
@@ -66,7 +85,7 @@ MySQL triggers are used to capture audit_ records.  Each table being audited has
 ### How can audit data be queried?
 Sample queries are provided for analysing audit data combining the warehouse import table, the table being audited, the audit_ table and joining other relations in the warehouse for lookup values.
 
-#### Exam
+#### Query Exam
 
 **Finding modifications to a students exams**
 The following query outputs one row for each modified exam for one student.  It includes the count of modifications and the date of the last change.
@@ -364,7 +383,7 @@ ORDER BY acc_audit.exam_id, acc_audit.action_date DESC;
 9 rows in set (0.00 sec)
 ```
 
-#### Student
+#### Query Student
 
 **Finding modified students**
 The following query outputs one row for each modified student.  It includes the count of modifications and the date of the last change.
@@ -606,7 +625,7 @@ ORDER BY eth_audit.student_id, eth_audit.action_date DESC;
 12 rows in set (0.00 sec)
 ```
 
-#### Student Groups
+#### Query Student Groups
 
 **Finding modified student groups**
 The following query outputs one row for each modified student_group.  It includes the count of modifications and the date of the last change.
@@ -854,4 +873,590 @@ ORDER BY membership_audit.student_group_id, membership_audit.action_date DESC;
 |                1 | 2017-11-29 05:36:19.109393 | update  | 1         | NULL    |            |         |                  | StudentGroup001 |
 +------------------+----------------------------+---------+-----------+---------+------------+---------+------------------+-----------------+
 11 rows in set (0.00 sec)
+```
+
+### How can the audit trail be cleared?
+
+#### Clear a specific student record
+
+**Step 1: Table `audit_student_ethnicity`.  Query records to delete.**
+The following query outputs the `audit_student_ethnicity` records to be deleted.
+
+```mysql
+SELECT ase.id audit_id, ase.student_id, ase.ethnicity_id, ase.action, ase.audited FROM audit_student_ethnicity ase
+WHERE student_id IN (SELECT s.id FROM student s WHERE s.ssid = 'SSID001');
+```
+
+```text
++----------+------------+--------------+--------+----------------------------+
+| audit_id | student_id | ethnicity_id | action | audited                    |
++----------+------------+--------------+--------+----------------------------+
+|        1 |          1 |            4 | delete | 2017-12-05 00:12:50.472978 |
++----------+------------+--------------+--------+----------------------------+
+1 row in set (0.00 sec)
+```
+
+**Step 2: Table `audit_student_ethnicity`.  Delete records.**
+The following statement deletes records with the same `FROM` clause as the previous statement.
+
+```mysql
+DELETE ase FROM audit_student_ethnicity ase
+WHERE student_id IN (SELECT s.id FROM student s WHERE s.ssid = 'SSID001');
+```
+
+```text
+Query OK, 1 row affected (0.00 sec)
+```
+
+**Step 3: Table `audit_student_ethnicity`.  Validate records deleted.**
+Execute the same query used before the `DELETE` step to validate records no longer exist. 
+
+```mysql
+SELECT ase.id audit_id, ase.student_id, ase.ethnicity_id, ase.action, ase.audited FROM audit_student_ethnicity ase
+WHERE student_id IN (SELECT s.id FROM student s WHERE s.ssid = 'SSID001');
+```
+
+```text
+Empty set (0.00 sec)
+```
+
+**Step 4: Table `audit_student`.  Query records to delete.**
+The following query outputs the `audit_student` records do be deleted.
+
+```mysql
+SELECT ast.id audit_id, ast.student_id, ast.ssid, ast.action, ast.audited FROM audit_student ast
+WHERE student_id IN (SELECT id FROM student WHERE ssid = 'SSID001');
+```
+
+```text
++----+--------+----------------------------+----------------+------------+---------+-----------------+
+| id | action | audited                    | database_user  | student_id | ssid    | last_or_surname |
++----+--------+----------------------------+----------------+------------+---------+-----------------+
+|  1 | update | 2017-12-01 23:01:02.854184 | root@localhost |          1 | SSID001 | Durrant         |
+|  2 | update | 2017-12-01 23:01:02.928821 | root@localhost |          1 | SSID001 | Durrant         |
+|  4 | update | 2017-12-01 23:01:03.080797 | root@localhost |          1 | SSID001 | Durrant         |
+|  5 | update | 2017-12-01 23:01:03.151168 | root@localhost |          1 | SSID001 | Durrant         |
+|  7 | update | 2017-12-01 23:01:03.364097 | root@localhost |          1 | SSID001 | Williams        |
++----+--------+----------------------------+----------------+------------+---------+-----------------+
+5 rows in set (0.00 sec)
+```
+
+**Step 5: Table `audit_student`.  Delete records.**
+The following statement deletes records with the same `FROM` clause as the previous statement.
+
+```mysql
+DELETE ast FROM audit_student ast
+WHERE student_id IN (SELECT id FROM student WHERE ssid = 'SSID001');
+```
+
+```text
+Query OK, 5 rows affected (0.01 sec)
+```
+
+**Step 6: Table `audit_student`.  Validate records deleted.**
+Execute the same query used before the `DELETE` step to validate records no longer exist. 
+
+```mysql
+SELECT ast.id audit_id, ast.student_id, ast.ssid, ast.action, ast.audited FROM audit_student ast
+WHERE student_id IN (SELECT id FROM student WHERE ssid = 'SSID001');
+```
+
+```text
+Empty set (0.00 sec)
+```
+
+#### Clear all exams for a specific student
+
+**Step 1: Table `audit_exam_claim_score`.  Query records to delete.**
+The following query outputs the `audit_exam_claim_score` records to be deleted.
+
+```mysql
+SELECT aecs.id audit_id, aecs.subject_claim_score_id, student_exams.id exam_id, aecs.action, aecs.audited FROM audit_exam_claim_score aecs
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON aecs.exam_id = student_exams.id;
+```
+
+```text
++----------+------------------------+---------+--------+----------------------------+
+| audit_id | subject_claim_score_id | exam_id | action | audited                    |
++----------+------------------------+---------+--------+----------------------------+
+|        1 |                      7 |       2 | update | 2017-12-04 19:12:41.951761 |
+|        2 |                      5 |       2 | update | 2017-12-04 19:12:41.952197 |
+|        3 |                      4 |       2 | update | 2017-12-04 19:12:41.952457 |
+|        4 |                      6 |       2 | update | 2017-12-04 19:12:41.952693 |
++----------+------------------------+---------+--------+----------------------------+
+4 rows in set (0.00 sec)
+```
+
+**Step 2: Table `audit_exam_claim_score`.  Delete records.**
+The following statement deletes records with the same `FROM` clause as the previous statement.
+
+```mysql
+DELETE aecs FROM audit_exam_claim_score aecs
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON aecs.exam_id = student_exams.id;
+```
+
+```text
+Query OK, 4 rows affected (0.01 sec)
+```
+
+**Step 3: Table `audit_exam_claim_score`.  Validate records deleted.**
+Execute the same query used before the `DELETE` step to validate records no longer exist. 
+
+```mysql
+SELECT aecs.id audit_id, aecs.subject_claim_score_id, student_exams.id exam_id, aecs.action, aecs.audited FROM audit_exam_claim_score aecs
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON aecs.exam_id = student_exams.id;
+```
+
+```text
+Empty set (0.00 sec)
+```
+
+**Step 4: Table `audit_exam_available_accommodation`.  Query records to delete.**
+The following query outputs the `audit_exam_available_accommodation` records to be deleted.
+
+```mysql
+SELECT aeaa.id audit_id, aeaa.accommodation_id, student_exams.id exam_id, aeaa.action, aeaa.audited FROM audit_exam_available_accommodation aeaa
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON aeaa.exam_id = student_exams.id;
+```
+
+```text
++----------+------------------+---------+--------+----------------------------+
+| audit_id | accommodation_id | exam_id | action | audited                    |
++----------+------------------+---------+--------+----------------------------+
+|        1 |               32 |       1 | delete | 2017-12-04 19:04:27.827775 |
+|        2 |                5 |       2 | delete | 2017-12-04 19:04:28.045994 |
++----------+------------------+---------+--------+----------------------------+
+2 rows in set (0.00 sec)
+```
+
+**Step 5: Table `audit_exam_available_accommodation`.  Delete records.**
+The following statement deletes records with the same `FROM` clause as the previous statement.
+
+```mysql
+DELETE aeaa FROM audit_exam_available_accommodation aeaa
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON aeaa.exam_id = student_exams.id;
+```
+
+```text
+Query OK, 2 rows affected (0.00 sec)
+```
+
+**Step 6: Table `audit_exam_available_accommodation`.  Validate records deleted.**
+Execute the same query used before the `DELETE` step to validate records no longer exist. 
+
+```mysql
+SELECT aeaa.id audit_id, aeaa.accommodation_id, student_exams.id exam_id, aeaa.action, aeaa.audited FROM audit_exam_available_accommodation aeaa
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON aeaa.exam_id = student_exams.id;
+```
+
+```text
+Empty set (0.00 sec)
+```
+
+**Step 7: Table `audit_exam_item`.  Query records to delete.**
+The following query outputs the `audit_exam_item` records to be deleted.
+
+```mysql
+SELECT aei.id audit_id, aei.exam_item_id, student_exams.id exam_id, aei.action, aei.audited FROM audit_exam_item aei
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON aei.exam_id = student_exams.id;
+```
+
+```text
++----------+--------------+---------+--------+----------------------------+
+| audit_id | exam_item_id | exam_id | action | audited                    |
++----------+--------------+---------+--------+----------------------------+
+|        1 |            2 |       1 | update | 2017-12-04 18:59:14.263477 |
+|        2 |            3 |       1 | update | 2017-12-04 18:59:14.264113 |
+|        3 |            5 |       1 | delete | 2017-12-04 18:59:14.266069 |
+|        4 |            8 |       2 | update | 2017-12-04 18:59:14.514066 |
+|        5 |            7 |       2 | delete | 2017-12-04 18:59:14.514715 |
++----------+--------------+---------+--------+----------------------------+
+5 rows in set (0.00 sec)
+```
+
+**Step 8: Table `audit_exam_item`.  Delete records.**
+The following statement deletes records with the same `FROM` clause as the previous statement.
+
+```mysql
+DELETE aei FROM audit_exam_item aei
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON aei.exam_id = student_exams.id;
+```
+
+```text
+Query OK, 5 rows affected (0.01 sec)
+```
+
+**Step 9: Table `audit_exam_item`.  Validate records deleted.**
+Execute the same query used before the `DELETE` step to validate records no longer exist. 
+
+```mysql
+SELECT aei.id audit_id, aei.exam_item_id, student_exams.id exam_id, aei.action, aei.audited FROM audit_exam_item aei
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON aei.exam_id = student_exams.id;
+```
+
+```text
+Empty set (0.00 sec)
+```
+
+**Step 10: Table `audit_exam`.  Query records to delete.**
+The following query outputs the `audit_exam` records to be deleted.
+
+```mysql
+SELECT ae.id, ae.exam_id, ae.oppId, ae.student_id, ae.action, ae.audited FROM audit_exam ae
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON ae.exam_id = student_exams.id;
+```
+
+```text
++----+---------+--------------+------------+--------+----------------------------+
+| id | exam_id | oppId        | student_id | action | audited                    |
++----+---------+--------------+------------+--------+----------------------------+
+|  1 |       1 | 100000000010 |          1 | update | 2017-12-04 17:19:03.837310 |
+|  2 |       2 | 100000000030 |          1 | update | 2017-12-04 17:19:03.913670 |
+|  3 |       2 | 100000000030 |          1 | update | 2017-12-04 17:19:04.072135 |
+|  5 |       2 | 100000000030 |          1 | update | 2017-12-04 17:19:04.204870 |
++----+---------+--------------+------------+--------+----------------------------+
+4 rows in set (0.00 sec)
+```
+
+**Step 11: Table `audit_exam`.  Delete records.**
+The following statement deletes records with the same `FROM` clause as the previous statement.
+
+```mysql
+DELETE ae FROM audit_exam ae
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON ae.exam_id = student_exams.id;
+```
+
+```text
+Query OK, 4 rows affected (0.01 sec)
+```
+
+**Step 12: Table `audit_exam`.  Validate records deleted.**
+Execute the same query used before the `DELETE` step to validate records no longer exist. 
+
+```mysql
+SELECT ae.id, ae.exam_id, ae.oppId, ae.student_id, ae.action, ae.audited FROM audit_exam ae
+JOIN (
+       SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
+     ) student_exams
+ON ae.exam_id = student_exams.id;
+```
+
+```text
+Empty set (0.00 sec)
+```
+
+#### Clear a specific exam record
+
+To clear a specific exams audit records modify the `SELECT` statement that is joined against the audit table and substitute it in the same steps as [Clear all exams for a specific student](#clear-all-exams-for-a-specific-student).
+
+For example the following `JOIN` statement can be substituted for each of the tables,
+ `audit_exam_claim_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear one exams audit records by it's `oppId`  
+
+```mysql
+JOIN (
+       SELECT id FROM exam WHERE oppId = '100000000030'
+     ) specific_exam
+```
+
+The following query demonstrates this substitution for the `audit_exam` table.  
+Use the same `SELECT` to collect exam id's to join the audit table in each statement to query before, delete and query after for each of the above mentioned exam related audit tables.
+
+```mysql
+SELECT ae.id, ae.exam_id, ae.oppId, ae.student_id, ae.action, ae.audited FROM audit_exam ae
+JOIN (
+       SELECT id FROM exam WHERE oppId = '100000000030'
+     ) specific_exam
+ON ae.exam_id = specific_exam.id;
+```
+
+#### Clear all exams for a school
+
+To clear all exam audit records for a specific school modify the `SELECT` statement that is joined against the audit table and substitute it in the same steps as [Clear all exams for a specific student](#clear-all-exams-for-a-specific-student).
+
+For example the following `JOIN` statement can be substituted for each of the tables,
+ `audit_exam_claim_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear all exam audit records for the school with a `natural_id` of `TS000001`  
+
+```mysql
+JOIN (
+       SELECT id FROM exam WHERE school_id IN ( SELECT id FROM school WHERE natural_id = 'TS000001')
+     ) school_exams
+```
+
+The following query demonstrates this substitution for the `audit_exam` table.  
+Use the same `SELECT` to collect exam id's to join the audit table in each statement to query before, delete and query after for each of the above mentioned exam related audit tables.
+
+```mysql
+SELECT ae.id, ae.exam_id, ae.oppId, ae.school_id, ae.student_id, ae.action, ae.audited FROM audit_exam ae
+JOIN (
+       SELECT id FROM exam WHERE school_id IN ( SELECT id FROM school WHERE natural_id = 'TS000001')
+     ) school_exams
+ON ae.exam_id = school_exams.id;
+```
+
+#### Clear all exams for a specific assessment
+
+To clear all exam audit records for a specific assessment modify the `SELECT` statement that is joined against the audit table and substitute it in the same steps as [Clear all exams for a specific student](#clear-all-exams-for-a-specific-student).
+
+For example the following `JOIN` statement can be substituted for each of the tables,
+ `audit_exam_claim_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear all exam audit records for the assessment with a `natural_id` of `(naturalId)MOCK-ICA-G11-2017-2018`
+
+```mysql
+JOIN (
+       SELECT id FROM exam WHERE asmt_id IN ( SELECT id FROM asmt WHERE natural_id = '(naturalId)MOCK-ICA-G11-2017-2018')
+     ) asmt_exams
+```
+
+The following query demonstrates this substitution for the `audit_exam` table.  
+Use the same `SELECT` to collect exam id's to join the audit table in each statement to query before, delete and query after for each of the above mentioned exam related audit tables.
+
+```mysql
+SELECT ae.id, ae.exam_id, ae.oppId, ae.student_id, ae.action, ae.audited FROM audit_exam ae
+JOIN (
+       SELECT id FROM exam WHERE asmt_id IN ( SELECT id FROM asmt WHERE natural_id = '(naturalId)MOCK-ICA-G11-2017-2018')
+     ) asmt_exams
+ON ae.exam_id = asmt_exams.id;
+```
+
+#### Clear a specific student group
+
+**Step 1: Table `audit_user_student_group`.  Query records to delete.**
+The following query outputs the `audit_user_student_group` records to be deleted.
+
+```mysql
+SELECT ausg.id, ausg.student_group_id, ausg.user_login, ausg.action, ausg.audited FROM audit_user_student_group ausg
+JOIN (
+       SELECT id FROM student_group
+       WHERE school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
+             AND name = 'StudentGroup001'
+             AND school_year = '2018'
+     ) specific_group
+ON ausg.student_group_id = specific_group.id;
+```
+
+```text
++----+------------------+-----------------------+--------+----------------------------+
+| id | student_group_id | user_login            | action | audited                    |
++----+------------------+-----------------------+--------+----------------------------+
+|  1 |                1 | teacher01@example.com | delete | 2017-12-06 04:37:23.022623 |
+|  2 |                1 | teacher03@example.com | delete | 2017-12-06 04:37:23.083122 |
+|  3 |                1 | teacher04@example.com | delete | 2017-12-06 04:37:23.083122 |
++----+------------------+-----------------------+--------+----------------------------+
+3 rows in set (0.00 sec)
+```
+
+**Step 2: Table `audit_user_student_group`.  Delete records.**
+The following statement deletes records with the same `FROM` clause as the previous statement.
+
+```mysql
+DELETE ausg FROM audit_user_student_group ausg
+JOIN (
+       SELECT id FROM student_group
+       WHERE school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
+             AND name = 'StudentGroup001'
+             AND school_year = '2018'
+     ) specific_group
+ON ausg.student_group_id = specific_group.id;
+```
+
+```text
+Query OK, 3 rows affected (0.01 sec)
+```
+
+**Step 3: Table `audit_user_student_group`.  Validate records deleted.**
+Execute the same query used before the `DELETE` step to validate records no longer exist. 
+
+```mysql
+SELECT ausg.id, ausg.student_group_id, ausg.user_login, ausg.action, ausg.audited FROM audit_user_student_group ausg
+JOIN (
+       SELECT id FROM student_group
+       WHERE school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
+             AND name = 'StudentGroup001'
+             AND school_year = '2018'
+     ) specific_group
+ON ausg.student_group_id = specific_group.id;
+```
+
+```text
+Empty set (0.00 sec)
+```
+
+**Step 4: Table `audit_student_group_membership`.  Query records to delete.**
+The following query outputs the `audit_student_group_membership` records to be deleted.
+
+```mysql
+SELECT asgm.id, asgm.student_group_id, asgm.student_id, asgm.action, asgm.audited FROM audit_student_group_membership asgm
+JOIN (
+       SELECT id FROM student_group
+       WHERE school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
+             AND name = 'StudentGroup001'
+             AND school_year = '2018'
+     ) specific_group
+ON asgm.student_group_id = specific_group.id;
+```
+
+```text
++----+------------------+------------+--------+----------------------------+
+| id | student_group_id | student_id | action | audited                    |
++----+------------------+------------+--------+----------------------------+
+|  1 |                1 |          2 | delete | 2017-12-06 04:37:23.024463 |
+|  2 |                1 |          3 | delete | 2017-12-06 04:37:23.024463 |
+|  4 |                1 |          6 | delete | 2017-12-06 04:37:23.085580 |
++----+------------------+------------+--------+----------------------------+
+3 rows in set (0.00 sec) 
+```
+
+**Step 5: Table `audit_student_group_membership`.  Delete records.**
+The following statement deletes records with the same `FROM` clause as the previous statement.
+
+```mysql
+DELETE asgm FROM audit_student_group_membership asgm
+JOIN (
+       SELECT id FROM student_group
+       WHERE school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
+             AND name = 'StudentGroup001'
+             AND school_year = '2018'
+     ) specific_group
+ON asgm.student_group_id = specific_group.id;
+```
+
+```text
+Query OK, 3 rows affected (0.01 sec)
+```
+
+**Step 6: Table `audit_student_group_membership`.  Validate records deleted.**
+Execute the same query used before the `DELETE` step to validate records no longer exist. 
+
+```mysql
+SELECT asgm.id, asgm.student_group_id, asgm.student_id, asgm.action, asgm.audited FROM audit_student_group_membership asgm
+JOIN (
+       SELECT id FROM student_group
+       WHERE school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
+             AND name = 'StudentGroup001'
+             AND school_year = '2018'
+     ) specific_group
+ON asgm.student_group_id = specific_group.id;
+```
+
+```text
+Empty set (0.00 sec)
+```
+
+**Step 7: Table `audit_student_group`.  Query records to delete.**
+The following query outputs the `audit_student_group` records to be deleted.
+
+```mysql
+SELECT asg.id, asg.student_group_id, asg.name, asg.action, asg.audited FROM audit_student_group asg
+JOIN (
+       SELECT id FROM student_group
+       WHERE school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
+             AND name = 'StudentGroup001'
+             AND school_year = '2018'
+     ) specific_group
+ON asg.student_group_id = specific_group.id;
+```
+
+```text
++----+------------------+-----------------+--------+----------------------------+
+| id | student_group_id | name            | action | audited                    |
++----+------------------+-----------------+--------+----------------------------+
+|  1 |                1 | StudentGroup001 | update | 2017-12-06 04:37:22.944438 |
+|  2 |                1 | StudentGroup001 | update | 2017-12-06 04:37:23.019759 |
+|  5 |                1 | StudentGroup001 | update | 2017-12-06 04:37:23.081925 |
++----+------------------+-----------------+--------+----------------------------+
+3 rows in set (0.00 sec)
+```
+
+**Step 8: Table `audit_student_group`.  Delete records.**
+The following statement deletes records with the same `FROM` clause as the previous statement.
+
+```mysql
+DELETE asg FROM audit_student_group asg
+JOIN (
+       SELECT id FROM student_group
+       WHERE school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
+             AND name = 'StudentGroup001'
+             AND school_year = '2018'
+     ) specific_group
+ON asg.student_group_id = specific_group.id;
+```
+
+```text
+Query OK, 3 rows affected (0.00 sec)
+```
+
+**Step 9: Table `audit_student_group`.  Validate records deleted.**
+Execute the same query used before the `DELETE` step to validate records no longer exist. 
+
+```mysql
+SELECT asg.id, asg.student_group_id, asg.name, asg.action, asg.audited FROM audit_student_group asg
+JOIN (
+       SELECT id FROM student_group
+       WHERE school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
+             AND name = 'StudentGroup001'
+             AND school_year = '2018'
+     ) specific_group
+ON asg.student_group_id = specific_group.id;
+```
+
+```text
+Empty set (0.00 sec)
+```
+
+#### Clear all student groups for a specific school
+
+To clear all student group audit records for a specific school modify the `SELECT` statement that is joined against the audit table and substitute it in the same steps as [Clear a specific student group](#clear-a-specific-student-group).
+
+For example the following `JOIN` statement can be substituted for each of the tables,
+ `audit_user_student_group`, `audit_student_group_membership` and `audit_student_group` to clear all student group audit records for the school with a `natural_id` of `TS000001`
+
+```mysql
+JOIN (
+       SELECT id FROM student_group
+       WHERE school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
+     ) school_groups
+```
+
+The following query demonstrates this substitution for the `audit_student_group` table.  
+Use the same `SELECT` to collect student_group id's to join the audit table in each statement to query before, delete and query after for each of the above mentioned student group related audit tables.
+
+```mysql
+SELECT asg.id, asg.student_group_id, asg.name, asg.action, asg.audited FROM audit_student_group asg
+JOIN (
+       SELECT id FROM student_group
+       WHERE school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
+     ) school_groups
+ON asg.student_group_id = school_groups.id;
 ```

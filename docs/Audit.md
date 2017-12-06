@@ -18,7 +18,7 @@ This document describes auditing in RDW and provides sample queries for analysin
     * [Clear all exams for a school](#clear-all-exams-for-a-school)
     * [Clear all exams for a specific assessment](#clear-all-exams-for-a-specific-assessment)
     * [Clear a specific student group](#clear-a-specific-student-group)
-
+    * [Clear all student groups for a specific school](#clear-all-student-groups-for-a-specific-school)
 
 ### Intended Audience
 The intended audience should be familiar with database technology and querying a database with SQL.
@@ -1181,6 +1181,7 @@ Empty set (0.00 sec)
 #### Clear a specific exam record
 
 To clear a specific exams audit records modify the `SELECT` statement that is joined against the audit table and substitute it in the same steps as [Clear all exams for a specific student](#clear-all-exams-for-a-specific-student).
+
 For example the following `JOIN` statement can be substituted for each of the tables,
  `audit_exam_claim_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear one exams audit records by it's `oppId`  
 
@@ -1204,6 +1205,7 @@ ON ae.exam_id = specific_exam.id;
 #### Clear all exams for a school
 
 To clear all exam audit records for a specific school modify the `SELECT` statement that is joined against the audit table and substitute it in the same steps as [Clear all exams for a specific student](#clear-all-exams-for-a-specific-student).
+
 For example the following `JOIN` statement can be substituted for each of the tables,
  `audit_exam_claim_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear all exam audit records for the school with a `natural_id` of `TS000001`  
 
@@ -1227,6 +1229,7 @@ ON ae.exam_id = school_exams.id;
 #### Clear all exams for a specific assessment
 
 To clear all exam audit records for a specific assessment modify the `SELECT` statement that is joined against the audit table and substitute it in the same steps as [Clear all exams for a specific student](#clear-all-exams-for-a-specific-student).
+
 For example the following `JOIN` statement can be substituted for each of the tables,
  `audit_exam_claim_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear all exam audit records for the assessment with a `natural_id` of `(naturalId)MOCK-ICA-G11-2017-2018`
 
@@ -1435,6 +1438,7 @@ Empty set (0.00 sec)
 #### Clear all student groups for a specific school
 
 To clear all student group audit records for a specific school modify the `SELECT` statement that is joined against the audit table and substitute it in the same steps as [Clear a specific student group](#clear-a-specific-student-group).
+
 For example the following `JOIN` statement can be substituted for each of the tables,
  `audit_user_student_group`, `audit_student_group_membership` and `audit_student_group` to clear all student group audit records for the school with a `natural_id` of `TS000001`
 

@@ -465,11 +465,17 @@ This section records all details that will facilitate configuration and maintena
         ```
         
 ### Updating Applications
-When software updates are available, use the rollout capability of Kubernetes to deploy it.
-1. Determine the images needed for the update. Consider that the ingest and reporting applications may be on different release cycles, and certain applications may have patch releases.
-1. Update the deployment specs to reflect the changes. Specifically change the container images.
-1. Make any corresponding changes to the configuration files served by the configuration server.
-1. Either apply the modified spec OR directly update the image. This will be repeated for all affected applications but a single example:
+When software updates are available there may be a number of steps involved in deploying them.
+1. Determine which images are being updated. This may range from a single application getting a hot fix, to all the applications being updated to a new major release.
+1. There may be configuration changes required. The CHANGELOG should give an indication of this, and the source history for the project can be reviewed. Configuration changes may be made just before new software is deployed -- they won't affect the running software and will be loaded as the new software comes online.
+1. There may be schema changes required. The CHANGELOG should give an indication of this, and the source history for the project can be reviewed. Schema changes can take a while and the coordination can be tricky. All but the most trivial schema changes require downtime of the system.
+1. Use the rollout capability of Kubernetes to deploy changes.
+
+##### Software Patch
+The simplest update is a backward compatible patch, usually to deploy an urgent bug fix. The major and minor versions don't change, there is no significant schema change, and only minor configuration changes expected. Typically only one or a few applications are being updated. 
+1. Update the deployment specs with the new image value.
+1. Make any corresponding changes to the configuration files.
+1. Either apply the modified specs OR directly update the images. This will be repeated for all affected applications but a single example:
     ```bash
     kubectl apply -f import-service.yml
     OR

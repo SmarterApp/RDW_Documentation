@@ -414,11 +414,11 @@ GROUP BY s.id;
 3 rows in set (0.00 sec)
 ```
 
-**Finding modifications to students**
-The following query outputs one row for each student.  It includes the count of modifications and the date of the last change.
-Students with no modifications have a `student_update_count` of `0`.
+**Finding modifications to students by school**
+The following query outputs one row for each student in a specific current institution.  Current institution is inferred from the most recent exam completed by a student.
+The output includes the count of modifications and the date of the last change.  Students with no modifications have a `student_update_count` of `0`.
 
-A `WHERE` clause can be added to filter students.
+Running this query without a `WHERE` clause to limit the students will result in a full scan of the `students` table resulting in a long running query on databases with a large number of students.
 
 ```mysql
 SELECT
@@ -430,6 +430,7 @@ SELECT
   MAX(ast.audited) last_update
 FROM student s
 LEFT JOIN audit_student ast ON s.id = ast.student_id
+WHERE s.inferred_school_id IN ( SELECT id from school WHERE natural_id = 'TS000001')
 GROUP BY s.id;
 ```
 
@@ -437,12 +438,10 @@ GROUP BY s.id;
 +---------+------------+-------------+-----------------+----------------------+----------------------------+
 | ssid    | first_name | middle_name | last_or_surname | student_update_count | last_update                |
 +---------+------------+-------------+-----------------+----------------------+----------------------------+
-| SSID001 | Gladys     | Ruth        | Williams        |                    6 | 2017-11-10 09:26:31.858088 |
-| SSID002 | Joe        |             | Smith           |                    1 | 2017-11-10 09:23:01.576030 |
-| SSID003 | Mark       |             | Anderson        |                    1 | 2017-11-10 09:25:21.846849 |
+| SSID002 | Joe        |             | Smith           |                    1 | 2017-12-07 01:41:32.825826 |
 | SSID004 | Linda      |             | Smart           |                    0 | NULL                       |
 +---------+------------+-------------+-----------------+----------------------+----------------------------+
-4 rows in set (0.00 sec)
+2 rows in set (0.00 sec)
 ```
 
 **Finding modifications to students in a date range**

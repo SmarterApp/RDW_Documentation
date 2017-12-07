@@ -8,6 +8,7 @@ This document describes auditing in RDW and provides sample queries for analysin
 * [What is audited?](#what-is-audited)
 * [Where is audit data stored?](#where-is-audit-data-stored)
 * [Adding audit table indexes](#adding-audit-table-indexes)
+* [Enable and disable auditing](#enable-and-disable-auditing)
 * [How can audit data be queried?](#how-can-audit-data-be-queried)
     * [Query Exam](#query-exam)
     * [Query Student](#query-student)
@@ -85,6 +86,27 @@ MySQL triggers are used to create `audit_` records.  Each table being audited ha
 
 ### Adding audit table indexes
 There are no indexes on audit tables.  If auditing is queried frequently or the tables become large, indexes could be added to improve query performance.  The trade off is indexes on audit tables could have a negative impact on ingest performance.
+
+### Enable and disable auditing
+The warehouse has a `setting` table.  The setting record with a `name` of `AUDIT_TRIGGER_ENABLE` controls if audit records will be created.  Only when the `value` is `TRUE` will audit records be created.
+
+To view the current audit setting run the following query.
+
+```mysql
+SELECT s.name, s.value from setting s WHERE s.name = 'AUDIT_TRIGGER_ENABLE';
+```
+
+To enable auditing run the following statement.
+
+```mysql
+UPDATE setting s SET s.value = 'TRUE' WHERE s.name = 'AUDIT_TRIGGER_ENABLE';
+```
+
+To disable auditing run the following statement.
+
+```mysql
+UPDATE setting s SET s.value = 'FALSE' WHERE s.name = 'AUDIT_TRIGGER_ENABLE';
+```
 
 ### How can audit data be queried?
 Sample queries are provided for analyzing audit data combining the warehouse import table, the table being audited, the audit_ table, and joining other relations in the warehouse for lookup values.

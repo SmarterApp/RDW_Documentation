@@ -7,6 +7,7 @@ This document describes auditing in RDW and provides sample queries for analysin
 * [Terminology](#terminology)
 * [What is audited?](#what-is-audited)
 * [Where is audit data stored?](#where-is-audit-data-stored)
+* [Adding audit table indexes](#adding-audit-table-indexes)
 * [How can audit data be queried?](#how-can-audit-data-be-queried)
     * [Query Exam](#query-exam)
     * [Query Student](#query-student)
@@ -81,6 +82,9 @@ MySQL triggers are used to create `audit_` records.  Each table being audited ha
 | audit_student_group                | student_group                | Update, Soft Delete (as update) |
 | audit_student_group_membership     | student_group_membership     | Delete                          |
 | audit_user_student_group           | user_student_group           | Delete                          |
+
+### Adding audit table indexes
+There are no indexes on audit tables.  If auditing is queried frequently or the tables become large, indexes could be added to improve query performance.  The trade off is indexes on audit tables could have a negative impact on ingest performance.
 
 ### How can audit data be queried?
 Sample queries are provided for analyzing audit data combining the warehouse import table, the table being audited, the audit_ table, and joining other relations in the warehouse for lookup values.

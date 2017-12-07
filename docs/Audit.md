@@ -7,6 +7,8 @@ This document describes auditing in RDW and provides sample queries for analysin
 * [Terminology](#terminology)
 * [What is audited?](#what-is-audited)
 * [Where is audit data stored?](#where-is-audit-data-stored)
+* [Adding audit table indexes](#adding-audit-table-indexes)
+* [Enable and disable auditing](#enable-and-disable-auditing)
 * [How can audit data be queried?](#how-can-audit-data-be-queried)
     * [Query Exam](#query-exam)
     * [Query Student](#query-student)
@@ -20,23 +22,23 @@ This document describes auditing in RDW and provides sample queries for analysin
     * [Clear a specific student group](#clear-a-specific-student-group)
     * [Clear all student groups for a specific school](#clear-all-student-groups-for-a-specific-school)
 
-### Intended Audience
+### Intended audience
 The intended audience should be familiar with database technology and querying a database with SQL.
 - **System and Database Administrators**: This document provides administrators information on what is audited in the warehouse and where it is stored.
 - **Developers and Analysts**: Developers and analysts with knowledge of SQL and the appropriate permissions can use this document as a guide to querying exam and student modifications.
 
 ### Terminology
-- **Test Result**: When a student takes a test the results are transmitted to the data warehouse.  This submission is a test result.  It is for one instance of a student taking a given test.
-- **TRT**: Is an acronym for an instance of a test result in the Smarter Balanced [Test Results Transmission Format](http://www.smarterapp.org/specs/TestResultsTransmissionFormat.html) where the content adheres to the [Test Results Data Model](http://www.smarterapp.org/news/2015/08/26/DataModelAndSamples.html)
+- **Test Result**: When a student takes a test the results are transmitted to the data warehouse.
+- **TRT**: Is an acronym for an instance of a test result in the Smarter Balanced [Test Results Transmission Format](http://www.smarterapp.org/specs/TestResultsTransmissionFormat.html) where the content adheres to the [Test Results Data Model](http://www.smarterapp.org/news/2015/08/26/DataModelAndSamples.html).
 - **Ingest**: Ingest is the process of receiving a submission of data and loading it into the data warehouse.
 - **Exam**: Each test result submitted or migrated from legacy data is stored as an exam in the data warehouse.
-- **warehouse schema**: The warehouse schema is the source of truth for reporting in the data warehouse and is used to populate user reporting and analytical reporting schemas. All schemas are defined in the [SmarterApp/RDW_Schema](https://github.com/SmarterApp/RDW_Schema) repository.  The warehouse schema is in the [SmarterApp/RDW_Schema/warehouse](https://github.com/SmarterApp/RDW_Schema/tree/develop/warehouse) folder.
+- **Warehouse Schema**: The warehouse schema is the source of truth for reporting in the data warehouse and is used to populate user reporting and analytical reporting schemas. All schemas are defined in the [SmarterApp/RDW_Schema](https://github.com/SmarterApp/RDW_Schema) repository.  The warehouse schema is in the [SmarterApp/RDW_Schema/warehouse](https://github.com/SmarterApp/RDW_Schema/tree/develop/warehouse) folder.
 - **State Changes**: Auditing tracks entity changes.
-  - **Create**: A new entity such as an exam is added to the warehouse.  This is not audited, however, there is an import record that records attributes of the submission.
+  - **Create**: A new entity is added to the warehouse.  This is not audited, however, there is an import record that records attributes of the submission.
   - **Update**: A request to change a previously created entity.  This is audited as an update.
-  - **Delete**: An entity is removed from the warehouse.  Does not occur for entities being audited such as exam.  Does occur for entity attributes stored in supporting child tables and is audited as a delete.
-  - **Soft Delete**: A request to delete an entity from the warehouse that is being audited is updated with it's deleted flag set to true.  This is audited as an update.
-- **Modification**: update, delete and soft delete state changes
+  - **Delete**: An entity is removed from the warehouse.  This is audited as a delete.
+  - **Soft Delete**: An update that sets a deleted flag to true.  This is audited as an update.
+- **Modification**: Update, delete and soft delete state changes.
 - **Import**:  All inflows of data to the warehouse create an import record that stores attributes of the inflow including a timestamp and the authorized user.
 
 
@@ -62,32 +64,56 @@ Warehouse tables audited:
 Each audited table has an `audit_...` table that records the state change for each row.  The audit tables contain the state of the row before the change.  In addition to the columns from the table being audited, each audit_ table has the following columns:
 
 - **id**: Unique ID
-- **action**: delete or update
-- **audited**: timestamp when the audit record was created
-- **database_user**: The 'username'@'hostname' of the database user connected to the database.
+- **action**: A value of delete or update
+- **audited**: Timestamp when the audit record was created
+- **database_user**: The 'username'@'hostname' of the database user connected to the database
 
-The Ingest Event column is the normal application flow for loading data into the warehouse where events are recorded.  Create is not recorded, instead, queries combining the the audit_ table and the table being audited can represent a complete audit trail.
+The Ingest Event column is the normal application flow for loading data into the warehouse that triggers a new audit record.  Create is not audited; instead, queries combining the `audit_` table and the table being audited can represent a complete audit trail.
 
-MySQL triggers are used to capture audit_ records.  Each table being audited has update and delete triggers providing a record of changes made by normal application flow and manual modifications if they occur.  
+MySQL triggers are used to create `audit_` records.  Each table being audited has update and delete triggers providing a record of changes made by normal application flow and manual modifications if they occur.  
 
-| Audit Table                        | Audits                       | Ingest Event                   |
-|------------------------------------|------------------------------|--------------------------------|
-| audit_exam                         | exam                         | Update, Soft Delete(as update) |
-| audit_exam_available_accommodation | exam_available_accommodation | Delete                         |
-| audit_exam_claim_score             | exam_claim_score             | Update                         |
-| audit_exam_item                    | exam_item                    | Update, Delete                 |
-| audit_student                      | student                      | Update, Soft Delete(as update) |
-| audit_student_ethnicity            | student_ethnicity            | Delete                         |
-| audit_student_group                | student_group                | Update, Soft Delete(as update) |
-| audit_student_group_membership     | student_group_membership     | Delete                         |
-| audit_user_student_group           | user_student_group           | Delete                         |
+| Audit Table                        | Audits                       | Ingest Event                    |
+|------------------------------------|------------------------------|---------------------------------|
+| audit_exam                         | exam                         | Update, Soft Delete (as update) |
+| audit_exam_available_accommodation | exam_available_accommodation | Delete                          |
+| audit_exam_claim_score             | exam_claim_score             | Update                          |
+| audit_exam_item                    | exam_item                    | Update, Delete                  |
+| audit_student                      | student                      | Update, Soft Delete (as update) |
+| audit_student_ethnicity            | student_ethnicity            | Delete                          |
+| audit_student_group                | student_group                | Update, Soft Delete (as update) |
+| audit_student_group_membership     | student_group_membership     | Delete                          |
+| audit_user_student_group           | user_student_group           | Delete                          |
+
+### Adding audit table indexes
+There are no indexes on audit tables.  If auditing is queried frequently or the tables become large, indexes could be added to improve query performance.  The trade off is indexes on audit tables could have a negative impact on ingest performance.
+
+### Enable and disable auditing
+The warehouse has a `setting` table.  The setting record with a `name` of `AUDIT_TRIGGER_ENABLE` controls if audit records will be created.  Only when the `value` is `TRUE` will audit records be created.
+
+To view the current audit setting run the following query.
+
+```mysql
+SELECT s.name, s.value from setting s WHERE s.name = 'AUDIT_TRIGGER_ENABLE';
+```
+
+To enable auditing run the following statement.
+
+```mysql
+UPDATE setting s SET s.value = 'TRUE' WHERE s.name = 'AUDIT_TRIGGER_ENABLE';
+```
+
+To disable auditing run the following statement.
+
+```mysql
+UPDATE setting s SET s.value = 'FALSE' WHERE s.name = 'AUDIT_TRIGGER_ENABLE';
+```
 
 ### How can audit data be queried?
-Sample queries are provided for analysing audit data combining the warehouse import table, the table being audited, the audit_ table and joining other relations in the warehouse for lookup values.
+Sample queries are provided for analyzing audit data combining the warehouse import table, the table being audited, the audit_ table, and joining other relations in the warehouse for lookup values.
 
-#### Query Exam
+#### Query exam
 
-**Finding modifications to a students exams**
+**Finding modifications to a students exams.**
 The following query outputs one row for each modified exam for one student.  It includes the count of modifications and the date of the last change.
 
 The `WHERE` clause can be changed to include multiple students.
@@ -120,7 +146,7 @@ GROUP BY e.id
 +---------+-----------------+---------+--------------+-------------+-----------------------------------+-------------------+----------------------------+
 2 rows in set (0.00 sec)
 ```
-**Finding modifications to exams in a date range**
+**Finding modifications to exams in a date range.**
 The following query outputs one row for each modification to an exam within a date range.
 
 ```mysql
@@ -152,8 +178,8 @@ GROUP BY e.id
 2 rows in set (0.00 sec)
 ```
 
-**Listing all exams for one student with update count**
-The following query outputs one row for each exam for one student with a count of modifications and the date of the most recent update.  If the exam has not been modified `exam_update_count` is zero.
+**Listing all exams for one student, with update count.** 
+The following query outputs one row for each exam for one student, with a count of modifications and the date of the most recent update.  If the exam has not been modified `exam_update_count` is zero.
 
 ```mysql
 SELECT
@@ -184,10 +210,10 @@ GROUP BY e.id
 3 rows in set (0.00 sec)
 ```
 
-**Exam audit trail**
+**Exam audit trail.** 
 The following query lists the details of exam modifications in addition to the current state.
 
-The query can be modified to display different or all columns.  The `WHERE` clause can be modified, such as, to include multiple exams or all exams for a student.
+The query can be modified to display different or all columns.  The `WHERE` clause can be modified, for example, to include multiple exams or all exams for a student.
 
 ```mysql
 SELECT
@@ -298,10 +324,10 @@ ORDER BY e.exam_id, e.updated DESC;
 4 rows in set (0.00 sec)
 ```
 
-**Accommodation audit trail for exams**
+**Accommodation audit trail for exams.** 
 Each child table audit trail can be queried in a similar manner.  The following example is for the exam_available_accommodation child table.
 
-The query can be modified to display different or all columns.  The `WHERE` clause can be modified, such as, to include multiple exams or all exams for a student.
+The query can be modified to display different or all columns.  The `WHERE` clause can be modified, for example, to include multiple exams or all exams for a student.
 
 
 ```mysql
@@ -383,9 +409,9 @@ ORDER BY acc_audit.exam_id, acc_audit.action_date DESC;
 9 rows in set (0.00 sec)
 ```
 
-#### Query Student
+#### Query student
 
-**Finding modified students**
+**Finding modified students.** 
 The following query outputs one row for each modified student.  It includes the count of modifications and the date of the last change.
 
 A `WHERE` clause can be added to filter students.
@@ -414,7 +440,7 @@ GROUP BY s.id;
 3 rows in set (0.00 sec)
 ```
 
-**Finding modifications to students by school**
+**Finding modifications to students by school.** 
 The following query outputs one row for each student in a specific current institution.  Current institution is inferred from the most recent exam completed by a student.
 The output includes the count of modifications and the date of the last change.  Students with no modifications have a `student_update_count` of `0`.
 
@@ -444,7 +470,7 @@ GROUP BY s.id;
 2 rows in set (0.00 sec)
 ```
 
-**Finding modifications to students in a date range**
+**Finding modifications to students in a date range.** 
 The following query outputs one row for each modification to a student within a date range.
 
 ```mysql
@@ -471,10 +497,10 @@ GROUP BY s.id;
 2 rows in set (0.00 sec)
 ```
 
-**Student audit trail**
+**Student audit trail.** 
 The following query lists the details of student modifications in addition to the current state.
 
-The query can be modified to display different or all columns.  The `WHERE` clause can be modified, such as, to include multiple students or all students in a school.
+The query can be modified to display different or all columns.  The `WHERE` clause can be modified, for example, to include multiple students or all students in a school.
 
 ```mysql
 SELECT
@@ -538,10 +564,10 @@ ORDER BY s.student_id, s.updated DESC;
 +------------+---------+------------+-------------+-----------------+--------+--------------------+----------------------------+----------+------------+----------------------------+
 7 rows in set (0.00 sec)
 ```
-**Ethnicity audit trail for students**
+**Ethnicity audit trail for students.** 
 Each child table audit trail can be queried in a similar manner.  The following example is for the `student_ethnicity` child table.  Student currently has one child table.
 
-The query can be modified to display different or all columns.  The `WHERE` clause can be modified, such as, to include multiple students or all students in a school.
+The query can be modified to display different or all columns.  The `WHERE` clause can be modified, for example, to include multiple students or all students in a school.
 
 
 ```mysql
@@ -624,9 +650,9 @@ ORDER BY eth_audit.student_id, eth_audit.action_date DESC;
 12 rows in set (0.00 sec)
 ```
 
-#### Query Student Groups
+#### Query student groups
 
-**Finding modified student groups**
+**Finding modified student groups.** 
 The following query outputs one row for each modified student_group.  It includes the count of modifications and the date of the last change.
 
 A `WHERE` clause can be added to filter results.
@@ -658,7 +684,7 @@ GROUP BY sg.id;
 3 rows in set (0.00 sec)
 ```
 
-**Finding modifications to student groups**
+**Finding modifications to student groups.** 
 The following query outputs one row for each student_group.  It includes the count of modifications and the date of the last change.
 Students with no modifications have a `update_count` of `0`.
 
@@ -693,7 +719,7 @@ GROUP BY sg.id;
 5 rows in set (0.00 sec)
 ```
 
-**Finding modifications to student groups in a date range**
+**Finding modifications to student groups in a date range.** 
 The following query outputs one row for each modification to a student_group within a date range.
 
 ```mysql
@@ -723,10 +749,10 @@ GROUP BY sg.id;
 2 rows in set (0.00 sec)
 ```
 
-**Student group audit trail**
+**Student group audit trail.** 
 The following query lists the details of student group modifications in addition to the current state.
 
-The query can be modified to display different or all columns.  The `WHERE` clause can be modified, such as, to include multiple student groups or all student groups in a district.
+The query can be modified to display different or all columns.  The `WHERE` clause can be modified, for example, to include multiple student groups or all student groups in a district.
 
 ```mysql
 SELECT
@@ -788,10 +814,10 @@ ORDER BY sg.student_group_id, sg.updated DESC;
 +----------+-----------------+----------------------+-------------+---------+---------+--------+--------+----------------+----------------------------+----------+
 4 rows in set (0.00 sec)
 ```
-**Student membership audit trail**
+**Student membership audit trail.** 
 Each child table audit trail can be queried in a similar manner.  For student_groups the child tables are `student_group_membership` and `user_student_group`.  The following example is for `student_group_membership`.  
 
-The query can be modified to display different or all columns.  The `WHERE` clauses can be modified, such as, to include multiple student_groups or all student_groups in a district.
+The query can be modified to display different or all columns.  The `WHERE` clauses can be modified, for example, to include multiple student_groups or all student_groups in a district.
 
 
 ```mysql
@@ -878,7 +904,7 @@ ORDER BY membership_audit.student_group_id, membership_audit.action_date DESC;
 
 #### Clear a specific student record
 
-**Step 1: Table `audit_student_ethnicity`.  Query records to delete.**
+**Step 1: Table `audit_student_ethnicity`.  Query records to delete.** 
 The following query outputs the `audit_student_ethnicity` records to be deleted.
 
 ```mysql
@@ -895,7 +921,7 @@ WHERE student_id IN (SELECT s.id FROM student s WHERE s.ssid = 'SSID001');
 1 row in set (0.00 sec)
 ```
 
-**Step 2: Table `audit_student_ethnicity`.  Delete records.**
+**Step 2: Table `audit_student_ethnicity`.  Delete records.** 
 The following statement deletes records with the same `FROM` clause as the previous statement.
 
 ```mysql
@@ -907,7 +933,7 @@ WHERE student_id IN (SELECT s.id FROM student s WHERE s.ssid = 'SSID001');
 Query OK, 1 row affected (0.00 sec)
 ```
 
-**Step 3: Table `audit_student_ethnicity`.  Validate records deleted.**
+**Step 3: Table `audit_student_ethnicity`.  Validate records deleted.** 
 Execute the same query used before the `DELETE` step to validate records no longer exist. 
 
 ```mysql
@@ -919,7 +945,7 @@ WHERE student_id IN (SELECT s.id FROM student s WHERE s.ssid = 'SSID001');
 Empty set (0.00 sec)
 ```
 
-**Step 4: Table `audit_student`.  Query records to delete.**
+**Step 4: Table `audit_student`.  Query records to delete.** 
 The following query outputs the `audit_student` records do be deleted.
 
 ```mysql
@@ -940,7 +966,7 @@ WHERE student_id IN (SELECT id FROM student WHERE ssid = 'SSID001');
 5 rows in set (0.00 sec)
 ```
 
-**Step 5: Table `audit_student`.  Delete records.**
+**Step 5: Table `audit_student`.  Delete records.** 
 The following statement deletes records with the same `FROM` clause as the previous statement.
 
 ```mysql
@@ -952,7 +978,7 @@ WHERE student_id IN (SELECT id FROM student WHERE ssid = 'SSID001');
 Query OK, 5 rows affected (0.01 sec)
 ```
 
-**Step 6: Table `audit_student`.  Validate records deleted.**
+**Step 6: Table `audit_student`.  Validate records deleted.** 
 Execute the same query used before the `DELETE` step to validate records no longer exist. 
 
 ```mysql
@@ -966,7 +992,7 @@ Empty set (0.00 sec)
 
 #### Clear all exams for a specific student
 
-**Step 1: Table `audit_exam_claim_score`.  Query records to delete.**
+**Step 1: Table `audit_exam_claim_score`.  Query records to delete.** 
 The following query outputs the `audit_exam_claim_score` records to be deleted.
 
 ```mysql
@@ -989,7 +1015,7 @@ ON aecs.exam_id = student_exams.id;
 4 rows in set (0.00 sec)
 ```
 
-**Step 2: Table `audit_exam_claim_score`.  Delete records.**
+**Step 2: Table `audit_exam_claim_score`.  Delete records.** 
 The following statement deletes records with the same `FROM` clause as the previous statement.
 
 ```mysql
@@ -1004,7 +1030,7 @@ ON aecs.exam_id = student_exams.id;
 Query OK, 4 rows affected (0.01 sec)
 ```
 
-**Step 3: Table `audit_exam_claim_score`.  Validate records deleted.**
+**Step 3: Table `audit_exam_claim_score`.  Validate records deleted.** 
 Execute the same query used before the `DELETE` step to validate records no longer exist. 
 
 ```mysql
@@ -1019,7 +1045,7 @@ ON aecs.exam_id = student_exams.id;
 Empty set (0.00 sec)
 ```
 
-**Step 4: Table `audit_exam_available_accommodation`.  Query records to delete.**
+**Step 4: Table `audit_exam_available_accommodation`.  Query records to delete.** 
 The following query outputs the `audit_exam_available_accommodation` records to be deleted.
 
 ```mysql
@@ -1040,7 +1066,7 @@ ON aeaa.exam_id = student_exams.id;
 2 rows in set (0.00 sec)
 ```
 
-**Step 5: Table `audit_exam_available_accommodation`.  Delete records.**
+**Step 5: Table `audit_exam_available_accommodation`.  Delete records.** 
 The following statement deletes records with the same `FROM` clause as the previous statement.
 
 ```mysql
@@ -1055,7 +1081,7 @@ ON aeaa.exam_id = student_exams.id;
 Query OK, 2 rows affected (0.00 sec)
 ```
 
-**Step 6: Table `audit_exam_available_accommodation`.  Validate records deleted.**
+**Step 6: Table `audit_exam_available_accommodation`.  Validate records deleted.** 
 Execute the same query used before the `DELETE` step to validate records no longer exist. 
 
 ```mysql
@@ -1070,7 +1096,7 @@ ON aeaa.exam_id = student_exams.id;
 Empty set (0.00 sec)
 ```
 
-**Step 7: Table `audit_exam_item`.  Query records to delete.**
+**Step 7: Table `audit_exam_item`.  Query records to delete.** 
 The following query outputs the `audit_exam_item` records to be deleted.
 
 ```mysql
@@ -1094,7 +1120,7 @@ ON aei.exam_id = student_exams.id;
 5 rows in set (0.00 sec)
 ```
 
-**Step 8: Table `audit_exam_item`.  Delete records.**
+**Step 8: Table `audit_exam_item`.  Delete records.** 
 The following statement deletes records with the same `FROM` clause as the previous statement.
 
 ```mysql
@@ -1109,7 +1135,7 @@ ON aei.exam_id = student_exams.id;
 Query OK, 5 rows affected (0.01 sec)
 ```
 
-**Step 9: Table `audit_exam_item`.  Validate records deleted.**
+**Step 9: Table `audit_exam_item`.  Validate records deleted.** 
 Execute the same query used before the `DELETE` step to validate records no longer exist. 
 
 ```mysql
@@ -1124,7 +1150,7 @@ ON aei.exam_id = student_exams.id;
 Empty set (0.00 sec)
 ```
 
-**Step 10: Table `audit_exam`.  Query records to delete.**
+**Step 10: Table `audit_exam`.  Query records to delete.** 
 The following query outputs the `audit_exam` records to be deleted.
 
 ```mysql
@@ -1147,7 +1173,7 @@ ON ae.exam_id = student_exams.id;
 4 rows in set (0.00 sec)
 ```
 
-**Step 11: Table `audit_exam`.  Delete records.**
+**Step 11: Table `audit_exam`.  Delete records.** 
 The following statement deletes records with the same `FROM` clause as the previous statement.
 
 ```mysql
@@ -1162,7 +1188,7 @@ ON ae.exam_id = student_exams.id;
 Query OK, 4 rows affected (0.01 sec)
 ```
 
-**Step 12: Table `audit_exam`.  Validate records deleted.**
+**Step 12: Table `audit_exam`.  Validate records deleted.** 
 Execute the same query used before the `DELETE` step to validate records no longer exist. 
 
 ```mysql
@@ -1251,7 +1277,7 @@ ON ae.exam_id = asmt_exams.id;
 
 #### Clear a specific student group
 
-**Step 1: Table `audit_user_student_group`.  Query records to delete.**
+**Step 1: Table `audit_user_student_group`.  Query records to delete.** 
 The following query outputs the `audit_user_student_group` records to be deleted.
 
 ```mysql
@@ -1276,7 +1302,7 @@ ON ausg.student_group_id = specific_group.id;
 3 rows in set (0.00 sec)
 ```
 
-**Step 2: Table `audit_user_student_group`.  Delete records.**
+**Step 2: Table `audit_user_student_group`.  Delete records.** 
 The following statement deletes records with the same `FROM` clause as the previous statement.
 
 ```mysql
@@ -1294,7 +1320,7 @@ ON ausg.student_group_id = specific_group.id;
 Query OK, 3 rows affected (0.01 sec)
 ```
 
-**Step 3: Table `audit_user_student_group`.  Validate records deleted.**
+**Step 3: Table `audit_user_student_group`.  Validate records deleted.** 
 Execute the same query used before the `DELETE` step to validate records no longer exist. 
 
 ```mysql
@@ -1312,7 +1338,7 @@ ON ausg.student_group_id = specific_group.id;
 Empty set (0.00 sec)
 ```
 
-**Step 4: Table `audit_student_group_membership`.  Query records to delete.**
+**Step 4: Table `audit_student_group_membership`.  Query records to delete.** 
 The following query outputs the `audit_student_group_membership` records to be deleted.
 
 ```mysql
@@ -1337,7 +1363,7 @@ ON asgm.student_group_id = specific_group.id;
 3 rows in set (0.00 sec) 
 ```
 
-**Step 5: Table `audit_student_group_membership`.  Delete records.**
+**Step 5: Table `audit_student_group_membership`.  Delete records.** 
 The following statement deletes records with the same `FROM` clause as the previous statement.
 
 ```mysql
@@ -1355,7 +1381,7 @@ ON asgm.student_group_id = specific_group.id;
 Query OK, 3 rows affected (0.01 sec)
 ```
 
-**Step 6: Table `audit_student_group_membership`.  Validate records deleted.**
+**Step 6: Table `audit_student_group_membership`.  Validate records deleted.** 
 Execute the same query used before the `DELETE` step to validate records no longer exist. 
 
 ```mysql
@@ -1373,7 +1399,7 @@ ON asgm.student_group_id = specific_group.id;
 Empty set (0.00 sec)
 ```
 
-**Step 7: Table `audit_student_group`.  Query records to delete.**
+**Step 7: Table `audit_student_group`.  Query records to delete.** 
 The following query outputs the `audit_student_group` records to be deleted.
 
 ```mysql
@@ -1398,7 +1424,7 @@ ON asg.student_group_id = specific_group.id;
 3 rows in set (0.00 sec)
 ```
 
-**Step 8: Table `audit_student_group`.  Delete records.**
+**Step 8: Table `audit_student_group`.  Delete records.** 
 The following statement deletes records with the same `FROM` clause as the previous statement.
 
 ```mysql
@@ -1416,7 +1442,7 @@ ON asg.student_group_id = specific_group.id;
 Query OK, 3 rows affected (0.00 sec)
 ```
 
-**Step 9: Table `audit_student_group`.  Validate records deleted.**
+**Step 9: Table `audit_student_group`.  Validate records deleted.** 
 Execute the same query used before the `DELETE` step to validate records no longer exist. 
 
 ```mysql

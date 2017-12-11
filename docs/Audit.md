@@ -113,7 +113,7 @@ Sample queries are provided for analyzing audit data combining the warehouse imp
 
 #### Query exam
 
-**Finding modifications to a students exams.**
+**Finding modifications to a student's exams.**
 The following query outputs one row for each modified exam for one student.  It includes the count of modifications and the date of the last change.
 
 The `WHERE` clause can be changed to include multiple students.
@@ -686,7 +686,7 @@ GROUP BY sg.id;
 
 **Finding modifications to student groups.** 
 The following query outputs one row for each student_group.  It includes the count of modifications and the date of the last change.
-Students with no modifications have a `update_count` of `0`.
+Students with no modifications have an `update_count` of `0`.
 
 A `WHERE` clause can be added to filter results.
 
@@ -946,7 +946,7 @@ Empty set (0.00 sec)
 ```
 
 **Step 4: Table `audit_student`.  Query records to delete.** 
-The following query outputs the `audit_student` records do be deleted.
+The following query outputs the `audit_student` records to be deleted.
 
 ```mysql
 SELECT ast.id audit_id, ast.student_id, ast.ssid, ast.action, ast.audited FROM audit_student ast

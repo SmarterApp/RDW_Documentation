@@ -47,7 +47,7 @@ As [Spring Boot][1] applications, the configuration settings for all application
 * **Command Line Options**. These may be used to override any default setting. In a container orchestration framework, these are seldom used.
 * **Configuration server**. There is a central configuration server that all applications use to get environment-specific settings. Properties served up by the configuration server may be encrypted, protecting environment secrets. 
 
-There are settings that all the applications use to bootstrap to the configuration server. These are generally set using environment variables in the orchestration framwork, for example: 
+There are settings that all the applications use to bootstrap to the configuration server. These are generally set using environment variables in the orchestration framework, for example: 
 
 ```bash
 CONFIG_SERVICE_ENABLED=true

@@ -14,6 +14,7 @@ Monitoring RDW applications includes monitoring:
     * [Monitor Migrate Failures](#monitor-migrate-failures)
     * [Monitor Migrate Rate](#monitor-migrate-rate)
     * [System Use By Date](#system-use-by-date)
+    * [Organization Queries](#organization-queries)
 * [Logging](#logging)
     * [Log Level](#log-level)
     * [Log Collection](#log-collection)
@@ -191,6 +192,29 @@ SELECT p.date, count(DISTINCT sub.sid) FROM prod p
     ON sub.date <= p.date
   GROUP BY p.date
   ORDER BY p.date; 
+```
+
+#### Organization Queries
+As part of the suite of SmarterBalanced applications, the RDW uses ART to get organization information. Part of maintenance of ART is knowing which organizations are being used and which aren't. Here are a couple queries that may help with that.
+
+```sql
+-- schools with counts of exams (deleted or not) 
+SELECT s.natural_id AS school_id, s.name AS school_name, count(es.id) AS exam_count FROM school s 
+  LEFT JOIN exam_student es ON es.school_id = s.id
+GROUP BY s.id
+ORDER BY s.natural_id;
+
+-- districts with counts of exams (deleted or not)
+SELECT d.natural_id AS district_id, d.name AS district_name, count(es.id) AS exam_count FROM district d
+  JOIN school s ON s.district_id = d.id
+  LEFT JOIN exam_student es ON es.school_id = s.id
+GROUP BY d.id
+ORDER BY d.natural_id;
+```
+
+A good way to output the data for use is to use the `--batch` flag which prints results using tab as the column separator, then pipe the output to a file. If you prefer CSV you can pipe it through sed to replace tabs. For example:
+```bash
+mysql -h host -u username -p --batch warehouse < myquery.sql | sed 's/\t/,/g' > results.tsv
 ```
 
 ### Logging

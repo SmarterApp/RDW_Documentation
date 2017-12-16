@@ -199,13 +199,13 @@ As part of the suite of SmarterBalanced applications, the RDW uses ART to get or
 
 ```sql
 -- schools with counts of exams (deleted or not) 
-SELECT s.natural_id AS school_id, s.name AS school_name, count(es.id) AS exam_count FROM school s 
+SELECT s.natural_id AS school_id, concat('"', s.name, '"') AS school_name, count(es.id) AS exam_count FROM school s 
   LEFT JOIN exam_student es ON es.school_id = s.id
 GROUP BY s.id
 ORDER BY s.natural_id;
 
 -- districts with counts of exams (deleted or not)
-SELECT d.natural_id AS district_id, d.name AS district_name, count(es.id) AS exam_count FROM district d
+SELECT d.natural_id AS district_id, concat('"', d.name, '"') AS district_name, count(es.id) AS exam_count FROM district d
   JOIN school s ON s.district_id = d.id
   LEFT JOIN exam_student es ON es.school_id = s.id
 GROUP BY d.id

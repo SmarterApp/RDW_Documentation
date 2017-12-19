@@ -24,6 +24,7 @@
 ### Other Resources
 
 1. [Import and Migrate](Runbook.migrate.md)
+1. [Embargo](Runbook.embargo.md)
 1. [Language Support](Runbook.language.md)
 
 <a name="common"></a>

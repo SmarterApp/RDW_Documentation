@@ -11,6 +11,7 @@ Content Type   | Table       |  Comment  |
 n/a | asmt_type, subject, subject_claim_score import_content, import_status, import, language | Considered critical data. Must be pre-loaded as part of the initial schema set. Cannot be modified later.
 CODES | administration_condition, common_core_standard, grade, completeness, ethnicity, gender, claim, depth_of_knowledge, math_practice, item_trait_score, target | Pre-loaded from SBAC blueprints and specifications. Allows for manual updates.
 CODES | accommodation, accommodation_translation | Ingested using the [Import Service API](https://github.com/SmarterApp/RDW_Ingest/blob/develop/import-service/API.md) and [SBAC Accessbility Accomodataion Configuration](https://github.com/SmarterApp/AccessibilityAccommodationConfigurations/tree/RDW_DataWarehouse).
+EMBARGO | state_embargo, district_embargo | Embargo settings are edited using the Admin UI.
 PACKAGE | **asmt**, asmt_score, item, item_common_core_standard, item_other_target | Ingested using the Import Service API and the output from the tabulator.
 ORGANIZATION | **school**, school_group, district, district_group | Uploaded by the Update Organizations task.
 EXAM | **exam**, student, exam_item, exam_available_accommodation, exam_claim_score | Ingested from TRTs.
@@ -54,12 +55,21 @@ Data shall be ingested into the system using the import mechanism where availabl
 
 #### Modify any CODES tables
 * Update data in the tables of entity type CODES.
-* Insert an entry into import table with the ‘CODES’ content type:
+* Insert an entry into import table with the `CODES` content type:
 ```sql
 mysql> USE warehouse;
 mysql> INSERT INTO import(status, content, contentType, digest) VALUES (1, 3, 'initial load', 'initial load');
 ```
 * The migrate will pick this up. It will migrate all tables from this category.
+
+#### Modify EMBARGO settings
+* Update/insert data in the EMBARGO tables.
+* Insert an entry in to the import table with the `EMBARGO` content type:
+```sql
+mysql> USE warehouse;
+mysql> INSERT INTO import(status, content, contentType, digest) VALUES (1, 6, 'embargo', 'embargo-settings-2017-12-19');
+```
+* The migrate will pick this up. It will migrate the embargo settings for all organizations.
 
 #### Modify one main table and any of its children
 * Create an import id to associate with your changes. Use an appropriate content type:

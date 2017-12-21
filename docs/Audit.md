@@ -1,9 +1,9 @@
 ## Auditing
-This document describes auditing in RDW and provides sample queries for analysing audit data.
+This document describes auditing in RDW and provides sample queries for analyzing audit data.
 
 ### Table of Contents
 
-* [Intended Audience](#intended-audience)
+* [Intended audience](#intended-audience)
 * [Terminology](#terminology)
 * [What is audited?](#what-is-audited)
 * [Where is audit data stored?](#where-is-audit-data-stored)

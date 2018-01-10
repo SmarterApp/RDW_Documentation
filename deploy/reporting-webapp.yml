@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: admin-service
+  name: reporting-service
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:[aws-randomization]"
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
@@ -17,28 +17,28 @@ spec:
     targetPort: 8080
     name: https
   selector:
-    app: admin-server
+    app: reporting-server
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: admin-deployment
+  name: reporting-deployment
 spec:
-  replicas: 2
+  replicas: 4
   revisionHistoryLimit: 2
   minReadySeconds: 60
   strategy:
     rollingUpdate:
       maxUnavailable: 1
-      maxSurge: 1
+      maxSurge: 2
   template:
     metadata:
       labels:
-        app: admin-server
+        app: reporting-server
     spec:
       containers:
       - name: webapp
-        image: smarterbalanced/rdw-admin-webapp:1.1.0-RELEASE
+        image: smarterbalanced/rdw-reporting-webapp:1.1.0-RELEASE
         readinessProbe:
           httpGet:
             path: /health
@@ -49,11 +49,11 @@ spec:
           failureThreshold: 3
         resources:
           requests:
-            cpu: 200m
+            cpu: 500m
             memory: 1G
           limits:
-            cpu: 300m
-            memory: 1G
+            cpu: 750m
+            memory: 1180M
         env:
         - name: CONFIG_SERVICE_URL
           value: "http://configuration-service"
@@ -62,3 +62,10 @@ spec:
         ports:
         - containerPort: 8080
         - containerPort: 8008
+        volumeMounts:
+        - mountPath: /itembank
+          name: itembank
+      volumes:
+      - name: itembank
+        persistentVolumeClaim:
+          claimName: iris-efs-volume

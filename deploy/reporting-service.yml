@@ -2,55 +2,30 @@ apiVersion: v1
 kind: Service
 metadata:
   name: reporting-service
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:[aws-randomization]"
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
-    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
-    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 8080
-    name: http
-  - port: 443
-    targetPort: 8080
-    name: https
-  selector:
-    app: reporting-server
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: reporting-status-service
 spec:
   type: ClusterIP
   ports:
   - port: 80
-    targetPort: 8008
+    targetPort: 8080
   selector:
-    app: reporting-server
+    app: reporting-service
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: reporting-deployment
+  name: reporting-service-deployment
 spec:
-  replicas: 4
-  revisionHistoryLimit: 2
-  minReadySeconds: 60
-  strategy:
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 2
+  replicas: 1
+  revisionHistoryLimit: 1
   template:
     metadata:
       labels:
-        app: reporting-server
+        app: reporting-service
     spec:
       containers:
-      - name: webapp
-        image: smarterbalanced/rdw-reporting-webapp:1.0.4-RELEASE
+      - name: reporting-service
+        image: smarterbalanced/rdw-reporting-service:1.1.0-RELEASE
+        imagePullPolicy: Always
         readinessProbe:
           httpGet:
             path: /health
@@ -61,11 +36,11 @@ spec:
           failureThreshold: 3
         resources:
           requests:
-            cpu: 500m
-            memory: 1G
+            cpu: 750m
+            memory: 750M
           limits:
             cpu: 750m
-            memory: 1180M
+            memory: 750M
         env:
         - name: CONFIG_SERVICE_URL
           value: "http://configuration-service"
@@ -74,10 +49,3 @@ spec:
         ports:
         - containerPort: 8080
         - containerPort: 8008
-        volumeMounts:
-        - mountPath: /itembank
-          name: itembank
-      volumes:
-      - name: itembank
-        persistentVolumeClaim:
-          claimName: iris-efs-volume

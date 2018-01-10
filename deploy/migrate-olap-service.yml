@@ -1,21 +1,22 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: package-processor-deployment
+  name: migrate-olap-deployment
 spec:
   replicas: 1
-  revisionHistoryLimit: 2
+  revisionHistoryLimit: 1
   template:
     metadata:
       labels:
-        app: package-processor
+        app: migrate-olap
     spec:
       containers:
-      - name: package-processor
-        image: smarterbalanced/rdw-ingest-package-processor:1.1.0-RELEASE
+      - name: migrate-olap
+        image: smarterbalanced/rdw-ingest-migrate-olap:1.1.0-RELEASE
+        imagePullPolicy: Always
         readinessProbe:
           httpGet:
-            path: /health.json
+            path: /health
             port: 8008
           initialDelaySeconds: 60
           periodSeconds: 60

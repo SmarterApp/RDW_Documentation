@@ -422,7 +422,7 @@ delete s from school s where s.natural_id like '%0000000' and not exists (select
 #### Student Groups - Invalid Upload Status
 
 A number of users were having problems uploading student group CSV files. One of them provided a screen shot showing
-that the file was accepted but then switch to Upload Status `Invalid` (Upload ID = 234).
+that the file was accepted but then switch to Upload Status `Invalid` (Upload ID = 234). The information provided by the user varies; typically they know their email and might know the upload id since it is displayed on the screen.
 
 A quick check in the database shows that the status is invalid but the error message isn't that useful:
 ```sql
@@ -436,6 +436,20 @@ mysql> select * from upload_student_group_batch where id = 234 \G
  updated: 2017-09-28 21:41:42.786444
  message: Problem processing Batch: 234
 filename: Sample Unified.csv
+```
+
+If they provide their email and not the id, something like this may be more appropriate:
+```sql
+mysql> select * from upload_student_group_batch where creator = 'user@school.org' and message is not null \G
+*************************** 78. row ***************************
+      id: 14669
+  digest: D91B31A2650C0D75206155E1A4AB39B7
+  status: -1
+ creator: user@school.org
+ created: 2018-01-13 02:02:00.053236
+ updated: 2018-01-13 02:02:00.201750
+ message: Problem processing Batch: 14669
+filename: Harding test.csv
 ```
 
 A dump of the log was more useful. The process is the group-processor

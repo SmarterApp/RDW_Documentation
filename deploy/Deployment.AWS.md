@@ -481,32 +481,7 @@ The simplest update is a backward compatible patch, usually to deploy an urgent 
     OR
     kubectl set image deployment import-deployment api="smarterbalanced/rdw-ingest-import-service:1.2.3-RELEASE"
     ```
-
-### Major Version Updates
-Major version updates often require additional steps. For now, document them here ...
-
-#### v1.0 -> v1.1
-This is the first major update to RDW. It adds "Phase 2" functionality. 
-* Aggregate reporting.
-* District/School groups (from ART).
-* Combine webapp applications (i.e. admin-webapp goes away)
-
-Quick list of changes; place to keep notes until we finalize this
-1. Redshift.
-1. Changes to configuration files.
-    1. Remove rdw-admin-webapp.yml
-    1. Remove rdw-reporting-admin-webapp.yml (if present)
-    1. Add rdw-ingest-migrate-olap.yml
-    1. Add rdw-reporting-admin-service.yml
-    1. Add rdw-reporting-aggregate-service.yml
-    1. Add rdw-reporting-service.yml
-    1. Update rdw-ingest-task-service.yml: add groups-of-districts/schools-url setting
-    1. Update ... TODO (all the config files need to be updated, need to document)
-        1. Update datasource URL configuration
-1. Changes to Kubernetes configuration files.
-    1. Add aggregate-service.yml
-    1. Add migrate-olap-service.yml
-    1. Rename reporting-service.yml to reporting-webapp.yml
-    1. Add reporting-service.yml
-    1. Update admin-service.yml
-    1. Update image version in all configuration files.
+    
+##### Major Version Upgrades
+Major version updates often require additional steps. Please refer to specific documentation:
+* [Upgrade v1.1](Upgrade.AWS.md)

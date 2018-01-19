@@ -24,8 +24,16 @@ Monitoring RDW applications includes monitoring:
 ### Database 
 There are a number of tables that provide useful information about the state of the system.
 
+When working with the database, know that there are multiple databases used by the system. The `warehouse` database is the primary data store: all imported data resides there. The `reporting` database is the backing store for the individual test result system. The `reporting_olap` database is the backing store for the aggregate reports. In each of the monitoring sections, the database will be called out -- be sure to connect to the right one!
+
+Some of these queries may be used to dump data for automated monitoring systems, reports, etc. With the `mysql` client a good way to output the data is to use the `--batch` flag which prints results using tab as the column separator, then pipe the output to a file. If you prefer CSV you can pipe it through sed to replace tabs. For example:
+```bash
+$ mysql -h host -u username -p --batch warehouse < myquery.sql > results.tsv
+$ mysql -h host -u username -p --batch warehouse < myquery.sql | sed 's/\t/,/g' > results.csv
+```
+
 #### Import Status
-As data is accepted into the system an import record is created. Once the data is processed the status of the import record is updated to reflect success or a number of different error conditions. Monitoring the import table will catch any such issues. A query against the warehouse that counts all failures:
+As data is accepted into the system an import record is created. Once the data is processed the status of the import record is updated to reflect success or a number of different error conditions. Monitoring the import table will catch any such issues. A query against the `warehouse` that counts all failures:
 
 ```sql
 SELECT s.name status,  i.count
@@ -82,7 +90,7 @@ For any of the queries, a non-empty result set indicates that there is unprocess
 [Troubleshooting][1] to resolve issues.
 
 #### Monitor Ingest Speed
-A new ingest request is captured by the ACCEPTED status of the import. Once the data is loaded into the warehouse the status is updated accordingly. Each ingest is different and hence the processing time will vary, but in general it is expected to take less than a minute.
+A new ingest request is captured by the ACCEPTED status of the import. Once the data is loaded into the `warehouse` the status is updated accordingly. Each ingest is different and hence the processing time will vary, but in general it is expected to take less than a minute.
 
 To monitor for slow imports:
 
@@ -92,7 +100,7 @@ SELECT count(*) FROM import WHERE status = 0 AND updated > (CURRENT_TIMESTAMP + 
 If there are slow imports please refer to [Troubleshooting][1] to resolve. Although not urgent, this will affect the timeliness of the reporting data.
 
 #### Monitor Time-To-Warehouse
-Test results include the completed-at timestamp. Using the import create time we can calculate the time it takes for the test delivery and scoring system to get the results to the warehouse.
+Test results include the completed-at timestamp. Using the import create time we can calculate the time it takes for the test delivery and scoring system to get the results to the `warehouse`.
 
 ```sql
 SELECT
@@ -111,10 +119,18 @@ ORDER BY bucket DESC, delay;
 There is a script that reports on data discrepancies between the data warehouse and the reporting data mart(s). Detailed instructions for running that scripts and interpreting the results can be found in [RDW_Schema](https://github.com/SmarterApp/RDW_Schema) under the `validation` folder.
 
 #### Monitor Migrate Failures
-The migrate process is managed by the “migrate-reporting” service. The service records its status into the table. For all possible migrate statuses please refer to `migrate_status` table:
+The migrate process is managed by the “migrate-reporting” service. It records progress and status in the migrate table in the `reporting` database. For all possible migrate statuses please refer to `migrate_status` table:
 
 ```sql
 select * from migrate_status;
++-----+-----------+
+| id  | name      |
++-----+-----------+
+| -10 | ABANDONED |
+|  20 | COMPLETED |
+| -20 | FAILED    |
+|  10 | STARTED   |
++-----+-----------+
 ```
 
 The service will suspend itself if there is a failure. To check for the failure, run:
@@ -129,7 +145,7 @@ If there are failures refer to [Troubleshooting][1] to resolve.
 #### Monitor Migrate Rate
 The  “migrate-reporting” service continuously migrates newly imported data from `warehouse` to `reporting`. The data is moved in batches defined by the `migrate`'s `first_at` and `last_at` timestamps. Each batch is different and hence the processing time will vary, but in general it is expected to take less than a minute.
 
-To establish an average speed of the migrate for a particular installation, check the processing speed of the successful migrates on any given day:
+To establish an average speed of the migrate for a particular installation, check the processing speed of the successful migrates on any given day by querying against the `reporting` database:
 
 ```sql
 SELECT timestampdiff(SECOND, created, updated) runtime_in_sec
@@ -161,7 +177,7 @@ If migrates are taking longer than expected, or if the monitoring shows a consis
 
 #### System Use By Date
 
-Management may find it useful to report on system use by date, showing the increasing adoption over time. This is done in the data warehouse database where all data enters the system. First, create some date sequence views using the beginning of the overall testing window, `2017-09-07`, as the start:
+Management may find it useful to report on system use by date, showing the increasing adoption over time. This is done in the `warehouse` database where all data enters the system. First, create some date sequence views using the beginning of the overall testing window, `2017-09-07`, as the start:
 
 ```sql
 CREATE VIEW digits AS SELECT 0 AS digit UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9;
@@ -195,7 +211,7 @@ SELECT p.date, count(DISTINCT sub.sid) FROM prod p
 ```
 
 #### Organization Queries
-As part of the suite of SmarterBalanced applications, the RDW uses ART to get organization information. Part of maintenance of ART is knowing which organizations are being used and which aren't. Here are a couple queries that may help with that.
+As part of the suite of SmarterBalanced applications, the RDW uses ART to get organization information. Part of maintenance of ART is knowing which organizations are being used and which aren't. Here are a couple queries against the `warehouse` that may help with that.
 
 ```sql
 -- schools with counts of exams (deleted or not) 
@@ -210,11 +226,6 @@ SELECT d.natural_id AS district_id, concat('"', d.name, '"') AS district_name, c
   LEFT JOIN exam_student es ON es.school_id = s.id
 GROUP BY d.id
 ORDER BY d.natural_id;
-```
-
-A good way to output the data for use is to use the `--batch` flag which prints results using tab as the column separator, then pipe the output to a file. If you prefer CSV you can pipe it through sed to replace tabs. For example:
-```bash
-mysql -h host -u username -p --batch warehouse < myquery.sql | sed 's/\t/,/g' > results.tsv
 ```
 
 ### Logging

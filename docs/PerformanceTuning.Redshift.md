@@ -103,6 +103,7 @@ ORDER BY 2 DESC, 6 DESC;
 ```
 
 ##### Top slowest queries
+https://github.com/awslabs/amazon-redshift-utils/blob/master/src/AdminScripts/top_queries.sql
 ```sql
 SELECT
   trim(database)                 AS DB,
@@ -135,12 +136,12 @@ FROM (
                        query,
                        trim(split_part(event, ':', 1)) AS event
                      FROM STL_ALERT_EVENT_LOG
-                     WHERE event_time >= dateadd(day, -7, current_Date)
+                     WHERE event_time >= dateadd(h, -6, localtimestamp)
                      GROUP BY query, trim(split_part(event, ':', 1))) AS alrt ON alrt.query = stl_query.query
   WHERE userid <> 1
-        AND (querytxt LIKE 'SELECT count(*)%')
+        -- and (querytxt like 'SELECT%' or querytxt like 'select%' )
         -- and database = ''
-        AND starttime >= dateadd(m, -5, localtimestamp)
+        AND starttime >= dateadd(h, -6, localtimestamp)
 )
 GROUP BY database, label, qry_md5, aborted, event
 ORDER BY total DESC

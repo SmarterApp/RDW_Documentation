@@ -9,7 +9,7 @@ The RDW is divided into sub-systems based on data, performance and scalability r
 * **Data Warehouse**. This is where data enters the system. It is the collection of all assessment definitions, institutions, students, student groups, and test results. It includes supplemental reference data such as subject claims and traits, common core standards, accessibility/accommodation codes and descriptions, ethnicities, and grades.
 * **Reporting**. This is the main reporting data mart and web UI. The test results have been optimized for presentation to teachers and administrators to allow them to quickly view results. It includes *all* test results (summative, interim comprehensive and assessment blocks).
 * **Aggregate Reporting**. This is the system for viewing test results through the lens of aggregation, trends, etc. The test results have been optimized for slicing and dicing. It is limited to summative and interim comprehensive tests (no aggregation is done for interim assessment blocks).
-* **Admin**. This is the system for performing application administrative tasks such as uploading student groups, configuring assessment subjects, embargoing/releasing test results, etc. 
+* **Admin**. This is the system for performing application administrative tasks including management of student groups, instructional resource links, and embargo settings
 
 The RDW uses other systems from the SBAC Open Test System environment, including:
 

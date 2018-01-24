@@ -1,0 +1,49 @@
+# Annotated configuration for RDW Aggregate Service.
+#
+# The spring application name is rdw-reporting-aggregate-service so this file should
+# be named rdw-reporting-aggregate-service when served by the configuration server.
+#
+# Properties that have a reasonable default value are commented out.
+# Other properties are not commented out and must be provided.
+
+# The actuator end-point is on a different port with no security because it is
+# expected to be exposed only in a private subnet.
+management:
+#  port: 8008
+#  security:
+#    enabled: false
+
+# Application configuration
+app:
+#  aggregate-reports:
+#    summative-enabled: true
+#    statewide-interim-enabled: false
+
+#  state:
+#    code: CA
+#    name: California
+
+  datamart:
+     olap_datasource:
+#        url: "\
+#           jdbc:redshift://${app.datamart.olap_datasource.url-server:localhost:5432}/${app.datamart.olap_datasource.url-db:dev}\
+#           ?ApplicationName=rdw-reporting-aggregate-service\
+#           "
+        url-server:
+#        url-db: dev
+        username:
+        password:
+#        testWhileIdle: true
+#        validationQuery: SELECT 1
+#        driverClassName: com.amazon.redshift.jdbc42.Driver
+
+# Server configuration.
+# Use the defaults unless you really know what you're doing.
+server:
+#  tomcat:
+#    max-connections: 0
+#    max-threads: 4
+#    accept-count: 10
+#  compression:
+#    enabled: true
+#    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,text/csv

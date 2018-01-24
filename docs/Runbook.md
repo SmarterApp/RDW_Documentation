@@ -2,8 +2,6 @@
 
 **Intended Audience**: the runbook describes behavior and configuration options of the various applications in the [Reporting Data Warehouse](../README.md) (RDW). Operations, system administration, developers, and tier 3 support may find it useful.
 
-**TODO - rabbitmq?**
-
 **TODO - configuration server?**
 
 ### Table of Contents
@@ -17,9 +15,10 @@
 1. [Migrate OLAP](#migrate-olap)
 1. [Task Service](#task-service)
 1. [Reporting Web App](#reporting-webapp)
+1. [Reporting Service](#reporting-service)
+1. [Aggregate Service](#aggregate-service)
 1. [Report Processor](#report-processor)
 1. [PDF Generator](#pdf-generator)
-1. [Admin Web App](#admin-webapp)
 
 ### Other Resources
 
@@ -37,8 +36,6 @@ All the applications in the RDW share common conventions and behaviors. This con
     * [Configuration][1] and [Common Properties][2]. 
     * [Actuator end-points][3]. 
     * Logging. 
-    * what else? 
-* 
 
 #### Configuration
 As [Spring Boot][1] applications, the configuration settings for all applications come from:
@@ -105,7 +102,7 @@ The [Annotated Configuration](../config/rdw-ingest-group-processor.yml) describe
 ## Migrate Reporting
 The migrate reporting service moves data from the warehouse to the reporting database. The service is not built to be horizontally scalable. Having more than one migrate reporting process will result in unpredictable behavior. 
 
-Data is migrated based on import status (PROCESSED) and created/updated timestamps. The migration process is scheduled to run periodically. In each period, data is processed in batches until there is no full batch remaining. The migration occurs in two steps, first from warehouse to staging, then from staging to reporting (the staging tables exist in the reporting database).
+Data is migrated based on import status (PROCESSED) and created/updated timestamps. The migration process is scheduled to run periodically. In each period, data is processed in small batches until there is no full batch remaining. The migration occurs in two steps, first from warehouse to staging, then from staging to reporting (the staging tables exist in the reporting database).
 
 ![Migrate Reporting](migrate-reporting.png)
 
@@ -117,8 +114,17 @@ The [Annotated Configuration](../config/rdw-ingest-migrate-reporting.yml) descri
 
 <a name="migrate-olap"></a>
 ## Migrate OLAP
-The migrate OLAP service is responsible for migrating data from the data warehouse to the aggregate reporting OLAP database.
+The migrate OLAP service is responsible for migrating data from the data warehouse to the aggregate reporting OLAP data store. The service is not built to be horizontally scalable. Having more than one migrate olap process will result in unpredictable behavior.
 
+Data is migrated based on import status (PROCESSED) and created/updated timestamps. The migration process is scheduled to run daily. Each time data is processed in large batches until there is no full batch remaining. The migration occurs in two steps, first from warehouse to staging, then from staging to olap (the staging tables exist in the olap database). The migration tables exist in a separate, non-OLAP database.
+
+![Migrate OLAP](migrate-olap.png)
+
+The migrate service is controlled by two conditions: the user-controlled run state and the system-generated enabled state. The status end-points can be used to see the current status and pause/resume the service.
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-ingest-migrate-olap.yml) describes the properties and their effects.
+ 
 
 <a name="taks-service"></a>
 ## Task Service
@@ -137,12 +143,44 @@ The [Annotated Configuration](../config/rdw-ingest-task-service.yml) describes t
 
 <a name="reporting-webapp"></a>
 ## Reporting Web App
-This is the main reporting web application used by customers. It is horizontally scalable with each process handling 2000-3000 concurrent users (this deployment is expected to have up to 15000 concurrent users).
+This is the main reporting web application used by customers. It provides the UI experience for all users, including functionality like managing student groups (which used to be in a separate admin webapp). It is horizontally scalable with each process handling 2000-3000 concurrent users (this deployment is expected to have up to 15000 concurrent users).
+
+The reporting web app is a UI-only application that handles some security (SSO redirects) and the presentation of data. All the "heavy lifting" of querying data is handled by the API services.
 
 ![Reporting Web App](reporting-webapp.png)
 
 #### Configuration
 The [Annotated Configuration](../config/rdw-reporting-webapp.yml) describes the properties and their effects.
+
+
+<a name="reporting-service"></a>
+## Reporting Service
+This service provides the back-end API for reports against the reporting data mart, i.e. individual test results. It is horizontally scalable and many instances should be run to deal with report requests from the webapp.
+
+![Reporting Service](reporting-service.png)
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-reporting-service.yml) describes the properties and their effects.
+
+
+<a name="aggregate-service"></a>
+## Aggregate Service
+This service provides the back-end API for reports against the OLAP data store, i.e. aggregate reports. It is horizontally scalable; however, the OLAP data store is typically the bottleneck and running many instances of this service may not result in better overall throughput.
+
+![Aggregate Service](aggregate-service.png)
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-reporting-aggregate-service.yml) describes the properties and their effects.
+
+
+<a name="admin-service"></a>
+## Admin Service
+This service provides the back-end API for administrative functionality including management of student groups, instructional resource links, embargo settings. It is horizontally scalable, however administrative management is limited in scope and a single instance is usually sufficient.
+
+![Admin Service](admin-service.png)
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-reporting-admin-service.yml) describes the properties and their effects.
 
 
 <a name="report-processor"></a>
@@ -163,16 +201,6 @@ This application converts HTML to PDF. It is used by the report processor. It is
 
 #### Configuration
 There are no configuration options for the PDF generator.
-
-
-<a name="admin-webapp"></a>
-## Admin Web App
-This web application is used by customers to manage student groups. It is horizontally scalable with each process handling ??? concurrent users. Because student group management is infrequent, # instances should be sufficient.
-
-![Admin Web App](admin-webapp.png)
-
-#### Configuration
-The [Annotated Configuration](../config/rdw-admin-webapp.yml) describes the properties and their effects.
 
 
 ---

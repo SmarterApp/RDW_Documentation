@@ -1,0 +1,103 @@
+# Annotated configuration for RDW Migrate OLAP
+#
+# The spring application name is rdw-ingest-migrate-olap so this file should be
+# named rdw-ingest-migrate-olap.yml when served by the configuration server.
+#
+# Properties that have a reasonable default value are commented out.
+# Other properties are not commented out and must be provided.
+
+# The actuator end-point is on a different port with no security because it is expected to be
+# exposed only in a private subnet. Use the default settings unless you really know what you
+# are doing.
+management:
+#  security:
+#    enabled: false
+server:
+#  port: 8008
+#  tomcat:
+#    max-connections: 2
+#    max-threads: 2
+
+# Migrate uses S3 to stage data. Although the data is written to by Aurora and read by Redshift
+# the service must have a configured archive service to manage the files. All values must be
+# provided.
+archive:
+  root:
+  cloud:
+    aws:
+      credentials:
+        accessKey:
+        secretKey:
+      region:
+        auto: false
+        static: us-west-2
+
+# Migrate configuration.
+migrate:
+  # Migrate uses S3 to stage data. The location is relative to the archive bucket.
+  # The role must be provided and must grant Redshift permissions to S3.
+  aws:
+#    location: MigrateOlap
+    redshift:
+      role:
+
+  # The batch size is the number of records migrated in one iteration. The aggregate data store is
+  # very good at ingesting large data sets so this value can be large and defaults to 500,000.
+  # Increasing it can improve migrate performance but values over 1,000,000 require a large Redshift
+  # instance.
+  batch:
+#    size: 500000
+#    delay: 60000
+
+# Spring application configuration.
+spring:
+  # Datasource configuration. There are two datasources for migrate.
+  # Use defaults for most of the settings except server, username and password.
+  # The url-server should be set to the host and port, e.g. localhost:3306 or
+  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+  # The password should be encrypted.
+  migrate_datasource:
+#    url: "\
+#      jdbc:mysql://${spring.migrate_datasource.url-server:localhost:3306}/${spring.migrate_datasource.url-schema:migrate_olap}\
+#      ?useSSL=${spring.migrate_datasource.use-ssl:false}\
+#      &useLegacyDatetimeCode=${spring.migrate_datasource.use-legacy-datetime-code:false}\
+#      &characterEncoding=${spring.migrate_datasource.character-encoding:utf8}\
+#      "
+    url-server:
+    username:
+    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    driverClassName: com.mysql.jdbc.Driver
+#    initialize: false
+#    maxActive: 10
+#    initialSize: 4
+
+  olap_datasource:
+#    url: "\
+#      jdbc:redshift://${spring.olap_datasource.url-server:localhost:5432}/${spring.olap_datasource.url-db:dev}\
+#      ?ApplicationName=rdw-ingest-migrate-olap\
+#      "
+    url-server:
+    username:
+    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    driverClassName: com.amazon.redshift.jdbc42.Driver
+
+  warehouse_datasource:
+#    url: "\
+#      jdbc:mysql://${spring.warehouse_datasource.url-server:localhost:3306}/${spring.warehouse_datasource.url-schema:warehouse}\
+#      ?useSSL=${spring.warehouse_datasource.use-ssl:false}\
+#      &useLegacyDatetimeCode=${spring.warehouse_datasource.use-legacy-datetime-code:false}\
+#      &characterEncoding=${spring.warehouse_datasource.character-encoding:utf8}\
+#      "
+    url-server:
+    username:
+    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    driverClassName: com.mysql.jdbc.Driver
+#    initialize: false
+#    maxActive: 10
+#    initialSize: 4

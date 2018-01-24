@@ -1,7 +1,7 @@
-# Annotated configuration for RDW Admin Web App.
+# Annotated configuration for RDW Admin Service.
 #
-# The spring application name is rdw-admin-webapp so this file should be named
-# rdw-admin-webapp.yml when served by the configuration server.
+# The spring application name is rdw-reporting-admin-service so this file should be named
+# rdw-reporting-admin-service when served by the configuration server.
 #
 # Properties that have a reasonable default value are commented out.
 # Other properties are not commented out and must be provided.
@@ -12,22 +12,13 @@ management:
 #  port: 8008
 #  security:
 #    enabled: false
-#  health:
-#    redis:
-#      enabled: false
 
 # Application configuration
 app:
+#  school-year: 2018
 #  state:
 #    code: CA
-
-  # Link to reporting webapp, this should be the public URL, e.g. https://reporting.smarterbalanced.org/
-  home-url:
-
-  # Google analytics configuration (optional).
-  # To enable analytics, set this property.
-  analytics:
-#    trackingId: ${rdw.admin.analytics.trackingId:}
+#    name: California
 
 # Archive configuration
 # Student group upload payloads are archived. Although the location may be a local file system the
@@ -47,38 +38,9 @@ archive:
         auto: false
         static: us-west-2
 
-# Permission service configuration
-# endpoint is probably the public URL, e.g. https://perm.smarterbalanced.org/rest
-permissionservice:
-#  component: Reporting
-  endpoint:
-
-# SAML/SSO configuration
-# The setting of these properties is covered in more detail in the deployment guide.
-# The keystore path will be a binary configuration, e.g. 'binary-${spring.cloud.config.uri}/*/*/master/rdw-reporting.jks'
-# IDP metadata URL example: 'https://sso.smarterbalanced.org/auth/saml2/jsp/exportmetadata.jsp?realm=/sbac'.
-# The passwords should be encrypted.
-saml:
-  key-store-file:
-  key-store-password:
-  private-key-entry-alias:
-  private-key-entry-password:
-  idp-metadata-url:
-  sp-entity-id:
-  # SAML settings when hosting behind a load balancer or reverse proxy
-  # To use this, set enabled to true and set the hostname, e.g. admin.smarterbalanced.org
-  load-balance:
-    enabled: false
-#    scheme: https
-    hostname:
-#    context-path: /
-#    port: 8080
-#    include-server-port: false
-
 # Server configuration.
 # Use the defaults unless you really know what you're doing.
 server:
-#  port: 8080
 #  tomcat:
 #    max-connections: 0
 #    max-threads: 4
@@ -89,18 +51,33 @@ server:
 
 # Spring application configuration
 spring:
-
   # Datasource configuration.
   # NOTE: this section changed between 1.0 and 1.1.
   # Use defaults for most of the settings, except server, username and password.
   # The url-server should be set to the host and port, e.g. localhost:3306 or
   # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  datasource:
+  reporting_datasource:
 #    url: "\
-#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:warehouse}\
-#      ?useSSL=${spring.datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
+#      jdbc:mysql://${spring.reporting_datasource.url-server:localhost:3306}/${spring.reporting_datasource.url-schema:warehouse}\
+#      ?useSSL=${spring.reporting_datasource.use-ssl:false}\
+#      &useLegacyDatetimeCode=${spring.reporting_datasource.use-legacy-datetime-code:false}\
+#      &characterEncoding=${spring.reporting_datasource.character-encoding:utf8}\
+#      &rewriteBatchedStatements=${spring.reporting_datasource.rewrite-batched-statements:true}\
+#      "
+    url-server:
+    username:
+    password:
+#    driverClassName: com.mysql.jdbc.Driver
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    initialize: false
+
+  warehouse_datasource:
+#    url: "\
+#      jdbc:mysql://${spring.warehouse_datasource.url-server:localhost:3306}/${spring.warehouse_datasource.url-schema:warehouse}\
+#      ?useSSL=${spring.warehouse_datasource.use-ssl:false}\
+#      &useLegacyDatetimeCode=${spring.warehouse_datasource.use-legacy-datetime-code:false}\
+#      &characterEncoding=${spring.warehouse_datasource.character-encoding:utf8}\
 #      "
     url-server:
     username:
@@ -117,12 +94,3 @@ spring:
     host:
     username:
     password:
-
-  # Session cache configuration.
-  # The default is to not cache session data. To enable caching (using redis), set the
-  # session.store-type to "redis" and set the redis values
-  session:
-    store-type:
-  redis:
-    host:
-    port:

@@ -19,6 +19,7 @@
     * [Missing Student Group](#missing-student-group)
     * [Can't See Student Group](#missing-student-group-one-user)
     * [Item Viewer](#item-viewer)
+    * [User Context](#user-context)
 
 ### Kubernetes
 
@@ -669,3 +670,30 @@ $ curl http://localhost:8080/iris/Pages/API/content/reload
 ```
 
 For additional IRiS documentation please refer to [IRiS in RDW](../deploy/IRIS.AWS.md) and [TDS IRIS](https://github.com/SmarterApp/TDS_IRIS).
+
+<a name="user-context></a>
+#### User Context
+If there is ever a question about a user's permissions there is a trick for getting some additional information: log in with the user credentials then, in the same browser session, navigate to https://reporting.smarterbalanced.org/api/user (in v1.1 this changes to https://reporting.smarterbalanced.org/api/reporting-service/user). This should return a JSON payload that includes some useful context information about the user. For example:
+```json
+{
+  "firstName": "MixedRoles",
+  "lastName": "Acosta",
+  "permissions": [],
+  "schools": [],
+  "groups": [],
+  "settings": {
+    "minItemDataYear": 2016,
+    "uiLanguages": [
+      "es"
+    ],
+    "reportLanguages": [
+      "es"
+    ],
+    "irisVendorId": "2B3C34BF-064C-462A-93EA-41E9E3EB8333",
+    "analyticsTrackingId": "UA-102446884-1",
+    "interpretiveGuideUrl": "https://portal.smarterbalanced.org/library/en/reporting-system-interpretive-guide.pdf",
+    "userGuideUrl": "https://portal.smarterbalanced.org/library/en/reporting-system-user-guide.pdf",
+    "transferAccess": true
+  }
+}
+```

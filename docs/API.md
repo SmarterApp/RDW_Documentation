@@ -14,6 +14,7 @@ Quick Links:
 1. [Organization Endpoints](#organization-endpoints)
 1. [Accommodations Endpoints](#accommodations-endpoints)
 1. [Package Endpoints](#package-endpoints)
+1. [Norms Endpoints](#norms-endpoints)
 1. [Task Endpoints](#task-endpoints)
 1. [Status Endpoints](#status-endpoints)
 
@@ -504,7 +505,7 @@ AssessmentId,AssessmentName,AssessmentSubject,AssessmentGrade,AssessmentType,Ass
   * Code: 403 (Forbidden) if token doesn't provide the `ASTMDATALOAD` role.
 * Sample Call (raw body):
 ```bash
-curl -X POST --header "Authorization:Bearer {access_token}" --header "Content-Type:application/xml" \
+curl -X POST --header "Authorization:Bearer {access_token}" --header "Content-Type:application/csv" \
   --data-binary "AssessmentId,..." https://import-service/packages/imports?filename=2017-2018.csv
 ```
 * Sample Call (form-data):
@@ -515,6 +516,80 @@ curl -X POST --header "Authorization:Bearer {access_token}" -F file=@2017-2018.c
 To check the status of the import use Get Import Request. Imports with "PROCESSED" status will include a messages describing actions taken. An example of the response: 
 ```
 "Assessments processed: 7, created: 5, updated: 1, rejected: 1".
+```
+              
+### Norms Endpoints
+End-points for submitting norms percentile tables in the Smarter Balanced Norms CSV format. This end point can be used to import new norms or update existing ones. When norms are created, the following data elements are required and comprise the unique identifier for the norms percentile table:
+* assessment_id : natural id of an assessment that must already be loaded
+* start_date : inclusive start date of exam completion
+* end_date : inclusive end date of exam completion
+
+When an existing norms percentile table matches the above three data elements on import it is updated.
+
+#### Create Norms Import Request
+Accepts payloads in the Smarter Balanced Norms CSV format.
+
+There are two ways of posting content: with a raw body of type `application/csv` or form-data file upload in CSV format.
+
+* Host: import service
+* URL: `/norms/imports`
+* Method: `POST`
+* URL Params: any URL param will be preserved as properties for the upload, well-known params:
+  * `filename=<originalFileName>`  (not needed for form-data)
+* Headers:
+  * `Authorization: Bearer {access_token}`
+* Headers (raw body):
+  * `Content-Type:application/csv`
+* Body (raw body): Smarter Balanced Norms CSV
+* Headers (form-data):
+  * `Content-Type:multipart/form-data`
+* Form Data (form-data):
+  * `file` - the upload file
+  * `filename=<filename>`
+  * any other form data will be preserved as properties for the upload
+* Success Response:
+  * Code: 202 (Accepted)
+  * Content:
+    ```json
+    {
+        "id": 9,
+        "content": "NORMS",
+        "contentType": "application/csv",
+        "digest": "5EA9607434903493BD274611FA817304",
+        "status": "PROCESSED",
+        "creator": "dwtest@example.com",
+        "created": "2018-02-08T22:29:47.120343Z",
+        "updated": "2018-02-08T22:29:47.120343Z",
+        "message": "Percentiles created: 0 updated: 2",
+        "_links": {
+            "self": {
+                "href": "http://localhost:8080/imports/9"
+            },
+            "payload": {
+                "href": "http://localhost:8080/imports/9/payload"
+            },
+            "payload-properties": {
+                "href": "http://localhost:8080/imports/9/payload/properties"
+            }
+        }
+    }
+    ```
+* Error Response:
+  * Code: 401 (Unauthorized) if token is missing or invalid.
+  * Code: 403 (Forbidden) if token doesn't provide the `ASTMDATALOAD` role.
+* Sample Call (raw body):
+```bash
+curl -X POST --header "Authorization:Bearer {access_token}" --header "Content-Type:application/csv" \
+  --data-binary "assessment_id,start_date,..." https://import-service/norms/imports?filename=2017-norms.csv
+```
+* Sample Call (form-data):
+```bash
+curl -X POST --header "Authorization:Bearer {access_token}" -F file=@2017-norms.csv https://import-service/norms/imports
+``` 
+##### Check Norms Import Request result
+To check the status of the import use Get Import Request. Imports with "PROCESSED" status will include a messages describing actions taken. An example of the response: 
+```
+"Percentiles created: 0 updated: 2".
 ```
               
 ### Task Endpoints

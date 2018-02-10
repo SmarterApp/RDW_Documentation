@@ -654,7 +654,7 @@ Screen shots show that a student group was successfully uploaded but the teacher
 * Retrieving the file from S3 shows a CSV file that is not the same as the sample, specifically the rows for that 9th user are not in it. User error. 
 
 
-<a name="unable-to-admin-district">
+<a name="unable-to-admin-district"></a>
 #### Unable To Admin District
 A user has been granted admin privileges for a district (in ART). Typically this is GROUP_ADMIN but there are other admin roles. But in the application, they do not see the button that takes them to the admin screen. We usually know a few things:
 * User login (and perhaps credentials for mirroring).

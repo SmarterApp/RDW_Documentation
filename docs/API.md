@@ -519,7 +519,7 @@ To check the status of the import use Get Import Request. Imports with "PROCESSE
 ```
               
 ### Norms Endpoints
-End-points for submitting norms percentile tables in the Smarter Balanced Norms CSV format. This end point can be used to import new norms or update existing ones. When norms are created, the following data elements are required and comprise the unique identifier for the norms percentile table:
+End-points for submitting norms percentile tables in the Smarter Balanced [Norms CSV format](Norms.md). This end point can be used to import new norms or update existing ones. When norms are created, the following data elements are required and comprise the unique identifier for the norms percentile table:
 * assessment_id : natural id of an assessment that must already be loaded
 * start_date : inclusive start date of exam completion
 * end_date : inclusive end date of exam completion
@@ -527,7 +527,7 @@ End-points for submitting norms percentile tables in the Smarter Balanced Norms 
 When an existing norms percentile table matches the above three data elements on import it is updated.
 
 #### Create Norms Import Request
-Accepts payloads in the Smarter Balanced Norms CSV format.
+Accepts payloads in the Smarter Balanced [Norms CSV format](Norms.md).
 
 There are two ways of posting content: with a raw body of type `application/csv` or form-data file upload in CSV format.
 
@@ -540,7 +540,7 @@ There are two ways of posting content: with a raw body of type `application/csv`
   * `Authorization: Bearer {access_token}`
 * Headers (raw body):
   * `Content-Type:application/csv`
-* Body (raw body): Smarter Balanced Norms CSV
+* Body (raw body): Smarter Balanced [Norms CSV format](Norms.md)
 * Headers (form-data):
   * `Content-Type:multipart/form-data`
 * Form Data (form-data):

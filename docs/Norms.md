@@ -1,16 +1,13 @@
 ## Norms
+
+**Intended Audience**: this document provides *system administrators* information on creating and updating norms data in the data warehouse, and file format information for anyone developing percentile tables of normative test results to be loaded into the data warehouse.
+
 This document defines the Smarter Balanced Norms CSV format.
 
-### Table of Contents
-
-* [Intended audience](#intended-audience)
-* [CSV Format Field Definitions](#csv-format-field-definitions)
-* [Import Rules](#import-rules)
-* [Samples](#samples)
-
-### Intended audience
-- **System Administrators**: This document provides system administrators information on creating and updating norms data in the data warehouse.
-- **Producers of Normative Data**: This document provides information to anyone developing percentile tables of normative test results to be loaded into the data warehouse.
+Quick Links:
+1. [CSV Format Field Definitions](#csv-format-field-definitions)
+1. [Import Rules](#import-rules)
+1. [Samples](#samples)
 
 ### CSV Format Field Definitions
 

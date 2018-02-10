@@ -18,6 +18,8 @@
     * [Empty Student Report](#empty-report)
     * [Missing Student Group](#missing-student-group)
     * [Can't See Student Group](#missing-student-group-one-user)
+    * [Unable To Admin District](#unable-to-admin-district)
+    * [ART Organization Data](#art-organization-data)
     * [Item Viewer](#item-viewer)
     * [User Context](#user-context)
 
@@ -651,6 +653,64 @@ Screen shots show that a student group was successfully uploaded but the teacher
     ``` 
 * Retrieving the file from S3 shows a CSV file that is not the same as the sample, specifically the rows for that 9th user are not in it. User error. 
 
+
+<a name="unable-to-admin-district">
+#### Unable To Admin District
+A user has been granted admin privileges for a district (in ART). Typically this is GROUP_ADMIN but there are other admin roles. But in the application, they do not see the button that takes them to the admin screen. We usually know a few things:
+* User login (and perhaps credentials for mirroring).
+* District name and id, e.g. KIPP Adelante Preparatory Academy (01013450000000)
+
+* If we have the user credentials the [User Context](#user-context) will show us permissions for that user. In this situation, it is likely that the permissions list is empty, which is why the button isn't displayed.
+
+* Check to see if the district is in the system. There are two likely scenarios:
+	* The district doesn't exist in the system.
+		```sql
+		select * from district where natural_id='01611190119222';
+		Empty set (0.00 sec)
+		```
+	  In this situation, the user will not have permissions because, although ART grants them a role, that role doesn't apply to any districts in RDW. But why isn't the district in the system? The most likely reason is that there are no schools in ART for that district. You can query ART (or its underlying mongo db) or use the [ART Organization Data](#art-organization-data) to verify this. Districts are only brought into RDW if they are associated with a school.
+	* The district does exist.
+		```sql
+		select * from district where natural_id='37683380101345' OR name='KIPP Adelante Preparatory Academy';
+		+-----+----------------+-----------------------------------+
+	   | id  | natural_id     | name                              |
+	   +-----+----------------+-----------------------------------+
+	   | 809 | 37683380101345 | KIPP Adelante Preparatory Academy |
+	   +-----+----------------+-----------------------------------+
+		```
+	In this situation, more digging is required. Suspicion is raised because the id doesn't match and it looks more like a school id than a district id.  Using the [ART Organization Data](#art-organization-data) we observe that there are two districts in the system with that name, one with id 01013450000000 (with no schools) and one with 37683380101345 (with one school). Looking at permissions, it turns out they granted privileges for the one that had no schools. It is likely that the school needs to be assigned to the correct district in ART. Then the daily sync will catch the change.
+
+<a name="art-organization-data"></a>
+#### ART Organization Data
+The system pulls data from ART periodically (once a day by default). The payload returned by ART is preserved in S3 and can be used to do forensics on organization problems. 
+* First, get the digest for the most recent payload:
+	```sql
+	select * from import where content=4 order by id desc limit 1 \G
+	*************************** 1. row ***************************
+	         id: 4708387
+	     status: 1
+	    content: 4
+	contentType: application/json
+	     digest: 7A108B8E5BFF30C6B279D4A3890A2FA6
+	      batch: NULL
+	    creator: rdw-ingest-prod@smarterbalanced.org
+	    created: 2018-02-09 10:00:53.921911
+	    updated: 2018-02-09 10:01:30.468025
+	    message: 13529 schools processed
+	```
+* Use the digest and navigate to the appropriate S3 folder. The files are partitioned by the first two pairs of digits in the digest: in this case it will be something like S3://archive-bucket/ORGANIZATION/7A/10/7A108B8E5BFF30C6B279D4A3890A2FA6. Download the file and view with a good JSON viewer. Organization data includes fields that let you search for the parent, children, etc.:
+	```json
+	{
+     "id" : "542f120ce4b0c757f5e1807d",
+     "entityId" : "23655990000000",
+     "entityName" : "Point Arena Joint Union High",
+     "parentEntityId" : "CA",
+     "stateAbbreviation" : "CA",
+     "parentId" : "5425732de4b02ab2d550cbc0",
+     "entityType" : "DISTRICT",
+     "parentEntityType" : "STATE",
+   }
+	```
 
 <a name="item-viewer"></a>
 #### Item Viewer

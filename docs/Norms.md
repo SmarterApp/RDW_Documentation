@@ -5,7 +5,7 @@ This document defines the Smarter Balanced Norms CSV format.
 
 * [Intended audience](#intended-audience)
 * [CSV format](#csv-format)
-    * [Rules](#import-rules)
+    * [Import Rules](#import-rules)
     * [Samples](#samples)
 
 ### Intended audience
@@ -42,7 +42,8 @@ The intended audience should be familiar with database technology and querying a
 
                                                                                                                                                                           
 #### Samples
-Sample 1
+**Sample 1**: The following sample defines four percentile tables.  Two for assessment `(SBAC)SBAC-IAB-FIXED-G4M-OA-MATH-4-Winter-2017-2018` and two for `(SBAC)SBAC-IAB-FIXED-G3M-Perf-OrderForm-MATH-3-Winter-2017-2018`. Both assessments have one table for date range 2017-08-01 to 2018-01-31 and one for date range 2018-02-01 to 2018-07-31. Each of the four percentile tables have three ranks, 25%, 50% and 75%.
+
 ```csv
 assessment_id,start_date,end_date,count,mean,standard_deviation,min_score,max_score,percentile_rank,score
 (SBAC)SBAC-IAB-FIXED-G4M-OA-MATH-4-Winter-2017-2018,2017-08-01,2018-01-31,812345,2425.5,88.9,,,25,2365
@@ -59,7 +60,7 @@ assessment_id,start_date,end_date,count,mean,standard_deviation,min_score,max_sc
 (SBAC)SBAC-IAB-FIXED-G3M-Perf-OrderForm-MATH-3-Winter-2017-2018,2018-02-01,2018-07-31,,,,,,75,2500
 ```
 
-Sample 2
+**Sample2**: The following sample defines two percentile tables for the assessment `(SBAC)SBAC-IAB-FIXED-G11E-BriefWrites-ELA-11-Winter-2016-2017`. The first table has a date range of 2016-08-01 to 2017-01-31 and the second table has a date range of 2017-02-01 to 2017-07-31. Each of the two percentile tables have 9 ranks from 10% to 90% by ten.
 ```csv
 assessment_id,start_date,end_date,count,mean,standard_deviation,min_score,max_score,percentile_rank,score
 (SBAC)SBAC-IAB-FIXED-G11E-BriefWrites-ELA-11-Winter-2016-2017,2016-08-01,2017-01-31,812345,2425.5,88.9,,,10,2295

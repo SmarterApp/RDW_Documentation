@@ -15,27 +15,35 @@ management:
 
 # Application configuration
 app:
+  # Aggregate report configuration.
 #  aggregate-reports:
+#    api-enabled: false
+#    custom-aggregate-report-repository:
+#      organization-partition-size: 10
+#    query-pool-size: 6
 #    summative-enabled: true
 #    statewide-interim-enabled: false
+
+  # Report archive configuration.
+  # Although the location may be a local file system the preferred solution is to write to AWS S3,
+  # which requires credentials. For S3, the root should be the protocol and the bucket, e.g. s3://my-archive-bucket.
+  # The AWS access key should be for a programmatic AWS user. The secretKey should be encrypted.
+  # The bucket should be in the same region as the deployment (to reduce costs).
+  # There are no default values for these properties and they must be provided.
+  archive:
+    root:
+    cloud:
+      aws:
+        credentials:
+          accessKey:
+          secretKey:
+        region:
+          auto: false
+          static: us-west-2
 
 #  state:
 #    code: CA
 #    name: California
-
-  datamart:
-     olap_datasource:
-#        url: "\
-#           jdbc:redshift://${app.datamart.olap_datasource.url-server:localhost:5432}/${app.datamart.olap_datasource.url-db:dev}\
-#           ?ApplicationName=rdw-reporting-aggregate-service\
-#           "
-        url-server:
-#        url-db: dev
-        username:
-        password:
-#        testWhileIdle: true
-#        validationQuery: SELECT 1
-#        driverClassName: com.amazon.redshift.jdbc42.Driver
 
 # Server configuration.
 # Use the defaults unless you really know what you're doing.
@@ -47,3 +55,31 @@ server:
 #  compression:
 #    enabled: true
 #    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,text/csv
+
+# Spring application configuration.
+spring:
+  # Datasource configuration.
+  # Use defaults for most of the settings except server, perhaps db, username and password.
+  # The url-server should be set to the host and port, e.g. localhost:3306 or
+  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+  # The password should be encrypted.
+  olap_datasource:
+#    url: "\
+#       jdbc:redshift://${spring.olap_datasource.url-server:localhost:5432}/${spring.olap_datasource.url-db:dev}\
+#       ?ApplicationName=rdw-reporting-aggregate-service\
+#       "
+    url-server:
+#    url-db: dev
+    username:
+    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    driverClassName: com.amazon.redshift.jdbc42.Driver
+
+  # RabbitMQ configuration.
+  # There are no default values. The host must be set based on the orchestration environment
+  # e.g. rabbit-service, with appropriate username and password. The password should be encrypted.
+  rabbitmq:
+    host:
+    username:
+    password:

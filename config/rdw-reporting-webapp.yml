@@ -18,28 +18,6 @@ management:
 
 # Application configuration
 app:
-  # Datasource configuration.
-  # NOTE: this section changed between 1.0 and 1.1.
-  # Use defaults for most of the settings, except server, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  datamart:
-    datasource:
-#      url: "\
-#        jdbc:mysql://${app.datamart.datasource.url-server:localhost:3306}/${app.datamart.datasource.url-schema:reporting}\
-#        ?useSSL=${app.datamart.datasource.use-ssl:false}\
-#        &useLegacyDatetimeCode=${app.datamart.datasource.use-legacy-datetime-code:false}\
-#        &characterEncoding=${app.datamart.datasource.character-encoding:utf8}\
-#        &useCompression=${app.datamart.datasource.use-compression:true}\
-#        "
-      url-server:
-      username:
-      password:
-#      testWhileIdle: true
-#      validationQuery: SELECT 1
-#      driverClassName: com.mysql.jdbc.Driver
-#      initialize: false
-
   # IRiS configuration.
   # The URL should be the internal (private) route, e.g. http://internal-[aws-randomization]/iris/
   iris:
@@ -91,6 +69,29 @@ server:
 
 # Spring application configuration
 spring:
+  # Datasource configuration.
+  # NOTE: this section changed between 1.0 and 1.1.
+  # Use defaults for most of the settings, except server, username and password.
+  # The url-server should be set to the host and port, e.g. localhost:3306 or
+  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+  datasource:
+#    url: "\
+#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:reporting}\
+#      ?useSSL=${spring.datasource.use-ssl:false}\
+#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
+#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
+#      &useCompression=${spring.datasource.use-compression:true}\
+#      "
+    url-server:
+    username:
+    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    driverClassName: com.mysql.jdbc.Driver
+#    initialize: false
+#    initialSize: 4
+#    maxActive: 10
+
   # Session cache configuration.
   # The default is to not cache session data. To enable caching (using redis), set the
   # session.store-type to "redis" and set the redis values
@@ -115,7 +116,7 @@ tenant:
 #  translation-location:
 
 # Netflix zuul configuration.
-# The URLs must be set to match the environment, e.g. http://admin-service,# the other defaults should be fine.
+# The URLs must be set to match the environment, e.g. http://admin-service, the other defaults should be fine.
 zuul:
 #  set-content-length: true
 #  FormBodyWrapperFilter:

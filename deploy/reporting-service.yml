@@ -36,10 +36,10 @@ spec:
           failureThreshold: 3
         resources:
           requests:
-            cpu: 750m
+            cpu: 500m
             memory: 750M
           limits:
-            cpu: 750m
+            cpu: 500m
             memory: 750M
         env:
         - name: CONFIG_SERVICE_URL
@@ -49,3 +49,10 @@ spec:
         ports:
         - containerPort: 8080
         - containerPort: 8008
+        volumeMounts:
+        - mountPath: /itembank
+          name: itembank
+      volumes:
+      - name: itembank
+        persistentVolumeClaim:
+          claimName: iris-efs-volume

@@ -71,6 +71,8 @@ spring:
 #    testWhileIdle: true
 #    validationQuery: SELECT 1
 #    initialize: false
+#    maxActive: 10
+#    initialSize: 4
 
   warehouse_datasource:
 #    url: "\
@@ -86,6 +88,8 @@ spring:
 #    testWhileIdle: true
 #    validationQuery: SELECT 1
 #    initialize: false
+#    maxActive: 10
+#    initialSize: 4
 
   # RabbitMQ configuration.
   # There are no default values. The host must be set based on the orchestration environment

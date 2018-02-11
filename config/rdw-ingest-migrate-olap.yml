@@ -18,6 +18,11 @@ server:
 #    max-connections: 2
 #    max-threads: 2
 
+# The embargo feature applies its rules for only the current school year, so it must be configured.
+# Although there is a default value for this setting (2018), it should be explicitly configured.
+app:
+  school-year:
+
 # Migrate uses S3 to stage data. Although the data is written to by Aurora and read by Redshift
 # the service must have a configured archive service to manage the files. All values must be
 # provided.
@@ -79,6 +84,7 @@ spring:
 #      ?ApplicationName=rdw-ingest-migrate-olap\
 #      "
     url-server:
+#    url-db: dev
     username:
     password:
 #    testWhileIdle: true

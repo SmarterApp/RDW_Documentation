@@ -18,6 +18,11 @@ server:
 #    max-connections: 2
 #    max-threads: 2
 
+# The embargo feature applies its rules for only the current school year, so it must be configured.
+# Although there is a default value for this setting (2018), it should be explicitly configured.
+app:
+  school-year:
+
 # Batch configuration.
 # The batch size is the number of import ids migrated in one chunk/iteration. The batch size can
 # be adjusted for performance: it is a trade off between size and overall throughput. Because the

@@ -6,25 +6,9 @@ It is assumed that the [Deployment Checklist](Deployment.AWS.md) was used for th
 
 > Although these are generic instructions, having an example makes it easier to document and understand. Throughout this document we'll use `opus` as the sample environment name; this might correspond to `staging` or `production` in the real world. We'll use `sbac.org` as the domain/organization. Any other ids, usernames or other system-generated values are products of the author's imagination. The reader is strongly encouraged to use their own consistent naming conventions. **Avoid putting real environment-specific details _especially secrets and sensitive information_ in this document.**
 
-#### NOTES from discussion with SmarterBalanced
-
-Schedule
-* 2/12-2/13 - Jeff/Mark prep work; do staging with pre-release; finalize this document
-* 2/14-2/16 - SB travel and offsite
-* 2/14 - UAT
-* 2/19 - Presidents Day. Woot, go presidents!
-* 2/20-2/23 - refine document; deal with staging issues; remaining production prep
-* 2/?? - Brandt/Brad messaging to users that system will be down 3/3/18 - 3/4/18, available morning 3/5
-* 2/?? - Louis/Mark schedule with ETS to suspend test result feed: stop 3/3/18 morning, resume and test 3/5/18 (?)
-* 2/28/18 - deliver artifacts
-* 3/2/18 (late) or 3/3/18 - stop feed (Louis/Mark), put up static status page (Jeff/Alex)
-* 3/3/18 - backup Aurora (Jeff)
-* 3/3/18 - maintenance window 3:00-7:00pm (pac)
-
-
 ### Overview
 
-This is the first major update to RDW. It adds "Phase 2" functionality:
+This is the first significant upgrade to RDW. It adds "Phase 2" functionality:
 * Custom Aggregate Reports.
 * Key / Distractor Analysis and Writing Trait Scores
 * State/District-provided Instructional Links
@@ -59,13 +43,13 @@ The goal of this step is to make changes to everything that doesn't directly aff
 	```bash
 	cd ~/git/../RDW_Deploy_Opus
 	git checkout master; git pull
-	git checkout -b v11 master
-	git push -u origin v11
+	git checkout -b v1_1 master
+	git push -u origin v1_1
 	
 	cd ../RDW_Config_Opus
 	git checkout master; git pull
-	git checkout -b v11 master
-	git push -u origin v11
+	git checkout -b v1_1 master
+	git push -u origin v1_1
 	```
 * [ ] Add a copy of this checklist to deployment and switch to that copy.
 * [ ] Changes to deployment files. There are sample deployment files in the `deploy` folder in this repository; use those to copy or help guide edits.
@@ -90,11 +74,16 @@ The goal of this step is to make changes to everything that doesn't directly aff
 			* Change image version to `1.1.0-RELEASE`
 			* Reduce cpu/memory resources to `300m`/`750M`
 			* Remove `volumeMounts` and `volumes` (copy over to new `reporting-service.yml`, next step)
+			* Reduce replicas - 2 should be enough
 		* [ ] Copy (new) `reporting-service.yml`
 			* Add `volumeMounts` and `volumes` from old file (from previous step).
+			* Set replicas to 4
 		* [ ] Copy `aggregate-service.yml` and adjust if necessary (rare).
+			* Set replicas to 1 (2 for HA only, single instance can saturate Redshift)
 		* [ ] Copy (replace) `admin-service.yml` and adjust if necessary (rare). This completely replaces the old admin service.
+			* Set replicas to 1 (2 for HA)
 		* [ ] Edit `report-processor-service.yml` and set image version to `1.1.0-RELEASE`.
+			* Leave replicas as 2
 	* Commit changes
 		```bash
 		cd ~/git/../RDW_Deploy_Opus
@@ -102,6 +91,23 @@ The goal of this step is to make changes to everything that doesn't directly aff
 		git push 
 		```
 * [ ] Changes to configuration files. There are annotated configuration files in the `config` folder in this repository; use those to help guide edits.
+	* [ ] Common service properties. There are some properties that are used by many services. To avoid duplication and help with maintenance these should be set in the `application.yml` file. 
+		* Copy or edit `application.yml` as appropriate, putting in values from the annotated sample, e.g.
+			```yaml
+			app:
+			  school-year: 2018
+			  state:
+			    code: CA
+			    name: California
+			
+			tenant:
+			  transfer-access-enabled: true
+			
+			logging:
+			  level:
+			    # this outputs a couple INFO messages every 5 minutes, annoying
+			    org.springframework.cloud.config.client.ConfigServicePropertySourceLocator: warn
+			```
 	* [ ] Ingest services. 
 		* [ ] Import service, edit `rdw-ingest-import-service.yml`
 			* replace `spring.datasource.url` with `spring.datasource.url-server`
@@ -124,55 +130,80 @@ The goal of this step is to make changes to everything that doesn't directly aff
 			* Configure redshift role - TBD
 			* Configure `spring.olap_datasource` - TBD
 	* [ ] Reporting services.
-		* [ ] Admin service, copy `rdw-reporting-admin-service.yml` and edit
+    	* [ ] Admin service, copy `rdw-reporting-admin-service.yml` and edit
 			* Configure `spring.rabbitmq`, copy from `rdw-admin-webapp.yml`
 			* Configure `archive`, copy from `rdw-admin-webapp.yml`
 			* Configure `spring.warehouse_datasource`, copy from `rdw-admin-webapp.yml`
 			* Configure `spring.reporting_datasource`, copy from `rdw-reporting-webapp.yml`
-			* Configure `app.state`
 		* [ ] Aggregate service, copy `rdw-reporting-aggregate-service.yml` and edit
 			* Configure `spring.rabbitmq`, copy from admin service
 			* Configure `app.archive`, copy from admin service
-			* Configure `app.state`
 			* Configure `spring.olap_datasource` - TBD
 		* [ ] Reporting service, copy `rdw-reporting-service.yml` and edit
 			* Configure `app.iris.vendorId`, copy from `rdw-reporting-webapp.yml`
+			* Configure `app.min-item-data-year`, copy from `rdw-reporting-webapp.yml`
 			* Configure `artifacts`, copy from `rdw-reporting-webapp.yml`
 			* Configure `spring.datasource`, copy from `rdw-reporting-webapp.yml`
 			* Configure `cloud`, copy from `rdw-reporting-report-processor.yml` `app.archive.cloud` (note different property prefix)
-			* Configure `tenant.transfer-access-enabled`
-			* Configure `app.state`
 		* [ ] Report processor, edit `rdw-reporting-report-processor.yml`
 			* Configure `spring.rabbitmq`, copy from admin service
-			* Configure `tenant.transfer-access-enabled`
 			* Move `app.datamart.datasource` to `spring.datasource` and replace `spring.datasource.url` with `spring.datasource.url-server`
-			* Configure `task.remove-stale-reports` task
-			* Configure `app.state`
+			* Configure `task.remove-stale-reports` task, copy from annotated sample, something like:
+			    ```yaml
+			    task:
+                remove-stale-reports:
+                  cron: 0 0 8 * * *
+                  max-report-lifetime-days: 30
+                  max-random-minutes: 20
+			    ```				
 		* [ ] Reporting webapp, edit `rdw-reporting-webapp.yml`
-			* Configure `zuul.routes`, copy from annotated sample
-			* Configure `tenant.transfer-access-enabled`
-			* Configure `app.state`
+			* Configure `zuul.routes`, copy from annotated sample, something like:
+			    ```yaml
+                zuul:
+                  routes:
+                    admin-service:
+                      url: http://admin-service
+                    aggregate-service:
+                      url: http://aggregate-service
+                    report-processor:
+                      url: http://report-processor
+                    reporting-service:
+                      url: http://reporting-service
+              ```			  
 			* Remove `app.admin-webapp-url`
 			* Remove `app.reportservice`
 			* Remove `app.wkhtmltopdf`
 			* Remove `artifacts`
+			* Remove `spring.rabbitmq`
 			* Move `app.datamart.datasource` to `spring.datasource` and replace `spring.datasource.url` with `spring.datasource.url-server`
-		* Remove `rdw-admin-webapp.yml`
-		* Remove `rdw-reporting-admin-webapp.yml` (rare, will exist only if interim builds were deployed)
+		* Delete `rdw-admin-webapp.yml`
+		* Delete `rdw-reporting-admin-webapp.yml` (rare, will exist only if interim builds were deployed)
 	* Commit changes
 		```bash
 		cd ~/git/../RDW_Config_Opus
 		git commit -am "Changes for v1.1"
 		git push 
 		```		
-* [ ] Update ops system. 
-    * [ ] Install `psql`.
+* [ ] Update ops system, aka jump server. 
+    * [ ] Install `psql` client, e.g. `sudo yum install postgresql`.
+    * TODO - config file that points to redshift
+    * TODO - test
 * [ ] Configure Redshift cluster. Redshift is expensive. Have to decide whether to share a single cluster between your environments.
 	* Obviously this work will affect configuration files from previous steps.
+	* Put Redshift in its own subnet (group?) in the production VPC and then VPC peer that subnet to allow staging, and jump servers to access it
+	* Name like rdw-prod
+	* Cluster should be 2 nodes, dc2.large
+	* Cluster Parameter Group, e.g. rdw-prod-redshift10
+		* Enable Short Query Acceleration, 5 seconds
+		* Concurrency = 6
 * [ ] Roles / Permissions
-	* Create new permissions:
-	* Create new role: 
-	* Add roles and permissions
+	* Create new permissions: CUSTOM_AGGREGATE_READ, EMBARGO_READ, EMBARGO_WRITE, INSTRUCTIONAL_RESOURCE_WRITE
+	* Create new roles: Instructional Resource Admin, Embargo Admin, Custom Aggregate Reporter
+	* Add roles and permissions mappings:
+		* CUSTOM_AGGREGATE_READ - Custom Aggregate Reporter
+		* EMBARGO_READ - Embargo Admin
+		* EMBARGO_WRITE - Embargo Admin
+		* INSTRUCTIONAL_RESOURCE_WRITE - Instructional Resource Admin
 	* Chain admin roles to PII users
 
 
@@ -213,7 +244,12 @@ All cluster deployment and configuration is stored in version control, so nothin
 	```
 TODO - this will wipe the reporting service load balancer; that okay, did we customize it at all?
 * [ ] Upgrade cluster (?)
+	```bash
+	kops upgrade cluster --name awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+	# TODO - can we block rolling update and just slam out the upgrade? 
+	```
 * [ ] Increase cluster size
+	* Not needed for production; might want to revisit auto-scaler configuration
 * [ ] Apply schema changes.
 	```bash
 	# get latest version of the schema
@@ -241,18 +277,18 @@ TODO - this will wipe the reporting service load balancer; that okay, did we cus
 * [ ] Merge deployment and configuration branches. This can be done via command line or via the repository UI; if you use the repository UI, make sure to checkout and pull the latest `master`. Here are the command line actions:
 	```bash
 	cd ~/git/../RDW_Deploy_Opus
-	git checkout v11; git pull
+	git checkout v1_1; git pull
 	git checkout master
-	git merge v11
+	git merge v1_1
 	git push origin master
-	git push origin -d v11; git branch -d v11
+	git push origin -d v1_1; git branch -d v1_1
 	
 	cd ~/git/../RDW_Config_Opus
-	git checkout v11; git pull
+	git checkout v1_1; git pull
 	git checkout master
-	git merge v11
+	git merge v1_1
 	git push origin master
-	git push origin -d v11; git branch -d v11
+	git push origin -d v1_1; git branch -d v1_1
 	```
 * [ ] Redeploy services
 	```bash
@@ -288,7 +324,7 @@ TODO - this will wipe the reporting service load balancer; that okay, did we cus
 	```
 * [ ] Miscellaneous cleanup
 	* [ ] Remove admin-webapp stuff from OpenAM
-	* 
+	* [ ] Remove DNS / route for admin-webapp (from Route 53, GoDaddy, wherever)
 
 ### Smoke Test
 Smoke 'em if ya got 'em.		 

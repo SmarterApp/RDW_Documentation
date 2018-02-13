@@ -1,0 +1,26 @@
+# Annotated configuration for settings common across all applications
+#
+# This file should be named application.yml when served by the configuration server.
+#
+# Arguably this is an implementation details so some of the properties that appear in this file are
+# also annotated in the files for the individual services.
+
+app:
+  # The embargo feature applies its rules for only the current school year, so it must be configured.
+  # Although there is a default value for this setting (2018), it should be explicitly configured.
+  school-year: 2018
+
+  state:
+    code: CA
+    name: California
+
+tenant:
+  # By default the system does not allow users to see test results from institutions outside their
+  # permissions. Setting this property true allows users to see all test results for students
+  # regardless of where the test was administered, if they have PII for the student.
+  transfer-access-enabled: true
+
+logging:
+  level:
+    # this outputs a couple INFO messages every 5 minutes, annoying
+    org.springframework.cloud.config.client.ConfigServicePropertySourceLocator: warn

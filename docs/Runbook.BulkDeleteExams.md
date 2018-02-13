@@ -1,6 +1,6 @@
 ## Bulk Delete Exams
 
-**Intended Audience**: This document provides instructions for bulk deleting exams from the Reporting Data Warehouse. Knowledge of SQL and access to the production data warehouse is required.
+**Intended Audience**: This document provides instructions for bulk deleting exams from the Reporting Data Warehouse. Knowledge of SQL and access to the production databases is required.
 Operations will find this useful if and only if a bulk delete operation is required.
 
 Deleting exams includes:
@@ -13,8 +13,8 @@ and the exam processors are paused.**.
 
 ### Other Resources
 1. [Import and Migrate](Runbook.migrate.md) - Operations and system administration may find this useful with manually adjusting or cleaning up data.
-1. [Migrate Reporting](#migrate-reporting)
-1. [Migrate OLAP](#migrate-olap)
+1. [Migrate Reporting](Runbook.md#migrate-reporting)
+1. [Migrate OLAP](Runbook.md#migrate-olap)
 
 ### Warehouse exam data store
 Test result data (aka exams) depends on the following data being pre-loaded:
@@ -104,13 +104,34 @@ Purging exams includes:
 ### Purging from reporting data mart
 If exams were deleted using soft-delete and migration (see above) there is no need to do this: the system has already deleted the records in the data mart.
 
-To delete exams bypassing the soft-delete step, follow instructions for [Purging from data warehouse](#purging-from-warehouse). Skip step 3.3 since `reporting` data mart does not have this table.
+To delete exams bypassing the soft-delete step, follow instructions for [Purging from data warehouse](#purging-from-warehouse) and replace ```WHERE deleted = 1``` with 
+a delete condition that matches your deletion criteria. Skip step 3.3 since `reporting` data mart does not have this table.
 
 ### Purging from OLAP data mart
-(TODO)
+If exams were deleted using soft-delete and migration (see above) there is no need to do this: the system has already deleted the records in the OLAP data mart.
+
+To delete exams bypassing the soft-delete step follow this steps:
+ 
+1. Count the number of records to be deleted and verify that it matches your expectations.
+```sql 
+SELECT count(*) FROM fact_student_exam WHERE {delete condition here};
+```
+2. Count the number of records that should be left after you purge the data. Save this number for post-validation.
+```sql 
+SELECT count(*) FROM exam WHERE deleted {delete condition here};
+```
+3. Delete exams related data: 
+```sql 
+ DELETE FROM fact_student_exam WHERE {delete condition here};
+```
+4. Count the number of records and compare it to the count from the step 2 above. The numbers must match.
+```sql 
+SELECT count(*) FROM fact_student_exam;
+```
+
 
 ### Purging exam auditing data in the warehouse
-(TODO)
+[Clear Audit Trail](Audit.md#clear-audit)
 
 <a name="purging-from-warehouse"></a>
 ### Purging from data warehouse
@@ -121,7 +142,7 @@ This assumes you know exam rules for delete. **Below example purges soft-deleted
  
 1. Count the number of records be deleted and verify it this matches your expectations.
 ```sql 
-SELECT count(*)  FROM exam WHERE deleted = 1;
+SELECT count(*) FROM exam WHERE deleted = 1;
 ```
 2. Count the number of records that should be left after you purge the data. Save this number for post-validation.
 ```sql 

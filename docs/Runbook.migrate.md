@@ -11,6 +11,7 @@ Content Type   | Table       |  Comment  |
 n/a | asmt_type, subject, subject_claim_score import_content, import_status, import, language | Considered critical data. Must be pre-loaded as part of the initial schema set. Cannot be modified later.
 CODES | administration_condition, common_core_standard, grade, completeness, ethnicity, gender, claim, depth_of_knowledge, math_practice, item_trait_score, target | Pre-loaded from SBAC blueprints and specifications. Allows for manual updates.
 CODES | accommodation, accommodation_translation | Ingested using the [Import Service API](https://github.com/SmarterApp/RDW_Ingest/blob/develop/import-service/API.md) and [SBAC Accessbility Accomodataion Configuration](https://github.com/SmarterApp/AccessibilityAccommodationConfigurations/tree/RDW_DataWarehouse).
+NORMS | percentile, percentile_score |[Norms Data](Norms.md)
 EMBARGO | state_embargo, district_embargo | Embargo settings are edited using the Admin UI.
 PACKAGE | **asmt**, asmt_score, item, item_common_core_standard, item_other_target | Ingested using the Import Service API and the output from the tabulator.
 ORGANIZATION | **school**, school_group, district, district_group | Uploaded by the Update Organizations task.

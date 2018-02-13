@@ -110,7 +110,7 @@ a delete condition that matches your deletion criteria. Skip step 3.3 since `rep
 ### Purging from OLAP data mart
 If exams were deleted using soft-delete and migration (see above) there is no need to do this: the system has already deleted the records in the OLAP data mart.
 
-To delete exams bypassing the soft-delete step follow this steps:
+To delete exams bypassing the soft-delete step:
  
 1. Count the number of records to be deleted and verify that it matches your expectations.
 ```sql 

@@ -900,7 +900,8 @@ ORDER BY membership_audit.student_group_id, membership_audit.action_date DESC;
 11 rows in set (0.00 sec)
 ```
 
-### How can the audit trail be cleared?
+<a name="clear-audit"></a>
+### How can the audit trail be trail?
 
 #### Clear a specific student record
 

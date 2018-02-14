@@ -323,7 +323,7 @@ This section records all details that will facilitate configuration and maintena
         ```
     1. Create a role to allow RDS access to the S3 bucket using console or CLI.
         ```bash
-        aws iam create-role --role-name rdsRdwOpusArchiveRole --description "RDS access to rdw-opus-archive" --assume-role-policy-document file://ArchiveRoleTrustPolicy.json
+        aws iam create-role --role-name rdsRdwOpusArchiveRole --description "RDS access to rdw-opus-archive" --assume-role-policy-document file://RdsRoleTrustPolicy.json
         aws iam attach-role-policy --role-name rdsRdwOpusArchiveRole --policy-arn arn:aws:iam::478575410002:policy/AllowRdwOpusArchiveBucket
         ```
     1. Create IAM group and user: rdw-opus. 

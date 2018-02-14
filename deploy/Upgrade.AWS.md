@@ -186,8 +186,6 @@ The goal of this step is to make changes to everything that doesn't directly aff
 		```		
 * [ ] Update ops system, aka jump server. 
     * [ ] Install `psql` client, e.g. `sudo yum install postgresql`.
-    * TODO - config file that points to redshift
-    * TODO - test
 * [ ] Configure Redshift cluster. Redshift is expensive. Have to decide whether to share a single cluster between your environments.
 	* Obviously this work will affect configuration files from previous steps.
 	* Put Redshift in its own subnet (group?) in the production VPC and then VPC peer that subnet to allow staging, and jump servers to access it
@@ -196,14 +194,42 @@ The goal of this step is to make changes to everything that doesn't directly aff
 	* Cluster Parameter Group, e.g. rdw-prod-redshift10
 		* Enable Short Query Acceleration, 5 seconds
 		* Concurrency = 6
-* [ ] Roles / Permissions
-	* Create new permissions: CUSTOM_AGGREGATE_READ, EMBARGO_READ, EMBARGO_WRITE, INSTRUCTIONAL_RESOURCE_WRITE
-	* Create new roles: Instructional Resource Admin, Embargo Admin, Custom Aggregate Reporter
-	* Add roles and permissions mappings:
-		* CUSTOM_AGGREGATE_READ - Custom Aggregate Reporter
-		* EMBARGO_READ - Embargo Admin
-		* EMBARGO_WRITE - Embargo Admin
-		* INSTRUCTIONAL_RESOURCE_WRITE - Instructional Resource Admin
+* [ ] Create Redshift role to grant access to S3.
+	* [ ] Verify the existing policy that allows access to the S3 archive bucket. It should have a name like `AllowRdwOpusArchiveBucket`.
+	* [ ] Create Redshift role with that policy. Use the console or CLI, and a consistent naming convention for your environment:
+		```bash
+		aws iam create-role --role-name redshiftRdwOpusArchiveAccess --description "Redshift access to rdw-opus-archive" --assume-role-policy-document file://RedshiftRoleTrustPolicy.json
+		aws iam attach-role-policy --role-name redshiftRdwOpusArchiveAccess --policy-arn arn:aws:iam::478575410002:policy/AllowRdwOpusArchiveBucket
+		```
+	* [ ] Associate that role with the Redshift cluster. Use the console (Manage IAM roles) or CLI (TBD)
+* [ ] Create Redshift database and users. To avoid excessive costs, a single cluster can be used to support multiple environments. This is done using a separate database for each environment. Using `psql`, create a database for the environment, the reporting schema and users
+	```psql
+	CREATE DATABASE opus;
+	CREATE USER rdw-ingest PASSWORD 'AGoodPassword';
+	CREATE USER rdw-reporting PASSWORD 'AnotherGoodPassword';
+	-- are these necessary?
+	-- GRANT ALL ON DATABASE opus TO rdw-ingest;
+	-- GRANT ALL ON DATABASE opus TO rdw-reporting;
+	\connect opus
+	CREATE SCHEMA reporting;
+	GRANT ALL ON SCHEMA reporting to rdw-ingest;
+	-- can we just grant select for reporting?
+	-- GRANT ALL ON SCHEMA reporting to rdw-reporting;
+	GRANT SELECT ON ALL TABLES IN SCHEMA reporting TO rdw-reporting;
+	ALTER USER rdw-ingest SET SEARCH_PATH TO reporting;
+	ALTER USER rdw-reporting SET SEARCH_PATH TO reporting;
+	```
+* [ ] Create Roles / Permissions
+	* All this is for the component `Reporting`
+	* Create new roles and enable at appropriate levels: 
+		* `Instructional Resource Admin` - State, District, GroupOfInstitutions, Institution
+		* `Embargo Admin` - State, District
+		* `Custom Aggregate Reporter` - State, District, GroupOfInstitutions, Institution
+	* Create new permissions and map them to roles:
+		* `CUSTOM_AGGREGATE_READ` - Custom Aggregate Reporter
+		* `EMBARGO_READ` - Embargo Admin
+		* `EMBARGO_WRITE` - Embargo Admin
+		* `INSTRUCTIONAL_RESOURCE_WRITE` - Instructional Resource Admin
 	* Chain admin roles to PII users
 
 

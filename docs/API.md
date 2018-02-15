@@ -303,9 +303,12 @@ curl -X POST --header "Authorization:Bearer {access_token}" https://import-servi
 End-points for submitting organization data; this includes districts, schools, and groups of institutions. 
 
 #### Create Organization Import Request
-Accepts JSON payload, compatible with the format produced by ART. The payload should contain all the organization data necessary to resolve all contents; for example, if a school is in a group under a district, all three must be present in the payload. The payload must be valid JSON but the exact structure doesn't matter a lot: the system will parse the payload looking for the required fields: `entityType`, `entityId`, `entityName`, `parentEntityId`. 
+Accepts JSON payload, compatible with the [format produced by ART](https://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools/blob/master/external_release_docs/SBAC-11%20TestRegistration%20API.pdf),
+or CALPADS format. 
 
-There are two ways of posting content: with a raw body of type `application/json` or form-data (file upload).
+The payload should contain all the organization data necessary to resolve all contents; for example, if a school is in a group under a district, all three must be present in the payload. The payload must be valid JSON but the exact structure doesn't matter a lot: the system will parse the payload looking for the required fields: `entityType`, `entityId`, `entityName`, `parentEntityId`. 
+
+There are two ways of posting content: with a raw body of type `application/json` or `text/csv` or form-data (file upload).
 
 * Host: import service
 * URL: `/organizations/imports`
@@ -315,28 +318,115 @@ There are two ways of posting content: with a raw body of type `application/json
 * Headers:
   * `Authorization: Bearer {access_token}`
 * Headers (raw body):
-  * `Content-Type:application/json`
+  * `Content-Type:application/json` (JSON)
+  * `Content-Type:text/csv` (CALPADS)
 * Body (raw body): JSON payload, contrived example:
 ```json
-{ "districts": [
+{
+  "groupofdistricts": [
     {
-      "id": "572d7630e4b0ed2c55c37e34",
-      "entityId": "DISTRICT9",
-      "entityName": "District 9 - Prawn Town",
-      "parentEntityId": "CA",
-       "entityType": "DISTRICT"
-    }, ...
-  ], "schools": [
+      "entityId": "8880001",
+      "entityType": "GROUPOFDISTRICTS",
+      "parentEntityType": "STATE",
+      "entityName": "Pern North",
+      "parentEntityId": "CA"
+    }
+  ],
+  "districts": [
     {
-      "id": "57325fc6e4b0ed2c55c37e40",
-      "entityId": "DS9001",
-      "entityName": "Prawn Town Middle School",
-      "parentEntityId": "DISTRICT9",
-      "nationwideIdentifier": "NCESID001",
-      "entityType": "INSTITUTION"
-    }, ...
+      "entityId": "88800120000000",
+      "entityType": "DISTRICT",
+      "parentEntityType": "GROUPOFDISTRICTS",
+      "entityName": "Igen District",
+      "parentEntityId": "8880001"
+    },
+    {
+      "entityId": "88800130000000",
+      "entityType": "DISTRICT",
+      "parentEntityType": "STATE",
+      "entityName": "Crom District",
+      "parentEntityId": "CA"
+    }
+  ], 
+  "institutions": [
+    {
+      "entityId": "88800120012001",
+      "entityType": "INSTITUTION", 
+      "parentEntityType": "DISTRICT", 
+      "entityName": "Big Bay",
+      "parentEntityId": "88800120000000"
+    }, 
+    {
+      "entityId": "88800130013001",
+      "entityType": "INSTITUTION", 
+      "parentEntityType": "DISTRICT", 
+      "entityName": "Camp Natalon",
+      "parentEntityId": "88800130000000"
+    }, 
+    {
+      "entityId": "88800120012002",
+      "entityType": "INSTITUTION", 
+      "parentEntityType": "DISTRICT", 
+      "entityName": "Igen Hold",
+      "parentEntityId": "88800120000000"
+    }, 
+    {
+      "entityId": "88800130013002",
+      "entityType": "INSTITUTION", 
+      "parentEntityType": "DISTRICT", 
+      "entityName": "Crom Hold",
+      "parentEntityId": "88800130000000"
+    }, 
+    {
+      "entityId": "88800120012003",
+      "entityType": "INSTITUTION", 
+      "parentEntityType": "DISTRICT", 
+      "entityName": "Katz Field",
+      "parentEntityId": "88800120000000"
+    }, 
+    {
+      "entityId": "88800130013003",
+      "entityType": "INSTITUTION", 
+      "parentEntityType": "DISTRICT", 
+      "entityName": "Greenfields",
+      "parentEntityId": "88800130000000"
+    }, 
+    {
+      "entityId": "88800130013004",
+      "entityType": "INSTITUTION", 
+      "parentEntityType": "DISTRICT", 
+      "entityName": "Keogh",
+      "parentEntityId": "88800130000000"
+    }, 
+    {
+      "entityId": "88800120012004",
+      "entityType": "INSTITUTION", 
+      "parentEntityType": "DISTRICT", 
+      "entityName": "Tannercraft Hall",
+      "parentEntityId": "88800120000000"
+    }, 
+    {
+      "entityId": "88800130013005",
+      "entityType": "INSTITUTION", 
+      "parentEntityType": "DISTRICT", 
+      "entityName": "Three Rivers",
+      "parentEntityId": "88800130000000"
+    }
   ]
 }
+```
+* Body (raw body): CALPADS payload, same contrived example:
+```text
+County-District Code^School Code^Auth CDS Code^County Name^District Name^School Name^Charter School^Charter Status^NPS School
+8880012^0012001^88800120012001^Pern^Igen District^Big Bay^N^^N
+8880012^0012002^88800120012002^Pern^Igen District^Igen Hold^N^^N
+8880012^0012003^88800120012003^Pern^Igen District^Katz Field^N^^N
+8880012^0012004^88800120012004^Pern^Igen District^Tannercraft Hall^N^^N
+8880013^0013001^88800130013001^Pern^Crom District^Camp Natalon^N^^N
+8880013^0013002^88800130013002^Pern^Crom District^Crom Hold^N^^N
+8880013^0013003^88800130013003^Pern^Crom District^Greenfields^N^^N
+8880013^0013004^88800130013004^Pern^Crom District^Keogh^N^^N
+8880013^0013005^88800130013005^Pern^Crom District^Three Rivers^N^^N
 ```
 * Headers (form-data):
   * `Content-Type:multipart/form-data`
@@ -455,8 +545,7 @@ End-points for submitting assessment package data in CSV format (tabulator outpu
 An attempt to update any of the above data elements will result in the "PROCESSED" status and the message stating that it was rejected.
 
 #### Create Package Import Request
-Accepts payloads in the Smarter Balanced Assessment Tabulator format. This is a CSV format produced by the internal
-tabulator utility. 
+Accepts payloads in the Smarter Balanced Assessment Tabulator format. This is a CSV format produced by the internal tabulator utility. 
 
 There are two ways of posting content: with a raw body of type `application/csv` or form-data (file upload).
 
@@ -471,8 +560,9 @@ There are two ways of posting content: with a raw body of type `application/csv`
   * `Content-Type:application/csv`
 * Body (raw body): CSV payload, snippet:
 ```csv
-AssessmentId,AssessmentName,AssessmentSubject,AssessmentGrade,AssessmentType,AssessmentSubtype,AssessmentLabel,AssessmentVersion,AcademicYear,FullItemKey,BankKey,ItemId,Filename,Version,ItemType,Grade,Standard,Claim,Target,PassageId,ASL,Braille,LanguageBraille,DOK,Language,AllowCalculator,MathematicalPractice,MaxPoints,Glossary,ScoringEngine,Spanish,IsFieldTest,IsActive,ResponseRequired,AdminRequired,ItemPosition,MeasurementModel,Weight,ScorePoints,a,b0_b,b1_c,b2,b3,avg_b,bpref1,bpref2,bpref3,bpref4,bpref5,bpref6,bpref7,CommonCore,ClaimContentTarget,SecondaryCommonCore,SecondaryClaimContentTarget,CutPoint1,ScaledLow1,ScaledHigh1,CutPoint2,ScaledLow2,ScaledHigh2,CutPoint3,ScaledLow3,ScaledHigh3,CutPoint4,ScaledLow4,ScaledHigh4
-(SBAC)SBAC-IAB-FIXED-G11E-BriefWrites-ELA-11-Winter-2014-2015,SBAC-IAB-FIXED-G11E-BriefWrites-ELA-11,ELA,11,interim,IAB,ELA IAB G11 BriefWrites,6579,2015,200-33218,200,33218,item-200-33218.xml,6580,SA,11,SBAC-ELA-v1:2-W|3-11,"2-W	","3-11	",,,,ENU-Braille,3,ENU,,,2,,HandScored,,FALSE,TRUE,TRUE,TRUE,2,IRTGPC,1,2,0.62844,-0.38994,2.66386,,,1.13696,(SBAC)SBAC-IAB-FIXED-G11E-BriefWrites-ELA-11-Winter-2014-2015,,SBAC-2-W|3-11,,,,,"11-12.W.2f	",2-W|3-11,,,1,2.30E+03,2.49E+03,2,2.49E+03,2.58E+03,3,2.58E+03,2.68E+03,4,2.68E+03,2.80E+03
+AssessmentId,AssessmentName,AssessmentSubject,AssessmentGrade,AssessmentType,AssessmentSubtype,AssessmentLabel,AssessmentVersion,AcademicYear,FullItemKey,BankKey,ItemId,Filename,Version,AnswerKey,NumberOfAnswerOptions,ItemType,Grade,Standard,Claim,Target,ClaimContentTarget,SecondaryClaimContentTarget,CommonCore,SecondaryCommonCore,ASL,Braille,LanguageBraille,DOK,Language,AllowCalculator,MathematicalPractice,MaxPoints,Glossary,ScoringEngine,Spanish,IsFieldTest,IsActive,ResponseRequired,AdminRequired,ItemPosition,MeasurementModel,Weight,ScorePoints,a,b0_b,b1_c,b2,b3,avg_b,bpref1,bpref2,bpref3,bpref4,bpref5,bpref6,bpref7,CutPoint1,ScaledLow1,ScaledHigh1,CutPoint2,ScaledLow2,ScaledHigh2,CutPoint3,ScaledLow3,ScaledHigh3,CutPoint4,ScaledLow4,ScaledHigh4,PtWritingType
+(SBAC)SBAC-IAB-FIXED-G11E-BriefWrites-ELA-11-Winter-2016-2017,SBAC-IAB-FIXED-G11E-BriefWrites-ELA-11,ELA,11,interim,IAB,ELA IAB G11 BriefWrites,9832,2017,200-58197,200,58197,item-200-58197.xml,9832,Hand,1,SA,11,SBAC-ELA-v1:2-W|1-11,"2-W	","1-11	","2-W	|1-11	","2-W	|1-11	;2-W |3-11 ",5.RI.10;8.L.5b,5.RI.10;8.L.5b,N,BRF,ENU-Braille,3,ENU,,,2,,HandScored,N,FALSE,TRUE,TRUE,TRUE,1,IRTGPC,1,2,0.55434,0.93104,0.43826,,,0.68465,(SBAC)SBAC-IAB-FIXED-G11E-BriefWrites-ELA-11-Winter-2016-2017,,SBAC-2-W|1-11,,,,,1,2.30E+03,,2,2.49E+03,2.58E+03,3,2.58E+03,,4,2.68E+03,2.80E+03,Argumentative
+(SBAC)SBAC-IAB-FIXED-G11E-BriefWrites-ELA-11-Winter-2016-2017,SBAC-IAB-FIXED-G11E-BriefWrites-ELA-11,ELA,11,interim,IAB,ELA IAB G11 BriefWrites,9832,2017,200-59189,200,59189,item-200-59189.xml,9832,Hand,2,SA,11,SBAC-ELA-v1:2-W|1-11,"2-W	","1-11	","2-W	|1-11	","2-W	|1-11	",8.L.5b,8.L.5b;8.L.5b,N,BRF,ENU-Braille,3,ENU,,,2,,HandScored,N,FALSE,TRUE,TRUE,TRUE,2,IRTGPC,1,2,0.51807,0.66337,3.26407,,,1.96372,(SBAC)SBAC-IAB-FIXED-G11E-BriefWrites-ELA-11-Winter-2016-2017,,SBAC-2-W|1-11,,,,,1,2.30E+03,,2,2.49E+03,2.58E+03,3,2.58E+03,,4,2.68E+03,2.80E+03,Explanatory
 ...
 ```
 * Headers (form-data):
@@ -519,7 +609,7 @@ To check the status of the import use Get Import Request. Imports with "PROCESSE
 ```
               
 ### Norms Endpoints
-End-points for submitting norms percentile tables in the Smarter Balanced [Norms CSV format](Norms.md). This end point can be used to import new norms or update existing ones. When norms are created, the following data elements are required and comprise the unique identifier for the norms percentile table:
+End-point for submitting norms percentile tables in the Smarter Balanced [Norms CSV format](Norms.md). This end point can be used to import new norms or update existing ones. When norms are created, the following data elements are required and comprise the unique identifier for the norms percentile table:
 * assessment_id : natural id of an assessment that must already be loaded
 * start_date : inclusive start date of exam completion
 * end_date : inclusive end date of exam completion

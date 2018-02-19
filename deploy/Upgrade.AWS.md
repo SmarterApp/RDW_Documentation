@@ -186,12 +186,13 @@ The goal of this step is to make changes to everything that doesn't directly aff
 		```		
 * [ ] Update ops system, aka jump server. 
     * [ ] Install `psql` client, e.g. `sudo yum install postgresql`.
+    * TODO - steps to configure psql to connect to redshift instance by default
 * [ ] Configure Redshift cluster. Redshift is expensive. Have to decide whether to share a single cluster between your environments.
 	* Obviously this work will affect configuration files from previous steps.
 	* Put Redshift in its own subnet (group?) in the production VPC and then VPC peer that subnet to allow staging, and jump servers to access it
-	* Name like rdw-prod
+	* Name like rdw-opus
 	* Cluster should be 2 nodes, dc2.large
-	* Cluster Parameter Group, e.g. rdw-prod-redshift10
+	* Cluster Parameter Group, e.g. rdw-opus-redshift10
 		* Enable Short Query Acceleration, 5 seconds
 		* Concurrency = 6
 * [ ] Create Redshift role to grant access to S3.
@@ -219,6 +220,26 @@ The goal of this step is to make changes to everything that doesn't directly aff
 	ALTER USER rdw-ingest SET SEARCH_PATH TO reporting;
 	ALTER USER rdw-reporting SET SEARCH_PATH TO reporting;
 	```
+* [ ] Create reporting olap schemas. There is the schema in Redshift and there is a migrate olap schema in the same
+Aurora instance as the warehouse schema. Use RDW_Schema project to create the schema. NOTE: this would normally use the 
+`master` branch but the `develop` branch had not yet been merged when these instructions were written; please adjust 
+to use whichever branch corresponds to the v1.1 release.
+    ```bash
+    cd RDW_Schema
+    # see NOTE above
+    git checkout develop; git pull
+    # create schemas
+    ./gradlew -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse-cluster.[aws-randomization]:3306/" \
+      -Pdatabase_user=root -Pdatabase_password=password migrateMigrate_olap \
+      -Predshift_url=jdbc:redshift://rdw-opus.[aws-randomization]:5439/opus \
+      -Predshift_user=root -Predshift_password=password \
+      migrateMigrate_olap migrateReporting_olap
+    ``` 
+    * [ ] Grant access to the migrate olap schema to the existing ingest database user.
+        ```bash
+        mysql -h rdw-opus-warehouse-cluster.[aws-randomization] -u root -p
+        mysql> grant all privileges on migrate_olap.* to 'rdw-ingest'@'%';
+        ```
 * [ ] Create Roles / Permissions
 	* All this is for the component `Reporting`
 	* Create new roles and enable at appropriate levels: 

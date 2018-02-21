@@ -126,6 +126,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
 		* [ ] Migrate olap, copy `rdw-ingest-migrate-olap.yml` and edit
 			* Configure `spring.migrate_datasource` copy from migrate-reporting `warehouse_datasource`
 			* Configure `spring.warehouse_datasource`, copy from migrate-reporting `warehouse_datasource`
+			* Configure `migrate.olap-batch.run-cron`, make it after update organization task
 			* Configure S3 archive, copy from import-service `archive`
 			* Configure redshift role - TBD
 			* Configure `spring.olap_datasource` - TBD
@@ -138,6 +139,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
 		* [ ] Aggregate service, copy `rdw-reporting-aggregate-service.yml` and edit
 			* Configure `spring.rabbitmq`, copy from admin service
 			* Configure `app.archive`, copy from admin service
+			* Configure `app.cache.repository.refresh-cron`, make it after migrate olap task
 			* Configure `spring.olap_datasource` - TBD
 		* [ ] Reporting service, copy `rdw-reporting-service.yml` and edit
 			* Configure `app.iris.vendorId`, copy from `rdw-reporting-webapp.yml`

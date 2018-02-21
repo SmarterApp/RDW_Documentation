@@ -43,6 +43,13 @@ app:
           auto: false
           static: us-west-2
 
+  # The repository cache should be cleared whenever new data is migrated. Typically this is daily so the default
+  # is to clear the cache every day at 2:00 am (GMT). This setting should be coordinated to happen after the migration
+  # cron setting in rdw-ingest-migrate-olap.yml.
+#  cache:
+#    repository:
+#      refresh-cron: "0 0 2 * * *"
+
 #  state:
 #    code: CA
 #    name: California

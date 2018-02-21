@@ -50,9 +50,12 @@ migrate:
   # very good at ingesting large data sets so this value can be large and defaults to 500,000.
   # Increasing it can improve migrate performance but values over 1,000,000 require a large Redshift
   # instance.
-  batch:
+  # By default the migration is scheduled to run once a day at 1:00 am (GMT). If this is changed, it should
+  # be coordinated to happen before the repository cache flush in rdw-reporting-aggregate-service.yml.
+#  olap-batch:
 #    size: 500000
-#    delay: 60000
+#    # every day at 1:00 am
+#    run-cron: "0 0 1 * * *"
 
 # Spring application configuration.
 spring:

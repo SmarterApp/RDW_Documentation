@@ -39,9 +39,18 @@ Well in advance of this work:
 ### Prep Work
 The goal of this step is to make changes to everything that doesn't directly affect current operations, leaving the absolute minimum work required during the actual maintenance window.
 
+* These instructions expect you to have access to the files in the RDW project, so clone that locally if needed.
+    ```bash
+    cd ~/git
+    git clone https://github.com/SmarterApp/RDW.git
+    ```
 * [ ] Branch deployment and configuration repositories. All changes to these files will be made in the branch which can be quickly merged during the upgrade.
 	```bash
-	cd ~/git/../RDW_Deploy_Opus
+	cd ~/git
+	git clone https://github.com/SmarterApp/RDW_Deploy_Opus.git
+	git clone https://github.com/SmarterApp/RDW_Config_Opus.git
+
+	cd RDW_Deploy_Opus
 	git checkout master; git pull
 	git checkout -b v1_1 master
 	git push -u origin v1_1
@@ -52,7 +61,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
 	git push -u origin v1_1
 	```
 * [ ] Add a copy of this checklist to deployment and switch to that copy.
-* [ ] Changes to deployment files. There are sample deployment files in the `deploy` folder in this repository; use those to copy or help guide edits.
+* [ ] Changes to deployment files in `RDW_Deploy_Opus`. There are sample deployment files in the `deploy` folder in the `RDW` repository; use those to copy or help guide edits.
 	* Common services. These helper services require no changes.
 		* rabbit service
 		* configuration service
@@ -90,7 +99,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
 		git commit -am "Changes for v1.1"
 		git push 
 		```
-* [ ] Changes to configuration files. There are annotated configuration files in the `config` folder in this repository; use those to help guide edits.
+* [ ] Changes to configuration files in `RDW_Config_Opus`. There are annotated configuration files in the `config` folder in the `RDW` repository; use those to help guide edits.
 	* [ ] Common service properties. There are some properties that are used by many services. To avoid duplication and help with maintenance these should be set in the `application.yml` file. 
 		* Copy or edit `application.yml` as appropriate, putting in values from the annotated sample, e.g.
 			```yaml
@@ -124,39 +133,44 @@ The goal of this step is to make changes to everything that doesn't directly aff
 			* replace `spring.datasource.url` with `spring.datasource.url-server`
 			* for `task.update-organizations` add `groups-of-districts-url` and `groups-of-schools-url`
 		* [ ] Migrate olap, copy `rdw-ingest-migrate-olap.yml` and edit
-			* Configure `spring.migrate_datasource` copy from migrate-reporting `warehouse_datasource`
-			* Configure `spring.warehouse_datasource`, copy from migrate-reporting `warehouse_datasource`
+			* Configure `spring.migrate_datasource` copy from `rdw-ingest-migrate-reporting.yml` `warehouse_datasource`
+			* Configure `spring.warehouse_datasource`, copy from `rdw-ingest-migrate-reporting.yml` `warehouse_datasource`
 			* Configure `migrate.olap-batch.run-cron`, make it after update organization task
-			* Configure S3 archive, copy from import-service `archive`
+			* Configure S3 archive, copy from `rdw-ingest-import-service.yml` `archive`
 			* Configure redshift role - TBD
 			* Configure `spring.olap_datasource` - TBD
 	* [ ] Reporting services.
     	* [ ] Admin service, copy `rdw-reporting-admin-service.yml` and edit
 			* Configure `spring.rabbitmq`, copy from `rdw-admin-webapp.yml`
 			* Configure `archive`, copy from `rdw-admin-webapp.yml`
-			* Configure `spring.warehouse_datasource`, copy from `rdw-admin-webapp.yml`
-			* Configure `spring.reporting_datasource`, copy from `rdw-reporting-webapp.yml`
+			* Configure `spring.warehouse_datasource`, copy from `rdw-admin-webapp.yml` `spring.datasource`
+			* replace `spring.warehouse_datasource.url` with `spring.warehouse_datasource.url-server`
+			* Configure `spring.reporting_datasource`, copy from `rdw-reporting-webapp.yml` `app.datamart.datasource`
+			* Replace `spring.reporting_datasource.url` with `spring.reporting_datasource.url-server`
 		* [ ] Aggregate service, copy `rdw-reporting-aggregate-service.yml` and edit
-			* Configure `spring.rabbitmq`, copy from admin service
-			* Configure `app.archive`, copy from admin service
+			* Configure `spring.rabbitmq`, copy from `rdw-reporting-admin-service.yml`
+			* Configure `app.archive`, copy from `rdw-reporting-admin-service.yml`
 			* Configure `app.cache.repository.refresh-cron`, make it after migrate olap task
 			* Configure `spring.olap_datasource` - TBD
 		* [ ] Reporting service, copy `rdw-reporting-service.yml` and edit
 			* Configure `app.iris.vendorId`, copy from `rdw-reporting-webapp.yml`
 			* Configure `app.min-item-data-year`, copy from `rdw-reporting-webapp.yml`
 			* Configure `artifacts`, copy from `rdw-reporting-webapp.yml`
-			* Configure `spring.datasource`, copy from `rdw-reporting-webapp.yml`
+			* Configure `spring.datasource`, copy from `rdw-reporting-webapp.yml` `app.datamart.datasource`
+			* Replace `spring.datasource.url` with `spring.datasource.url-server`
 			* Configure `cloud`, copy from `rdw-reporting-report-processor.yml` `app.archive.cloud` (note different property prefix)
 		* [ ] Report processor, edit `rdw-reporting-report-processor.yml`
-			* Configure `spring.rabbitmq`, copy from admin service
-			* Move `app.datamart.datasource` to `spring.datasource` and replace `spring.datasource.url` with `spring.datasource.url-server`
+			* Configure `spring.rabbitmq`, copy from `rdw-reporting-admin-service.yml`
+			* Move `app.datamart.datasource` to `spring.datasource` 
+			* Replace `spring.datasource.url` with `spring.datasource.url-server`
+			* Remove `app.state.code`
 			* Configure `task.remove-stale-reports` task, copy from annotated sample, something like:
 			    ```yaml
 			    task:
-                remove-stale-reports:
-                  cron: 0 0 8 * * *
-                  max-report-lifetime-days: 30
-                  max-random-minutes: 20
+                  remove-stale-reports:
+                    cron: 0 0 8 * * *
+                    max-report-lifetime-days: 30
+                    max-random-minutes: 20
 			    ```				
 		* [ ] Reporting webapp, edit `rdw-reporting-webapp.yml`
 			* Configure `zuul.routes`, copy from annotated sample, something like:
@@ -174,15 +188,17 @@ The goal of this step is to make changes to everything that doesn't directly aff
               ```			  
 			* Remove `app.admin-webapp-url`
 			* Remove `app.reportservice`
+			* Remove `app.state.code`
 			* Remove `app.wkhtmltopdf`
 			* Remove `artifacts`
 			* Remove `spring.rabbitmq`
-			* Move `app.datamart.datasource` to `spring.datasource` and replace `spring.datasource.url` with `spring.datasource.url-server`
+			* Move `app.datamart.datasource` to `spring.datasource` 
+			* Replace `spring.datasource.url` with `spring.datasource.url-server`
 		* Delete `rdw-admin-webapp.yml`
 		* Delete `rdw-reporting-admin-webapp.yml` (rare, will exist only if interim builds were deployed)
 	* Commit changes
 		```bash
-		cd ~/git/../RDW_Config_Opus
+		cd ~/git/RDW_Config_Opus
 		git commit -am "Changes for v1.1"
 		git push 
 		```		
@@ -191,12 +207,17 @@ The goal of this step is to make changes to everything that doesn't directly aff
     * TODO - steps to configure psql to connect to redshift instance by default
 * [ ] Configure Redshift cluster. Redshift is expensive. Have to decide whether to share a single cluster between your environments.
 	* Obviously this work will affect configuration files from previous steps.
-	* Put Redshift in its own subnet (group?) in the production VPC and then VPC peer that subnet to allow staging, and jump servers to access it
-	* Name like rdw-opus
-	* Cluster should be 2 nodes, dc2.large
 	* Cluster Parameter Group, e.g. rdw-opus-redshift10
 		* Enable Short Query Acceleration, 5 seconds
 		* Concurrency = 6
+	* Create Cluster Subnet Group in opus VPC, rdw-opus is a good name, add multiple zones
+	* Create Security Group
+	    * rdw-redshift
+	    * opus VPC
+	    * redshift traffic from nodes (use security group or CIDRs) and jump server 
+	* Name like rdw-opus
+	* Cluster should be 2 nodes, dc2.large
+	* Put Redshift in opus VPC using cluster subnet group and other stuff we just created
 * [ ] Create Redshift role to grant access to S3.
 	* [ ] Verify the existing policy that allows access to the S3 archive bucket. It should have a name like `AllowRdwOpusArchiveBucket`.
 	* [ ] Create Redshift role with that policy. Use the console or CLI, and a consistent naming convention for your environment:

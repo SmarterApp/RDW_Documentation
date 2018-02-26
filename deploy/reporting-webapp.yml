@@ -49,11 +49,11 @@ spec:
           failureThreshold: 3
         resources:
           requests:
-            cpu: 300m
-            memory: 750M
+            cpu: 750m
+            memory: 1G
           limits:
-            cpu: 300m
-            memory: 750M
+            cpu: 750m
+            memory: 1G
         env:
         - name: CONFIG_SERVICE_URL
           value: "http://configuration-service"

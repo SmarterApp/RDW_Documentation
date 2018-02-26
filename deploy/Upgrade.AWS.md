@@ -96,6 +96,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
 	* Commit changes
 		```bash
 		cd ~/git/../RDW_Deploy_Opus
+        git add *
 		git commit -am "Changes for v1.1"
 		git push 
 		```
@@ -199,12 +200,10 @@ The goal of this step is to make changes to everything that doesn't directly aff
 	* Commit changes
 		```bash
 		cd ~/git/RDW_Config_Opus
+        git add *
 		git commit -am "Changes for v1.1"
 		git push 
 		```		
-* [ ] Update ops system, aka jump server. 
-    * [ ] Install `psql` client, e.g. `sudo yum install postgresql`.
-    * TODO - steps to configure psql to connect to redshift instance by default
 * [ ] Configure Redshift cluster. Redshift is expensive. Have to decide whether to share a single cluster between your environments.
 	* Obviously this work will affect configuration files from previous steps.
 	* Cluster Parameter Group, e.g. rdw-opus-redshift10
@@ -226,22 +225,38 @@ The goal of this step is to make changes to everything that doesn't directly aff
 		aws iam attach-role-policy --role-name redshiftRdwOpusArchiveAccess --policy-arn arn:aws:iam::478575410002:policy/AllowRdwOpusArchiveBucket
 		```
 	* [ ] Associate that role with the Redshift cluster. Use the console (Manage IAM roles) or CLI (TBD)
+* [ ] Update ops system, aka jump server. 
+    * [ ] Install `psql`, e.g. `sudo yum install postgresql`. Install just the client, not the server! After installing
+    check the connection to Redshift.
+        ```bash
+        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=root --password --dbname=dev
+        ```
+    * [ ] (Optional) Configure psql to automatically connect. One way to do this ...
+        * Create `~/.pg_service.conf` with something like this: 
+            ```ini
+            [rdw]
+            host=rdw-opus.[aws-randomization]
+            port=5439
+            dbname=dev
+            user=root
+            password=password
+            ```
+        NOTE: there is a password in there so do something like `chmod 0600 ~/.pg_service.conf` to protect it.
+        * Add to `.bashrc` (and source it)
+            ```bash
+            export PGSERVICE=rdw 
+            ```
 * [ ] Create Redshift database and users. To avoid excessive costs, a single cluster can be used to support multiple environments. This is done using a separate database for each environment. Using `psql`, create a database for the environment, the reporting schema and users
-	```psql
+	```sql
 	CREATE DATABASE opus;
-	CREATE USER rdw-ingest PASSWORD 'AGoodPassword';
-	CREATE USER rdw-reporting PASSWORD 'AnotherGoodPassword';
-	-- are these necessary?
-	-- GRANT ALL ON DATABASE opus TO rdw-ingest;
-	-- GRANT ALL ON DATABASE opus TO rdw-reporting;
+	CREATE USER rdwopusingest PASSWORD 'AGoodPassword';
+	CREATE USER rdwopusreporting PASSWORD 'AnotherGoodPassword';
 	\connect opus
 	CREATE SCHEMA reporting;
-	GRANT ALL ON SCHEMA reporting to rdw-ingest;
-	-- can we just grant select for reporting?
-	-- GRANT ALL ON SCHEMA reporting to rdw-reporting;
-	GRANT SELECT ON ALL TABLES IN SCHEMA reporting TO rdw-reporting;
-	ALTER USER rdw-ingest SET SEARCH_PATH TO reporting;
-	ALTER USER rdw-reporting SET SEARCH_PATH TO reporting;
+	GRANT ALL ON SCHEMA reporting to rdwopusingest;
+	GRANT ALL ON SCHEMA reporting to rdwopusreporting;
+	ALTER USER rdwopusingest SET SEARCH_PATH TO reporting;
+	ALTER USER rdwopusreporting SET SEARCH_PATH TO reporting;
 	```
 * [ ] Create reporting olap schemas. There is the schema in Redshift and there is a migrate olap schema in the same
 Aurora instance as the warehouse schema. Use RDW_Schema project to create the schema. NOTE: this would normally use the 
@@ -253,7 +268,7 @@ to use whichever branch corresponds to the v1.1 release.
     git checkout develop; git pull
     # create schemas
     ./gradlew -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse-cluster.[aws-randomization]:3306/" \
-      -Pdatabase_user=root -Pdatabase_password=password migrateMigrate_olap \
+      -Pdatabase_user=root -Pdatabase_password=password \
       -Predshift_url=jdbc:redshift://rdw-opus.[aws-randomization]:5439/opus \
       -Predshift_user=root -Predshift_password=password \
       migrateMigrate_olap migrateReporting_olap
@@ -263,18 +278,31 @@ to use whichever branch corresponds to the v1.1 release.
         mysql -h rdw-opus-warehouse-cluster.[aws-randomization] -u root -p
         mysql> grant all privileges on migrate_olap.* to 'rdw-ingest'@'%';
         ```
+    * [ ] Verify Redshift user search path by using their credentials to connect and list tables (or something similar).
+        ```bash
+        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=rdwopusreporting --password --dbname=opus
+        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=rdwopusingest --password --dbname=opus
+  
+        stage=> \dt
+                              List of relations
+          schema   |               name               | type  | owner 
+        -----------+----------------------------------+-------+-------
+         reporting | administration_condition         | table | root
+         reporting | asmt                             | table | root
+        ...
+        ```
 * [ ] Create Roles / Permissions
 	* All this is for the component `Reporting`
-	* Create new roles and enable at appropriate levels: 
+	* [ ] Create new roles and enable at appropriate levels: 
 		* `Instructional Resource Admin` - State, District, GroupOfInstitutions, Institution
 		* `Embargo Admin` - State, District
 		* `Custom Aggregate Reporter` - State, District, GroupOfInstitutions, Institution
-	* Create new permissions and map them to roles:
+	* [ ] Create new permissions and map them to roles:
 		* `CUSTOM_AGGREGATE_READ` - Custom Aggregate Reporter
 		* `EMBARGO_READ` - Embargo Admin
 		* `EMBARGO_WRITE` - Embargo Admin
 		* `INSTRUCTIONAL_RESOURCE_WRITE` - Instructional Resource Admin
-	* Chain admin roles to PII users
+	* (?) Chain admin roles to PII users
 
 
 ### Quiesce the System
@@ -336,13 +364,6 @@ TODO - this will wipe the reporting service load balancer; that okay, did we cus
    		-Pdatabase_user=user -Pdatabase_password=password infoReporting
    gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-reporting-[aws-randomization]:3306/" \
    		-Pdatabase_user=user -Pdatabase_password=password migrateReporting
-
-	# create olap data mart
-    gradle -Predshift_url=jdbc:redshift://rdw-[aws-randomization]:5439/opus \
-    	-Predshift_user=user -Predshift_password=password \
-    	-Pdatabase_url=jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306 \
-    	-Pdatabase_user=user -Pdatabase_password=password \
-    	migrateReporting_olap migrateMigrate_olap
 	```
 * [ ] Merge deployment and configuration branches. This can be done via command line or via the repository UI; if you use the repository UI, make sure to checkout and pull the latest `master`. Here are the command line actions:
 	```bash
@@ -364,34 +385,46 @@ TODO - this will wipe the reporting service load balancer; that okay, did we cus
 	```bash
 	cd ~/git/../RDW_Deploy_Opus
 	# ingest services
-   kubectl apply -f exam-processor-service.yml
-   kubectl apply -f group-processor-service.yml
-   kubectl apply -f package-processor-service.yml
-   kubectl apply -f import-service.yml
-   kubectl apply -f migrate-reporting-service.yml
-   kubectl apply -f migrate-olap-service.yml
-   kubectl apply -f task-service.yml
-   # reporting services
+    kubectl apply -f exam-processor-service.yml
+    kubectl apply -f group-processor-service.yml
+    kubectl apply -f package-processor-service.yml
+    kubectl apply -f import-service.yml
+    kubectl apply -f migrate-reporting-service.yml
+    kubectl apply -f migrate-olap-service.yml
+    kubectl apply -f task-service.yml
+    # reporting services
 	kubectl apply -f admin-service.yml
 	kubectl apply -f aggregate-service.yml
 	kubectl apply -f reporting-service.yml
 	kubectl apply -f report-processor-service.yml
 	kubectl apply -f reporting-webapp.yml
-   ```
+    ```
 * [ ] Route 53
 	* redo for reporting webapp (pretty sure it will get deleted)
 	* remove for admin webapp
-* [ ] Load new instructional resources	
-	```bash
-	TODO - sql command to run SQL; probably also need the actual SQL
-	```
-* [ ] Reload assessment packages. The tabulator output has been updated to include additional assessment data (especially for items). This upgrade supports updating assessment packages. So, submit the new tabulator output for all assessments. Note: the assessment labels are still wrong in the tabulator output so the `label_assessments` script must be rerun as well.
-	```bash
-	TODO - curl commands to POST CSVs
-	```
-	```sql
-	TODO - mysql command for running script
-	```
+* [ ] Load data
+    * [ ] Reload assessment packages. The tabulator output has been updated to include additional assessment data (especially for items). This upgrade supports updating assessment packages. So, submit the new tabulator output for all assessments. Note: the assessment labels are still wrong in the tabulator output so the `label_assessments` script must be rerun as well.
+        ```bash
+        # fetch an access token for loading data
+        export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
+
+        # load updated packages    
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2016v2.csv https://import.sbac.org/packages/imports
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017v2.csv https://import.sbac.org/packages/imports
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2018v2.csv https://import.sbac.org/packages/imports
+  
+        # (Optional) check package processor logs
+        kubectl logs -f package-processor-[k8s-randomization]
+        ```
+    * [ ] Run SQL for updating assessment labels
+        ```bash
+        # adjust labels and trigger migration
+        mysql -h rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com -uroot --ppassword < label_assessments.sql
+        ```
+    * [ ] Run SQL for loading new instructional resources
+        ```bash
+        mysql -h rdw-opus-reporting.cimuvo5urx1e.us-west-2.rds.amazonaws.com -uroot -ppassword < load_instructional_resources.sql
+        ```
 * [ ] Miscellaneous cleanup
 	* [ ] Remove admin-webapp stuff from OpenAM
 	* [ ] Remove DNS / route for admin-webapp (from Route 53, GoDaddy, wherever)

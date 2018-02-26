@@ -92,9 +92,7 @@ Continue with the steps in this SQL file.
 10. Re-start Exam Processors.
 
 ## Purging exams in the warehouse
-> **NOTE: Directly modifying the database cares high risk. Refrain from doing it unless you have a strong reason.** 
-
-**NOTE: this is not a standard operation and should only be pursued in extraordinary circumstances**
+> **NOTE** Directly modifying the database carries high risk. This is not a standard operation and should be pursued only in extraordinary cicrumstances.
 
 Purging exams includes:
 * purging exams from the data mart(s).

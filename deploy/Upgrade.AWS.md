@@ -254,7 +254,9 @@ The goal of this step is to make changes to everything that doesn't directly aff
 	\connect opus
 	CREATE SCHEMA reporting;
 	GRANT ALL ON SCHEMA reporting to rdwopusingest;
+	GRANT ALL ON ALL TABLES IN SCHEMA reporting to rdwopusingest;
 	GRANT ALL ON SCHEMA reporting to rdwopusreporting;
+	GRANT ALL ON ALL TABLES IN SCHEMA reporting to rdwopusreporting;
 	ALTER USER rdwopusingest SET SEARCH_PATH TO reporting;
 	ALTER USER rdwopusreporting SET SEARCH_PATH TO reporting;
 	```
@@ -273,10 +275,13 @@ to use whichever branch corresponds to the v1.1 release.
       -Predshift_user=root -Predshift_password=password \
       migrateMigrate_olap migrateReporting_olap
     ``` 
-    * [ ] Grant access to the migrate olap schema to the existing ingest database user.
+    * [ ] In Aurora, grant access to the migrate olap schema to the existing ingest database user, and allow both users 
+    to write to S3 (ingest needs it for migrate, reporting needs it for report generation)..
         ```bash
         mysql -h rdw-opus-warehouse-cluster.[aws-randomization] -u root -p
         mysql> grant all privileges on migrate_olap.* to 'rdw-ingest'@'%';
+        mysql> grant SELECT INTO S3 ON *.* to 'rdw-ingest'@'%';
+        mysql> grant SELECT INTO S3 ON *.* to 'rdw-reporting'@'%';
         ```
     * [ ] Verify Redshift user search path by using their credentials to connect and list tables (or something similar).
         ```bash
@@ -290,6 +295,20 @@ to use whichever branch corresponds to the v1.1 release.
          reporting | administration_condition         | table | root
          reporting | asmt                             | table | root
         ...
+        ```
+* [ ] Test connectivity between S3, Aurora and Redshift. The data migration uses S3 to stage data between the warehouse
+and the data marts. This is a good time to verify that the required connectivity and permissions are in place for that.
+    * Export test file from Aurora. Connect to the warehouse using the ingest user and export a table to a test file.
+        ```bash
+        mysql -h rdw-opus-warehouse-cluster.[aws-randomization] --user=rdw-ingest --password=password warehouse
+        mysql> SELECT id, code FROM completeness INTO OUTFILE S3 's3://rdw-opus-archive/completeness' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n';
+        Query OK, 2 rows affected (0.13 sec)
+        ```
+    * Import test file to Redshift. Connect to redshift using the ingest user and import the test file into the table.
+        ```bash
+        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=rdwopusingest --password --dbname=opus
+        prod=> COPY reporting.staging_completeness (id, code) FROM 's3://rdw-opus-archive/completeness.part_00000' CREDENTIALS 'aws_iam_role=arn:aws:iam::[aws-randomization]' FORMAT AS CSV DELIMITER ',' COMPUPDATE OFF;
+        INFO:  Load into table 'staging_completeness' completed, 2 record(s) loaded successfully.
         ```
 * [ ] Create Roles / Permissions
 	* All this is for the component `Reporting`

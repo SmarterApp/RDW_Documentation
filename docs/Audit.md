@@ -86,7 +86,7 @@ There are no indexes on audit tables.  If auditing is queried frequently or the 
 
 ### Enable and disable auditing
 Embargo related auditing may not be disabled.  
-Exams and students audting is controlled by a `setting` table.  The setting record with a `name` of `AUDIT_TRIGGER_ENABLE` controls if audit records will be created.  Only when the `value` is `TRUE` will audit records be created.
+Exams and students auditing is controlled by a `setting` table.  The setting record with a `name` of `AUDIT_TRIGGER_ENABLE` controls if audit records will be created.  Only when the `value` is `TRUE` will audit records be created.
 
 To view the current audit setting run the following query.
 

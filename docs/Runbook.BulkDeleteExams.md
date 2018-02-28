@@ -12,9 +12,8 @@ Deleting exams includes:
 and the exam processors are paused.**.   
 
 ### Other Resources
-1. [Import and Migrate](Runbook.migrate.md) - Operations and system administration may find this useful with manually adjusting or cleaning up data.
-1. [Migrate Reporting](Runbook.md#migrate-reporting)
-1. [Migrate OLAP](Runbook.md#migrate-olap)
+1. [Import and Migrate](Runbook.migrate.md)
+2. [Manual Data Modifications](Runbook.ManualDataModifications.md) 
 
 ### Warehouse exam data store
 Test result data (aka exams) depends on the following data being pre-loaded:
@@ -39,7 +38,7 @@ exam_claim_score |Opportunity's claims ScaleScore and PerformanceLevel data| Dep
 As defined in [Import and Migrate](Runbook.migrate.md#import-id), to soft-delete exams in the warehouse a corresponding `exam` record must be marked with `deleted = 1`.
    
 ### Migrating (propagating) the changes to the reporting data mart(s)
-As defined in [Import and Migrate](Runbook.migrate.md#create-update), the data updates must adhere to the defined pattern in order for the migrate process to propagate the changes to the data mart(s). 
+As defined in [Manual Data Modifications](Runbook.ManualDataModifications.md), the data updates must adhere to the defined pattern in order for the migrate process to propagate the changes to the data mart(s). 
 
 ### Example SQL scripts and instructions
 

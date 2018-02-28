@@ -43,57 +43,55 @@ The intended audience should be familiar with database technology and querying a
 
 
 ### What is audited?
-The warehouse audits entity state changes for exams and student information.
+1. All actions to release or embargo results are audited. 
 
 Warehouse tables audited:
 
-| Table                        | Description                                 | Entity Type | Ingest State Changes        |
-|------------------------------|---------------------------------------------|-------------|-----------------------------|
-| exam                         | One record per test result                  | Parent      | Create, Update, Soft Delete |
-| exam_available_accommodation | One record per exam available accommodation | Child       | Create, Delete              |
-| exam_claim_score             | One record per exam claim                   | Child       | Create, Update              |
-| exam_item                    | One record per exam item                    | Child       | Create, Update, Delete      |
-| student                      | One record per student                      | Parent      | Create, Update, Soft Delete |
-| student_ethnicity            | One record per student ethnicity            | Child       | Create, Delete              |
-| student_group                | One record per student group                | Parent      | Create, Update, Soft Delete |
-| student_group_membership     | One record per student membership in group  | Child       | Create, Delete              |
-| user_student_group           | One record per user with access to group    | Child       | Create, Delete              |
+| Table                        | Description                                                        | Audited actions        |
+|------------------------------|--------------------------------------------------------------------|------------------------|
+| district_embargo             | Individual and aggregate embargo flags per district and school year| Create, Update, Delete |
+| state_embargo                | Statewide individual and aggregate embargo flags per school year   | Create, Update, Delete |
 
+
+2. Changes for the existing exams and student information.
+
+Warehouse tables audited:
+
+| Table                        | Description                                 | Entity Type | Audited actions               |
+|------------------------------|---------------------------------------------|-------------|-------------------------------|
+| exam                         | One record per test result                  | Parent      | Update, Soft Delete as Update |
+| exam_available_accommodation | One record per exam available accommodation | Child       | Delete                        |
+| exam_claim_score             | One record per exam claim                   | Child       | Update                        |
+| exam_item                    | One record per exam item                    | Child       | Update, Delete                |
+| student                      | One record per student                      | Parent      | Update, Soft Delete as Update |
+| student_ethnicity            | One record per student ethnicity            | Child       | Delete                        |
+| student_group                | One record per student group                | Parent      | Update, Soft Delete as Update |
+| student_group_membership     | One record per student membership in group  | Child       | Delete                        |
+| user_student_group           | One record per user with access to group    | Child       | Delete                        |
+
+'Create' event is not audited for the exam and student data.
 
 ### Where is audit data stored?
 Each audited table has an `audit_...` table that records the state change for each row.  The audit tables contain the state of the row before the change.  In addition to the columns from the table being audited, each audit_ table has the following columns:
 
 - **id**: Unique ID
-- **action**: A value of delete or update
+- **action**: A value of insert, delete or update 
 - **audited**: Timestamp when the audit record was created
 - **database_user**: The 'username'@'hostname' of the database user connected to the database
 
-The Ingest Event column is the normal application flow for loading data into the warehouse that triggers a new audit record.  Create is not audited; instead, queries combining the `audit_` table and the table being audited can represent a complete audit trail.
-
-MySQL triggers are used to create `audit_` records.  Each table being audited has update and delete triggers providing a record of changes made by normal application flow and manual modifications if they occur.  
-
-| Audit Table                        | Audits                       | Ingest Event                    |
-|------------------------------------|------------------------------|---------------------------------|
-| audit_exam                         | exam                         | Update, Soft Delete (as update) |
-| audit_exam_available_accommodation | exam_available_accommodation | Delete                          |
-| audit_exam_claim_score             | exam_claim_score             | Update                          |
-| audit_exam_item                    | exam_item                    | Update, Delete                  |
-| audit_student                      | student                      | Update, Soft Delete (as update) |
-| audit_student_ethnicity            | student_ethnicity            | Delete                          |
-| audit_student_group                | student_group                | Update, Soft Delete (as update) |
-| audit_student_group_membership     | student_group_membership     | Delete                          |
-| audit_user_student_group           | user_student_group           | Delete                          |
+MySQL triggers are used to create `audit_` records. Each table being audited has triggers providing a record of changes made by normal application flow and manual modifications if they occur.  
 
 ### Adding audit table indexes
 There are no indexes on audit tables.  If auditing is queried frequently or the tables become large, indexes could be added to improve query performance.  The trade off is indexes on audit tables could have a negative impact on ingest performance.
 
 ### Enable and disable auditing
-The warehouse has a `setting` table.  The setting record with a `name` of `AUDIT_TRIGGER_ENABLE` controls if audit records will be created.  Only when the `value` is `TRUE` will audit records be created.
+Embargo related auditing may not be disabled.  
+Exams and students auditing is controlled by a `setting` table.  The setting record with a `name` of `AUDIT_TRIGGER_ENABLE` controls if audit records will be created.  Only when the `value` is `TRUE` will audit records be created.
 
 To view the current audit setting run the following query.
 
 ```mysql
-SELECT s.name, s.value from setting s WHERE s.name = 'AUDIT_TRIGGER_ENABLE';
+SELECT s.name, s.value FROM setting s WHERE s.name = 'AUDIT_TRIGGER_ENABLE';
 ```
 
 To enable auditing run the following statement.
@@ -110,6 +108,16 @@ UPDATE setting s SET s.value = 'FALSE' WHERE s.name = 'AUDIT_TRIGGER_ENABLE';
 
 ### How can audit data be queried?
 Sample queries are provided for analyzing audit data combining the warehouse import table, the table being audited, the audit_ table, and joining other relations in the warehouse for lookup values.
+
+#### Query state embargo
+```mysql
+SELECT * FROM audit_state_embargo
+```
+
+#### Query district embargo
+```mysql
+SELECT * FROM audit_district_embargo
+```
 
 #### Query exam
 

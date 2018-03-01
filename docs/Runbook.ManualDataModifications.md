@@ -50,7 +50,62 @@ mysql> SELECT LAST_INSERT_ID() into @importid;
 # trigger migration
 mysql> UPDATE import SET status = 1 WHERE id = @importid;
 ```
+#### Update assessment item common core standards
+> **Assumption**:Common core standards are loaded into warehouse and do not require modifications
+##### Prerequisites
+1. Assessments natural ids. Ex.:`(SBAC)SBAC-IAB-FIXED-G11E-Perf-Explanatory-Marshmallow-Winter-2016-2017` 
+1. Items natural ids (`bankKey` and `key` separated by `-`). Ex.:`200-62023` 
+1. Common core standards subject and natural ids. Ex. of the natural id:`1.G.1`. Common core standards are stored in the `common_core_standard` table per subject. Subjects are stored in the `subject` table.
+> **Note**: An item could be stored as part of one or multiple assessment(s). Both identities are required.
 
+##### Create an import id to associate with your changes
+```sql
+mysql> USE warehouse;
+mysql> INSERT INTO import (status, content, contentType, digest, creator)
+        VALUES (
+          0, -- started the update
+          (SELECT id FROM import_content WHERE name = 'PACKAGE'),
+          'manual item cc update',
+          (SELECT CONCAT('item cc upd ', DATE_FORMAT(NOW(), '%Y-%m-%d %T'))), -- make it unique by adding time
+          USER()
+        );
+mysql> SELECT LAST_INSERT_ID() into @importId;
+```
+##### Repeat for each assessment 
+1. Identify an assessment record to be modified
+```sql
+SELECT id INTO @asmtId FROM asmt WHERE natural_id = 'replace with asmt natural id here';
+```
+###### Repeat for each item within the assessment
+1.1. Identify an item record to be modified
+```sql
+SELECT id INTO @itemId FROM item WHERE natural_id = 'replace with item natural id here' AND asmt_id = @asmtId;
+```
+1.2. Identify a common core standard record to be modified, replace X with the subject id.
+```sql
+SELECT id INTO @ccId FROM common_core_standard WHERE natural_id = 'replace with common core standard natural id here' AND subject_id = X;
+```
+1.3. Add or deleted the common core standard to/from the item within the assessment
+
+To add:
+```sql
+INSERT INTO item_common_core_standard (item_id, common_core_standard_id) VALUES
+  (@itemId, @ccId);
+```
+To delete
+```sql
+DELETE FROM item_common_core_standard WHERE item_id = @itemId AND common_core_standard_id =  @ccId;
+```
+If you have more items for this assessment, repeat the process for each item.
+##### Update assessment
+```sql
+UPDATE asmt SET update_import_id = @importId WHERE id = @asmtId;
+```
+If you have more assessments to modify, repeat the process for each assessment.
+###### Finalize and trigger the migration
+```sql
+UPDATE import SET status = 1 WHERE id = @importId;
+```
 <a name="modify-lots-of-content"></a>
 #### Modify lots of content
 Because the migrate process handles many import records in a single iteration, it is important to **not** associate too much content with a single import record. The safest rule is 1 import record per 1 content record; in some situations you may associate a few (3-10) content records with a single import record. 

@@ -81,22 +81,18 @@ The goal of this step is to make changes to everything that doesn't directly aff
 			* Change deployment name to `reporting-webapp-deployment`
 			* Change deployment spec app to `reporting-webapp`
 			* Change image version to `1.1.0-RELEASE`
-			* Reduce cpu/memory resources to `300m`/`750M`
+			* Reduce cpu/memory resources to `750m`/`1G`
 			* Remove `volumeMounts` and `volumes` (copy over to new `reporting-service.yml`, next step)
-			* Reduce replicas - 2 should be enough
 		* [ ] Copy (new) `reporting-service.yml`
 			* Add `volumeMounts` and `volumes` from old file (from previous step).
-			* Set replicas to 4
+			* Set replicas to match reporting-webapp (perhaps -1 if there are lots)
 		* [ ] Copy `aggregate-service.yml` and adjust if necessary (rare).
-			* Set replicas to 1 (2 for HA only, single instance can saturate Redshift)
 		* [ ] Copy (replace) `admin-service.yml` and adjust if necessary (rare). This completely replaces the old admin service.
-			* Set replicas to 1 (2 for HA)
 		* [ ] Edit `report-processor-service.yml` and set image version to `1.1.0-RELEASE`.
-			* Leave replicas as 2
 	* Commit changes
 		```bash
-		cd ~/git/../RDW_Deploy_Opus
-        git add *
+		cd ~/git/RDW_Deploy_Opus
+		git add *
 		git commit -am "Changes for v1.1"
 		git push 
 		```
@@ -138,8 +134,12 @@ The goal of this step is to make changes to everything that doesn't directly aff
 			* Configure `spring.warehouse_datasource`, copy from `rdw-ingest-migrate-reporting.yml` `warehouse_datasource`
 			* Configure `migrate.olap-batch.run-cron`, make it after update organization task
 			* Configure S3 archive, copy from `rdw-ingest-import-service.yml` `archive`
-			* Configure redshift role - TBD
-			* Configure `spring.olap_datasource` - TBD
+			* Configure `migrate.aws.redshift.role`, e.g. arn:aws:iam::[acct]:role/rdw-redshift-access
+			* Configure `spring.olap_datasource`
+			    * `url-server`: rdw.[aws-randomization].redshift.amazonaws.com:5439
+			    * `url-db`: opus
+			    * `username`: rdwopusingest
+			    * `password`, encrypted using config server
 	* [ ] Reporting services.
     	* [ ] Admin service, copy `rdw-reporting-admin-service.yml` and edit
 			* Configure `spring.rabbitmq`, copy from `rdw-admin-webapp.yml`
@@ -152,7 +152,15 @@ The goal of this step is to make changes to everything that doesn't directly aff
 			* Configure `spring.rabbitmq`, copy from `rdw-reporting-admin-service.yml`
 			* Configure `app.archive`, copy from `rdw-reporting-admin-service.yml`
 			* Configure `app.cache.repository.refresh-cron`, make it after migrate olap task
-			* Configure `spring.olap_datasource` - TBD
+			* Configure concurrency for Redshift. In general the idea is to saturate the Redshift queue. With a single
+			pod, do that by matching the pool size to the queue size and handling two requests simultaneously.
+                * Configure `app.aggregate-reports.query-pool-size`, set to Redshift WLM concurrency, 12
+                * Configure `spring.cloud.stream.bindings.AggregateRequest.consumer.concurrency`, set to 2
+			* Configure `spring.olap_datasource`
+			    * `url-server`: rdw.[aws-randomization].redshift.amazonaws.com:5439
+			    * `url-db`: opus
+			    * `username`: rdwopusreporting
+			    * `password`, encrypted using config server
 		* [ ] Reporting service, copy `rdw-reporting-service.yml` and edit
 			* Configure `app.iris.vendorId`, copy from `rdw-reporting-webapp.yml`
 			* Configure `app.min-item-data-year`, copy from `rdw-reporting-webapp.yml`
@@ -183,7 +191,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
                     aggregate-service:
                       url: http://aggregate-service
                     report-processor:
-                      url: http://report-processor
+                      url: http://report-processor-service
                     reporting-service:
                       url: http://reporting-service
               ```			  
@@ -200,7 +208,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
 	* Commit changes
 		```bash
 		cd ~/git/RDW_Config_Opus
-        git add *
+		git add *
 		git commit -am "Changes for v1.1"
 		git push 
 		```		
@@ -208,7 +216,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
 	* Obviously this work will affect configuration files from previous steps.
 	* Cluster Parameter Group, e.g. rdw-opus-redshift10
 		* Enable Short Query Acceleration, 5 seconds
-		* Concurrency = 6
+		* Concurrency = 12
 	* Create Cluster Subnet Group in opus VPC, rdw-opus is a good name, add multiple zones
 	* Create Security Group
 	    * rdw-redshift
@@ -248,9 +256,10 @@ The goal of this step is to make changes to everything that doesn't directly aff
             ```
 * [ ] Create Redshift database and users. To avoid excessive costs, a single cluster can be used to support multiple environments. This is done using a separate database for each environment. Using `psql`, create a database for the environment, the reporting schema and users
 	```sql
-	CREATE DATABASE opus;
 	CREATE USER rdwopusingest PASSWORD 'AGoodPassword';
 	CREATE USER rdwopusreporting PASSWORD 'AnotherGoodPassword';
+	CREATE DATABASE opus;
+	ALTER DATABASE opus OWNER TO rdwopusingest;
 	\connect opus
 	CREATE SCHEMA reporting;
 	GRANT ALL ON SCHEMA reporting to rdwopusingest;
@@ -307,8 +316,17 @@ and the data marts. This is a good time to verify that the required connectivity
     * Import test file to Redshift. Connect to redshift using the ingest user and import the test file into the table.
         ```bash
         psql --host=rdw-opus.[aws-randomization] --port=5439 --username=rdwopusingest --password --dbname=opus
-        prod=> COPY reporting.staging_completeness (id, code) FROM 's3://rdw-opus-archive/completeness.part_00000' CREDENTIALS 'aws_iam_role=arn:aws:iam::[aws-randomization]' FORMAT AS CSV DELIMITER ',' COMPUPDATE OFF;
+        opus=> COPY reporting.staging_completeness (id, code) FROM 's3://rdw-opus-archive/completeness.part_00000' CREDENTIALS 'aws_iam_role=arn:aws:iam::[aws-randomization]' FORMAT AS CSV DELIMITER ',' COMPUPDATE OFF;
         INFO:  Load into table 'staging_completeness' completed, 2 record(s) loaded successfully.
+        opus=> select * from staging_completeness;
+         id |   code   
+        ----+----------
+          1 | Partial
+          2 | Complete
+        (2 rows)
+        opus=> delete from staging_completeness;
+        DELETE 2
+        opus=> \q
         ```
 * [ ] Create Roles / Permissions
 	* All this is for the component `Reporting`
@@ -354,29 +372,32 @@ All cluster deployment and configuration is stored in version control, so nothin
 
 ### Upgrade
 
+* [ ] Get the latest deploy repo
+	```bash
+	cd ~/git/RDW_Deploy_Opus
+	git checkout master; git pull
+	```
 * [ ] Delete current deployments as necessary. For many of the services, only the configuration has changed. However, some of the services have significant changes that require completely recreating them. NOTE: this is being done with the spec files **before** merging the branch.
 	```bash
 	kubectl delete -f admin-service.yml
 	kubectl delete -f reporting-service.yml
 	```
-TODO - this will wipe the reporting service load balancer; that okay, did we customize it at all?
-* [ ] Upgrade cluster (?)
+* [ ] Upgrade cluster. If the version of the cluster is old (< 1.7 at the time of this writing), consider upgrading it.
 	```bash
 	kops upgrade cluster --name awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
-	# TODO - can we block rolling update and just slam out the upgrade? 
 	```
-* [ ] Increase cluster size
+* [ ] Increase cluster size. If the cluster is just barely big enough now, you'll need to add a node.
 	* Not needed for production; might want to revisit auto-scaler configuration
 * [ ] Apply schema changes.
 	```bash
 	# get latest version of the schema
-	cd ~/git/../RDW_Schema
+	cd ~/git/RDW_Schema
 	git checkout master; git pull
 	
 	# test credentials and state of warehouse, then migrate it (this may take a while)
-	gradle --Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" \
+	gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" \
    		-Pdatabase_user=user -Pdatabase_password=password infoWarehouse
-	gradle --Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" \
+	gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" \
    		-Pdatabase_user=user -Pdatabase_password=password migrateWarehouse	
    # test credentials and state of reporting, then migrate it (this may take a while)
    gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-reporting-[aws-randomization]:3306/" \
@@ -384,42 +405,44 @@ TODO - this will wipe the reporting service load balancer; that okay, did we cus
    gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-reporting-[aws-randomization]:3306/" \
    		-Pdatabase_user=user -Pdatabase_password=password migrateReporting
 	```
-* [ ] Merge deployment and configuration branches. This can be done via command line or via the repository UI; if you use the repository UI, make sure to checkout and pull the latest `master`. Here are the command line actions:
+* [ ] Merge deployment and configuration branches. This can be done via command line or via the repository UI (if you use the repository UI, make sure to checkout and pull the latest `master`). Here are the command line actions:
 	```bash
-	cd ~/git/../RDW_Deploy_Opus
+	cd ~/git/RDW_Deploy_Opus
 	git checkout v1_1; git pull
 	git checkout master
 	git merge v1_1
 	git push origin master
-	git push origin -d v1_1; git branch -d v1_1
+	git push origin --delete v1_1; git branch -d v1_1
 	
-	cd ~/git/../RDW_Config_Opus
+	cd ~/git/RDW_Config_Opus
 	git checkout v1_1; git pull
 	git checkout master
 	git merge v1_1
 	git push origin master
-	git push origin -d v1_1; git branch -d v1_1
+	git push origin --delete v1_1; git branch -d v1_1
 	```
 * [ ] Redeploy services
 	```bash
-	cd ~/git/../RDW_Deploy_Opus
+	cd ~/git/RDW_Deploy_Opus
 	# ingest services
-    kubectl apply -f exam-processor-service.yml
-    kubectl apply -f group-processor-service.yml
-    kubectl apply -f package-processor-service.yml
-    kubectl apply -f import-service.yml
-    kubectl apply -f migrate-reporting-service.yml
-    kubectl apply -f migrate-olap-service.yml
-    kubectl apply -f task-service.yml
-    # reporting services
+   kubectl apply -f exam-processor-service.yml
+   kubectl apply -f group-processor-service.yml
+   kubectl apply -f package-processor-service.yml
+   kubectl apply -f import-service.yml
+   kubectl apply -f migrate-reporting-service.yml
+   kubectl apply -f migrate-olap-service.yml
+   kubectl apply -f task-service.yml
+   # reporting services
 	kubectl apply -f admin-service.yml
 	kubectl apply -f aggregate-service.yml
 	kubectl apply -f reporting-service.yml
 	kubectl apply -f report-processor-service.yml
 	kubectl apply -f reporting-webapp.yml
-    ```
+   ```
+Check the logs of the services. Of particular interest are the migrate-olap-service which will immediately start migrating from the warehouse to the new aggregate reporting data mart, and the reporting-webapp which needs to talk to lots of other services.    
 * [ ] Route 53
-	* redo for reporting webapp (pretty sure it will get deleted)
+	* verify for import
+	* redo for reporting webapp
 	* remove for admin webapp
 * [ ] Load data
     * [ ] Reload assessment packages. The tabulator output has been updated to include additional assessment data (especially for items). This upgrade supports updating assessment packages. So, submit the new tabulator output for all assessments. Note: the assessment labels are still wrong in the tabulator output so the `label_assessments` script must be rerun as well.
@@ -451,6 +474,39 @@ TODO - this will wipe the reporting service load balancer; that okay, did we cus
 ### Smoke Test
 Smoke 'em if ya got 'em.		 
 
-		 
+### Performance and Scalability
+Changes to the reporting services have affected deployment specifications. The main reporting webapp with 750m CPU and
+1G memory will support about 2000 concurrent users. The reporting service supports the individual test result queries 
+and should be able to support about the same, 2000 concurrent users per pod with 500m CPU and 750M memory. The other
+services should stay the same as the previous version.
 
-
+NOTE: When allocating pod memory please consider the ratio of memory/processor for the nodes. It is silly to restrict
+memory if it is just going to go to waste because of CPU allocation. So, if the nodes have a 4/1 memory to processor
+ratio then the allocation should be similarly scaled: using the webapp as an example, it requires 750m processor so
+giving it 4*750m = 3G memory would be okay. That said, none of these services will do much with >2G, so cap it.
+ 
+Redshift is the backing OLAP data mart for the aggregate reports. Redshift deals with lots of data and is not 
+particularly good at high concurrency. The RDW architecture attempts to mitigate this but know that Redshift itself
+is the bottleneck when lots of requests are being made. Adding more aggregate-report pods will actually degrade 
+performance. And a larger Redshift instance will provide only incremental improvements to overall performance of the
+system. Given the cost of the larger instance, it is not advised to increase the size. The aggregate-report pod pool 
+size should be coordinated with the Redshift queue size (WLM concurrency). Know that a report request typically needs 
+less than 10 queries so, if the queue size is greater than that, the consumer concurrency should be increased so the 
+Redshift queue is saturated. A couple examples:
+	* Typical configuration.
+		* Redshift queue size = 12
+		* Aggregate-report service pool size = 12
+		* Aggregate-report consumer concurrency = 2
+	* Small configuration.
+		* Redshift queue size = 6
+		* Aggregate-report service pool size = 6
+		* Aggregate-report consumer concurrency = 1
+	* Large configuration.
+		* Redshift queue size = 30
+		* Aggregate-report service pool size = 30
+		* Aggregate-report consumer concurrency = 3
+	* Large configuration, alternate (not extensively tested)
+		* Redshift queue size = 30
+		* Aggregate-report service pods = 2
+		* Aggregate-report service pool size = 15
+		* Aggregate-report consumer concurrency = 2

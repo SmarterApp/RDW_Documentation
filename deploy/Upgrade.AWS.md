@@ -388,20 +388,23 @@ All cluster deployment and configuration is stored in version control, so nothin
 	```
 * [ ] Increase cluster size. If the cluster is just barely big enough now, you'll need to add a node.
 	* Not needed for production; might want to revisit auto-scaler configuration
-* [ ] Apply schema changes.
+* [ ] Apply schema changes. If the warehouse and reporting databases are separate it will be more efficient to run the
+two migration tasks in parallel. Use two terminal sessions (or `screen`) and run them at the same time.
 	```bash
 	# get latest version of the schema
 	cd ~/git/RDW_Schema
 	git checkout master; git pull
 	
-	# test credentials and state of warehouse, then migrate it (this may take a while)
+	# test credentials and state of databases
 	gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" \
    		-Pdatabase_user=user -Pdatabase_password=password infoWarehouse
-	gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" \
-   		-Pdatabase_user=user -Pdatabase_password=password migrateWarehouse	
-   # test credentials and state of reporting, then migrate it (this may take a while)
    gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-reporting-[aws-randomization]:3306/" \
    		-Pdatabase_user=user -Pdatabase_password=password infoReporting
+	
+	# migrate warehouse (this may take a while)
+	gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" \
+   		-Pdatabase_user=user -Pdatabase_password=password migrateWarehouse	
+   # migrate reporting (this may take a while)
    gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-reporting-[aws-randomization]:3306/" \
    		-Pdatabase_user=user -Pdatabase_password=password migrateReporting
 	```
@@ -421,7 +424,7 @@ All cluster deployment and configuration is stored in version control, so nothin
 	git push origin master
 	git push origin --delete v1_1; git branch -d v1_1
 	```
-* [ ] Redeploy services
+* [ ] Redeploy services. 
 	```bash
 	cd ~/git/RDW_Deploy_Opus
 	# ingest services

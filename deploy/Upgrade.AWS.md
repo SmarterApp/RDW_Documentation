@@ -80,7 +80,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
 			* Change service name and app selector to `reporting-webapp`
 			* Change deployment name to `reporting-webapp-deployment`
 			* Change deployment spec app to `reporting-webapp`
-			* Change image version to `1.1.0-RELEASE`
+			* Change image version to `1.1.1-RELEASE`
 			* Reduce cpu/memory resources to `750m`/`1G`
 			* Remove `volumeMounts` and `volumes` (copy over to new `reporting-service.yml`, next step)
 		* [ ] Copy (new) `reporting-service.yml`
@@ -88,7 +88,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
 			* Set replicas to match reporting-webapp (perhaps -1 if there are lots)
 		* [ ] Copy `aggregate-service.yml` and adjust if necessary (rare).
 		* [ ] Copy (replace) `admin-service.yml` and adjust if necessary (rare). This completely replaces the old admin service.
-		* [ ] Edit `report-processor-service.yml` and set image version to `1.1.0-RELEASE`.
+		* [ ] Edit `report-processor-service.yml` and set image version to `1.1.1-RELEASE`.
 	* Commit changes
 		```bash
 		cd ~/git/RDW_Deploy_Opus

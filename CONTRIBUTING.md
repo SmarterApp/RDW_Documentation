@@ -1,6 +1,6 @@
 # Contributing
 
-**Inteneded Audience**: this document describes the conventions used in this RDW project.
+**Intended Audience**: this document describes the conventions used in this RDW project.
 
 ## Contributing to Documentation
 * Please keep documentation **consistent**.
@@ -10,15 +10,5 @@
 ## TODO
 Bored? Here's some stuff you can do ...
 
-* Runbook. 
-    * It needs cleaning up: it should be mostly configuration. Move monitoring into Monitoring.md and troubleshooting into Troubleshooting.md.
-    * How to deal with "common" properties vs. "uncommon" settings?
-    * Import Service chapter
-    * Package Processor chapter
-    * Exam Processor chapter
-    * Migrate Reporting chapter - there is a lot of information here, it needs organization and separation (monitoring, troubleshooting)
-    * Migrate OLAP chapter
-    * Group Processor chapter
-    * Task Service chapter
-* Troubleshooting - perhaps two: flowchart-style "what's the problem", and a scenario-based (problem specific) guide 
-* Reporting. All the work done so far has focused on ingest processes. We need to document the reporting app, admin app and related processes.
+* Runbook - all the service-specific chapters could use embellishment: 
+* Troubleshooting - perhaps introduce a flowchart-style "what's the problem"

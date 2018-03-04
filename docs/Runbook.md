@@ -2,8 +2,6 @@
 
 **Intended Audience**: the runbook describes behavior and configuration options of the various applications in the [Reporting Data Warehouse](../README.md) (RDW). Operations, system administration, developers, and tier 3 support may find it useful.
 
-**TODO - configuration server?**
-
 ### Table of Contents
 
 1. [Common Conventions](#common)
@@ -53,9 +51,14 @@ CONFIG_SERVICE_LABEL=master
 CONFIG_SERVICE_URL=http://configuration-service
 ```
 
-**TODO - document how to encrypt secrets and use them in configuration**
+Secrets in the configuration files may be encrypted to further protect them. The configuration service automatically decrypts these values when providing them to a service. To encrypt a value, pass it to the configuration service `encrypt` end-point. Using curl this looks like: `curl -X POST --data-urlencode "my+secret" http://localhost:8888/encrypt`. The encrypted value is then prefixed with `{cipher}` and wrapped in quotes, for example:
+```yaml
+spring:
+  datasource:
+    password: '{cipher}5e0e421375abd307f87f07a8ed4dab5ee9f105e8d4845ecf037f7ebdaeaf5709' 
+``` 
 
-**TODO - ?document how `spring.profiles` can be used with configuration server?**
+The configuration server can combine multiple configuration files for a service. One use of this feature is to have common settings in one file, as shown in this [Annotated Configuration](../config/application.yml).
 
 
 <a name="import-service"></a>

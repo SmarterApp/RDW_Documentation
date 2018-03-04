@@ -2,7 +2,7 @@
 
 **Intended Audience**: this document provides detailed instructions for upgrading the [Reporting Data Warehouse (RDW)](../README.md) applications in an AWS environment from v1.0.x to v1.1. Operations and system administrators will find it useful.
 
-It is assumed that the [Deployment Checklist](Deployment.AWS.md) was used for the installation of v1.0. Please refer to that documentation for general guidelines.
+It is assumed that the v1.0 [Deployment Checklist](https://github.com/SmarterApp/RDW/blob/1.0/deploy/Deployment.AWS.md) was used for the installation. Please refer to that documentation for general guidelines.
 
 > Although these are generic instructions, having an example makes it easier to document and understand. Throughout this document we'll use `opus` as the sample environment name; this might correspond to `staging` or `production` in the real world. We'll use `sbac.org` as the domain/organization. Any other ids, usernames or other system-generated values are products of the author's imagination. The reader is strongly encouraged to use their own consistent naming conventions. **Avoid putting real environment-specific details _especially secrets and sensitive information_ in this document.**
 
@@ -340,6 +340,8 @@ and the data marts. This is a good time to verify that the required connectivity
 		* `EMBARGO_WRITE` - Embargo Admin
 		* `INSTRUCTIONAL_RESOURCE_WRITE` - Instructional Resource Admin
 	* (?) Chain admin roles to PII users
+* [ ] (Optional) "Before" Smoke Test. You may want to go through some of the steps of the smoke test before doing the
+upgrade, just to make sure any problems are new. This may require temporarily providing access for your QA volunteers.
 
 
 ### Quiesce the System
@@ -350,19 +352,23 @@ Before upgrading the system it must be made idle.
 	* reporting.sbac.org should redirect to static landing page
 	* admin.sbac.org should go away
 	* import.sbac.org can return an error during the upgrade
-* [ ] Scale down all service deployments to have no pods. 
+* [ ] Disable any ops monitoring on RDW services.
+* We're on the clock. Play the Jeopardy theme in a loop ...	
+* [ ] Scale down all service deployments to have no pods. The first three deployments listed allow/cause data changes in
+the system. It is suggested that scale them down, wait 5 minutes to all migration to complete, then scale down the rest. 
 	```bash
+	# these allow/cause data changes
+	kubectl scale deployment task-server-deployment --replicas=0
+	kubectl scale deployment admin-deployment --replicas=0
 	kubectl scale deployment import-deployment --replicas=0
+	# pause here for 2-3 minutes to allow processing and migration to complete 
 	kubectl scale deployment package-processor-deployment --replicas=0
 	kubectl scale deployment group-processor-deployment --replicas=0
 	kubectl scale deployment exam-processor-deployment --replicas=0
 	kubectl scale deployment migrate-reporting-deployment --replicas=0
-	kubectl scale deployment task-server-deployment --replicas=0
-	kubectl scale deployment admin-deployment --replicas=0
 	kubectl scale deployment reporting-deployment --replicas=0
 	kubectl scale deployment report-processor-deployment --replicas=0
 	```
-* We're on the clock. Play the Jeopardy theme in a loop ...	
 
 ### Backup
 All cluster deployment and configuration is stored in version control, so nothing is necessary for that.
@@ -396,17 +402,13 @@ two migration tasks in parallel. Use two terminal sessions (or `screen`) and run
 	git checkout master; git pull
 	
 	# test credentials and state of databases
-	gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" \
-   		-Pdatabase_user=user -Pdatabase_password=password infoWarehouse
-   gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-reporting-[aws-randomization]:3306/" \
-   		-Pdatabase_user=user -Pdatabase_password=password infoReporting
+	./gradlew -Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" -Pdatabase_user=user -Pdatabase_password=password infoWarehouse
+	./gradlew -Pdatabase_url="jdbc:mysql://rdw-aurora-reporting-[aws-randomization]:3306/" -Pdatabase_user=user -Pdatabase_password=password infoReporting
 	
 	# migrate warehouse (this may take a while)
-	gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" \
-   		-Pdatabase_user=user -Pdatabase_password=password migrateWarehouse	
-   # migrate reporting (this may take a while)
-   gradle -Pdatabase_url="jdbc:mysql://rdw-aurora-reporting-[aws-randomization]:3306/" \
-   		-Pdatabase_user=user -Pdatabase_password=password migrateReporting
+	./gradlew -Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" -Pdatabase_user=user -Pdatabase_password=password migrateWarehouse	
+	# migrate reporting (this may take a while)
+	./gradlew -Pdatabase_url="jdbc:mysql://rdw-aurora-reporting-[aws-randomization]:3306/" -Pdatabase_user=user -Pdatabase_password=password migrateReporting
 	```
 * [ ] Merge deployment and configuration branches. This can be done via command line or via the repository UI (if you use the repository UI, make sure to checkout and pull the latest `master`). Here are the command line actions:
 	```bash
@@ -428,14 +430,14 @@ two migration tasks in parallel. Use two terminal sessions (or `screen`) and run
 	```bash
 	cd ~/git/RDW_Deploy_Opus
 	# ingest services
-   kubectl apply -f exam-processor-service.yml
-   kubectl apply -f group-processor-service.yml
-   kubectl apply -f package-processor-service.yml
-   kubectl apply -f import-service.yml
-   kubectl apply -f migrate-reporting-service.yml
-   kubectl apply -f migrate-olap-service.yml
-   kubectl apply -f task-service.yml
-   # reporting services
+	kubectl apply -f exam-processor-service.yml
+	kubectl apply -f group-processor-service.yml
+	kubectl apply -f package-processor-service.yml
+	kubectl apply -f import-service.yml
+	kubectl apply -f migrate-reporting-service.yml
+	kubectl apply -f migrate-olap-service.yml
+	kubectl apply -f task-service.yml
+	# reporting services
 	kubectl apply -f admin-service.yml
 	kubectl apply -f aggregate-service.yml
 	kubectl apply -f reporting-service.yml

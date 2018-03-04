@@ -4,8 +4,6 @@
 
 > Although these are generic instructions, having an example makes it easier to document and understand. Throughout this document we'll use `opus` as the sample environment name; this might correspond to `staging` or `production` in the real world. We'll use `sbac.org` as the domain/organization. Any other ids, usernames or other system-generated values are products of the author's imagination. The reader is strongly encouraged to use their own consistent naming conventions. **Avoid putting real environment-specific details _especially secrets and sensitive information_ in this document.**
 
-**TODO - the keystore instructions (for reporting and admin) seem partial, perhaps missing some details?**
-
 **TODO - instructions for creating OpenAM oauth2 agent client id/password?**
 
 ### Table Of Contents
@@ -56,6 +54,13 @@ This section records all details that will facilitate configuration and maintena
     * read-write: rdw-opus-reporting-cluster.cluster-[aws-randomization]
     * read-only: rdw-opus-reporting-cluster.cluster-ro-[aws-randomization]
     * reporting user: rdw-reporting/password
+* Redshift:
+    * name: rdw
+    * root user: root/password
+    * end-point: rdw.[aws-randomization]
+    * ingest user: rdwopusingest/password
+    * reporting user: rdwopusreporting/password
+    * role (to access S3): arn:aws:iam::[aws-acct]:role/rdw-redshift-access
 * Redis: rdw-opus-redis.[aws-randomization]
 * Archive S3 bucket: 
     * name: rdw-opus-archive

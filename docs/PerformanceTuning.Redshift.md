@@ -1,6 +1,6 @@
 ## Performance Tuning - Redshift (PostgreSQL)
 
-**Intended Audience**: this document has some instructions for finding performance issues with the Aurora (MySQL) database(s). Operations may find this useful.
+**Intended Audience**: this document has some instructions for finding performance issues with the Redshift (PostgreSQL) database. Operations may find this useful.
 
 You can find additional resources here:
 - [awslabs](https://github.com/awslabs/amazon-redshift-utils)

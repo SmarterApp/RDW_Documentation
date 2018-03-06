@@ -633,20 +633,20 @@ system. Given the cost of the larger instance, it is not advised to increase the
 size should be coordinated with the Redshift queue size (WLM concurrency). Know that a report request typically needs 
 less than 10 queries so, if the queue size is greater than that, the consumer concurrency should be increased so the 
 Redshift queue is saturated. A couple examples:
-    * Typical configuration.
-        * Redshift queue size = 12
-        * Aggregate-report service pool size = 12
-        * Aggregate-report consumer concurrency = 2
-    * Small configuration.
-        * Redshift queue size = 6
-        * Aggregate-report service pool size = 6
-        * Aggregate-report consumer concurrency = 1
-    * Large configuration.
-        * Redshift queue size = 30
-        * Aggregate-report service pool size = 30
-        * Aggregate-report consumer concurrency = 3
-    * Large configuration, alternate (not extensively tested)
-        * Redshift queue size = 30
-        * Aggregate-report service pods = 2
-        * Aggregate-report service pool size = 15
-        * Aggregate-report consumer concurrency = 2
+* Typical configuration
+  * Redshift queue size = 12  
+  * Aggregate-report service pool size = 12
+  * Aggregate-report consumer concurrency = 2
+* Small configuration
+  * Redshift queue size = 6
+  * Aggregate-report service pool size = 6
+  * Aggregate-report consumer concurrency = 1
+* Large configuration
+  * Redshift queue size = 30
+  * Aggregate-report service pool size = 30
+  * Aggregate-report consumer concurrency = 3
+* Large configuration, alternate (not extensively tested)
+  * Redshift queue size = 30
+  * Aggregate-report service pods = 2
+  * Aggregate-report service pool size = 15
+  * Aggregate-report consumer concurrency = 2

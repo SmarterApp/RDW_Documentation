@@ -189,6 +189,15 @@ This section records all details that will facilitate configuration and maintena
         * `aws ec2 describe-availability-zones --output table` to test configuration
         * `export KOPS_STATE_STORE=s3://kops-rdw-opus-state-store` - add to bash profile
         * `kops export kubecfg rdw-opus.sbac.org` - perhaps add to bash profile
+    * [ ] (Optional) Install kubetail. This utility is pretty darn handy for tailing the logs of multiple pods at once.
+    You can get it from the source (https://github.com/johanhaleby/kubetail) or just use the copy included here. Put it
+    somewhere in your path and mark it executable, for example:
+        ```bash
+        cd ~/git/
+        git clone https://github.com/johanhaleby/kubetail
+        cp kubetail/kubetail /usr/local/bin/
+        chmod +x /usr/local/bin/kubetail
+        ```
 * [ ] SBAC Application Prerequisites. These are non-RDW applications that are maintained as part of the SBAC ecosystem. They run independently of RDW and are not part of the Kubernetes cluster.
     * [ ] SSO. 
         * Create OpenAM OAuth2 client.

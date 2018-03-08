@@ -13,6 +13,7 @@
 * [Checklist](#checklist)
 * [Updating Applications](#updating-applications)
 * [Scalability](#performance-and-scalability)
+* [Sizing Kubernetes Cluster](#sizing-kubernetes-cluster)
 
 <a name="reference"></a>
 ### Summary / Reference
@@ -659,3 +660,34 @@ Redshift queue is saturated. A couple examples:
   * Aggregate-report service pods = 2
   * Aggregate-report service pool size = 15
   * Aggregate-report consumer concurrency = 2
+
+### Sizing Kubernetes Cluster
+Deciding how many nodes and what size they should be requires some consideration (and a little math).
+
+The RDW apps are generally CPU constrained. That is, for a typical node where the ratio of memory to CPU is 4/1 (GB/CPU), it is the CPU that will constrain things. So this discussion will focus on CPU, with the measure in milli-cpu, `m`. A Kubernetes cluster has some overhead for each node (~300m) and for the cluster overall (~600m). The RDW applications have requirements ranging from 200m to 750m. Also consider that each node should have some "headroom" to allow for the surge during updates. 
+
+Given N nodes with C cpu (full CPU not milli-cpu), application requirements of A milli-cpu, ignoring headroom, `1000 x N x C >= A + 600 + 300 x N`. Solving for N, `N >= (A + 600) / (1000C - 300)`. For a given configuration the headroom will be `H = 1000 x N x C - A - 600 - 300 x N`
+
+For example consider a moderate installation with four webapp instances with a total of A = 10000m for all the apps, something like:
+```
+1 x configuration (100m, 250M)
+1 x rabbit (250m, 1G)
+1 x admin (500m, 750M)
+1 x aggregate (500m, 1G)
+2 x exam (300m, 500M)
+1 x group (300m, 500M)
+2 x import (200m, 400M)
+1 x migrate-olap (200m, 400M)
+1 x migrate-reporting (200m, 1G)
+1 x package (300m, 1G)
+4 x wkhtmltopdf (500m, 300M)
+2 x report processor (200m, 850M)
+3 x report service (500m, 1G)
+4 x webapp (750m, 1G)
+```
+
+If this were deployed using m4.large nodes (C = 2), N >= 10600 / 1700 = 6.2, it would require 7 nodes. With headroom of 1300m, about 200m per node. To have sufficient headroom, adding a node would provide 3000m, about 375m per node.
+
+If this were deployed using m4.xlarge nodes (C = 4), N >= 10600 / 3700 = 2.9, it would require 3 nodes. With headroom of 500m, barely 150m per node. To have sufficient headroom, adding a node would provide 4200, more than 1000m per node. 
+
+The alert reader will note that larger nodes provide higher overall capacity with larger headroom per node. However, having a single gigantic node is also a bad idea since it fails HA considerations, OS resource constraints, etc. And a node that large is likely to be more expensive per CPU unit. It is a trade-off. Our general advice is to use m4.xlarge nodes.

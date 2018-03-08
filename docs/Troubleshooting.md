@@ -733,7 +733,7 @@ For additional IRiS documentation please refer to [IRiS in RDW](../deploy/IRIS.A
 
 <a name="user-context></a>
 #### User Context
-If there is ever a question about a user's permissions there is a trick for getting some additional information: log in with the user credentials then, in the same browser session, navigate to https://reporting.smarterbalanced.org/api/user (in v1.1 this changes to https://reporting.smarterbalanced.org/api/reporting-service/user). This should return a JSON payload that includes some useful context information about the user. For example:
+If there is ever a question about a user's permissions there is a trick for getting some additional information: log in with the user credentials then, in the same browser session, navigate to https://reporting.smarterbalanced.org/api/reporting-service/user. This should return a JSON payload that includes some useful context information about the user. For example:
 ```json
 {
   "firstName": "MixedRoles",

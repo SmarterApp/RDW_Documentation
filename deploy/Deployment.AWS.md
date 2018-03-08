@@ -691,3 +691,5 @@ If this were deployed using m4.large nodes (C = 2), N >= 10600 / 1700 = 6.2, it 
 If this were deployed using m4.xlarge nodes (C = 4), N >= 10600 / 3700 = 2.9, it would require 3 nodes. With headroom of 500m, barely 150m per node. To have sufficient headroom, adding a node would provide 4200, more than 1000m per node. 
 
 The alert reader will note that larger nodes provide higher overall capacity with larger headroom per node. However, having a single gigantic node is also a bad idea since it fails HA considerations, OS resource constraints, etc. And a node that large is likely to be more expensive per CPU unit. It is a trade-off. Our general advice is to use m4.xlarge nodes.
+
+> NOTE: this discussion is about the standard nodes in a cluster. Master nodes may be sized much smaller: 1000m, 2Gi is sufficient. Given the choices on AWS this implies m4.large master nodes.

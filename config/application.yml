@@ -5,7 +5,7 @@
 # Arguably this is an implementation detail so some of the properties that appear in this file are
 # also annotated in the files for the individual services that use them.
 
-app:
+reporting:
   # The embargo feature applies its rules for only the current school year, so it must be configured.
   # Although there is a default value for this setting (2018), it should be explicitly configured.
   school-year: 2018
@@ -14,7 +14,6 @@ app:
     code: CA
     name: California
 
-tenant:
   # The percentile feature displays percentiles derived from normative data so teachers can better
   # evaluate the performance of their students. Because this requires additional configuration data
   # that may not be available to a tenant, this feature is disabled by default.

@@ -13,8 +13,8 @@ management:
 #  security:
 #    enabled: false
 
-# Application configuration
-app:
+# Tenant configuration
+reporting:
 #  school-year: 2018
 #  state:
 #    code: CA

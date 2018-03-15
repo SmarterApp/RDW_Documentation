@@ -21,8 +21,11 @@
 ### Other Resources
 
 1. [Import and Migrate](Runbook.migrate.md)
+1. [Manual Data Modification](Runbook.ManualDataModifications.md)
+1. [Bulk Delete Exams](Runbook.BulkDeleteExams.md)
 1. [Embargo](Runbook.embargo.md)
 1. [Language Support](Runbook.language.md)
+1. [Data Specifications](Runbook.data.md)
 
 <a name="common"></a>
 ## Common Service Conventions

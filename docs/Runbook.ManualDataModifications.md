@@ -1,10 +1,6 @@
 ## Runbook - Manual Data Modifications
-**Intended Audience**: This document provides instructions for manual data modifications in the Reporting Data Warehouse. Knowledge of SQL and access to the production databases is required.
-Operations will find this useful if and only if it is required to manually modify the data bypassing the import mechanism.
 
-### Other Resources
-1. [Import and Migrate](Runbook.migrate.md) 
-2. [Bulk Delete Exams](Runbook.BulkDeleteExams.md)  
+**Intended Audience**: This document provides instructions for manual data modifications in the [Reporting Data Warehouse](../README.md) (RDW). Additional information is available in the main [Runbook](Runbook.md) and for the related issues of [Import and Migrate](Runbook.migrate.md) and [Bulk Delete Exams](Runbook.BulkDeleteExams.md). Knowledge of SQL and access to the production databases is required. Operations will find this useful if and only if it is required to manually modify the data bypassing the import mechanism.
 
 ### Create/Update Data
 Data shall be ingested into the system using the import mechanism where available. However, there may be rare situations where data must be created or updated manually. In these situations the general workflow is:

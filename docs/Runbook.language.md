@@ -1,6 +1,6 @@
 ## Runbook - Language Support
 
-**Intended Audience**: this document contains information for configuring language support for the UI applications and generated reports. Operations and system administration may find it useful.
+**Intended Audience**: This document contains information for configuring language support for the UI applications and generated reports in the [Reporting Data Warehouse](../README.md) (RDW). Additional information is available in the main [Runbook](Runbook.md). Operations and system administration may find it useful.
 
 ### Language Installation
 By default all UI and report-processor applications ship with English as an available, embedded language. Installing additional languages requires both configuration changes and translation message files to be made available to the applications.

@@ -47,13 +47,13 @@ migrate:
       role:
 
   # The batch size is the number of records migrated in one iteration. The aggregate data store is
-  # very good at ingesting large data sets so this value can be large and defaults to 500,000.
-  # Increasing it can improve migrate performance but values over 1,000,000 require a large Redshift
+  # very good at ingesting large data sets so this value can be large and defaults to 10,000,000.
+  # Increasing it can improve migrate performance but values over 10,000,000 require a large Redshift
   # instance.
   # By default the migration is scheduled to run once a day at 1:00 am (GMT). If this is changed, it should
   # be coordinated to happen before the repository cache flush in rdw-reporting-aggregate-service.yml.
 #  olap-batch:
-#    size: 500000
+#    size: 10000000
 #    # every day at 1:00 am
 #    run-cron: "0 0 1 * * *"
 

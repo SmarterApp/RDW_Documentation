@@ -16,16 +16,42 @@ management:
 #    redis:
 #      enabled: false
 
-# Application configuration
-app:
+# Tenant configuration.
+# These are tenant-specific customizations.
+reporting:
+  analytics-tracking-id:
+
+#  interpretive-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-interpretive-guide.pdf
+#  user-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-user-guide.pdf
+
   # IRiS configuration.
-  # The URL should be the internal (private) route, e.g. http://internal-[aws-randomization]/iris/
-  iris:
-    url:
+  # The vendor id is provided by SmarterBalanced
+  iris-vendor-id:
+
+  # Historical results may not have item level data. This setting controls UI options for items,
+  # it should be set to the beginning of the first school year that has item level data.
+#  min-item-data-year: 2016
+
+  # Installed language configuration (optional).
+  # These are lists of available languages, not including english (which is always available).
+  # Details for these properties are covered in the language runbook.
+#  report-languages:
+#  ui-languages:
 
 #  state:
 #    code: CA
 #    name: California
+
+  # By default the system does not allow users to see test results from institutions outside their
+  # permissions. Setting this property true allows users to see all test results for students
+  # regardless of where the test was administered, if they have PII for the student.
+#  transfer-access-enabled: false
+
+  # Location of translation files (optional).
+  # There is no default value. To use the central configuration server the value will be like
+  # "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
+  # Details for this property are covered in the language runbook.
+#  translation-location:
 
 # Permission service configuration
 # endpoint is probably the public URL, e.g. https://perm.smarterbalanced.org/rest
@@ -101,20 +127,6 @@ spring:
     host:
     port:
 
-# Tenant configuration.
-# These are tenant-specific customizations.
-tenant:
-  # By default the system does not allow users to see test results from institutions outside their
-  # permissions. Setting this property true allows users to see all test results for students
-  # regardless of where the test was administered, if they have PII for the student.
-#  transfer-access-enabled: false
-
-  # Location of translation files (optional).
-  # There is no default value. To use the central configuration server the value will be like
-  # "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
-  # Details for this property are covered in the language runbook.
-#  translation-location:
-
 # Netflix zuul configuration.
 # The URLs must be set to match the environment, e.g. http://admin-service, the other defaults should be fine.
 # Note that the iris url is derived from a legacy setting specified above.
@@ -124,10 +136,11 @@ zuul:
 #    pre: disable
 #  host:
 #    socket-timeout-millis: 100000
-#  routes:
-#    iris:
+  routes:
+    iris:
 #      path: /iris/**
-#      url: ${app.iris.url}
+      # The URL should be the internal (private) route, e.g. http://internal-[aws-randomization]/iris/
+      url:
 #      stripPrefix: true
     admin-service:
 #      path: /api/admin-service/**

@@ -50,6 +50,8 @@ app:
 #    repository:
 #      refresh-cron: "0 0 2 * * *"
 
+# Tenant configuration
+reporting:
 #  state:
 #    code: CA
 #    name: California

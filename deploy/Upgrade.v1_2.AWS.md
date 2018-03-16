@@ -131,6 +131,8 @@ The goal of this step is to make changes to everything that doesn't directly aff
         ```        
 * [ ] TODO - any other prep
 
+* [ ] Run data validation scripts. These scripts compare data between the warehouse and the data marts.
+    * TODO - describe this
 * [ ] (Optional) "Before" Smoke Test. You may want to go through some of the steps of the smoke test before doing the
 upgrade, just to make sure any problems are new. This may require temporarily providing access for your QA volunteers.
 
@@ -181,6 +183,11 @@ All cluster deployment and configuration is stored in version control, so nothin
     ```bash
     kops upgrade cluster --name awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
     ```
+
+* [ ] TODO - figure out how to handle migration of IABs to the olap data mart
+    * I think we're going to have to recommend wiping the olap data mart during the upgrade and allowing the migrate to go; it will take an hour or two to migrate everything.
+    If we take that approach we should wipe the data before applying schema changes.
+
 * [ ] Apply schema changes. If the warehouse and reporting databases are separate it will be more efficient to run the migration tasks in parallel. Use multiple terminal sessions (or `screen`) and run them at the same time.
     ```bash
     # get latest version of the schema
@@ -235,6 +242,8 @@ All cluster deployment and configuration is stored in version control, so nothin
    ```
 Check the logs of the services.
 * [ ] Load data - TODO
+* [ ] Run data validation scripts.
+    * TODO - instructions
 * [ ] Miscellaneous cleanup
     * [ ] Restore traffic to site (from static web page)
     * [ ] Notify 3rd party to restore data feeds

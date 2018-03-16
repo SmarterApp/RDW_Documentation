@@ -627,7 +627,8 @@ The simplest update is a backward compatible patch, usually to deploy an urgent 
     
 ##### Major Version Upgrades
 Major version updates often require additional steps. Please refer to specific documentation:
-* [Upgrade v1.1](Upgrade.AWS.md)
+* [Upgrade v1.1](Upgrade.v1_1.AWS.md)
+* [Upgrade v1.2](Upgrade.v1_2.AWS.md)
 
 
 ### Performance and Scalability

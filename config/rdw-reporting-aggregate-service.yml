@@ -50,6 +50,7 @@ app:
 #    repository:
 #      refresh-cron: "0 0 2 * * *"
 
+reporting:
 #  state:
 #    code: CA
 #    name: California

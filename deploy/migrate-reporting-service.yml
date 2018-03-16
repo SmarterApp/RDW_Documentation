@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: migrate-reporting
-        image: smarterbalanced/rdw-ingest-migrate-reporting:1.1.0-RELEASE
+        image: smarterbalanced/rdw-ingest-migrate-reporting:1.2.0-RELEASE
         readinessProbe:
           httpGet:
             path: /health.json

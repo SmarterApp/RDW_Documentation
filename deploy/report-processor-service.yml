@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: report-processor
-        image: smarterbalanced/rdw-reporting-report-processor:1.1.1-RELEASE
+        image: smarterbalanced/rdw-reporting-report-processor:1.2.0-RELEASE
         readinessProbe:
           httpGet:
             path: /health.json

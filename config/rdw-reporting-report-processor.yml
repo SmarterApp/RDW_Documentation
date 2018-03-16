@@ -18,10 +18,6 @@ server:
 
 # Application configuration
 app:
-#  state:
-#    code: CA
-#    name: California
-
   # Report archive configuration.
   # Although the location may be a local file system the preferred solution is to write to AWS S3,
   # which requires credentials. For S3, the root should be the protocol and the bucket, e.g. s3://my-archive-bucket.
@@ -47,6 +43,23 @@ app:
 #    options:
 #      page-size: Letter
 #      zoom: 0.75
+
+# Tenant configuration
+reporting:
+#  state:
+#    code: CA
+#    name: California
+
+  # By default the system does not allow users to see test results from institutions outside their
+  # permissions. Setting this property true allows users to see all test results for students
+  # regardless of where the test was administered, if they have PII for the student.
+#  transfer-access-enabled: false
+
+  # Location of translation files (optional).
+  # There is no default value. To use the central configuration server the value will be like
+  # "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
+  # Details for this property are covered in the language runbook.
+#  translation-location:
 
 
 # Spring application configuration.
@@ -98,18 +111,3 @@ task:
 #    cron: 0 0 8 * * *
 #    max-report-lifetime-days: 30
 #    max-random-minutes: 20
-
-# Tenant configuration.
-# These are tenant-specific customizations.
-tenant:
-  # By default the system does not allow users to see test results from institutions outside their
-  # permissions. Setting this property true allows users to see all test results for students
-  # regardless of where the test was administered, if they have PII for the student.
-#  transfer-access-enabled: false
-
-  # Location of translation files (optional).
-  # There is no default value. To use the central configuration server the value will be like
-  # "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
-  # Details for this property are covered in the language runbook.
-#  translation-location:
-

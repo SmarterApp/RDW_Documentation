@@ -46,6 +46,8 @@ spec:
           value: "http://configuration-service"
         - name: CONFIG_SERVICE_ENABLED
           value: "true"
+        - name: MAX_HEAP_SIZE
+          value: "-Xmx500m"
         ports:
         - containerPort: 8080
         - containerPort: 8008

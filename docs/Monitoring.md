@@ -310,7 +310,7 @@ $ curl http://localhost:8008/loggers/org.opentestsystem.rdw.ingest.processor
 Note that setting the log level via the actuator end-point will be in effect only for the currently running process. Other instances of the process will not be affected, and restarting the process will revert back to the configured log levels.
 
 #### Log Collection
-The approach is to use fluentd on the nodes to tail logs and forward entries to a central service like Elasticsearch. If you ask six developers how to install and configure fluentd in a kubernetes cluster you'll get a dozen different answers. If you want to do a little reading:
+The approach is to use fluentd on the nodes to tail logs and forward entries to a central service like Elasticsearch or Graylog. If you ask six people how to install and configure fluentd in a kubernetes cluster you'll get a dozen different answers. If you want to do a little reading:
 
 * [Overview of Kubernetes logging](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 * [Kubernetes logging with Elasticsearch/Kibana](https://kubernetes.io/docs/tasks/debug-application-cluster/logging-elasticsearch-kibana/)
@@ -318,78 +318,15 @@ The approach is to use fluentd on the nodes to tail logs and forward entries to 
 * [Logging to AWS Elasticsearch from Kubernetes](https://medium.com/@while1eq1/logging-to-aws-elasticsearch-service-from-kubernetes-855ad0959251)
 * [Alternative to below using Fluentd to send logs to GELF/Graylog](https://github.com/xbernpa/fluentd-kubernetes-gelf/)
 
-What we did:
+It is left as an exercise for the reader to set up the service that will catch the logs. When configuring the system
+there must be a route from the nodes in the cluster to the service for whatever protocol is appropriate.
 
-1. Create an AWS Elasticsearch instance. From the AWS Elasticsearch Service dashboard, `Create a new domain`:
-    * Name: rdw-qa
-    * Latest version (5.5)
-    * Instance: ts.small.elasticsearch (1)
-    * Storage: EBS 30GB (for now)
-    * Public (for now)
-1. Set access policy to allow full control from within VPC. For now, allow access from the interwebs too:
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "*"
-      },
-      "Action": "es:*",
-      "Resource": "arn:aws:es:region:id:domain/rdw-qa/*",
-      "Condition": {
-        "IpAddress": {
-          "aws:SourceIp": "172.31.0.0/16"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "*"
-      },
-      "Action": "es:*",
-      "Resource": "arn:aws:es:region:id:domain/rdw-qa/*",
-      "Condition": {
-        "IpAddress": {
-          "aws:SourceIp": [
-            "0.0.0.0/0"
-          ]
-        }
-      }
-    }
-  ]
-}
-```
-1. Note ES settings:
-    * Endpoint: https://search-rdw-qa-[AWS-randomization]
-    * Domain ARN: arn:aws:es:region:id:domain/rdw-qa
-    * Kibana: https://search-rdw-qa-[AWS-randomization]/_plugin/kibana/
-1. Test:
-```bash
-$ curl https://search-rdw-qa-[AWS-randomization]
-{
-  "name" : "YbZyaKb",
-  "cluster_name" : "id:rdw-qa",
-  "cluster_uuid" : "...",
-  "version" : {
-    "number" : "5.5.2",
-    "build_hash" : "b2f0c09",
-    "build_date" : "2017-08-21T22:31:55.076Z",
-    "build_snapshot" : false,
-    "lucene_version" : "6.6.0"
-  },
-  "tagline" : "You Know, for Search"
-}
-```
-1. Deploy fluentd agents to collect logs from each node.
-```bash
-kubectl apply -f fluentd.yml
-```
-1. TODO - how to access kibana without opening it to the whole world
+We have provided a Kubernetes spec for a fluentd DaemonSet that sends logs to a GELF endpoint, `fluentd-gelf.yml`.
+Modify the spec to set the host and port then deploy it, `kubectl apply -f fluentd-gelf.yml`.
 
-    
+Once the logs are rolling in, create filters using the Kubernetes metadata.
+
+
 #### Log Messages
 These are log messages that can be used to trigger alerts about rare but expected issues. In general, all ERROR 
 messages should trigger alerts, and messages at INFO, DEBUG, TRACE levels may be safely ignored. This section is

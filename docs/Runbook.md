@@ -65,9 +65,13 @@ The configuration server can combine multiple configuration files for a service.
 
 #### Resource Allocation
 Dockerized applications need to respect resource allocations when deployed in a container orchestration environment.
-This is especially important for memory utilization, which is controlled by a few settings:
-* Heap size. This tells java how much memory to give the application. Every application has a built in default value but that is seldom the correct setting for a specific environment. This is controlled by setting an environment variable recognized by the docker command, `MAX_HEAP_SIZE`, which should look like the java setting, e.g. `-Xmx500m`.
-* Container memory request/limit. The tells the orchestration framework how much memory to allow a pod. The framework will typically stop a pod that blows through that limit so it is important to coordinate this value with the heap size. A rule of thumb is to make the container limit 1.25 - 1.3 times the max heap size.
+This includes CPU allocation but is especially important for memory utilization. Most of the applications in RDW are
+java applications. Their memory utilization can be broadly broken down into two parts: heap and off-heap. The heap grows
+and shrinks as the application does work, while the off-heap is a relatively fixed overhead. For most RDW applications
+the off-heap is 120MB-200MB. The heap varies quite a bit and is described for each service. The memory allocation
+is controlled by a few settings:
+* Heap size. This tells java how much memory to give the application. Every application has a built in default value but that may not be optimal for a specific environment. This is controlled by setting an environment variable recognized by the docker command, `MAX_HEAP_SIZE`, which should look like the java setting, e.g. `-Xmx500m`.
+* Container memory request/limit. This tells the orchestration framework how much memory to allow a pod. The framework will typically stop a pod that blows through that limit so it is important to coordinate this value with the heap size. A rule of thumb is to make the container limit a bit larger than the sum of the off-heap and max heap size.
 * Java options. It is not recommended to use this except in extraordinary circumstances, but the docker image command recognizes the environment variable `JAVA_OPTS` and will add it to the java command line when starting the application.
 
 Together, these can be used to fine-tune memory utilization. As an example the following (contrived) snippet gives an application extra startup memory (initial heap size), larger max heap size, and more container memory:
@@ -82,13 +86,14 @@ Together, these can be used to fine-tune memory utilization. As an example the f
             memory: 1G
         env:
         - name: MAX_HEAP_SIZE
-          value: "-Xmx800m"
+          value: "-Xmx700m"
         - name: JAVA_OPTS
-          value: "-Xms500m"
+          value: "-Xms400m"
 ```
 Without the environment variables it would use the default values (typically -Xms256m -Xmx384m).
 
 In most orchestration environments, the ratio of memory to CPU is fixed; for example most general purpose nodes in AWS have 4GB per CPU. The applications tend to be CPU constrained so it is okay to throw a little extra memory at them.
+
 
 <a name="import-service"></a>
 ## Import Service
@@ -100,7 +105,7 @@ The import service is the REST end-point for submitting data to the system. It i
 The [Annotated Configuration](../config/rdw-ingest-import-service.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m which should be fine for any environment.
+The default max heap size is -Xmx384m which is more than enough and should be fine for any environment. The off-heap is about 200MB so the container should have a memory limit of about 500M.
 The [Sample Kubernetes Spec](../deploy/import-service.yml) runs two replicas.
 
 
@@ -114,7 +119,7 @@ The package processor processes assessment packages, organizations and accommoda
 The [Annotated Configuration](../config/rdw-ingest-package-processor.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m which should be fine for any environment.
+The default max heap size is -Xmx384m which should be fine for any environment. The off-heap is about 160MB so the container should have a memory limit of about 500M.
 The [Sample Kubernetes Spec](../deploy/package-processor-service.yml) runs a single replica.
 
 
@@ -128,7 +133,7 @@ This processor handles parsing, validating and writing test results to the data 
 The [Annotated Configuration](../config/rdw-ingest-exam-processor.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m which should be fine for any environment.
+The default max heap size is -Xmx384m which is more than enough and should be fine for any environment. The off-heap is about 180MB so the container should have a memory limit of about 500M.
 The [Sample Kubernetes Spec](../deploy/exam-processor-service.yml) runs two replicas.
 
 
@@ -142,7 +147,7 @@ This processor handles parsing, validating and writing student group information
 The [Annotated Configuration](../config/rdw-ingest-group-processor.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m which should be fine for any environment.
+The default max heap size is -Xmx384m which should be fine for any environment. The off-heap is about 170MB so the container should have a memory limit of about 500M.
 The [Sample Kubernetes Spec](../deploy/group-processor-service.yml) runs a single replica.
 
 
@@ -160,8 +165,8 @@ The migrate service is controlled by two conditions: the user-controlled run sta
 The [Annotated Configuration](../config/rdw-ingest-migrate-reporting.yml) describes the properties and their effects.
  
 #### Deployment Spec
-The default max heap size is -Xmx512m because this service requires more memory. If the system is configured for a larger batch size (e.g. 4000 instead of 2000), the memory may have to be increased.
-The [Sample Kubernetes Spec](../deploy/migrate-reporting-service.yml) runs a single replica with larger memory request.
+The default max heap size is -Xmx512m because this service requires more memory. If the system is configured for a larger batch size (e.g. 4000 instead of 2000), the memory may have to be increased. The off-heap is about 160MB so the container should have a memory limit of at least 800M.
+The [Sample Kubernetes Spec](../deploy/migrate-reporting-service.yml) runs a single replica with a larger memory limit.
 
 
 <a name="migrate-olap"></a>
@@ -178,7 +183,7 @@ The migrate service is controlled by two conditions: the user-controlled run sta
 The [Annotated Configuration](../config/rdw-ingest-migrate-olap.yml) describes the properties and their effects.
  
 #### Deployment Spec
-The default max heap size is -Xmx384m which should be fine for any environment (unlike migrate-reporting, the migrate-olap service offloads much of the work to the database).
+The default max heap size is -Xmx384m which should be fine for any environment (unlike migrate-reporting, the migrate-olap service offloads much of the work to the database). The off-heap is about 170MB so the container should have a memory limit of about 500M.
 The [Sample Kubernetes Spec](../deploy/migrate-olap-service.yml) runs a single replica.
 
 
@@ -197,7 +202,7 @@ Only a single instance should be run since the task execution uses a simple, unc
 The [Annotated Configuration](../config/rdw-ingest-task-service.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m which should be fine for any environment. There may be situations where very large organization data will require this to be increased.
+The default max heap size is -Xmx384m which should be fine for any environment. There may be situations where very large organization data will require this to be increased. The off-heap is about 160MB so the container should have a memory limit of about 500M.
 The [Sample Kubernetes Spec](../deploy/task-service.yml) runs a single replica.
 
 
@@ -213,7 +218,7 @@ The reporting web app is a UI-only application that handles some security (SSO r
 The [Annotated Configuration](../config/rdw-reporting-webapp.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx768m which should be fine for any environment.
+The default max heap size is -Xmx768m which should be fine for any environment. The off-heap is about 240MB so the container should have a memory limit of about 1G.
 The [Sample Kubernetes Spec](../deploy/reporting-webapp.yml) runs four replicas with a higher memory limit.
 
 
@@ -227,7 +232,7 @@ This service provides the back-end API for reports against the reporting data ma
 The [Annotated Configuration](../config/rdw-reporting-service.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m and should be increased in all but the smallest environments.
+The default max heap size is -Xmx384m and should be increased in all but the smallest environments. The off-heap is about 200MB so the container should have a memory limit of at least 500M.
 The [Sample Kubernetes Spec](../deploy/reporting-service.yml) runs a single replica with increased heap size and memory limit.
 
 
@@ -241,7 +246,7 @@ This service provides the back-end API for reports against the OLAP data store, 
 The [Annotated Configuration](../config/rdw-reporting-aggregate-service.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m and should be increased in all but the smallest environments.
+The default max heap size is -Xmx384m which is low and should be increased in all but the smallest environments. Based on recent experiments this should be set to -Xmx600m or higher. The off-heap is about 240MB so the container should have a memory limit of at least 850M.
 The [Sample Kubernetes Spec](../deploy/aggregate-service.yml) runs a single replica with increased heap size and memory limit.
 
 
@@ -255,7 +260,7 @@ This service provides the back-end API for administrative functionality includin
 The [Annotated Configuration](../config/rdw-reporting-admin-service.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m which should be fine for most environments.
+The default max heap size is -Xmx384m which should be fine for most environments. The off-heap overhead is about 200MB so the container should have a memory limit of about 500M.
 The [Sample Kubernetes Spec](../deploy/admin-service.yml) runs a single replica.
 
 
@@ -269,7 +274,7 @@ This processor generates PDF reports. It is horizontally scalable and many insta
 The [Annotated Configuration](../config/rdw-reporting-report-processor.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m and should be increased in all but the smallest environments.
+The default max heap size is -Xmx384m and should be increased in all but the smallest environments. The off-heap overhead is about 220MB so the container should have a memory limit of about 600M.
 The [Sample Kubernetes Spec](../deploy/report-processor-service.yml) runs two replicas with increased heap size and memory limit.
 
 
@@ -283,7 +288,7 @@ This application converts HTML to PDF. It is used by the report processor. It is
 There are no configuration options for the PDF generator.
 
 #### Deployment Spec
-Unlike the other applications, this service does not support changing the heap size.
+This service is not java-based and does not support changing the heap size.
 The [Sample Kubernetes Spec](../deploy/wkhtmltopdf-service.yml) runs four replicas.
 
 

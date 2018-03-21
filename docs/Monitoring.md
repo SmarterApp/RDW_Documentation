@@ -321,7 +321,7 @@ The approach is to use fluentd on the nodes to tail logs and forward entries to 
 It is left as an exercise for the reader to set up the service that will catch the logs. When configuring the system
 there must be a route from the nodes in the cluster to the service for whatever protocol is appropriate.
 
-We have provided a Kubernetes spec for a fluentd DaemonSet that sends logs to a GELF endpoint, `fluentd-gelf.yml`.
+We have provided a Kubernetes spec for a fluentd DaemonSet that sends logs to a GELF endpoint, [fluentd-gelf.yml](../deploy/fluentd-gelf.yml).
 Modify the spec to set the host and port then deploy it, `kubectl apply -f fluentd-gelf.yml`.
 
 Once the logs are rolling in, create filters using the Kubernetes metadata.

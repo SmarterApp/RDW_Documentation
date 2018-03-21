@@ -17,7 +17,8 @@ This is the second significant upgrade to RDW. It adds "Phase 3" functionality:
 * Unknown Gender
 * English Language Acquisition Status
 
-It involves some minor architectural changes:
+It involves some minor technical changes:
+* Fix/change the memory settings for all apps
 * Reorganize application and tenant properties
 
 TODO - Because there are schema changes, the data warehouse and reporting data mart must be migrated. This may take a couple hours depending on the amount of data involved. Combined with the non-trivial changes to the system configuration, this means the upgrade process may take 2-4 hours. It is important to alert the user base and any 3rd party data feeds of the extended downtime required for this upgrade.
@@ -62,12 +63,12 @@ The goal of this step is to make changes to everything that doesn't directly aff
     git push -u origin v1_2
     ```
 * [ ] Add a copy of this checklist to deployment and switch to that copy.
-* [ ] Changes to deployment files in `RDW_Deploy_Opus`. There are sample deployment files in the `deploy` folder in the `RDW` repository; use those to copy or help guide edits.
+* [ ] Changes to deployment files in `RDW_Deploy_Opus`. There are sample deployment files in the `deploy` folder in the `RDW` repository; use those to copy and help guide edits.
     * Common services. These helper services require no changes.
         * rabbit service
         * configuration service
         * wkhtmltopdf service
-    * [ ] Ingest services. Only the image version needs to be changed.
+    * [ ] Ingest services.
         * [ ] Change image version to `1.2.0-RELEASE` in the following files:
             * `import-service.yml`
             * `package-processor-service.yml`
@@ -76,6 +77,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
             * `migrate-olap-service.yml`
             * `migrate-reporting-service.yml`
             * `task-service.yml`
+        * Note: the ingest services should not require changes to max heap size or container memory limits
     * [ ] Reporting services. Only the image version needs to be changed.
         * [ ] Change image version to `1.2.0-RELEASE` in the following files:
             * `admin-service.yml`
@@ -83,6 +85,20 @@ The goal of this step is to make changes to everything that doesn't directly aff
             * `report-processor-service.yml`
             * `reporting-service.yml`
             * `reporting-webapp.yml`
+        * [ ] Fix/change memory settings:
+            * `admin-service.yml`
+                * Reduce requests/limits memory to 500M (it was probably 750M or higher)
+            * `aggregate-service.yml`
+                * Set requests/limits memory to at least 800M
+                * Set max heap size by setting environment variable `MAX_HEAP_SIZE = "-Xmx600m"`
+            * `report-processor-service.yml`
+                * Set requests/limits memory to at least 750M
+                * Set max heap size by setting environment variable `MAX_HEAP_SIZE = "-Xmx500m"`
+            * `reporting-service.yml`
+                * Set requests/limits memory to at least 750M
+                * Set max heap size by setting environment variable `MAX_HEAP_SIZE = "-Xmx500m"`
+            * `reporting-webapp.yml`
+                * Set requests/limits memory to at least 1G
     * [ ] Commit changes
         ```bash
         cd ~/git/RDW_Deploy_Opus

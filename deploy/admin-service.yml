@@ -38,10 +38,10 @@ spec:
         resources:
           requests:
             cpu: 500m
-            memory: 750M
+            memory: 500M
           limits:
             cpu: 500m
-            memory: 750M
+            memory: 500M
         env:
         - name: CONFIG_SERVICE_URL
           value: "http://configuration-service"

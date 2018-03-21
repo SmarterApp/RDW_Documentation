@@ -66,12 +66,13 @@ The configuration server can combine multiple configuration files for a service.
 #### Resource Allocation
 Dockerized applications need to respect resource allocations when deployed in a container orchestration environment.
 This includes CPU allocation but is especially important for memory utilization. Most of the applications in RDW are
-java applications. Their memory utilization can be broadly broken down into two parts: heap and off-heap. The heap grows
-and shrinks as the application does work, while the off-heap is a relatively fixed overhead. For most RDW applications
-the off-heap is 120MB-200MB. The heap varies quite a bit and is described for each service. The memory allocation
-is controlled by a few settings:
-* Heap size. This tells java how much memory to give the application. Every application has a built in default value but that may not be optimal for a specific environment. This is controlled by setting an environment variable recognized by the docker command, `MAX_HEAP_SIZE`, which should look like the java setting, e.g. `-Xmx500m`.
-* Container memory request/limit. This tells the orchestration framework how much memory to allow a pod. The framework will typically stop a pod that blows through that limit so it is important to coordinate this value with the heap size. A rule of thumb is to make the container limit a bit larger than the sum of the off-heap and max heap size.
+java applications. Their memory utilization can be broadly divided into two parts: heap and off-heap. The heap grows
+and shrinks as the application does work, while the off-heap is relatively fixed overhead. For most RDW applications
+the off-heap is 150MB-240MB. The heap varies and is described for each service.
+
+The memory allocation is controlled by a few settings:
+* Heap size. This tells java how much memory to give the application. Every application has a default value but that may not be optimal for a specific environment. This is controlled by setting an environment variable recognized by the docker command, `MAX_HEAP_SIZE`, which should look like the java setting, e.g. `-Xmx500m`.
+* Container memory request/limit. This tells the orchestration framework how much memory to allow a pod. The framework will typically stop a pod that blows through that limit so it is important to coordinate this value with the heap size. A rule of thumb is to make the container limit a bit larger than the sum of the off-heap and max heap size. Obviously, if the framework is killing containers due to memory limits, this values should be increased.
 * Java options. It is not recommended to use this except in extraordinary circumstances, but the docker image command recognizes the environment variable `JAVA_OPTS` and will add it to the java command line when starting the application.
 
 Together, these can be used to fine-tune memory utilization. As an example the following (contrived) snippet gives an application extra startup memory (initial heap size), larger max heap size, and more container memory:
@@ -165,7 +166,7 @@ The migrate service is controlled by two conditions: the user-controlled run sta
 The [Annotated Configuration](../config/rdw-ingest-migrate-reporting.yml) describes the properties and their effects.
  
 #### Deployment Spec
-The default max heap size is -Xmx512m because this service requires more memory. If the system is configured for a larger batch size (e.g. 4000 instead of 2000), the memory may have to be increased. The off-heap is about 160MB so the container should have a memory limit of at least 800M.
+The default max heap size is -Xmx512m because this service requires more memory. If the system is configured for a larger batch size (e.g. 4000 instead of 2000), the max heap size may have to be increased. The off-heap is about 160MB so the container should have a memory limit of at least 800M.
 The [Sample Kubernetes Spec](../deploy/migrate-reporting-service.yml) runs a single replica with a larger memory limit.
 
 
@@ -183,7 +184,7 @@ The migrate service is controlled by two conditions: the user-controlled run sta
 The [Annotated Configuration](../config/rdw-ingest-migrate-olap.yml) describes the properties and their effects.
  
 #### Deployment Spec
-The default max heap size is -Xmx384m which should be fine for any environment (unlike migrate-reporting, the migrate-olap service offloads much of the work to the database). The off-heap is about 170MB so the container should have a memory limit of about 500M.
+The default max heap size is -Xmx384m which should be fine for any environment (unlike migrate-reporting, the migrate-olap service offloads more of the work to the database). The off-heap is about 170MB so the container should have a memory limit of about 500M.
 The [Sample Kubernetes Spec](../deploy/migrate-olap-service.yml) runs a single replica.
 
 
@@ -202,7 +203,7 @@ Only a single instance should be run since the task execution uses a simple, unc
 The [Annotated Configuration](../config/rdw-ingest-task-service.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m which should be fine for any environment. There may be situations where very large organization data will require this to be increased. The off-heap is about 160MB so the container should have a memory limit of about 500M.
+The default max heap size is -Xmx384m which should be fine for any environment. The off-heap is about 160MB so the container should have a memory limit of about 500M.
 The [Sample Kubernetes Spec](../deploy/task-service.yml) runs a single replica.
 
 

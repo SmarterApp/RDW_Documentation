@@ -316,6 +316,7 @@ The approach is to use fluentd on the nodes to tail logs and forward entries to 
 * [Kubernetes logging with Elasticsearch/Kibana](https://kubernetes.io/docs/tasks/debug-application-cluster/logging-elasticsearch-kibana/)
 * [Kubernetes logging with Fluentd](https://docs.fluentd.org/v0.12/articles/kubernetes-fluentd)
 * [Logging to AWS Elasticsearch from Kubernetes](https://medium.com/@while1eq1/logging-to-aws-elasticsearch-service-from-kubernetes-855ad0959251)
+* [Alternative to below using Fluentd to send logs to GELF/Graylog](https://github.com/xbernpa/fluentd-kubernetes-gelf/)
 
 What we did:
 

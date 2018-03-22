@@ -275,7 +275,7 @@ This processor generates PDF reports. It is horizontally scalable and many insta
 The [Annotated Configuration](../config/rdw-reporting-report-processor.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m and should be increased in all but the smallest environments. The off-heap overhead is about 220MB so the container should have a memory limit of about 600M.
+The default max heap size is -Xmx384m and should be increased in all but the smallest environments. The off-heap overhead is about 240MB so the container should have a memory limit of about 600M.
 The [Sample Kubernetes Spec](../deploy/report-processor-service.yml) runs two replicas with increased heap size and memory limit.
 
 

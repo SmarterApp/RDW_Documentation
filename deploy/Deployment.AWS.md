@@ -614,6 +614,15 @@ When software updates are available there may be a number of steps involved in d
 1. There may be schema changes required. The CHANGELOG should give an indication of this, and the source history for the project can be reviewed. Schema changes can take a while and the coordination can be tricky. All but the most trivial schema changes require downtime of the system.
 1. Use the rollout capability of Kubernetes to deploy changes.
 
+##### Configuration Change
+Sometimes just a simple change to configuration is required. After making the change this trick can be used to force Kubernetes to "bounce" the applications:
+1. Make the configuration changes and commit them.
+2. Trick Kubernetes into thinking the deployment spec has changed. Using the webapp as an example,
+    ```bash
+    export DATE_PATCH="{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
+    kubectl patch deployment reporting-webapp-deployment -p "$DATE_PATCH"
+    ```
+
 ##### Software Patch
 The simplest update is a backward compatible patch, usually to deploy an urgent bug fix. The major and minor versions don't change, there is no significant schema change, and only minor configuration changes expected. Typically only one or a few applications are being updated. 
 1. Update the deployment specs with the new image value.

@@ -4,11 +4,11 @@
 
 ### Table of Contents
 
-* Kubernetes
+* [Kubernetes](#kubernetes)
     * [Jump Server](#jump-server)
     * [Working With Nodes](#working-with-nodes)
     * [Working With Pods](#working-with-pods)
-* Specific Issues
+* [Specific Issues](#specific-issues)
     * [Improperly configured schools](#state-schools)
     * [Migrate](#migrate)
     * [Reconciliation Report](#reconciliation-report)
@@ -21,7 +21,9 @@
     * [Unable To Admin District](#unable-to-admin-district)
     * [ART Organization Data](#art-organization-data)
     * [Item Viewer](#item-viewer)
+* [Unofficial API](#unofficial-api)
     * [User Context](#user-context)
+    * [User Organizations](#user-organizations)
 
 ### Kubernetes
 
@@ -731,9 +733,14 @@ $ curl http://localhost:8080/iris/Pages/API/content/reload
 
 For additional IRiS documentation please refer to [IRiS in RDW](../deploy/IRIS.AWS.md) and [TDS IRIS](https://github.com/SmarterApp/TDS_IRIS).
 
+
+<a name="unofficial-api></a>
+### Unofficial API
+There are a number of API end-points that support the reporting webapp. These end-points are not official and may change without notice. However, some of them can be useful for diagnosing issues. In general to use these, you must log into the reporting system and then, in the same browser session, navigate to the appropriate end-point.
+
 <a name="user-context></a>
 #### User Context
-If there is ever a question about a user's permissions there is a trick for getting some additional information: log in with the user credentials then, in the same browser session, navigate to https://reporting.smarterbalanced.org/api/reporting-service/user. This should return a JSON payload that includes some useful context information about the user. For example:
+To get metadata about the user's context: navigate to https://reporting.smarterbalanced.org/api/reporting-service/user. This should return a JSON payload that includes some useful context information about the user. For example:
 ```json
 {
   "firstName": "MixedRoles",
@@ -757,3 +764,11 @@ If there is ever a question about a user's permissions there is a trick for gett
   }
 }
 ```
+
+<a name="user-organizations></a>
+#### User Organizations
+To see organizations that a user has permission to access:
+* https://reporting.smarterbalanced.org/api/reporting-service/organizations/schools
+* https://reporting.smarterbalanced.org/api/reporting-service/organizations/schoolGroups
+* https://reporting.smarterbalanced.org/api/reporting-service/organizations/districts
+* https://reporting.smarterbalanced.org/api/reporting-service/organizations/districtGroups

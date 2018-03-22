@@ -2,7 +2,7 @@
 
 **Intended Audience**: this document describes the programming interface for the ingest and reporting services of the [Reporting Data Warehouse](../README.md). Operations and system adminstration will find it useful for the configuration data loading end-points and the diagnostic and task service end-points. Third party providers of test results will find it useful for the data loading end-points.
 
-This document describes the service end-points for the ingest and reporting services. *Note: there are many more end-points in the reporting services but most are intended to be consumed by the reporting UI, so are not documented here.*
+This document describes the service end-points for the ingest and reporting services. *Note: there are many more end-points in the reporting services but most are intended to be consumed by the reporting UI, so are not documented here. Some of those are unofficially documented in [Troubleshooting](Troubleshooting.md#unofficial-api).*
 * The import service has data loading end-points.
 * The task and report processor services have task trigger end-points. 
 * All services have diagnostic end-points. 

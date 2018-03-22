@@ -734,11 +734,10 @@ $ curl http://localhost:8080/iris/Pages/API/content/reload
 For additional IRiS documentation please refer to [IRiS in RDW](../deploy/IRIS.AWS.md) and [TDS IRIS](https://github.com/SmarterApp/TDS_IRIS).
 
 
-<a name="unofficial-api></a>
 ### Unofficial API
 There are a number of API end-points that support the reporting webapp. These end-points are not official and may change without notice. However, some of them can be useful for diagnosing issues. In general to use these, you must log into the reporting system and then, in the same browser session, navigate to the appropriate end-point.
 
-<a name="user-context></a>
+<a name="user-context"></a>
 #### User Context
 To get metadata about the user's context: navigate to https://reporting.smarterbalanced.org/api/reporting-service/user. This should return a JSON payload that includes some useful context information about the user. For example:
 ```json
@@ -765,7 +764,7 @@ To get metadata about the user's context: navigate to https://reporting.smarterb
 }
 ```
 
-<a name="user-organizations></a>
+<a name="user-organizations"></a>
 #### User Organizations
 To see organizations that a user has permission to access:
 * https://reporting.smarterbalanced.org/api/reporting-service/organizations/schools

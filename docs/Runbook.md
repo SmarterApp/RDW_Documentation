@@ -26,6 +26,7 @@
 1. [Embargo](Runbook.embargo.md)
 1. [Language Support](Runbook.language.md)
 1. [Data Specifications](Runbook.data.md)
+1. [Archive Tenant](Runbook.ArchiveTenant.md)
 
 <a name="common"></a>
 ## Common Service Conventions

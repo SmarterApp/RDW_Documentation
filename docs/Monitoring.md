@@ -15,6 +15,7 @@ Monitoring RDW applications includes monitoring:
     * [Monitor Migrate Rate](#monitor-migrate-rate)
     * [System Use By Date](#system-use-by-date)
     * [Organization Queries](#organization-queries)
+    * [Exam Distribution](#exam-distribution)
 * [Logging](#logging)
     * [Log Level](#log-level)
     * [Log Collection](#log-collection)
@@ -227,6 +228,30 @@ SELECT d.natural_id AS district_id, concat('"', d.name, '"') AS district_name, c
 GROUP BY d.id
 ORDER BY d.natural_id;
 ```
+
+#### Exam Distribution
+It's informative to look at the distribution of exams received by the system.
+Honestly, this is just a good place to store some useful queries we've used.
+
+* By type and administration condition
+    ```sql
+    -- exam distribution by type and administration condition
+    SELECT t.code as asmt, a.code as admin, count FROM
+      (SELECT type_id, administration_condition_id, count(*) AS count FROM exam GROUP BY type_id, administration_condition_id) sub
+      JOIN asmt_type t ON t.id=sub.type_id
+      JOIN administration_condition a ON a.id=sub.administration_condition_id;
+
+    +------+-------+---------+
+    | asmt | admin | count   |
+    +------+-------+---------+
+    | iab  | Valid |  597972 |
+    | iab  | SD    | 2466952 |
+    | iab  | NS    | 9555055 |
+    | ica  | Valid |   51037 |
+    | ica  | SD    |  203293 |
+    | ica  | NS    |  462427 |
+    +------+-------+---------+
+    ```
 
 ### Logging
 

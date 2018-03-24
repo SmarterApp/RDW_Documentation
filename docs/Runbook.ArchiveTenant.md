@@ -9,8 +9,8 @@ Archving content includes:
 
 Restoring content includes:
 
-* Querying an archived snapshot of a database for information
-* Merging that information into the current database as needed
+* Restoring a snapshot
+* Querying the restored snapshot of a database for information
 
 Archiving and restoring content may be done in one of two ways:
 
@@ -21,6 +21,8 @@ Archiving and restoring content may be done in one of two ways:
 
 
 ### Creating a Snapshot
+
+> **NOTE**: If automated backups are available, the most recent snapshot may be copied instead of creating a new snapshot.
 
 #### Creating a snapshot using the AWS Management Console
 
@@ -41,21 +43,9 @@ Archiving content may be done by creating a snapshot of the database using the [
 * --db-instance-identifier: The name of the database to back up
 * --db-snapshot-identifier: The name of the snapshot
 
-For Linux, OS X, or Unix, the command is:
+The command is:
 
-```
-aws rds create-db-snapshot /
-    --db-instance-identifier mydbinstance /
-    --db-snapshot-identifier mydbsnapshot 
-```
-
-For Windows, the command is:
-
-```
-aws rds create-db-snapshot ^
-    --db-instance-identifier mydbinstance ^
-    --db-snapshot-identifier mydbsnapshot 
-```
+`aws rds create-db-snapshot --db-instance-identifier mydbinstance --db-snapshot-identifier mydbsnapshot `
 
 These steps are shown in detail in the **CLI** section of: [https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_CreateSnapshot.html](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_CreateSnapshot.html)
 
@@ -81,21 +71,9 @@ Restoring content may be done by restoring a snapshot of the database using the 
 * --db-instance-identifier: The name of the database to restore to
 * --db-snapshot-identifier: The name of the snapshot to restore from
 
-For Linux, OS X, or Unix:
+The command is:
 
-```
-aws rds restore-db-instance-from-db-snapshot \
-    --db-instance-identifier mynewdbinstance \
-    --db-snapshot-identifier mydbsnapshot
-```
-
-For Windows:
-
-```
-aws rds restore-db-instance-from-db-snapshot ^
-    --db-instance-identifier mynewdbinstance ^
-    --db-snapshot-identifier mydbsnapshot
-```
+`aws rds restore-db-instance-from-db-snapshot --db-instance-identifier mynewdbinstance --db-snapshot-identifier mydbsnapshot`
 
 After the DB instance has been restored, you must add the DB instance to the security group and parameter group used by the DB instance used to create the DB snapshot if you want the same functionality as that of the previous DB instance. 
 

@@ -8,7 +8,7 @@ Deleting exams includes:
 
 > **NOTE**: Modifying a large volume of data needs to be done with the consideration of how data is [migrated](Runbook.migrate.md#modify-lots-of-content).
 > Since migrating this changes may take time, it is **strongly advisable to perform this task during the maintenance window, and while the system is quiescent 
-and the exam processors are paused.**.   
+and the exam processors are paused**.   
 
 ### Warehouse exam data store
 Test result data (aka exams) depends on the following data being pre-loaded:

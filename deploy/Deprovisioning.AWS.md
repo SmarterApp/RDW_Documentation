@@ -185,10 +185,7 @@ If the hosted zone was only being used for this particular tenant, you can delet
 
 For more information see the AWS Documentation [Deleting a Public Hosted Zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DeleteHostedZone.html).
 
-#### VPC
-
-TODO
-after deleting VPC, delete Elastic IP
+> **NOTE:** You won't be able to delete the hosted zone if it contains anything other than an NS and an SOA record.
 
 #### Security Groups
 
@@ -206,3 +203,24 @@ TODO
 * RDS archive group
 * Redshift archive role
 * rdw-opus (archive S3 user)
+
+#### VPC
+
+##### AWS Management Console
+
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose **Your VPCs** and select your VPC.
+3. Choose **Actions**, **Delete Endpoint**.
+4. In the confirmation screen, choose** Yes, Delete.**
+
+##### AWS CLI
+
+You will need the VPC identifier to delete the VPC via the CLI.  Refer back to your reference doucmentation to retrieve the VPC ID or use the AWS Management Console.
+
+The command to delete a specific VPC:
+
+```aws ec2 delete-vpc --vpc-id vpc-3b779dd0```
+
+For more information see the AWS Documentation [delete-vpc](https://docs.aws.amazon.com/cli/latest/reference/ec2/delete-vpc.html).
+
+TODO: deployment instructions say to create an ElasticIP for the VPC.  include details on deleting that EIP if needed.

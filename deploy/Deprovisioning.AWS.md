@@ -1,4 +1,4 @@
-## Deprovisioning Tenant
+## Deprovisioning
 
 **Intended Audience**: This document provides instructions for permanently deleting the [Reporting Data Warehouse](../README.md) (RDW) applications deployed in an AWS environment. Access to the production environment is required. Operations will find this useful when deprovisioning a production environment.
 
@@ -151,14 +151,58 @@ TODO:
 
 ### Deleting AWS services
 
-#### Hosted Zone
+#### Route 53
 
-TODO
+To delete all the DNS data from Route 53 for this tenant you will need to delete the following entries:
+
+* Import route
+* Reporting route
+* Hosted Zone (optionally)
+
+##### AWS Management Console
+
+1. Sign in to the AWS Management Console and open the Route 53 console at https://console.aws.amazon.com/route53/.
+2. On the Hosted Zones page, double-click the row for the hosted zone that contains records that you want to delete.
+3. In the list of records, select the record that you want to delete.
+4. Click **Delete Record Set**.
+5. Click **OK** to confirm.
+
+For more information see the AWS Documentation [Deleting Records](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-deleting.html).
+
+**Delete the following CNAMEs:**
+
+* [ ] Import Route: import.sbac.org
+* [ ] Reporting Route: reporting.sbac.org
+
+###### Hosted Zone
+
+If the hosted zone was only being used for this particular tenant, you can delete the hosted zone as follows.
+
+1. On the **Hosted Zones** page, choose the row for the hosted zone that you want to delete.
+2. Choose **Delete Hosted Zone**.
+3. Choose **OK** to confirm.
+
+
+For more information see the AWS Documentation [Deleting a Public Hosted Zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DeleteHostedZone.html).
 
 #### VPC
 
 TODO
+after deleting VPC, delete Elastic IP
 
 #### Security Groups
 
 TODO
+
+* Aurora security group
+* DB subnet group (where does this go)
+* Redis security group (rdw-opus-redis)
+
+#### IAM Users
+
+* kops group
+* optionally delete ops user if no longer needed
+* RDS archive role
+* RDS archive group
+* Redshift archive role
+* rdw-opus (archive S3 user)

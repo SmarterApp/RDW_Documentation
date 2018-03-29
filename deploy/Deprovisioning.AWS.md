@@ -189,20 +189,54 @@ For more information see the AWS Documentation [Deleting a Public Hosted Zone](h
 
 #### Security Groups
 
-TODO
+TODO: https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_SecurityGroups.html#DeleteSecurityGroup
 
 * Aurora security group
 * DB subnet group (where does this go)
 * Redis security group (rdw-opus-redis)
 
-#### IAM Users
+#### IAM Groups/Roles/Users
 
-* kops group
-* optionally delete ops user if no longer needed
-* RDS archive role
-* RDS archive group
-* Redshift archive role
-* rdw-opus (archive S3 user)
+There are groups, roles and users that were created during deployment that must now be removed.
+
+##### AWS CLI
+
+###### Users
+The following code deletes a user named `MyTestUser`:
+
+```aws iam delete-user --user-name MyTestUser ```
+
+**Delete the following users:**
+
+* [ ] RDW archive: rdw-opus
+	```aws iam delete-user --user-name rdw-opus```
+
+###### Roles
+The following code deletes a role named `MyTestRole`:
+
+```aws iam delete-role --role-name MyTestGroup```
+
+**Delete the following roles:**
+
+* [ ] RDW archive: rdw-opus-archive
+	```aws iam delete-role --role-name rdsRdwOpusArchiveRole```
+
+* [ ] Redshift archive: redshiftRdwOpusArchiveAccess
+	```aws iam delete-role --role-name redshiftRdwOpusArchiveAccess```
+
+###### Groups
+The following code deletes a group named `MyTestGroup`:
+
+```aws iam delete-group --group-name MyTestGroup```
+
+**Delete the following groups:**
+
+* [ ] kops group: kops
+	```aws iam delete-group --group-name kops```
+
+* [ ] RDW archive: rdw-opus-archive
+	```aws iam delete-group --group-name rdw-opus-archive```
+
 
 #### VPC
 
@@ -223,4 +257,4 @@ The command to delete a specific VPC:
 
 For more information see the AWS Documentation [delete-vpc](https://docs.aws.amazon.com/cli/latest/reference/ec2/delete-vpc.html).
 
-TODO: deployment instructions say to create an ElasticIP for the VPC.  include details on deleting that EIP if needed.
+**TODO: deployment instructions say to create an ElasticIP for the VPC.  include details on deleting that EIP if needed.**

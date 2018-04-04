@@ -365,6 +365,7 @@ NOTE: the security and routing for Redshift can be tricky, especially if the clu
         CREATE USER rdwopusingest PASSWORD 'password';
         CREATE USER rdwopusreporting PASSWORD 'password';
         CREATE DATABASE opus;
+        -- TODO - making rdwopusingest the OWNER should be unnecessary once vacuum/analyze handling is cleaned up
         ALTER DATABASE opus OWNER TO rdwopusingest;
         \connect opus
         CREATE SCHEMA reporting;
@@ -606,6 +607,10 @@ and the data marts. This is a good time to verify that the required connectivity
     1. There are other data that may need to be applied directly to the database. These require site-specific scripts so are not included here. Examples include:
         * Adjust assessment labels. 
         * Load instructional resources.
+* [ ] Miscellaneous tasks.
+    * [ ] Set up scheduled task to do Redshift `ANALYZE`. Please refer to [Analyze & Vacuum](../docs/Performance.md#redshift-analyze-and-vacuum).
+    * [ ] Set up centralized log collection. Please refer to [Log Collection](../docs/Monitoring.md#log-collection).
+    * [ ] Set up application monitoring.
         
 ### Updating Applications
 When software updates are available there may be a number of steps involved in deploying them.
@@ -670,6 +675,8 @@ Redshift queue is saturated. A couple examples:
   * Aggregate-report service pods = 2
   * Aggregate-report service pool size = 15
   * Aggregate-report consumer concurrency = 2
+
+If Redshift performance seems poor please refer to [Redshift Performance Tuning](../docs/PerformanceTuning.Redshift.md).
 
 ### Sizing Kubernetes Cluster
 Deciding how many nodes and what size they should be requires some consideration (and a little math).

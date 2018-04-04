@@ -22,3 +22,11 @@ python analyze-vacuum-schema.py --db opus --db-user root --db-pwd password --db-
 
 TODO - create a deployment package for AWS Lambda and instructions for setting up the lambda function
 TODO   https://docs.aws.amazon.com/lambda/latest/dg/python-programming-model-handler-types.html
+
+In the event that setting up a scheduled task is problematic, the system can be configured to analyze after every (daily) migration. This requires that the redshift user configured for the migration process be the OWNER of the reporting schema. In the configuration file for migrate-olap:
+```
+sql:
+  migrate:
+    finalizeList:
+      - ANALYZE
+```

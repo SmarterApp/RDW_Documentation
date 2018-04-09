@@ -186,22 +186,65 @@ For more information see the AWS Documentation [Deleting Records](https://docs.a
 
 If the hosted zone was only being used for this particular tenant, you can delete the hosted zone as follows.
 
+> **NOTE:** You won't be able to delete the hosted zone if it contains anything other than an NS and an SOA record.
+
 1. On the **Hosted Zones** page, choose the row for the hosted zone that you want to delete.
 2. Choose **Delete Hosted Zone**.
 3. Choose **OK** to confirm.
 
-
 For more information see the AWS Documentation [Deleting a Public Hosted Zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DeleteHostedZone.html).
-
-> **NOTE:** You won't be able to delete the hosted zone if it contains anything other than an NS and an SOA record.
 
 #### Security Groups
 
-TODO: https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_SecurityGroups.html#DeleteSecurityGroup
+> **NOTE:** You can't delete a security group that is associated with an instance, so make sure the Aurora database instances and Redis cluster have been removed first.
+
+To delete all the security groups for this tenant you will need to delete the following security groups:
 
 * Aurora security group
-* DB subnet group (where does this go)
-* Redis security group (rdw-opus-redis)
+* Redis security group
+
+##### AWS Management Console
+
+1. Open the Amazon EC2 console at [https://console.aws.amazon.com/ec2/](https://console.aws.amazon.com/ec2/).
+2. In the navigation pane, choose **Security Groups**.
+3. Select a security group and choose **Actions, Delete Security Group**.
+4. Choose **Yes, Delete**.
+
+##### AWS CLI
+
+The following code deletes a security group named `MySecurityGroup`
+
+`aws ec2 delete-security-group --group-name MySecurityGroup`
+
+**Delete the following security groups:**
+
+* [ ] Aurora security group: rdw-opus-aurora
+* [ ] Redis security group: rdw-opus-redis
+
+For more information see the AWS Documentation [Deleting a Security Group](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#deleting-security-group).
+
+#### DB Subnet Group
+
+To delete all the DB subnet groups for this tenant you will need to delete the following subnet groups:
+
+* DB subnet group
+
+##### AWS Management Console
+
+1. Sign in to the AWS Management Console and open the Amazon RDS console at [https://console.aws.amazon.com/rds/](https://console.aws.amazon.com/rds/).
+2. In the navigation pane, choose **Subnet Groups**.
+3. Select a subnet group and choose **Delete**.
+4. Choose **Yes, Delete**.
+
+##### AWS CLI
+
+The following code deletes a subnet group named `MySubnetGroup`
+
+`aws ec2 delete-db-subnet-group --db-subnet-group-name MySubnetGroup `
+
+**Delete the following subnet groups:**
+
+* [ ] DB subnet group: opus
 
 #### IAM Groups/Roles/Users
 

@@ -14,7 +14,7 @@ RDW is a suite of applications with lots of moving parts. These documents provid
 1. [Monitoring](docs/Monitoring.md)
 1. [Troubleshooting](docs/Troubleshooting.md)
 1. [Performance](docs/Performance.md)
-1. [Deployment Checklist](deploy/Deployment.AWS.md)
+1. [Deployment Checklist](deploy/Deployment.AWS.md) and [Deprovisioning Instuctions](deploy/Deprovisioning.AWS.md)
 1. [API](docs/API.md)
 1. [Auditing](docs/Audit.md)
 

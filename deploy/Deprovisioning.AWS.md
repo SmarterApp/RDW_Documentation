@@ -2,267 +2,304 @@
 
 **Intended Audience**: This document provides instructions for permanently deleting the [Reporting Data Warehouse](../README.md) (RDW) applications deployed in an AWS environment. Access to the production environment is required. Operations will find this useful when deprovisioning a production environment.
 
-> Although these are generic instructions, having an example makes it easier to document and understand. Throughout this document we'll use opus as the sample environment name; this might correspond to staging or production in the real world. These are the same examples provided on the [Deployment Checklist](./deploy/Deployment.AWS.md).
+> Although these are generic instructions, having an example makes it easier to document and understand. Throughout this document we'll use `opus` as the sample environment name; this might correspond to staging or production in the real world. We'll use `sbac.org` as the domain/organization. These are the same examples provided on the [Deployment Checklist](Deployment.AWS.md).
 
-Deprovisioning a tenant includes:
+> **NOTE:** decommissioning an entire deployment is a significant IT task. These instructions should be used as a guide, and each and every step should be fully understood and adapted to a specific environment. DO NOT just type in all the commands and hope for the best.
 
-* Deleting the applications
-* Deleting data
-* Deleting AWS services
+This document assumes the AWS deployment instructions were used. Deprovisioning a tenant generally reverses the steps performed during deployment.
+
+* [Quiesce the system](#quiesce)
+* [Delete data and data stores](#delete-data)
+* [Delete or reconfigure shared SBAC services](#shared-services)
+* [Delete the cluster](#delete-cluster)
+* [Clean up AWS resources](#cleanup-aws)
+
+One advantage of using AWS is that they take care of wiping released resources. There is no need to use tools like shred to securely wipe data.
 
 
-### Deleting the applications
+<a name="quiesce"></a>
+### Quiesce the system
 
-**TODO: instructions for kubernetes and kops **
+1. [ ] It is beyond the scope of this document to describe providing a static notification page or otherwise notifying the users. However, the public-facing services should be un-published. And preparations should be made for all the applications being taken down:
+    * Notify users
+    * Notify 3rd party data feeds
+    * Remove (external) DNS routing
+    * Remove application monitoring
+1. [ ] Modify all the deployments to have zero replicas. This is the easiest way of shutting down all the applications. From the ops server:
+```bash
+for d in `kubectl get deployment -o name`; do kubectl scale $d --replicas=0; done
+```
 
-### Deleting the data
+<a name="delete-data"></a>
+### Delete data and data stores
 
 #### Amazon S3
 
-To delete all the data stored in S3 for this tenant you will need to delete  the following buckets:
-
+To delete all the data stored in S3 for this tenant you will need to delete the following buckets:
 * kops state store bucket
 * Archive bucket
-* Reconciliation report bucket
- 
-##### AWS Management Console
 
-1. Sign in to the AWS Management Console and open the Amazon S3 console at [https://console.aws.amazon.com/s3/](https://console.aws.amazon.com/s3/).
-2. In the **Bucket name** list, choose the bucket icon next to the name of the bucket that you want to delete and then choose **Delete bucket**.
-3. In the **Delete bucket** dialog box, type the name of the bucket that you want to delete for confirmation and then choose **Confirm**.
+These instructions use both the AWS console and AWS S3 command-line. This is because the command-line cannot be used to delete all versions of objects within a versioned bucket, and the console cannot be used to delete very large buckets. For more information see the AWS Documentation [How Do I Delete an S3 Bucket?](https://docs.aws.amazon.com/AmazonS3/latest/user-guide/delete-bucket.html), [Deleting or Emptying a Bucket](https://docs.aws.amazon.com/AmazonS3/latest/dev/delete-or-empty-bucket.html).
 
-Amazon S3 buckets can be setup with versioning enabled.  In this case, deleting the individual objects is not enough to permanently remove the data as the previous versions are not removed.  To permanently delete all of the objects within a bucket, you can configure lifecycle on your bucket to expire objects. Amazon S3 then deletes expired objects. 
+1. [ ] Delete the archive bucket using the command line (because this bucket is very large)
+    ```bash
+    aws s3 rb s3://rdw-opus-archive --force
+    ```
+1. [ ] Delete the kops state store bucket using the console (because this bucket should be versioned).
+    * Sign into AWS and navigate to the S3 Management Console
+    * Select the `kops-rdw-opus-state-store` bucket, click **Delete Bucket** and follow directions to confirm.
 
-For more information see the AWS Documentation [How Do I Delete an S3 Bucket?](https://docs.aws.amazon.com/AmazonS3/latest/user-guide/delete-bucket.html)
+#### Redis
 
-**Delete the following S3 buckets:**
+To delete all the cached web session data for this tenant you will need to delete the Redis cluster.
 
-* [ ] kops state store bucket: kops-rdw-opus-state-store
-* [ ] Archive bucket: rdw-opus-archive
-* [ ] Reconciliation report bucket: recon-bucket
+To use the console, sign in to AWS and navigate to the Elasticache Management Console. For command-line the [aws redis reference](https://docs.aws.amazon.com/cli/latest/reference/rds/index.html) documentation may be useful.
 
-> **NOTE:** these instructions are targeted toward using the AWS Console since it allows deleting all versions of objects within a bucket. The AWS CLI may be used to delete non-versioned buckets however will not work with versioned buckets such as the kops state store.  For more information, see the AWS Documentation [Deleting or Emptying a Bucket](https://docs.aws.amazon.com/AmazonS3/latest/dev/delete-or-empty-bucket.html)
+There are many AWS resources associated with a Redis cluster including parameter groups, security groups, subnet groups, etc. It is a good idea to capture information about these resources before deleting the cluster.
 
-#### Amazon Aurora Databases
+> **Terminology Note:** in AWS Redis is presented as a replication group (which they call a "Cluster") that contains multiple clusters (which they call "Nodes"). Bit confusing.
+
+1. [ ] Capture information about the cluster. Note there will typically be a single replication group with multiple clusters, e.g.
+    ```bash
+    aws elasticache describe-replication-groups --replication-group-id rdw-opus-redis
+    aws elasticache describe-cache-clusters --cache-cluster-id rdw-opus-redis-001
+    aws elasticache describe-cache-clusters --cache-cluster-id rdw-opus-redis-002
+    aws elasticache describe-cache-clusters --cache-cluster-id rdw-opus-redis-003
+    ```
+    And/or you can see this information in the console by selecting the cluster.
+1. [ ] Delete Cluster (Replication Group)
+    * Use the console to delete the cluster, or use the command-line:
+    ```bash
+    aws elasticache delete-replication-group --replication-group-id rdw-opus-redis
+    ```
+1. [ ] Delete Parameter Groups
+    * Use the console to delete the parameter groups, or use the command-line:
+    ```bash
+    aws elasticache delete-cache-parameter-group --cache-parameter-group-name rdw-opus-redis32
+    ```
+1. [ ] Delete Subnet Groups
+    * Use the console to delete the subnet group, or use the command-line:
+    ```bash
+    aws elasticache delete-cache-subnet-group --cache-subnet-group-name rdw-opus-redis
+    ```
+
+#### Amazon Aurora
 
 To delete all the data stored in Aurora for this tenant you will need to delete the following databases:
-
 * Warehouse
 * Reporting
 
-When deleting a DB instance, you can choose whether to create a final snapshot of the DB instance.  If you want to be able to restore the DB instance at a later time, you should create a final snapshot.
+When deleting a DB instance, you can choose whether to create a final snapshot of the DB instance.  If you want to be able to restore the DB instance at a later time, you should create a final snapshot (or copy an existing snapshot). Alternatively, if you are responsible for completing purging all tenant data, you will need to delete any and all manual snapshots.
 
-> **NOTE:** When deleting a DB instance, all automated backups are deleted, while earlier manual snapshots are not deleted.
+> **NOTE:** When deleting a DB instance, all automated backups are deleted, while manual snapshots are not deleted.
 
-##### AWS Management Console
+For more information see the AWS Documentation [Deleting a DB Instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_DeleteInstance.html).
 
-1. Sign in to the AWS Management Console and open the Amazon RDS console at [https://console.aws.amazon.com/rds/](https://console.aws.amazon.com/rds/).
-2. In the navigation pane, choose **Instances**, and then select the DB instance that you want to delete.
-3. Choose **Instance actions**, and then choose **Delete**.
-4. For **Create final Snapshot?**, choose **Yes** or **No**.
-5. If you chose yes in the previous step, for **Final snapshot name** type the name of your final DB snapshot.
-6. Choose **Delete**.
+To use the console, sign in to AWS and navigate to the RDS Management Console. For command-line the [aws rds reference](https://docs.aws.amazon.com/cli/latest/reference/rds/index.html) documentation may be useful.
 
-##### AWS CLI
+There are many AWS resources associated with an Aurora cluster including parameter groups, security groups, subnet groups, etc. It is a good idea to capture information about these resources before deleting the cluster.
 
-To delete a DB instance by using the AWS CLI, call the [delete-db-instance](http://docs.aws.amazon.com/cli/latest/reference/rds/delete-db-instance.html) command with the following parameters:
+The procedure for deleting a database cluster varies depending on how it was created. In general you will use the RDS Management Console or command-line to delete the cluster. For each of the clusters, `rdw-opus-warehouse` and `rdw-opus-reporting`:
+1. [ ] Capture information about the cluster, e.g.
+    ```bash
+    aws rds describe-db-clusters --db-cluster-identifier rdw-opus-reporting-cluster
+    aws rds describe-db-cluster-snapshots --db-cluster-identifier rdw-opus-reporting-cluster
+    ```
+    And/or you can see some of this information in the AWS RDS Management Console by selecting a cluster. The snapshots can be seen on the appropriate screen. Take notes or screenshots.
+1. [ ] Delete Cluster
+    * As necessary, use console to delete all instances, then delete the cluster. **OR** use the command-line (you may be able to delete cluster or you may have to delete instances separately):
+    ```bash
+    # delete cluster with final snapshot
+    aws rds delete-db-cluster --db-cluster-identifier rdw-opus-reporting-cluster --final-db-snapshot-identifier rdw-opus-reporting
+    # delete cluster without final snapshot
+    aws rds delete-db-cluster --db-cluster-identifier rdw-opus-reporting-cluster --skip-final-snapshot true
 
-* --db-instance-identifier
-* --final-db-snapshot-identifier or --skip-final-snapshot
+    # delete instance with final snapshot
+    aws rds delete-db-instance --db-instance-identifier rdw-opus-reporting --final-db-snapshot-identifier rdw-opus-reporting
+    # delete instance without final snapshot
+    aws rds delete-db-instance --db-instance-identifier rdw-opus-reporting --skip-final-snapshot
+    ```
+1. [ ] Delete Parameter Groups
+    * There will typically be two parameter groups to remove, a parameter group and a cluster parameter group, and they typically have the same name. These can be deleted from the console or the command-line:
+    ```bash
+    aws rds delete-db-parameter-group --db-parameter-group-name rdw-opus-reporting
+    aws rds delete-db-cluster-parameter-group --db-cluster-parameter-group-name rdw-opus-reporting
+    ```
+1. [ ] Delete Subnet Groups
+    * Delete any subnet group associated with the cluster. These can be deleted from the console or the command-line:
+    ```bash
+    aws rds delete-db-subnet-group --db-subnet-group-name rdw-opus
+    ```
+1. [ ] Delete Security Groups
+    * Delete any security groups associated with the cluster. These can be deleted from the console or the command-line.
+    ```bash
 
-Example With a Final Snapshot
-
-`aws rds delete-db-instance --db-instance-identifier mydbinstance --final-db-snapshot-identifier mydbinstancefinalsnapshot`
-
-Example Without a Final Snapshot
-
-`aws rds delete-db-instance --db-instance-identifier mydbinstance  --skip-final-snapshot`
-
-For more information see the AWS Documentation [Deleting a DB Instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_DeleteInstance.html)
-
-**Delete the following DB instances:**
-
-* [ ] Warehouse: rdw-opus-warehouse
-* [ ] Reporting: rdw-opus-reporting
-
-###### Database Snapshots (Optional)
-
-Manual snapshots will need to be deleted manually as they are not automatically removed when the database is deleted.
-
-1. In the navigation pane, choose **Snapshots**, and select the snapshots you want to delete.
-2. Choose **Actions**, and then choose **Delete Snapshot**. 
+    ```
+1. [ ] (Optional) Delete Snapshots
+    * Delete any remaining (manual) snapshots as necessary.
 
 #### Amazon Redshift
 
-To delete all the data stored in Redshift for this tenant you will need to delete the single Redshift cluster:
+To delete all the data stored in Redshift for this tenant you will need to delete the Redshift cluster:
+* rdw
 
-* RDW
+> **NOTE:** if the redshift cluster is shared across environments or tenants (perhaps for cost-savings reasons) then, obviously, the cluster should not be deleted.
 
-When deleting a Redshift cluster, you can choose whether to create a final snapshot.  If you plan to provision a new cluster with the same data and configuration as this one, you will need to create the final snapshot. 
+When deleting a Redshift cluster, you can choose whether to create a final snapshot.  If you plan to provision a new cluster with the same data and configuration as this one, you will need to create the final snapshot. Alternatively, if you are responsible for completing purging all tenant data, you will need to delete any and all manual snapshots.
 
 > **NOTE:** When deleting a Redshift cluster, all automated backups are deleted, while earlier manual snapshots are not deleted.
 
-##### AWS Management Console
+To use the console, sign in to AWS and navigate to the Redshift Management Console. For command-line the [aws redshift reference](https://docs.aws.amazon.com/cli/latest/reference/redshift/index.html) documentation may be useful.
 
-1. Sign in to the AWS Management Console and open the Amazon Redshift console at [https://console.aws.amazon.com/redshift/](https://console.aws.amazon.com/redshift/).
-2. In the navigation pane, choose **Clusters**, and then choose the cluster that you want to delete.
-3. On the **Configuration** tab of the cluster details page, choose **Cluster**, and then choose **Delete**.
-4. In the** Delete Cluster** dialog box, do one of the following:
-	* In **Create snapshot**, choose **Yes** to delete the cluster and take a final snapshot. In **Snapshot name**, type a name for the final snapshot, and then choose **Delete**.
-	* In **Create snapshot**, choose **No** to delete the cluster without taking a final snapshot, and then choose **Delete**.
+There are many AWS resources associated with a Redshift cluster including parameter groups, security groups, subnet groups, etc. It is a good idea to capture information about these resources before deleting the cluster.
 
-> After you initiate the delete of the cluster, it can take several minutes for the cluster to be deleted. You can monitor the status in the cluster list.
+1. [ ] Capture information about the cluster, e.g.
+    ```bash
+    aws redshift describe-clusters --cluster-identifier rdw
+    ```
+    And/or you can see some of this information in the AWS Redshift Management Console by selecting a cluster. The snapshots can be seen on the appropriate screen. Take notes or screenshots.
+1. [ ] Delete Cluster
+    * As necessary, use console to delete all instances, then delete the cluster. **OR** use the command-line (you may be able to delete cluster or you may have to delete instances separately):
+    ```bash
+    # delete cluster with final snapshot
+    aws redshift delete-cluster --cluster-identifier rdw --final-cluster-snapshot-identifier rdw
+    # delete cluster without final snapshot
+    aws redshift delete-cluster --cluster-identifier rdw --skip-final-cluster-snapshot true
+    ```
+1. [ ] Delete Parameter Group
+    * Delete the parameter group from the console or the command-line:
+    ```bash
+    aws redshift delete-cluster-parameter-group --parameter-group-name rdw-opus
+    ```
+1. [ ] Delete Subnet Groups
+    * Delete any subnet group associated with the cluster. These can be deleted from the console or the command-line:
+    ```bash
+    aws redshift delete-cluster-subnet-group --cluster-subnet-group-name rdw-opus
+    ```
+1. [ ] Delete Security Groups
+    * Delete any security groups associated with the cluster. These can be deleted from the console or the command-line.
+1. [ ] (Optional) Delete Snapshots
+    * Delete any remaining (manual) snapshots as necessary.
 
-For more information see the AWS Documentation [Deleting a Cluster](https://docs.aws.amazon.com/redshift/latest/mgmt/managing-clusters-console.html#delete-cluster)
+##### Delete Database in Shared Redshift Cluster
 
-**Delete the following clusters:**
-
-* [ ] RDW: rdw
-
-###### Database Snapshots (Optional)
-
-Manual snapshots will need to be deleted manually as they are not automatically removed when the database is deleted.
-
-1. In the navigation pane, choose **Snapshots**, and select the snapshots you want to delete.
-2. Choose **Actions**, and then choose **Delete Manual Snapshot**. 
-
-#### ElastiCache Redis Cluster
-
-To delete all the data stored in Redis for this tenant you will need to delete the single Redis cluster.
-
-##### AWS Management Console
-
-1. Sign in to the AWS Management Console and open the Amazon ElastiCache console at [https://console.aws.amazon.com/elasticache/](https://console.aws.amazon.com/elasticache/).
-2. In the ElastiCache console dashboard, select the Redis engine.
-3. Select the cluster's name from the list of clusters.
-4. Select the **Actions** button and then select **Delete** from the list of actions.
-5. In the Delete Cluster confirmation screen, specify that a final snapshot should not be taken and choose **Delete** to delete the cluster.
-
-##### AWS CLI
-
-The following code deletes the cache cluster *rdw-opus-redis.aws-randomization*.
-
-`aws elasticache delete-cache-cluster --cache-cluster-id rdw-opus-redis.aws-randomization`
-
-**Delete the following cluster:**
-
-* [ ] RDW: rdw-opus-redis.[aws-randomization]
-
-#### EC2 Instances
-
-TODO: 
-
-* discuss deleting jump server
-* include details that AWS wipes the EBS volumes before making it available for use.  
-* no need to use a tool like shred since there shouldn't be sensitive data on this server
-	* I'm assuming the same goes for the k8s EC2 instances
-
-### Deleting AWS services
-
-#### Route 53
-
-To delete all the DNS data from Route 53 for this tenant you will need to delete the following entries:
-
-* Import route
-* Reporting route
-* Hosted Zone (optionally)
-
-##### AWS Management Console
-
-1. Sign in to the AWS Management Console and open the Route 53 console at https://console.aws.amazon.com/route53/.
-2. On the Hosted Zones page, double-click the row for the hosted zone that contains records that you want to delete.
-3. In the list of records, select the record that you want to delete.
-4. Click **Delete Record Set**.
-5. Click **OK** to confirm.
-
-For more information see the AWS Documentation [Deleting Records](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-deleting.html).
-
-**Delete the following CNAMEs:**
-
-* [ ] Import Route: import.sbac.org
-* [ ] Reporting Route: reporting.sbac.org
-
-###### Hosted Zone
-
-If the hosted zone was only being used for this particular tenant, you can delete the hosted zone as follows.
-
-1. On the **Hosted Zones** page, choose the row for the hosted zone that you want to delete.
-2. Choose **Delete Hosted Zone**.
-3. Choose **OK** to confirm.
+TODO - document deleting just a database instead of entire cluster
 
 
-For more information see the AWS Documentation [Deleting a Public Hosted Zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DeleteHostedZone.html).
+<a name="shared-services"></a>
+### Shared SBAC Services
 
-> **NOTE:** You won't be able to delete the hosted zone if it contains anything other than an NS and an SOA record.
+RDW runs as part of the SBAC ecosystem which consists of other services that may have been modified to integrate RDW. If the shared services will be left running (e.g. to support other applications), then RDW-specific settings should be reverted.
 
-#### Security Groups
+1. [ ] IRiS.
+    * Remove any routes added for RDW to access IRiS.
+1. [ ] Permissions.
+    * RDW permissions may be removed:
+        * GROUP_PII_READ
+        * GROUP_READ
+        * GROUP_WRITE
+        * INDIVIDUAL_PII_READ
+        * CUSTOM_AGGREGATE_READ
+        * EMBARGO_READ
+        * EMBARGO_WRITE
+        * INSTRUCTIONAL_RESOURCE_WRITE
+    * RDW roles may be removed:
+        * ASMTDATALOAD
+        * GROUP_ADMIN
+        * PII
+        * PII_GROUP
+        * Instructional Resource Admin
+        * Embargo Admin
+        * Custom Aggregate Reporter
+    * RDW component may be removed:
+        * Reporting
+    * Remove any routes added for RDW to access the permissions server.
+1. [ ] ART / SSO
+    * Any RDW users may be removed. This will include:
+        * end-users (teachers, administrators, etc.)
+        * vendor credentials (e.g. ASMTDATALOAD user)
+        * support / test credentials
+    * Remove any routes added for RDW to access ART/SSO.
+1. [ ] OpenAM
+    * TODO - Remove rdw-webapp configuration
+    * TODO - Remove OAuth2 agent ids for vendors
 
-TODO: https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_SecurityGroups.html#DeleteSecurityGroup
 
-* Aurora security group
-* DB subnet group (where does this go)
-* Redis security group (rdw-opus-redis)
+<a name="delete-cluster"></a>
+### Delete the cluster
+
+Use kops to delete the cluster. From the ops system (aka jump-server aka bastion):
+```bash
+kops delete cluster \
+  --state s3://kops-rdw-opus-state-store \
+  --name opus.rdw.sbac.org \
+  --yes
+```
+
+Although this will remove most resources created for the cluster there may be some things that may need additional cleanup:
+* Route 53 entries
+    * import.sbac.org
+    * reporting.sbac.org
+* If the hosted zone for sbac.org was created for just RDW and will no longer be used it should be deleted.
+
+
+<a name="cleanup-aws"></a>
+### AWS Resources
+
+The preceding steps clean up a lot of AWS resource but there are a few others.
 
 #### IAM Groups/Roles/Users
 
 There are groups, roles and users that were created during deployment that must now be removed.
 
-##### AWS CLI
+To use the console, sign in to AWS and navigate to the IAM Management Console. For command-line the [aws iam reference](https://docs.aws.amazon.com/cli/latest/reference/iam/index.html) documentation may be useful.
 
-###### Users
-The following code deletes a user named `MyTestUser`:
-
-```aws iam delete-user --user-name MyTestUser ```
-
-**Delete the following users:**
-
-* [ ] RDW archive: rdw-opus
-	```aws iam delete-user --user-name rdw-opus```
-
-###### Roles
-The following code deletes a role named `MyTestRole`:
-
-```aws iam delete-role --role-name MyTestGroup```
-
-**Delete the following roles:**
-
-* [ ] RDW archive: rdw-opus-archive
-	```aws iam delete-role --role-name rdsRdwOpusArchiveRole```
-
-* [ ] Redshift archive: redshiftRdwOpusArchiveAccess
-	```aws iam delete-role --role-name redshiftRdwOpusArchiveAccess```
-
-###### Groups
-The following code deletes a group named `MyTestGroup`:
-
-```aws iam delete-group --group-name MyTestGroup```
-
-**Delete the following groups:**
-
-* [ ] kops group: kops
-	```aws iam delete-group --group-name kops```
-
-* [ ] RDW archive: rdw-opus-archive
-	```aws iam delete-group --group-name rdw-opus-archive```
-
+1. [ ] Delete users
+    * Use the console to delete any RDW users, or use the command-line:
+    ```bash
+    aws iam delete-user --user-name rdw-opus
+    ```
+1. [ ] Delete groups
+    * Use the console to delete any RDW groups, or use the command-line:
+    ```bash
+    aws iam delete-group --group-name rdw-opus-archive
+    aws iam delete-group --group-name kops
+    ```
+1. [ ] Delete roles
+    * Use the console to delete any RDW roles, or use the command-line:
+    ```bash
+    aws iam delete-role --role-name rdsRdwOpusArchiveRole
+    aws iam delete-role --role-name redshiftRdwOpusArchiveAccess
+    ```
+    This is a good time to check that kops properly deleted the masters/nodes ec2 roles.
+1. [ ] Delete policies
+    * Use the console to delete any RDW policies, or use the command-line:
+    ```bash
+    aws iam delete-policy --policy-arn arn:aws:iam::479572410002:policy/AllowRdwOpusArchiveBucket
+    ```
 
 #### VPC
 
-##### AWS Management Console
+If a dedicated VPC was created for RDW then it should be deleted.
 
-1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
-2. In the navigation pane, choose **Your VPCs** and select your VPC.
-3. Choose **Actions**, **Delete Endpoint**.
-4. In the confirmation screen, choose** Yes, Delete.**
-
-##### AWS CLI
-
-You will need the VPC identifier to delete the VPC via the CLI.  Refer back to your reference doucmentation to retrieve the VPC ID or use the AWS Management Console.
-
-The command to delete a specific VPC:
-
-```aws ec2 delete-vpc --vpc-id vpc-3b779dd0```
+To use the console, sign in to AWS and navigate to the EC2 Management Console. For command-line the [aws ec2 reference](https://docs.aws.amazon.com/cli/latest/reference/ec2/index.html) documentation may be useful.
 
 For more information see the AWS Documentation [delete-vpc](https://docs.aws.amazon.com/cli/latest/reference/ec2/delete-vpc.html).
 
-**TODO: deployment instructions say to create an ElasticIP for the VPC.  include details on deleting that EIP if needed.**
+1. [ ] Delete RDW VPC.
+    * Use the console to delete the VPC, or use the command-line:
+    ```bash
+    # list vpcs to find id
+    aws ec2 describe-vpcs
+
+    # delete vpc
+    aws ec2 delete-vpc --vpc-id vpc-3b779dd0
+    ```
+1. [ ] Delete EIP
+
+#### Ops Server
+
+If the system is being completely decommissioned the ops server (aka jump server aka bastion) should be deleted.
+
+1. [ ] Delete ops server
+    * Use the console to delete the ops server.

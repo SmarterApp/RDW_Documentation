@@ -15,6 +15,9 @@
 * [Scalability](#performance-and-scalability)
 * [Sizing Kubernetes Cluster](#sizing-kubernetes-cluster)
 
+### Other Resources
+* [Deprovisioning Instructions](Deprovisioning.AWS.md)
+
 <a name="reference"></a>
 ### Summary / Reference
 This section records all details that will facilitate configuration and maintenance of the system. It should be filled in as the deployment checklist is worked. The instructions include reminders to *Record values in the reference.*

@@ -49,7 +49,6 @@ To delete all the data stored in Aurora for this tenant you will need to delete 
 
 * Warehouse
 * Reporting
-* TODO: User focused database
 
 When deleting a DB instance, you can choose whether to create a final snapshot of the DB instance.  If you want to be able to restore the DB instance at a later time, you should create a final snapshot.
 
@@ -85,9 +84,13 @@ For more information see the AWS Documentation [Deleting a DB Instance](https://
 
 * [ ] Warehouse: rdw-opus-warehouse
 * [ ] Reporting: rdw-opus-reporting
-* [ ] TODO: User focused database
 
-TODO: talk about deleting manually created snapshots since deleting the DB doesn't clean those up
+###### Database Snapshots (Optional)
+
+Manual snapshots will need to be deleted manually as they are not automatically removed when the database is deleted.
+
+1. In the navigation pane, choose **Snapshots**, and select the snapshots you want to delete.
+2. Choose **Actions**, and then choose **Delete Snapshot**. 
 
 #### Amazon Redshift
 
@@ -116,7 +119,12 @@ For more information see the AWS Documentation [Deleting a Cluster](https://docs
 
 * [ ] RDW: rdw
 
-TODO: talk about deleting manually created snapshots since deleting the cluster doesn't clean those up
+###### Database Snapshots (Optional)
+
+Manual snapshots will need to be deleted manually as they are not automatically removed when the database is deleted.
+
+1. In the navigation pane, choose **Snapshots**, and select the snapshots you want to delete.
+2. Choose **Actions**, and then choose **Delete Manual Snapshot**. 
 
 #### ElastiCache Redis Cluster
 

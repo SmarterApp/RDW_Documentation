@@ -57,7 +57,7 @@ To use the console, sign in to AWS and navigate to the Elasticache Management Co
 
 There are many AWS resources associated with a Redis cluster including parameter groups, security groups, subnet groups, etc. It is a good idea to capture information about these resources before deleting the cluster.
 
-> **Terminology Note:** in AWS Redis is presented as a replication group (which they call a "Cluster") that contains multiple clusters (which they call "Nodes"). Bit confusing.
+> **Terminology Note:** The AWS Redis console and command-line use different terminology. In the console a "Cluster" contains multiple "Nodes". In the CLI a "Replication Group" contains multiple "Clusters". Bit confusing.
 
 1. [ ] Capture information about the cluster. Note there will typically be a single replication group with multiple clusters, e.g.
     ```bash
@@ -133,7 +133,7 @@ The procedure for deleting a database cluster varies depending on how it was cre
 1. [ ] Delete Security Groups
     * Delete any security groups associated with the cluster. These can be deleted from the console or the command-line.
     ```bash
-
+    aws rds delete-db-security-group --db-security-group-name rdw-launch-wizard-4
     ```
 1. [ ] (Optional) Delete Snapshots
     * Delete any remaining (manual) snapshots as necessary.
@@ -189,37 +189,38 @@ TODO - document deleting just a database instead of entire cluster
 <a name="shared-services"></a>
 ### Shared SBAC Services
 
-RDW runs as part of the SBAC ecosystem which consists of other services that may have been modified to integrate RDW. If the shared services will be left running (e.g. to support other applications), then RDW-specific settings should be reverted.
+RDW runs as part of the SBAC ecosystem which consists of other services that may have been modified to integrate RDW. If the shared services will be left running (e.g. to support other applications), then RDW-specific settings should be reverted. If other RDW tenants are using the shared services then only remove routes for the tenant being deprovisioned.
 
 1. [ ] IRiS.
-    * Remove any routes added for RDW to access IRiS.
+    * Remove any routes for the RDW tenant being deprovisioned.
 1. [ ] Permissions.
-    * RDW permissions may be removed:
-        * GROUP_PII_READ
-        * GROUP_READ
-        * GROUP_WRITE
-        * INDIVIDUAL_PII_READ
-        * CUSTOM_AGGREGATE_READ
-        * EMBARGO_READ
-        * EMBARGO_WRITE
-        * INSTRUCTIONAL_RESOURCE_WRITE
-    * RDW roles may be removed:
-        * ASMTDATALOAD
-        * GROUP_ADMIN
-        * PII
-        * PII_GROUP
-        * Instructional Resource Admin
-        * Embargo Admin
-        * Custom Aggregate Reporter
-    * RDW component may be removed:
-        * Reporting
-    * Remove any routes added for RDW to access the permissions server.
-1. [ ] ART / SSO
-    * Any RDW users may be removed. This will include:
-        * end-users (teachers, administrators, etc.)
-        * vendor credentials (e.g. ASMTDATALOAD user)
-        * support / test credentials
-    * Remove any routes added for RDW to access ART/SSO.
+    * If no other RDW tenants are using the system, remove RDW-specific components, roles and permissions.
+        * RDW permissions may be removed:
+            * GROUP_PII_READ
+            * GROUP_READ
+            * GROUP_WRITE
+            * INDIVIDUAL_PII_READ
+            * CUSTOM_AGGREGATE_READ
+            * EMBARGO_READ
+            * EMBARGO_WRITE
+            * INSTRUCTIONAL_RESOURCE_WRITE
+        * RDW roles may be removed:
+            * ASMTDATALOAD
+            * GROUP_ADMIN
+            * PII
+            * PII_GROUP
+            * Instructional Resource Admin
+            * Embargo Admin
+            * Custom Aggregate Reporter
+        * RDW component may be removed:
+            * Reporting
+    * Remove any routes for the RDW tenant being deprovisioned.
+1. [ ] ART / SSO.
+    * These systems are used to grant users access to applications other than RDW. If a user will continue to use other services, remove just the RDW roles for users. If a user doesn't have access to other services and was created just for RDW, that user should be removed from the system.
+        * Remove end-users (teachers, administrators, etc.) or revoke RDW roles as appropriate.
+        * Remove vendor credentials (e.g. ASMTDATALOAD user)
+        * Remove support / test credentials or revoke RDW roles as appropriate.
+    * Remove any routes for the RDW tenant being deprovisioned.
 1. [ ] OpenAM
     * TODO - Remove rdw-webapp configuration
     * TODO - Remove OAuth2 agent ids for vendors

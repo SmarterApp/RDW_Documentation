@@ -310,3 +310,7 @@ If the system is being completely decommissioned the ops server (aka jump server
 
 1. [ ] Delete ops server
     * Use the console to delete the ops server.
+
+#### Repositories
+
+Technically these aren't AWS resources but the configuration and deployment repositories may be deleted.

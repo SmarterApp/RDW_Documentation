@@ -143,7 +143,7 @@ The procedure for deleting a database cluster varies depending on how it was cre
 To delete all the data stored in Redshift for this tenant you will need to delete the Redshift cluster:
 * rdw
 
-> **NOTE:** if the redshift cluster is shared across environments or tenants (perhaps for cost-savings reasons) then, obviously, the cluster should not be deleted.
+> **NOTE:** If the redshift cluster is shared across environments or tenants (perhaps for cost-savings reasons) then, obviously, the cluster should not be deleted.
 
 When deleting a Redshift cluster, you can choose whether to create a final snapshot.  If you plan to provision a new cluster with the same data and configuration as this one, you will need to create the final snapshot. Alternatively, if you are responsible for completing purging all tenant data, you will need to delete any and all manual snapshots.
 
@@ -183,7 +183,13 @@ There are many AWS resources associated with a Redshift cluster including parame
 
 ##### Delete Database in Shared Redshift Cluster
 
-TODO - document deleting just a database instead of entire cluster
+If the redshift cluster is shared then just remove the database and users for this RDW tenant. The details depend on how the sharing was set up; and example using `psql --host=rdw.[aws-randomization] --port=5439 --username=root --password --dbname=dev`:
+```sql
+ALTER DATABASE opus OWNER TO root;
+DROP USER rdwopusreporting;
+DROP USER rdwopusingest;
+DROP DATABASE opus;
+```
 
 
 <a name="shared-services"></a>
@@ -222,8 +228,8 @@ RDW runs as part of the SBAC ecosystem which consists of other services that may
         * Remove support / test credentials or revoke RDW roles as appropriate.
     * Remove any routes for the RDW tenant being deprovisioned.
 1. [ ] OpenAM
-    * TODO - Remove rdw-webapp configuration
-    * TODO - Remove OAuth2 agent ids for vendors
+    * Remove the rdw-reporting-opus SAML Entity Provider
+    * Remove the OAuth2 agent client id: rdw
 
 
 <a name="delete-cluster"></a>

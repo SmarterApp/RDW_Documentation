@@ -206,9 +206,9 @@ All cluster deployment and configuration is stored in version control, so nothin
 
 * [ ] Apply schema changes. If the warehouse and reporting databases are separate it will be more efficient to run the migration tasks in parallel. Use multiple terminal sessions (or `screen`) and run them at the same time.
    * Estimated schema changes run time:
-   [ ] Aurora/reporting : 1 hours (to drop and recrete FK on the exam table)
-   [ ] Aurora/warehouse : TODO
-   [ ] Redshift : TODO
+   * [ ] Aurora/reporting : 1 hours (to drop and recrete FK on the exam table)
+   * [ ] Aurora/warehouse : TODO
+   * [ ] Redshift : TODO
 
     ```bash
     # get latest version of the schema

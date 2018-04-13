@@ -200,11 +200,16 @@ All cluster deployment and configuration is stored in version control, so nothin
     kops upgrade cluster --name awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
     ```
 
-* [ ] TODO - figure out how to handle migration of IABs to the olap data mart
-    * I think we're going to have to recommend wiping the olap data mart during the upgrade and allowing the migrate to go; it will take an hour or two to migrate everything.
-    If we take that approach we should wipe the data before applying schema changes.
+* [ ] TODO - figure out how to handle migration of IABs and Longitudinal fact tables to the olap data mart
+    * Recommend wiping the olap data mart during the upgrade and allowing the migrate to go; it will take an hour or two to migrate everything.
+    If we take that approach we should wipe the Redshift data before applying schema changes.
 
 * [ ] Apply schema changes. If the warehouse and reporting databases are separate it will be more efficient to run the migration tasks in parallel. Use multiple terminal sessions (or `screen`) and run them at the same time.
+   * Estimated schema changes run time:
+   [ ] Aurora/reporting : 1 hours (to drop and recrete FK on the exam table)
+   [ ] Aurora/warehouse : TODO
+   [ ] Redshift : TODO
+
     ```bash
     # get latest version of the schema
     cd ~/git/RDW_Schema

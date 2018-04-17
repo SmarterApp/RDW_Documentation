@@ -164,25 +164,7 @@ This section records all details that will facilitate configuration and maintena
         # verify this is version 5.6
         mysql --version
         ```
-    * [ ] Install `psql`, e.g. `sudo yum install postgresql`. Install just the client, not the server! After installing check the connection to Redshift.
-        ```bash
-        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=root --password --dbname=dev
-        ```
-        * [ ] (Optional) Configure psql to automatically connect. One way to do this ...
-            * Create `~/.pg_service.conf` with something like this: 
-                 ```ini
-                [rdw]
-                host=rdw-opus.[aws-randomization]
-                port=5439
-                dbname=dev
-                user=root
-                password=password
-                ```
-             NOTE: there is a password in there so do something like `chmod 0600 ~/.pg_service.conf` to protect it.
-             * Add to `.bashrc` (and source it)
-                ```bash
-                export PGSERVICE=rdw 
-                 ```
+    * [ ] Install `psql`, e.g. `sudo yum install postgresql`. Install just the client, not the server!
     * [ ] Install git (requires sudo)
         ```bash
          sudo yum -y install git
@@ -363,6 +345,24 @@ NOTE: the security and routing for Redshift can be tricky, especially if the clu
         * 2 nodes, dc2.large 
         * opus VPC, use cluster subnet group, security group, etc. that were just created
     1. *Record the end-point URLs, root username/password in the reference.*
+    1. Check the connection to Redshift. From ops server:
+        ```bash
+        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=root --password --dbname=dev
+        ```
+        * (Optional) Configure psql to automatically connect. One way to do this ...
+            * Create `~/.pg_service.conf` with something like this:
+                 ```ini
+                [rdw]
+                host=rdw-opus.[aws-randomization]
+                port=5439
+                dbname=dev
+                user=root
+                password=password
+                ```
+             NOTE: there is a password in there so do something like `chmod 0600 ~/.pg_service.conf` to protect it.
+             * Add to `.bashrc` (and source it)
+                ```bash
+                export PGSERVICE=rdw
     1. Create database and users. The users shown here have both role (ingest/reporting) and environment in their name because this is an example for when the Redshift instance is used by all environments. Obviously, if this is for a single environment these could be rdwingest/rdwreporting. Using psql, `psql --host=rdw.[aws-randomization] --port=5439 --username=root --password --dbname=dev`:
         ```sql
         CREATE USER rdwopusingest PASSWORD 'password';
@@ -520,8 +520,7 @@ and the data marts. This is a good time to verify that the required connectivity
 * [ ] Install and configure backend RDW services. This step glosses over a **lot** of configuration details, highlighting just a few high-level steps. Read the architecture and runbook documents, and the annotated configuration files to fully understand all the configuration options.
     1. Generate encrypted passwords/secrets and set in configuration files. Need configuration service port-forward or exec into pod and install curl.
         ```bash
-        kubectl port-forward configuration-deployment-xxx 8888 
-        curl -X POST --data-urlencode "my+secret" http://localhost:8888/encrypt
+        kubectl exec -it configuration-deployment-xxx -- curl -X POST --data-urlencode "my+secret" http://localhost:8888/encrypt
         ```
     1. Set datasource urls, username, passwords in configuration files.
     1. Set S3 bucket, region, access key, secret key in configuration files.
@@ -533,13 +532,13 @@ and the data marts. This is a good time to verify that the required connectivity
     1. Create services.
         ```bash
         # ingest services
-        kubectl create -f exam-processor-service.yml
-        kubectl create -f group-processor-service.yml
-        kubectl create -f import-service.yml     
-        kubectl create -f package-processor-service.yml
-        kubectl create -f migrate-olap-service.yml
-        kubectl create -f migrate-reporting-service.yml
-        kubectl create -f task-service.yml
+        kubectl apply -f exam-processor-service.yml
+        kubectl apply -f group-processor-service.yml
+        kubectl apply -f import-service.yml
+        kubectl apply -f package-processor-service.yml
+        kubectl apply -f migrate-olap-service.yml
+        kubectl apply -f migrate-reporting-service.yml
+        kubectl apply -f task-service.yml
         # reporting services
         kubectl apply -f admin-service.yml
         kubectl apply -f aggregate-service.yml

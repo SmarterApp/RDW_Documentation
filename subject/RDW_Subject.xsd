@@ -52,7 +52,7 @@
     AssessmentType elements define the behavior of assessments for this subject
     within the context of a specific assessment type.
     A subject may have up to 3 assessment types defined, one each for
-    summative, ICA, and IAB.
+    "iab", "ica" or "sum"
   -->
   <xs:element name="AssessmentTypes">
     <xs:complexType>
@@ -71,7 +71,7 @@
         <!-- Subscore definitions for assessments of this type -->
         <xs:element ref="SubScoring" minOccurs="0"/>
       </xs:sequence>
-      <!-- The assessment type being defined. Must be "ica," "iab," or "sum." -->
+      <!-- The assessment type being defined. Must be "ica", "iab" or "sum" -->
       <xs:attribute name="code" use="required" type="AssessmentTypeCode"/>
     </xs:complexType>
   </xs:element>
@@ -339,8 +339,11 @@
   <!-- The Assessment Type codes available within the RDW system -->
   <xs:simpleType name="AssessmentTypeCode">
     <xs:restriction base="xs:string">
+      <!-- Interim Assessment Blocks -->
       <xs:enumeration value="iab"/>
+      <!-- Interim Comprehensive Assessment -->
       <xs:enumeration value="ica"/>
+      <!-- Summative Assessment -->
       <xs:enumeration value="sum"/>
     </xs:restriction>
   </xs:simpleType>
@@ -403,6 +406,11 @@
   <!-- The assessment grades available within the RDW system -->
   <xs:simpleType name="GradeCode">
     <xs:restriction base="xs:string">
+      <xs:enumeration value="UG"/>
+      <xs:enumeration value="IT"/>
+      <xs:enumeration value="PR"/>
+      <xs:enumeration value="PK"/>
+      <xs:enumeration value="TK"/>
       <xs:enumeration value="KG"/>
       <xs:enumeration value="01"/>
       <xs:enumeration value="02"/>
@@ -416,6 +424,8 @@
       <xs:enumeration value="10"/>
       <xs:enumeration value="11"/>
       <xs:enumeration value="12"/>
+      <xs:enumeration value="13"/>
+      <xs:enumeration value="PS"/>
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>

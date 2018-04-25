@@ -673,6 +673,7 @@
       <Icon>fa-book</Icon>
       <Categories>
         <Category code="1-LT" name="Literary Text">
+          <Description><![CDATA[Read Analytically: Literary Text - Students can read closely and analytically to comprehend a range of increasingly complex literary and informational texts.]]></Description>
           <Categories>
             <Category code="1-1" name="1-1">
               <Description><![CDATA[KEY DETAILS: Use explicit details and information from the text to support answers or basic inferences]]></Description>
@@ -908,6 +909,7 @@
           </Categories>
         </Category>
         <Category code="1-IT" name="Informational Text">
+          <Description><![CDATA[Read Analytically: Informational Text - Students can read closely and analytically to comprehend a range of increasingly complex literary and informational texts.]]></Description>
           <Categories>
             <Category code="10-1" name="10-1">
               <Description><![CDATA[WORD MEANINGS: Determine intended meanings of words, including domain-specific (tier 3) words and academic (tier 2) words with multiple meanings, based on context, word relationships, word structure (e.g., common roots, affixes), or use of resources (e.g., beginning dictionary, glossary)]]></Description>
@@ -1190,6 +1192,7 @@
       <Icon>fa-lightbulb-o</Icon>
       <Categories>
         <Category code="3-S" name="Listening">
+          <Description><![CDATA[Speak and Listen purposefully - Students can employ effective speaking and listening skills for a range of purposes and audiences.]]></Description>
           <Categories>
             <Category code="1-1" name="1-1">
               <Description><![CDATA[LANGUAGE & VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking]]></Description>
@@ -1311,6 +1314,7 @@
           </Categories>
         </Category>
         <Category code="3-L" name="Listening">
+          <Description><![CDATA[Speak and Listen purposefully - Students can employ effective speaking and listening skills for a range of purposes and audiences.]]></Description>
           <Categories>
             <Category code="4-1" name="4-1">
               <Description><![CDATA[LISTEN/INTERPRET: Interpret and use information delivered orally or visually]]></Description>
@@ -1357,6 +1361,7 @@
     </Category>
     <Category code="2-W" name="Writing" displayOrder="3">
       <Icon>fa-edit</Icon>
+      <Description><![CDATA[Write Effectively - Students can produce effective and well-grounded writing for a range of purposes and audiences.]]></Description>
       <Categories>
         <Category code="1-1" name="1-1">
           <Description><![CDATA[WRITE/REVISE BRIEF TEXTS: Write or revise one or more paragraphs demonstrating specific narrative strategies (use of dialogue, sensory or concrete details, description), chronology, or authors’ craft appropriate to purpose (detailing characters, plot, setting, or an event)]]></Description>
@@ -1752,6 +1757,7 @@
     </Category>
     <Category code="4-CR" name="Research &amp; Inquiry" displayOrder="4">
       <Icon>fa-question</Icon>
+      <Description><![CDATA[Conduct Research - Students can engage in research/inquiry to investigate topics and to analyze, integrate, and present information.]]></Description>
       <Categories>
         <Category code="1-1" name="1-1">
           <Description><![CDATA[PLAN/RESEARCH: Conduct short research projects to answer a multi-step question or to investigate different aspects (subtopics) of a broader topic or concept]]></Description>

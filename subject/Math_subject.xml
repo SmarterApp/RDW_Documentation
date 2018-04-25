@@ -573,6 +573,7 @@
   <Categories>
     <Category code="1" name="Concepts &amp; Procedures" displayOrder="1">
       <Icon>fa-book</Icon>
+      <Description><![CDATA[Concepts and Procedures - Students can explain and apply mathematical concepts and interpret and carry out mathematical procedures with precision and fluency.]]></Description>
       <Categories>
         <Category code="N-RN|A" name="A">
           <Description><![CDATA[Number and Quantities: Extend the properties of exponents to rational exponents.]]></Description>
@@ -1021,6 +1022,7 @@
       <Icon>fa-edit</Icon>
       <Categories>
         <Category code="2" name="Problem Solving">
+          <Description><![CDATA[Problem Solving - Students can solve a range of complex well-posed problems in pure and applied mathematics, making productive use of knowledge and problem solving strategies.]]></Description>
           <Categories>
             <Category code="NS|A" name="A">
               <Description><![CDATA[Apply mathematics to solve well-posed problems arising in everyday life, society, and the workplace.]]></Description>
@@ -1421,7 +1423,17 @@
           </Categories>
         </Category>
         <Category code="4" name="Modeling and Data Analysis">
+          <Description><![CDATA[Modeling and Data Analysis - Students can analyze complex, real-world scenarios and can construct and use mathematical models to interpret and solve problems.]]></Description>
           <Categories>
+            <Category code="F-LE|A" name="A">
+              <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
+            </Category>
+            <Category code="N-Q|A" name="A">
+              <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
+            </Category>
+            <Category code="SP|A" name="A">
+              <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
+            </Category>
             <Category code="CC|A" name="A">
               <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
             </Category>
@@ -1440,13 +1452,10 @@
             <Category code="NF|A" name="A">
               <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
             </Category>
-            <Category code="F-LE|A" name="A">
+            <Category code="S-MD|A" name="A">
               <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
             </Category>
-            <Category code="N-Q|A" name="A">
-              <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
-            </Category>
-            <Category code="SP|A" name="A">
+            <Category code="A-SSE|A" name="A">
               <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
             </Category>
             <Category code="G-MG|A" name="A">
@@ -1467,10 +1476,13 @@
             <Category code="N-CN|A" name="A">
               <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
             </Category>
-            <Category code="S-MD|A" name="A">
+            <Category code="A-REI|A" name="A">
               <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
             </Category>
-            <Category code="A-SSE|A" name="A">
+            <Category code="G-GPE|A" name="A">
+              <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
+            </Category>
+            <Category code="OA|A" name="A">
               <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
             </Category>
             <Category code="F|A" name="A">
@@ -1488,13 +1500,7 @@
             <Category code="S-ID|A" name="A">
               <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
             </Category>
-            <Category code="A-REI|A" name="A">
-              <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
-            </Category>
-            <Category code="G-GPE|A" name="A">
-              <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
-            </Category>
-            <Category code="OA|A" name="A">
+            <Category code="F-TF|A" name="A">
               <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
             </Category>
             <Category code="N-RN|A" name="A">
@@ -1518,8 +1524,8 @@
             <Category code="NS|A" name="A">
               <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
             </Category>
-            <Category code="F-TF|A" name="A">
-              <Description><![CDATA[Apply mathematics to solve problems arising in everyday life, society, and the workplace.]]></Description>
+            <Category code="NS|B" name="B">
+              <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
             </Category>
             <Category code="F-TF|B" name="B">
               <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
@@ -1542,7 +1548,13 @@
             <Category code="G-GMD|B" name="B">
               <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
             </Category>
-            <Category code="NS|B" name="B">
+            <Category code="F-LE|B" name="B">
+              <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
+            </Category>
+            <Category code="N-Q|B" name="B">
+              <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
+            </Category>
+            <Category code="SP|B" name="B">
               <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
             </Category>
             <Category code="CC|B" name="B">
@@ -1563,13 +1575,10 @@
             <Category code="NF|B" name="B">
               <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
             </Category>
-            <Category code="F-LE|B" name="B">
+            <Category code="S-MD|B" name="B">
               <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
             </Category>
-            <Category code="N-Q|B" name="B">
-              <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
-            </Category>
-            <Category code="SP|B" name="B">
+            <Category code="A-SSE|B" name="B">
               <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
             </Category>
             <Category code="G-MG|B" name="B">
@@ -1590,10 +1599,13 @@
             <Category code="N-CN|B" name="B">
               <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
             </Category>
-            <Category code="S-MD|B" name="B">
+            <Category code="A-REI|B" name="B">
               <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
             </Category>
-            <Category code="A-SSE|B" name="B">
+            <Category code="G-GPE|B" name="B">
+              <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
+            </Category>
+            <Category code="OA|B" name="B">
               <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
             </Category>
             <Category code="F|B" name="B">
@@ -1611,14 +1623,14 @@
             <Category code="S-ID|B" name="B">
               <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
             </Category>
-            <Category code="A-REI|B" name="B">
-              <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
+            <Category code="A-REI|C" name="C">
+              <Description><![CDATA[State logical assumptions being used.]]></Description>
             </Category>
-            <Category code="G-GPE|B" name="B">
-              <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
+            <Category code="G-GPE|C" name="C">
+              <Description><![CDATA[State logical assumptions being used.]]></Description>
             </Category>
-            <Category code="OA|B" name="B">
-              <Description><![CDATA[Construct, autonomously, chains of reasoning to justify mathematical models used, interpretations made, and solutions proposed for a complex problem.]]></Description>
+            <Category code="OA|C" name="C">
+              <Description><![CDATA[State logical assumptions being used.]]></Description>
             </Category>
             <Category code="F|C" name="C">
               <Description><![CDATA[State logical assumptions being used.]]></Description>
@@ -1635,13 +1647,7 @@
             <Category code="S-ID|C" name="C">
               <Description><![CDATA[State logical assumptions being used.]]></Description>
             </Category>
-            <Category code="A-REI|C" name="C">
-              <Description><![CDATA[State logical assumptions being used.]]></Description>
-            </Category>
-            <Category code="G-GPE|C" name="C">
-              <Description><![CDATA[State logical assumptions being used.]]></Description>
-            </Category>
-            <Category code="OA|C" name="C">
+            <Category code="NS|C" name="C">
               <Description><![CDATA[State logical assumptions being used.]]></Description>
             </Category>
             <Category code="F-TF|C" name="C">
@@ -1665,7 +1671,13 @@
             <Category code="G-GMD|C" name="C">
               <Description><![CDATA[State logical assumptions being used.]]></Description>
             </Category>
-            <Category code="NS|C" name="C">
+            <Category code="F-LE|C" name="C">
+              <Description><![CDATA[State logical assumptions being used.]]></Description>
+            </Category>
+            <Category code="N-Q|C" name="C">
+              <Description><![CDATA[State logical assumptions being used.]]></Description>
+            </Category>
+            <Category code="SP|C" name="C">
               <Description><![CDATA[State logical assumptions being used.]]></Description>
             </Category>
             <Category code="CC|C" name="C">
@@ -1686,13 +1698,10 @@
             <Category code="NF|C" name="C">
               <Description><![CDATA[State logical assumptions being used.]]></Description>
             </Category>
-            <Category code="F-LE|C" name="C">
+            <Category code="S-MD|C" name="C">
               <Description><![CDATA[State logical assumptions being used.]]></Description>
             </Category>
-            <Category code="N-Q|C" name="C">
-              <Description><![CDATA[State logical assumptions being used.]]></Description>
-            </Category>
-            <Category code="SP|C" name="C">
+            <Category code="A-SSE|C" name="C">
               <Description><![CDATA[State logical assumptions being used.]]></Description>
             </Category>
             <Category code="G-MG|C" name="C">
@@ -1713,11 +1722,11 @@
             <Category code="N-CN|C" name="C">
               <Description><![CDATA[State logical assumptions being used.]]></Description>
             </Category>
-            <Category code="S-MD|C" name="C">
-              <Description><![CDATA[State logical assumptions being used.]]></Description>
+            <Category code="N-CN|D" name="D">
+              <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
             </Category>
-            <Category code="A-SSE|C" name="C">
-              <Description><![CDATA[State logical assumptions being used.]]></Description>
+            <Category code="S-MD|D" name="D">
+              <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
             </Category>
             <Category code="A-SSE|D" name="D">
               <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
@@ -1737,10 +1746,13 @@
             <Category code="F-IF|D" name="D">
               <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
             </Category>
-            <Category code="N-CN|D" name="D">
+            <Category code="A-REI|D" name="D">
               <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
             </Category>
-            <Category code="S-MD|D" name="D">
+            <Category code="G-GPE|D" name="D">
+              <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
+            </Category>
+            <Category code="OA|D" name="D">
               <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
             </Category>
             <Category code="F|D" name="D">
@@ -1758,13 +1770,7 @@
             <Category code="S-ID|D" name="D">
               <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
             </Category>
-            <Category code="A-REI|D" name="D">
-              <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
-            </Category>
-            <Category code="G-GPE|D" name="D">
-              <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
-            </Category>
-            <Category code="OA|D" name="D">
+            <Category code="NS|D" name="D">
               <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
             </Category>
             <Category code="F-TF|D" name="D">
@@ -1788,7 +1794,13 @@
             <Category code="G-GMD|D" name="D">
               <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
             </Category>
-            <Category code="NS|D" name="D">
+            <Category code="F-LE|D" name="D">
+              <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
+            </Category>
+            <Category code="N-Q|D" name="D">
+              <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
+            </Category>
+            <Category code="SP|D" name="D">
               <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
             </Category>
             <Category code="CC|D" name="D">
@@ -1809,14 +1821,11 @@
             <Category code="NF|D" name="D">
               <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
             </Category>
-            <Category code="F-LE|D" name="D">
-              <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
+            <Category code="F-LE|E" name="E">
+              <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
-            <Category code="N-Q|D" name="D">
-              <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
-            </Category>
-            <Category code="SP|D" name="D">
-              <Description><![CDATA[Interpret results in the context of a situation.]]></Description>
+            <Category code="N-Q|E" name="E">
+              <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
             <Category code="SP|E" name="E">
               <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
@@ -1839,10 +1848,10 @@
             <Category code="NF|E" name="E">
               <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
-            <Category code="F-LE|E" name="E">
+            <Category code="N-CN|E" name="E">
               <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
-            <Category code="N-Q|E" name="E">
+            <Category code="S-MD|E" name="E">
               <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
             <Category code="A-SSE|E" name="E">
@@ -1863,10 +1872,13 @@
             <Category code="F-IF|E" name="E">
               <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
-            <Category code="N-CN|E" name="E">
+            <Category code="A-REI|E" name="E">
               <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
-            <Category code="S-MD|E" name="E">
+            <Category code="G-GPE|E" name="E">
+              <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
+            </Category>
+            <Category code="OA|E" name="E">
               <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
             <Category code="F|E" name="E">
@@ -1884,13 +1896,10 @@
             <Category code="S-ID|E" name="E">
               <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
-            <Category code="A-REI|E" name="E">
+            <Category code="G-GMD|E" name="E">
               <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
-            <Category code="G-GPE|E" name="E">
-              <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
-            </Category>
-            <Category code="OA|E" name="E">
+            <Category code="NS|E" name="E">
               <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
             <Category code="F-TF|E" name="E">
@@ -1911,11 +1920,11 @@
             <Category code="A-CED|E" name="E">
               <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
             </Category>
-            <Category code="G-GMD|E" name="E">
-              <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
+            <Category code="G-GMD|F" name="F">
+              <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
-            <Category code="NS|E" name="E">
-              <Description><![CDATA[Analyze the adequacy of and make improvements to an existing model or develop a mathematical model of a real phenomenon.]]></Description>
+            <Category code="NS|F" name="F">
+              <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
             <Category code="F-TF|F" name="F">
               <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
@@ -1935,10 +1944,10 @@
             <Category code="A-CED|F" name="F">
               <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
-            <Category code="G-GMD|F" name="F">
+            <Category code="F-LE|F" name="F">
               <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
-            <Category code="NS|F" name="F">
+            <Category code="N-Q|F" name="F">
               <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
             <Category code="SP|F" name="F">
@@ -1962,10 +1971,13 @@
             <Category code="NF|F" name="F">
               <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
-            <Category code="F-LE|F" name="F">
+            <Category code="F-IF|F" name="F">
               <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
-            <Category code="N-Q|F" name="F">
+            <Category code="N-CN|F" name="F">
+              <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
+            </Category>
+            <Category code="S-MD|F" name="F">
               <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
             <Category code="A-SSE|F" name="F">
@@ -1983,13 +1995,10 @@
             <Category code="NBT|F" name="F">
               <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
-            <Category code="F-IF|F" name="F">
+            <Category code="A-REI|F" name="F">
               <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
-            <Category code="N-CN|F" name="F">
-              <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
-            </Category>
-            <Category code="S-MD|F" name="F">
+            <Category code="G-GPE|F" name="F">
               <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
             <Category code="OA|F" name="F">
@@ -2010,11 +2019,11 @@
             <Category code="S-ID|F" name="F">
               <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
             </Category>
-            <Category code="A-REI|F" name="F">
-              <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
+            <Category code="A-REI|G" name="G">
+              <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
             </Category>
-            <Category code="G-GPE|F" name="F">
-              <Description><![CDATA[Identify important quantities in a practical situation and map their relationships (e.g., using diagrams, two-way tables, graphs, flowcharts, or formulas).]]></Description>
+            <Category code="G-GPE|G" name="G">
+              <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
             </Category>
             <Category code="OA|G" name="G">
               <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
@@ -2034,10 +2043,13 @@
             <Category code="S-ID|G" name="G">
               <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
             </Category>
-            <Category code="A-REI|G" name="G">
+            <Category code="A-CED|G" name="G">
               <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
             </Category>
-            <Category code="G-GPE|G" name="G">
+            <Category code="G-GMD|G" name="G">
+              <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
+            </Category>
+            <Category code="NS|G" name="G">
               <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
             </Category>
             <Category code="F-TF|G" name="G">
@@ -2055,13 +2067,7 @@
             <Category code="S-IC|G" name="G">
               <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
             </Category>
-            <Category code="A-CED|G" name="G">
-              <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
-            </Category>
-            <Category code="G-GMD|G" name="G">
-              <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
-            </Category>
-            <Category code="NS|G" name="G">
+            <Category code="F-LE|G" name="G">
               <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
             </Category>
             <Category code="N-Q|G" name="G">
@@ -2088,7 +2094,13 @@
             <Category code="NF|G" name="G">
               <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
             </Category>
-            <Category code="F-LE|G" name="G">
+            <Category code="F-IF|G" name="G">
+              <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
+            </Category>
+            <Category code="N-CN|G" name="G">
+              <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
+            </Category>
+            <Category code="S-MD|G" name="G">
               <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
             </Category>
             <Category code="A-SSE|G" name="G">
@@ -2106,21 +2118,13 @@
             <Category code="NBT|G" name="G">
               <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
             </Category>
-            <Category code="F-IF|G" name="G">
-              <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
-            </Category>
-            <Category code="N-CN|G" name="G">
-              <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
-            </Category>
-            <Category code="S-MD|G" name="G">
-              <Description><![CDATA[Identify, analyze and synthesize relevant external resources to pose or solve problems.]]></Description>
-            </Category>
           </Categories>
         </Category>
       </Categories>
     </Category>
     <Category code="3" name="Communicating Reasoning" displayOrder="3">
       <Icon>fa-question</Icon>
+      <Description><![CDATA[Communicating Reasoning - Students can clearly and precisely construct viable arguments to support their own reasoning and to critique the reasoning of others.]]></Description>
       <Categories>
         <Category code="CC|A" name="A">
           <Description><![CDATA[Test propositions or conjectures with specific examples.]]></Description>
@@ -2395,9 +2399,6 @@
         <Category code="SP|C" name="C">
           <Description><![CDATA[State logical assumptions being used.]]></Description>
         </Category>
-        <Category code="A-SSE|C" name="C">
-          <Description><![CDATA[State logical assumptions being used.]]></Description>
-        </Category>
         <Category code="G-MG|C" name="C">
           <Description><![CDATA[State logical assumptions being used.]]></Description>
         </Category>
@@ -2417,6 +2418,9 @@
           <Description><![CDATA[State logical assumptions being used.]]></Description>
         </Category>
         <Category code="S-MD|C" name="C">
+          <Description><![CDATA[State logical assumptions being used.]]></Description>
+        </Category>
+        <Category code="A-SSE|C" name="C">
           <Description><![CDATA[State logical assumptions being used.]]></Description>
         </Category>
         <Category code="A-SSE|D" name="D">
@@ -2491,9 +2495,6 @@
         <Category code="NS|D" name="D">
           <Description><![CDATA[Use the technique of breaking an argument into cases.]]></Description>
         </Category>
-        <Category code="SP|D" name="D">
-          <Description><![CDATA[Use the technique of breaking an argument into cases.]]></Description>
-        </Category>
         <Category code="CC|D" name="D">
           <Description><![CDATA[Use the technique of breaking an argument into cases.]]></Description>
         </Category>
@@ -2516,6 +2517,9 @@
           <Description><![CDATA[Use the technique of breaking an argument into cases.]]></Description>
         </Category>
         <Category code="N-Q|D" name="D">
+          <Description><![CDATA[Use the technique of breaking an argument into cases.]]></Description>
+        </Category>
+        <Category code="SP|D" name="D">
           <Description><![CDATA[Use the technique of breaking an argument into cases.]]></Description>
         </Category>
         <Category code="SP|E" name="E">
@@ -2569,9 +2573,6 @@
         <Category code="S-MD|E" name="E">
           <Description><![CDATA[Distinguish correct logic or reasoning from that which is flawed, and—if there is a flaw in the argument—explain what it is.]]></Description>
         </Category>
-        <Category code="OA|E" name="E">
-          <Description><![CDATA[Distinguish correct logic or reasoning from that which is flawed, and—if there is a flaw in the argument—explain what it is.]]></Description>
-        </Category>
         <Category code="F|E" name="E">
           <Description><![CDATA[Distinguish correct logic or reasoning from that which is flawed, and—if there is a flaw in the argument—explain what it is.]]></Description>
         </Category>
@@ -2591,6 +2592,9 @@
           <Description><![CDATA[Distinguish correct logic or reasoning from that which is flawed, and—if there is a flaw in the argument—explain what it is.]]></Description>
         </Category>
         <Category code="G-GPE|E" name="E">
+          <Description><![CDATA[Distinguish correct logic or reasoning from that which is flawed, and—if there is a flaw in the argument—explain what it is.]]></Description>
+        </Category>
+        <Category code="OA|E" name="E">
           <Description><![CDATA[Distinguish correct logic or reasoning from that which is flawed, and—if there is a flaw in the argument—explain what it is.]]></Description>
         </Category>
         <Category code="F-TF|E" name="E">
@@ -2641,9 +2645,6 @@
         <Category code="NS|F" name="F">
           <Description><![CDATA[Base arguments on concrete referents such as objects, drawings, diagrams, and actions.]]></Description>
         </Category>
-        <Category code="N-Q|F" name="F">
-          <Description><![CDATA[Base arguments on concrete referents such as objects, drawings, diagrams, and actions.]]></Description>
-        </Category>
         <Category code="SP|F" name="F">
           <Description><![CDATA[Base arguments on concrete referents such as objects, drawings, diagrams, and actions.]]></Description>
         </Category>
@@ -2666,6 +2667,9 @@
           <Description><![CDATA[Base arguments on concrete referents such as objects, drawings, diagrams, and actions.]]></Description>
         </Category>
         <Category code="F-LE|F" name="F">
+          <Description><![CDATA[Base arguments on concrete referents such as objects, drawings, diagrams, and actions.]]></Description>
+        </Category>
+        <Category code="N-Q|F" name="F">
           <Description><![CDATA[Base arguments on concrete referents such as objects, drawings, diagrams, and actions.]]></Description>
         </Category>
         <Category code="A-SSE|F" name="F">
@@ -2716,9 +2720,6 @@
         <Category code="G-GPE|F" name="F">
           <Description><![CDATA[Base arguments on concrete referents such as objects, drawings, diagrams, and actions.]]></Description>
         </Category>
-        <Category code="G-GPE|G" name="G">
-          <Description><![CDATA[At later grades, determine conditions under which an argument does and does not apply. (For example, area increases with perimeter for squares, but not for all plane figures.)]]></Description>
-        </Category>
         <Category code="OA|G" name="G">
           <Description><![CDATA[At later grades, determine conditions under which an argument does and does not apply. (For example, area increases with perimeter for squares, but not for all plane figures.)]]></Description>
         </Category>
@@ -2738,6 +2739,9 @@
           <Description><![CDATA[At later grades, determine conditions under which an argument does and does not apply. (For example, area increases with perimeter for squares, but not for all plane figures.)]]></Description>
         </Category>
         <Category code="A-REI|G" name="G">
+          <Description><![CDATA[At later grades, determine conditions under which an argument does and does not apply. (For example, area increases with perimeter for squares, but not for all plane figures.)]]></Description>
+        </Category>
+        <Category code="G-GPE|G" name="G">
           <Description><![CDATA[At later grades, determine conditions under which an argument does and does not apply. (For example, area increases with perimeter for squares, but not for all plane figures.)]]></Description>
         </Category>
         <Category code="F-TF|G" name="G">

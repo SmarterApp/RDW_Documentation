@@ -206,7 +206,7 @@ All cluster deployment and configuration is stored in version control, so nothin
 
 * [ ] Apply schema changes. If the warehouse and reporting databases are separate it will be more efficient to run the migration tasks in parallel. Use multiple terminal sessions (or `screen`) and run them at the same time.
    * Estimated schema changes run time:
-    * [ ] Aurora/reporting (from AWS DEV reporting.schema_version) : 
+    * [ ] TODO: Aurora/reporting (from AWS DEV reporting.schema_version) : 
     ```mysql
     select version, script, execution_time/1000/60 from reporting.schema_version where script like 'V1_2%'`;
     ```
@@ -218,7 +218,13 @@ All cluster deployment and configuration is stored in version control, so nothin
    |1.2.0.3|V1_2_0_3__iab_dashboard_exam_index.sql|50.55576667|
    |1.2.0.4|V1_2_0_4__add_grade_order.sql|0.00538333|
    
-   * [ ] Aurora/warehouse : TODO
+   * [ ] TODO: Aurora/warehouse :
+    |version  | script       |  execution_time (in min) | 
+    |1.2.0.0|V1_2_0_0__elas_gender.sql|44.80201667|
+    |1.2.0.1|V1_2_0_1__elas_audit.sql|0.01543333|
+    |1.2.0.2|V1_2_0_2__ccs_for_summatives.sql|0.00030000|
+    |1.2.0.3|V1_2_0_3__add_grade_order.sql|0.00291667|
+
    * [ ] Redshift : TODO
 
     ```bash

@@ -219,6 +219,7 @@ All cluster deployment and configuration is stored in version control, so nothin
    |1.2.0.4|V1_2_0_4__add_grade_order.sql|0.00538333|
    
    * [ ] TODO: Aurora/warehouse :
+   
     |version  | script       |  execution_time (in min) | 
     |-------------- | ----------- |---------- |
     |1.2.0.0|V1_2_0_0__elas_gender.sql|44.80201667|

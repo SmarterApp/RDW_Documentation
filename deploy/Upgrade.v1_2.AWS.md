@@ -220,6 +220,7 @@ All cluster deployment and configuration is stored in version control, so nothin
    
    * [ ] TODO: Aurora/warehouse :
     |version  | script       |  execution_time (in min) | 
+    |-------------- | ----------- |---------- |
     |1.2.0.0|V1_2_0_0__elas_gender.sql|44.80201667|
     |1.2.0.1|V1_2_0_1__elas_audit.sql|0.01543333|
     |1.2.0.2|V1_2_0_2__ccs_for_summatives.sql|0.00030000|

@@ -212,7 +212,7 @@ All cluster deployment and configuration is stored in version control, so nothin
     ```
    |version  | script       |  execution_time (in min) | 
    |-------------- | ----------- |---------- |
-   |1.2.0.0,V1_2_0_0__elas_gender.sql|25.22918333|
+   |1.2.0.0|V1_2_0_0__elas_gender.sql|25.22918333|
    |1.2.0.1|V1_2_0_1__add_user_report_type.sql|0.00156667 |
    |1.2.0.2|V1_2_0_2__elas_date.sql|25.28641667|
    |1.2.0.3|V1_2_0_3__iab_dashboard_exam_index.sql|50.55576667|

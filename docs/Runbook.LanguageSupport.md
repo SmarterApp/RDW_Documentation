@@ -8,7 +8,7 @@ By default all reporting applications ship with English as an available, embedde
 #### Reporting Language File Installation
 Language translation values are represented as JSON.<br>
 To retrieve the current translations for a given language, log into the reporting application and make a call to `https://my-reporting-application/api/translations/{xx}?include-ui=true` to download the full language source for a language identified by it's two-character code. (Example: `en` for English)<br>
-The `?include-ui=true` parameter includes UI-only translation messages and may be omitted if only installing a language for generated reports (PDF, Aggregate, etc).<br>
+The `?include-ui=true` parameter includes translation messages that only apply to the UI and may be omitted if installing a language that only applies to generated reports (PDF, Aggregate, etc).<br>
 The downloaded JSON may be translated into any language and saved to the configuration repository as a xx.json file. (Example: `/i18n/es.json`)<br>
 See below for how to configure the reporting system to use your translated JSON file to provide translation options to the user.
 

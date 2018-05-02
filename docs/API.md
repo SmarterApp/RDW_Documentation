@@ -14,6 +14,7 @@ Quick Links:
 1. [Organization Endpoints](#organization-endpoints)
 1. [Accommodations Endpoints](#accommodations-endpoints)
 1. [Package Endpoints](#package-endpoints)
+1. [Groups Endpoints](#groups-endpoints)
 1. [Norms Endpoints](#norms-endpoints)
 1. [Task Endpoints](#task-endpoints)
 1. [Status Endpoints](#status-endpoints)
@@ -110,12 +111,61 @@ curl https://openam/auth/oauth2/tokeninfo?access_token=20b55fc2-1b84-4412-8149-8
 ```
 
 ### Import Endpoints
-The import service provides the end-points for submitting data to the system. The import requests are processed and migrated to the reporting data mart. Import payloads are hashed and duplicate content is detected, returning any previous import request for the given content. Thus submitting a payload a second time will safely no-op and return the current status of the previous import.
+The import service provides the end-points for submitting data to the system. All end-points require a valid token, the examples use `{access_token}` as a placeholder. The token must provide appropriate permissions. For most content, this is the `ASMTDATALOAD` role at the client or state level but refer to individual content end-point documentation for specific permissions. There is one diagnostic end-point provided that helps debug permissions issues:
 
-All data submissions result in an import being created. Thus a POST to `/exams/imports` will create an `import` resource which can be accessed at `/imports/{id}` (note that `exams` is not in the path). These are the end-points for query imports.
+#### Get User
+This end-point may be used to get the credentials of the current user.
+
+* Host: import service
+* URL: `/imports/user`
+* Method: `GET`
+* Params: none
+* Headers:
+  * `Authorization: Bearer {access_token}`
+* Success Response:
+  * Code: 200 (OK)
+  * Content:
+    ```json
+    {
+      "password": "N/A",
+      "username": "dwtest@example.com",
+      "authorities": [
+        {
+          "authority": "ROLE_ASMTDATALOAD"
+        }
+      ],
+      "accountNonExpired": true,
+      "accountNonLocked": true,
+      "credentialsNonExpired": true,
+      "enabled": true,
+      "tenancyChain": {
+        "grants": [
+          {
+            "level": "CLIENT",
+            "name": "",
+            "id": "SBAC",
+            "role": "ASMTDATALOAD",
+            "clientId": "SBAC",
+            "stateId": "",
+            "entityId": "SBAC"
+          }
+        ],
+      "empty": false
+      }
+    }
+    ```
+* Error Response:
+  * Code: 401 (Unauthorized) if token is missing or invalid.
+  * Code: 403 (Forbidden) if token doesn't provide the `ASTMDATALOAD` role.
+* Sample Call (curl):
+```bash
+curl --header "Authorization:Bearer {access_token}" https://import-service/imports/user
+```
+
+The import requests are processed and migrated to the reporting data mart. Import payloads are hashed and duplicate content is detected, returning any previous import request for the given content. Thus, for most content, submitting a payload a second time will safely no-op and return the current status of the previous import. The one exception to this rule is for Student Groups: because other factors such as permissions and organizations affect the processing of groups, duplicate import requests are reprocessed.
+
+All data submissions result in an import being created. Thus a POST to `/exams/imports` will create an `import` resource which can be accessed at `/imports/{id}` (note that `exams` is not in the path). These are the end-points for querying imports.
  
-All end-points require a valid token, the examples use `{access_token}` as a placeholder. The token must provide the `ASMTDATALOAD` role at the client or state level.
-
 #### Get Import Request
 This end-point may be used to get the current status of an import request.
 
@@ -215,6 +265,8 @@ curl --header "Authorization:Bearer {access_token}" https://import-service/impor
 ### Exam Endpoints
 End-points for submitting exams aka test results.
 
+These require the `ASMTDATALOAD` role.
+
 #### Create Exam Import Request
 Accepts payloads in Test Result Transmission ([TRT][3]) format, creating new exam import requests. Based on the data in the TRT this may result in an exam being created, updated or deleted. Exams are identified using the opportunity id and assessment id. If an incoming exam is not found in the system one will be added. If a matching exam already exists, it will be updated or, if the new status is `reset`, it will be deleted.
 
@@ -300,7 +352,9 @@ curl -X POST --header "Authorization:Bearer {access_token}" https://import-servi
 
   
 ### Organization Endpoints
-End-points for submitting organization data; this includes districts, schools, and groups of institutions. 
+End-points for submitting organization data; this includes districts, schools, and groups of institutions.
+
+These require the `ASMTDATALOAD` role.
 
 #### Create Organization Import Request
 Accepts JSON payload, compatible with the [format produced by ART](https://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools/blob/master/external_release_docs/SBAC-11%20TestRegistration%20API.pdf),
@@ -468,7 +522,9 @@ curl -X POST --header "Authorization:Bearer {access_token}" -F file=@ART.json ht
     
     
 ### Accommodations Endpoints
-End-points for submitting accommodations data. This is data authored by Smarter Balanced that describes the various accessibility features available during testing. 
+End-points for submitting accommodations data. This is data authored by Smarter Balanced that describes the various accessibility features available during testing.
+
+These require the `ASMTDATALOAD` role.
 
 #### Create Accommodation Import Request
 Accepts payloads in the Smarter Balanced [Accessibility Configuration Specification][2] format. There are two ways of posting content: with a raw body of type `application/xml` or form-data (file upload).
@@ -544,6 +600,8 @@ End-points for submitting assessment package data in CSV format (tabulator outpu
 
 An attempt to update any of the above data elements will result in the "PROCESSED" status and the message stating that it was rejected.
 
+These require the `ASMTDATALOAD` role.
+
 #### Create Package Import Request
 Accepts payloads in the Smarter Balanced Assessment Tabulator format. This is a CSV format produced by the internal tabulator utility. 
 
@@ -608,6 +666,71 @@ To check the status of the import use Get Import Request. Imports with "PROCESSE
 "Assessments processed: 7, created: 5, updated: 1, rejected: 1".
 ```
               
+### Groups Endpoints
+End-point for submitting student group data in the Smarter Balanced Student Group CSV format.
+
+These require the `GROUP_WRITE` permission.
+
+#### Create Groups Import Request
+Accepts payloads in the Smarter Balanced Student Group CSV format. This end point can be used to import new groups or update existing ones.
+
+There are two ways of posting content: with a raw body of type `application/csv` or form-data file upload in CSV format.
+
+* Host: import service
+* URL: `/groups/imports`
+* Method: `POST`
+* URL Params: any URL param will be preserved as properties for the upload, well-known params:
+  * `filename=<originalFileName>`  (not needed for form-data)
+* Headers:
+  * `Authorization: Bearer {access_token}`
+* Headers (raw body):
+  * `Content-Type:application/csv`
+* Body (raw body): Smarter Balanced Student Group CSV
+* Headers (form-data):
+  * `Content-Type:multipart/form-data`
+* Form Data (form-data):
+  * `file` - the upload file
+  * `filename=<filename>`
+  * any other form data will be preserved as properties for the upload
+* Success Response:
+  * Code: 202 (Accepted)
+  * Content:
+    ```json
+    {
+        "id": 9,
+        "content": "GROUPS",
+        "contentType": "application/csv",
+        "digest": "5EA9607434903493BD274611FA817304",
+        "status": "PROCESSED",
+        "creator": "dwtest@example.com",
+        "created": "2018-02-08T22:29:47.120343Z",
+        "updated": "2018-02-08T22:29:47.120343Z",
+        "_links": {
+            "self": {
+                "href": "http://localhost:8080/imports/9"
+            },
+            "payload": {
+                "href": "http://localhost:8080/imports/9/payload"
+            },
+            "payload-properties": {
+                "href": "http://localhost:8080/imports/9/payload/properties"
+            }
+        }
+    }
+    ```
+* Error Response:
+  * Code: 401 (Unauthorized) if token is missing or invalid.
+  * Code: 403 (Forbidden) if token doesn't provide the `GROUP_WRITE` permission.
+* Sample Call (raw body):
+```bash
+curl -X POST --header "Authorization:Bearer {access_token}" --header "Content-Type:application/csv" \
+  --data-binary "group_name,school_natural_id,..." https://import-service/groups/imports?filename=mygroups.csv
+```
+* Sample Call (form-data):
+```bash
+curl -X POST --header "Authorization:Bearer {access_token}" -F file=@mygroups.csv https://import-service/groups/imports
+``` 
+
 ### Norms Endpoints
 End-point for submitting norms percentile tables in the Smarter Balanced [Norms CSV format](Norms.md). This end point can be used to import new norms or update existing ones. When norms are created, the following data elements are required and comprise the unique identifier for the norms percentile table:
 * assessment_id : natural id of an assessment that must already be loaded
@@ -615,6 +738,8 @@ End-point for submitting norms percentile tables in the Smarter Balanced [Norms 
 * end_date : inclusive end date of exam completion
 
 When an existing norms percentile table matches the above three data elements on import it is updated.
+
+These require the `ASMTDATALOAD` role.
 
 #### Create Norms Import Request
 Accepts payloads in the Smarter Balanced [Norms CSV format](Norms.md).
@@ -675,13 +800,13 @@ curl -X POST --header "Authorization:Bearer {access_token}" --header "Content-Ty
 * Sample Call (form-data):
 ```bash
 curl -X POST --header "Authorization:Bearer {access_token}" -F file=@2017-norms.csv https://import-service/norms/imports
-``` 
+```
 ##### Check Norms Import Request result
-To check the status of the import use Get Import Request. Imports with "PROCESSED" status will include a messages describing actions taken. An example of the response: 
+To check the status of the import use Get Import Request. Imports with "PROCESSED" status will include a messages describing actions taken. An example of the response:
 ```
 "Percentiles created: 0 updated: 2".
 ```
-              
+
 ### Task Endpoints
 There are a few tasks that are configured to run periodically (typically once a day). These end-points allow those tasks to be manually triggered on demand. These end-points are part of the actuator framework so they are exposed on a separate port (8008) which is typically kept behind a firewall in a private network. No authentication is required. 
 

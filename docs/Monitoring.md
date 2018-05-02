@@ -105,7 +105,7 @@ SELECT count(*) FROM import WHERE status = 0 AND updated < (CURRENT_TIMESTAMP - 
 ```
 Although not urgent, persistent import slowness will affect the timeliness of the reporting data.
 
-The duration of an import can be calculated by comparing the `created` and `updated` values. This can be used to look at historical import performance, for example:
+The processing time of an import can be calculated by comparing the `created` and `updated` values. This can be used to look at historical import performance, for example:
 ```sql
 SELECT minutes, COUNT(*) AS count FROM (SELECT TIMESTAMPDIFF(MINUTE, created, updated) minutes FROM import) sub GROUP BY minutes;
 +---------+----------+

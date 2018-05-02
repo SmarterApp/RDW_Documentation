@@ -5,12 +5,28 @@
 ### Language Installation
 By default all reporting applications ship with English as an available, embedded language. Installing additional languages or overriding English display values requires both configuration changes and translation message files to be made available to the applications.
 
-#### Reporting Language File Installation
-Language translation values are represented as JSON.<br>
+#### Reporting Language Files
+Language translation values are represented as JSON files.  Each language is represented by a single `xx.json` file that is named using the language two-character ISO code. (Example: `es.json` for Spanish, `vi.json` for Vietnamese, etc)
+Additionally, although the application ships with English as a default embedded language, tenants may install an `en.json` file to override any display text in the reporting application.
+The language files must exist in a location that is accessible by the reporting services.  We recommend using the configuration repository as a simple accessible hosting location that also provides change tracking.
+
+#### Reporting Language File Creation and Installation
+To create a new language JSON file, it is easiest to start from the existing English values, translate them, and save the result as a new language JSON file.
 To retrieve the current translations for a given language, log into the reporting application and make a call to `https://my-reporting-application/api/translations/{xx}?include-ui=true` to download the full language source for a language identified by its two-character code. (Example: `en` for English)<br>
 The `?include-ui=true` parameter includes translation messages that only apply to the UI and may be omitted if installing a language that only applies to generated reports (PDF, Aggregate, etc).<br>
-The downloaded JSON may be translated into any language and saved to the configuration repository as a xx.json file. (Example: `/i18n/es.json`)<br>
-See below for how to configure the reporting system to use your translated JSON file to provide translation options to the user.
+The downloaded JSON may then be translated into any language and saved to the configuration repository as a xx.json file. (Example: `/i18n/es.json`)<br>
+See below for how to configure the reporting system to use your translated JSON file to provide translation options to the user.<br>
+
+NOTE: A translation JSON file is not required to be "complete." For example, to override just the footer text in English from the default value, you may install an `en.json` file that contains only the new footer message:
+
+**en.json**
+```json
+{
+  "common-ngx": {
+    "footer": "© My Organization – Smarter Balanced Assessment Consortium"
+  }
+}
+```
 
 #### Reporting Webapp UI Language Installation
 Adding an available language to the reporting webapp UI involves configuring the application to announce both the presence and location of additional languages.

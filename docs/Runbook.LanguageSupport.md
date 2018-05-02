@@ -13,7 +13,7 @@ The downloaded JSON may be translated into any language and saved to the configu
 See below for how to configure the reporting system to use your translated JSON file to provide translation options to the user.
 
 #### Reporting Webapp UI Language Installation
-Adding an available language to the reporting webapp UI involves configuring the application to announce the both the presence and location of additional languages.
+Adding an available language to the reporting webapp UI involves configuring the application to announce both the presence and location of additional languages.
 * The `reporting.ui-languages` property contains a list of languages that are available to the system in addition to English.
   Additional languages should be specified using their ISO-standard two-character language code.
 * The `reporting.translation-location` property contains the URL-prefix used to retrieve advertised language files.

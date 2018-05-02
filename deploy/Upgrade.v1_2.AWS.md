@@ -109,9 +109,12 @@ The goal of this step is to make changes to everything that doesn't directly aff
 * [ ] Changes to configuration files in `RDW_Config_Opus`. There are annotated configuration files in the `config` folder in the `RDW` repository; use those to help guide edits.
     * [ ] Common service properties.
         * Edit `application.yml`
-            * Change `app:` to `reporting:`.
+            * Change `app:` to `reporting:`.  <-- seriously?! look into this
+            * Set `app.client` to `SBAC` (this is the client-id). Set `app.state.code` to `CA`.
             * Delete `tenant:` line (and move things around if necessary) so those properties are now under `reporting:`
     * [ ] Ingest services.
+        * [ ] Import service, edit `rdw-ingest-import-service.yml`
+            * Set `security.permission-service.endpoint` (copy from reporting webapp config)
         * [ ] Migrate Olap service, edit `rdw-ingest-migrate-olap.yml`
             * TODO - change batch size?
     * [ ] Reporting services.
@@ -144,7 +147,20 @@ The goal of this step is to make changes to everything that doesn't directly aff
         git add *
         git commit -am "Changes for v1.2"
         git push 
-        ```        
+        ```
+* [ ] Permissions
+    * Because of a quirk in the permissions service there must be a permission associated with every role so, for the
+    Reporting component add a `DATA_WRITE` permission and associate it with the role `ASMTDATALOAD`.
+    TODO - perhaps fix the code
+* [ ] Translations
+    * Verify there are no custom entries in the reporting.translation table. If there are, create an `en.json` with the
+    custom values. For example,
+    ```json
+    ...
+    "html": {
+      "system-news": "<h2 class=\"blue-dark h3 mb-md\">Note</h2><div class=\"summary-reports-container mb-md\"><p>Item level data and session IDs are not available for tests administered prior to the 2017-18 school year.</p></div>"
+    },
+    ```
 * [ ] TODO - any other prep
 
 * [ ] Run data validation scripts. These scripts compare data between the warehouse and the data marts.

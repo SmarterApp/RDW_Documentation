@@ -186,7 +186,17 @@ This section records all details that will facilitate configuration and maintena
         ```
 * [ ] SBAC Application Prerequisites. These are non-RDW applications that are maintained as part of the SBAC ecosystem. They run independently of RDW and are not part of the Kubernetes cluster.
     * [ ] SSO. 
-        * Create OpenAM OAuth2 client.
+        * Create OpenAM OAuth2 client. The steps for this vary but here are the highlights:
+            * Navigate to the OpenAM site and login with an administrative account.
+            * Go to `Access Control`, selecting the appropriate realm, e.g. `sbac`
+            * Go to `Agents`, `Oauth 2.0 Client`
+            * Create a new client, noting name and password.
+            * Typically, a group is used to manage settings:
+                * Edit the newly created client, assign the `Group` to, for example, sbac_client_group, and then Save.
+                * Continue editing, set the `Inheritance Settings` to include at least:
+                    * `Default Scope(s)`
+                    * `ID Token Signed Response Algorithm`
+                    * `Scope(s)`
         * *Record the host and client info in the reference.*
     * [ ] ART. 
         * [ ] Create ingest user for the task service user. This is used by the task service to fetch organization information from ART and submit it to the import service. As such it should have `Administrator`, `State Coordinator` and `ASMTDATALOAD` roles at the state level for `CA`.

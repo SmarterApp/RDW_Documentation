@@ -6,8 +6,6 @@
 
 > **NOTE:** these instructions were originally written for a v1.0 installation. The v1.0 -> v1.1 upgrade instructions were then merged, but the consolidated instructions haven't been thoroughly tested for a clean v1.1 installation. 
 
-**TODO - instructions for creating OpenAM oauth2 agent client id/password?**
-
 ### Table Of Contents
 * [Reference](#reference)
 * [Checklist](#checklist)

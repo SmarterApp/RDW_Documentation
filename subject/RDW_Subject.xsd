@@ -13,6 +13,7 @@
         <xs:element ref="Messages"/>
         <xs:element ref="AssessmentTypes"/>
         <xs:element ref="DepthsOfKnowledge"/>
+        <xs:element ref="ItemDifficulties"/>
         <xs:element ref="ReportGrades"/>
         <xs:element ref="Claims"/>
         <xs:element ref="Standards"/>
@@ -66,8 +67,6 @@
       <xs:sequence>
         <!-- The performance levels available for assessments of this type -->
         <xs:element ref="PerformanceLevels"/>
-        <!-- The item difficulty cutpoints of items for assessments of this type -->
-        <xs:element ref="ItemDifficulties" minOccurs="0"/>
         <!-- Subscore definitions for assessments of this type -->
         <xs:element ref="SubScoring" minOccurs="0"/>
       </xs:sequence>
@@ -308,15 +307,13 @@
       <!--
         True if this claim is scorable and we are required to persist
         Student result scores against this claim.
-        DEFAULT VALUE: true
       -->
-      <xs:attribute name="scorable" type="xs:boolean"/>
+      <xs:attribute name="scorable" default="true" type="xs:boolean"/>
       <!--
         True if this claim is organizational and there exist assessment
         items that will reference this claim.
-        DEFAULT VALUE: true
       -->
-      <xs:attribute name="organizational" type="xs:boolean"/>
+      <xs:attribute name="organizational" default="true" type="xs:boolean"/>
       <!--
         Optional attribute declaring display order when displaying
         scorable claims.  Claims will be displayed in ascending order.

@@ -15,15 +15,6 @@
         <PerformanceLevel level="3" name="Met Standard" color="green-dark"/>
         <PerformanceLevel level="4" name="Exceeded Standard" color="blue-dark"/>
       </PerformanceLevels>
-      <ItemDifficulties>
-        <ItemDifficulty gradeCode="03" moderateLowEnd="-1.93882" difficultLowEnd="-0.43906"/>
-        <ItemDifficulty gradeCode="04" moderateLowEnd="-1.51022" difficultLowEnd="0.14288"/>
-        <ItemDifficulty gradeCode="05" moderateLowEnd="-1.07082" difficultLowEnd="0.55842"/>
-        <ItemDifficulty gradeCode="06" moderateLowEnd="-0.88783" difficultLowEnd="0.88783"/>
-        <ItemDifficulty gradeCode="07" moderateLowEnd="-0.7215" difficultLowEnd="1.06739"/>
-        <ItemDifficulty gradeCode="08" moderateLowEnd="-0.47018" difficultLowEnd="1.34599"/>
-        <ItemDifficulty gradeCode="11" moderateLowEnd="-0.38186" difficultLowEnd="1.5479"/>
-      </ItemDifficulties>
       <SubScoring>
         <PerformanceLevels>
           <PerformanceLevel level="1" name="Below Standard" color="aqua"/>
@@ -38,15 +29,6 @@
         <PerformanceLevel level="2" name="Near Standard" color="textured-blue"/>
         <PerformanceLevel level="3" name="Above Standard" color="blue-dark"/>
       </PerformanceLevels>
-      <ItemDifficulties>
-        <ItemDifficulty gradeCode="03" moderateLowEnd="-1.93882" difficultLowEnd="-0.43906"/>
-        <ItemDifficulty gradeCode="04" moderateLowEnd="-1.51022" difficultLowEnd="0.14288"/>
-        <ItemDifficulty gradeCode="05" moderateLowEnd="-1.07082" difficultLowEnd="0.55842"/>
-        <ItemDifficulty gradeCode="06" moderateLowEnd="-0.88783" difficultLowEnd="0.88783"/>
-        <ItemDifficulty gradeCode="07" moderateLowEnd="-0.7215" difficultLowEnd="1.06739"/>
-        <ItemDifficulty gradeCode="08" moderateLowEnd="-0.47018" difficultLowEnd="1.34599"/>
-        <ItemDifficulty gradeCode="11" moderateLowEnd="-0.38186" difficultLowEnd="1.5479"/>
-      </ItemDifficulties>
     </AssessmentType>
     <AssessmentType code="sum">
       <PerformanceLevels standardCutoff="3">
@@ -55,15 +37,6 @@
         <PerformanceLevel level="3" name="Met Standard" color="green-dark"/>
         <PerformanceLevel level="4" name="Exceeded Standard" color="blue-dark"/>
       </PerformanceLevels>
-      <ItemDifficulties>
-        <ItemDifficulty gradeCode="03" moderateLowEnd="-1.93882" difficultLowEnd="-0.43906"/>
-        <ItemDifficulty gradeCode="04" moderateLowEnd="-1.51022" difficultLowEnd="0.14288"/>
-        <ItemDifficulty gradeCode="05" moderateLowEnd="-1.07082" difficultLowEnd="0.55842"/>
-        <ItemDifficulty gradeCode="06" moderateLowEnd="-0.88783" difficultLowEnd="0.88783"/>
-        <ItemDifficulty gradeCode="07" moderateLowEnd="-0.7215" difficultLowEnd="1.06739"/>
-        <ItemDifficulty gradeCode="08" moderateLowEnd="-0.47018" difficultLowEnd="1.34599"/>
-        <ItemDifficulty gradeCode="11" moderateLowEnd="-0.38186" difficultLowEnd="1.5479"/>
-      </ItemDifficulties>
       <SubScoring>
         <PerformanceLevels>
           <PerformanceLevel level="1" name="Below Standard" color="aqua"/>
@@ -87,6 +60,15 @@
       <Reference><![CDATA[https://portal.smarterbalanced.org/library/en/english-language-artsliteracy-content-specifications.pdf#page=54]]></Reference>
     </DepthOfKnowledge>
   </DepthsOfKnowledge>
+  <ItemDifficulties>
+    <ItemDifficulty gradeCode="03" moderateLowEnd="-1.93882" difficultLowEnd="-0.43906"/>
+    <ItemDifficulty gradeCode="04" moderateLowEnd="-1.51022" difficultLowEnd="0.14288"/>
+    <ItemDifficulty gradeCode="05" moderateLowEnd="-1.07082" difficultLowEnd="0.55842"/>
+    <ItemDifficulty gradeCode="06" moderateLowEnd="-0.88783" difficultLowEnd="0.88783"/>
+    <ItemDifficulty gradeCode="07" moderateLowEnd="-0.7215" difficultLowEnd="1.06739"/>
+    <ItemDifficulty gradeCode="08" moderateLowEnd="-0.47018" difficultLowEnd="1.34599"/>
+    <ItemDifficulty gradeCode="11" moderateLowEnd="-0.38186" difficultLowEnd="1.5479"/>
+  </ItemDifficulties>
   <ReportGrades>
     <ReportGrade code="03">
       <ReportAssessmentTypes>

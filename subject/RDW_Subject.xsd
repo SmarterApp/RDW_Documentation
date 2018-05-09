@@ -212,7 +212,7 @@
         <!-- The performance level messages for the student's overall performance -->
         <xs:element ref="ReportPerformanceLevels"/>
         <!-- The subscore messages -->
-        <xs:element ref="ReportCategories"/>
+        <xs:element ref="ReportClaims"/>
       </xs:sequence>
       <!-- The target assessment type code -->
       <xs:attribute name="code" use="required" type="AssessmentTypeCode"/>
@@ -245,23 +245,23 @@
   </xs:element>
 
   <!--
-    ReportCategory elements define the report messages for a particular
-    grade, assessment type, category (sub-score) and performance level.
+    ReportClaim elements define the report messages for a particular
+    grade, assessment type, scorable claim and performance level.
   -->
-  <xs:element name="ReportCategories">
+  <xs:element name="ReportClaims">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="ReportCategory"/>
+        <xs:element maxOccurs="unbounded" ref="ReportClaim"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="ReportCategory">
+  <xs:element name="ReportClaim">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="ReportPerformanceLevels"/>
       </xs:sequence>
       <!--
-        The target category.  This must reference an existing Category@code
+        The target category.  This must reference an existing scorable Claim@code
         value in the XML document.
       -->
       <xs:attribute name="code" use="required" type="String10"/>

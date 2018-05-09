@@ -81,29 +81,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade three standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade three standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
         <ReportAssessmentType code="sum">
           <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade three California academic standards for mathematics and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
@@ -114,29 +114,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade three standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade three standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
       </ReportAssessmentTypes>
     </ReportGrade>
@@ -151,29 +151,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade four standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade four standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
         <ReportAssessmentType code="sum">
           <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade four California academic standards for mathematics and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
@@ -184,29 +184,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade four standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade four standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
       </ReportAssessmentTypes>
     </ReportGrade>
@@ -221,29 +221,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade five standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade five standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
         <ReportAssessmentType code="sum">
           <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade five California academic standards for mathematics and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
@@ -254,29 +254,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade five standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade five standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
       </ReportAssessmentTypes>
     </ReportGrade>
@@ -291,29 +291,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade six standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade six standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
         <ReportAssessmentType code="sum">
           <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade six California academic standards for mathematics and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
@@ -324,29 +324,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade six standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade six standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
       </ReportAssessmentTypes>
     </ReportGrade>
@@ -361,29 +361,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade seven standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade seven standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
         <ReportAssessmentType code="sum">
           <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade seven California academic standards for mathematics and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
@@ -394,29 +394,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade seven standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade seven standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
       </ReportAssessmentTypes>
     </ReportGrade>
@@ -431,29 +431,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade eight standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade eight standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
         <ReportAssessmentType code="sum">
           <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade eight California academic standards for mathematics and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
@@ -464,29 +464,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade eight standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade eight standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
       </ReportAssessmentTypes>
     </ReportGrade>
@@ -501,29 +501,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} met the grade eleven standard for mathematics and appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} exceeded the grade eleven standard for mathematics and is ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
         <ReportAssessmentType code="sum">
           <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade eleven California academic standards for mathematics and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
@@ -534,29 +534,29 @@
             <ReportPerformanceLevel level="3"><![CDATA[{0} met the grade eleven standard for mathematics and appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} exceeded the grade eleven standard for mathematics and is ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
-          <ReportCategories>
-            <ReportCategory code="SOCK_2">
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="1">
+            </ReportClaim>
+            <ReportClaim code="1">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-            <ReportCategory code="3">
+            </ReportClaim>
+            <ReportClaim code="3">
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
-            </ReportCategory>
-          </ReportCategories>
+            </ReportClaim>
+          </ReportClaims>
         </ReportAssessmentType>
       </ReportAssessmentTypes>
     </ReportGrade>

@@ -117,6 +117,8 @@ The goal of this step is to make changes to everything that doesn't directly aff
             * Set `security.permission-service.endpoint` (copy from reporting webapp config)
         * [ ] Migrate Olap service, edit `rdw-ingest-migrate-olap.yml`
             * TODO - change batch size?
+        * [ ] Package processor, edit `rdw-ingest-package-processor.yml`
+            * Add Amazon S3 credentials to configuration (copy from import-service)
     * [ ] Reporting services.
         * [ ] Admin service, edit `rdw-reporting-admin-service.yml`
             * Change `app:` to `reporting:`

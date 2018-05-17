@@ -62,6 +62,13 @@ curl -s -X POST \
   --data "grant_type=password&username=user@example.com&password=password&client_id=client&client_secret=secret" \
   https://openam/auth/oauth2/access_token?realm=/sbac
 ```
+* Extracting the access token. A handy util is `jq` which parses json payloads. Using it the access token may be extracted from the payload, something like:
+```bash
+ACCESS_TOKEN=`curl -s -X POST \
+  --data "grant_type=password&username=user@example.com&password=password&client_id=client&client_secret=secret" \
+  https://openam/auth/oauth2/access_token?realm=/sbac | jq -r '.access_token'`
+```
+The resulting environment variable may be used in subsequent calls. Where the samples have `{access_token}` substitute `${ACCESS_TOKEN}`.
 
 #### Test Access Token
 Although not needed during normal operations, this call can be used to check an access token.
@@ -114,7 +121,7 @@ curl https://openam/auth/oauth2/tokeninfo?access_token=20b55fc2-1b84-4412-8149-8
 The import service provides the end-points for submitting data to the system. All end-points require a valid token, the examples use `{access_token}` as a placeholder. The token must provide appropriate permissions. For most content, this is the `ASMTDATALOAD` role at the client or state level but refer to individual content end-point documentation for specific permissions. There is one diagnostic end-point provided that helps debug permissions issues:
 
 #### Get User
-This end-point may be used to get the credentials of the current user.
+This end-point may be used to get the credentials of the current user. This is provided for diagnostic purposes.
 
 * Host: import service
 * URL: `/imports/user`
@@ -669,7 +676,7 @@ To check the status of the import use Get Import Request. Imports with "PROCESSE
 ### Groups Endpoints
 End-point for submitting student group data in the Smarter Balanced Student Group CSV format.
 
-These require the `GROUP_WRITE` permission.
+These require the `GROUP_WRITE` permission for the schools involved.
 
 #### Create Groups Import Request
 Accepts payloads in the Smarter Balanced Student Group CSV format. This end point can be used to import new groups or update existing ones.

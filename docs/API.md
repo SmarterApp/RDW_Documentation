@@ -325,8 +325,7 @@ curl -X POST --header "Authorization:Bearer {access_token}" --header "Content-Ty
 ```
 * Sample Call (form-data):
 ```bash
-curl -X POST --header "Authorization:Bearer {access_token}" -F file=@winterICA.1.xml -F batch=WinterICA \
-  https://import-service/exams/imports
+curl -X POST --header "Authorization:Bearer {access_token}" -F file=@winterICA.1.xml -F batch=WinterICA https://import-service/exams/imports
 ```
   
 #### Resubmit Exams
@@ -665,7 +664,7 @@ curl -X POST --header "Authorization:Bearer {access_token}" --header "Content-Ty
 ```
 * Sample Call (form-data):
 ```bash
-curl -X POST --header "Authorization:Bearer {access_token}" -F file=@2017-2018.csv https://import-service/packages/imports
+curl -X POST --header "Authorization:Bearer {access_token}" -F "file=@2017-2018.csv;type=text/csv" https://import-service/packages/imports
 ``` 
 ##### Check Package Import Request result
 To check the status of the import use Get Import Request. Imports with "PROCESSED" status will include a messages describing actions taken. An example of the response: 
@@ -735,7 +734,7 @@ curl -X POST --header "Authorization:Bearer {access_token}" --header "Content-Ty
 ```
 * Sample Call (form-data):
 ```bash
-curl -X POST --header "Authorization:Bearer {access_token}" -F file=@mygroups.csv https://import-service/groups/imports
+curl -X POST --header "Authorization:Bearer {access_token}" -F "file=@mygroups.csv;type=text/csv" https://import-service/groups/imports
 ``` 
 
 ### Norms Endpoints
@@ -806,7 +805,7 @@ curl -X POST --header "Authorization:Bearer {access_token}" --header "Content-Ty
 ```
 * Sample Call (form-data):
 ```bash
-curl -X POST --header "Authorization:Bearer {access_token}" -F file=@2017-norms.csv https://import-service/norms/imports
+curl -X POST --header "Authorization:Bearer {access_token}" -F "file=@2017-norms.csv;type=text/csv" https://import-service/norms/imports
 ```
 ##### Check Norms Import Request result
 To check the status of the import use Get Import Request. Imports with "PROCESSED" status will include a messages describing actions taken. An example of the response:

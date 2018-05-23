@@ -572,316 +572,316 @@
         <Target code="N-RN|A" name="A">
           <Description>Number and Quantities: Extend the properties of exponents to rational exponents.</Description>
         </Target>
-        <Target code="OA|A-1" name="A-1">
+        <Target code="OA|A-1" name="A">
           <Description>Represent and solve problems involving addition and subtraction.</Description>
         </Target>
-        <Target code="OA|A-2" name="A-2">
+        <Target code="OA|A-2" name="A">
           <Description>Represent and solve problems involving addition and subtraction.</Description>
         </Target>
-        <Target code="OA|A-3" name="A-3">
+        <Target code="OA|A-3" name="A">
           <Description>Represent and solve problems involving multiplication and division.</Description>
         </Target>
-        <Target code="OA|A-4" name="A-4">
+        <Target code="OA|A-4" name="A">
           <Description>Use the four operations with whole numbers to solve problems.</Description>
         </Target>
-        <Target code="OA|A-5" name="A-5">
+        <Target code="OA|A-5" name="A">
           <Description>Write and interpret numerical expressions.</Description>
         </Target>
-        <Target code="RP|A-6" name="A-6">
+        <Target code="RP|A-6" name="A">
           <Description>Understand ration concepts and use ratio reasoning to solve problems.</Description>
         </Target>
-        <Target code="RP|A-7" name="A-7">
+        <Target code="RP|A-7" name="A">
           <Description>Analyze proportional relationships and use them to solve real-world and mathematical problems.</Description>
         </Target>
-        <Target code="NS|A-8" name="A-8">
+        <Target code="NS|A-8" name="A">
           <Description>Know that there are numbers that are not rational, and approximate them by rational numbers.</Description>
         </Target>
-        <Target code="CC|A-KG" name="A-KG">
+        <Target code="CC|A-KG" name="A">
           <Description>Know number names and the count sequence</Description>
         </Target>
         <Target code="N-RN|B" name="B">
           <Description>Number and Quantities: Use properties of rational and irrational numbers.</Description>
         </Target>
-        <Target code="OA|B-1" name="B-1">
+        <Target code="OA|B-1" name="B">
           <Description>Understand and apply properties of operations and the relationship between addition and subtraction.</Description>
         </Target>
-        <Target code="OA|B-2" name="B-2">
+        <Target code="OA|B-2" name="B">
           <Description>Add and subtract within 20.</Description>
         </Target>
-        <Target code="OA|B-3" name="B-3">
+        <Target code="OA|B-3" name="B">
           <Description>Understand properties of multiplication and the relationship between multiplication and division.</Description>
         </Target>
-        <Target code="OA|B-4" name="B-4">
+        <Target code="OA|B-4" name="B">
           <Description>Get familiarity with factors and multiples.</Description>
         </Target>
-        <Target code="OA|B-5" name="B-5">
+        <Target code="OA|B-5" name="B">
           <Description>Analyze patterns and relationships.</Description>
         </Target>
-        <Target code="NS|B-6" name="B-6">
+        <Target code="NS|B-6" name="B">
           <Description>Apply and extend previous understandings of multiplication and division to divide fractions by fractions.</Description>
         </Target>
-        <Target code="NS|B-7" name="B-7">
+        <Target code="NS|B-7" name="B">
           <Description>Apply and extend previous understandings of operations with fractions to add, subtract, multiply, and divide rational numbers.</Description>
         </Target>
-        <Target code="EE|B-8" name="B-8">
+        <Target code="EE|B-8" name="B">
           <Description>Work with radicals and integer exponents.</Description>
         </Target>
-        <Target code="CC|B-KG" name="B-KG">
+        <Target code="CC|B-KG" name="B">
           <Description>Count to tell the number of objects.</Description>
         </Target>
         <Target code="N-Q|C" name="C">
           <Description>Number and Quantities: Reason quantitatively and use units to solve problems.</Description>
         </Target>
-        <Target code="OA|C-1" name="C-1">
+        <Target code="OA|C-1" name="C">
           <Description>Add and subtract within 20.</Description>
         </Target>
-        <Target code="OA|C-2" name="C-2">
+        <Target code="OA|C-2" name="C">
           <Description>Work with equal groups of objects to gain foundations for multiplication.</Description>
         </Target>
-        <Target code="OA|C-3" name="C-3">
+        <Target code="OA|C-3" name="C">
           <Description>Multiply and divide within 100.</Description>
         </Target>
-        <Target code="OA|C-4" name="C-4">
+        <Target code="OA|C-4" name="C">
           <Description>Generate and analyze patterns.</Description>
         </Target>
-        <Target code="NBT|C-5" name="C-5">
+        <Target code="NBT|C-5" name="C">
           <Description>Understand the place value system.</Description>
         </Target>
-        <Target code="NS|C-6" name="C-6">
+        <Target code="NS|C-6" name="C">
           <Description>Compute fluently with muti-digit numbers and find common factors and multiples.</Description>
         </Target>
-        <Target code="EE|C-7" name="C-7">
+        <Target code="EE|C-7" name="C">
           <Description>Use properties of operations to generate equivalent expressions.</Description>
         </Target>
-        <Target code="EE|C-8" name="C-8">
+        <Target code="EE|C-8" name="C">
           <Description>Understand the connections between proportional relationships, lines, and linear equations.</Description>
         </Target>
-        <Target code="CC|C-KG" name="C-KG">
+        <Target code="CC|C-KG" name="C">
           <Description>Compare Numbers</Description>
         </Target>
         <Target code="A-SSE|D" name="D">
           <Description>Algebra: Interpret the structure of expressions.</Description>
         </Target>
-        <Target code="OA|D-1" name="D-1">
+        <Target code="OA|D-1" name="D">
           <Description>Work with addition and subtraction equations.</Description>
         </Target>
-        <Target code="NBT|D-2" name="D-2">
+        <Target code="NBT|D-2" name="D">
           <Description>Understand place  value.</Description>
         </Target>
-        <Target code="OA|D-3" name="D-3">
+        <Target code="OA|D-3" name="D">
           <Description>Solve problems involving the four operations, and identify and explain patterns in arithmetic.</Description>
         </Target>
-        <Target code="NBT|D-4" name="D-4">
+        <Target code="NBT|D-4" name="D">
           <Description>Generalize place value understanding for multi-digit whole numbers.</Description>
         </Target>
-        <Target code="NBT|D-5" name="D-5">
+        <Target code="NBT|D-5" name="D">
           <Description>Perform operations with multi-digit whole numbers and with decimals to hundredths.</Description>
         </Target>
-        <Target code="NS|D-6" name="D-6">
+        <Target code="NS|D-6" name="D">
           <Description>Apply and extend previous understandings of numbers to the system of rational numbers.</Description>
         </Target>
-        <Target code="EE|D-7" name="D-7">
+        <Target code="EE|D-7" name="D">
           <Description>Solve real-life and mathematical problems using numerical and algebraic expressions and equations.</Description>
         </Target>
-        <Target code="EE|D-8" name="D-8">
+        <Target code="EE|D-8" name="D">
           <Description>Analyze and solve linear equations and pairs of simultaneous linear equations.</Description>
         </Target>
-        <Target code="OA|D-KG" name="D-KG">
+        <Target code="OA|D-KG" name="D">
           <Description>Understand addition as putting together and adding to, and understand subtraction as taking apart and taking from.</Description>
         </Target>
         <Target code="A-SSE|E" name="E">
           <Description>Algebra: Write expressions in equivalent forms to solve problems.</Description>
         </Target>
-        <Target code="NBT|E-1" name="E-1">
+        <Target code="NBT|E-1" name="E">
           <Description>Extend the counting sequence.</Description>
         </Target>
-        <Target code="NBT|E-2" name="E-2">
+        <Target code="NBT|E-2" name="E">
           <Description>Use place value understanding and properties of operations to add and subtract.</Description>
         </Target>
-        <Target code="NBT|E-3" name="E-3">
+        <Target code="NBT|E-3" name="E">
           <Description>Use place value understanding and properties of operations to perform multi-digit arithmetic.</Description>
         </Target>
-        <Target code="NBT|E-4" name="E-4">
+        <Target code="NBT|E-4" name="E">
           <Description>Use place value understanding and properties of operations to perform multi-digit arithmetic.</Description>
         </Target>
-        <Target code="NF|E-5" name="E-5">
+        <Target code="NF|E-5" name="E">
           <Description>Use equivalent fractions as a strategy to add and subtract fractions.</Description>
         </Target>
-        <Target code="EE|E-6" name="E-6">
+        <Target code="EE|E-6" name="E">
           <Description>Apply and extend previous understandings of arithmetic to algebraic expressions.</Description>
         </Target>
-        <Target code="G|E-7" name="E-7">
+        <Target code="G|E-7" name="E">
           <Description>Draw, construct, and describe geometrical figures and describe the relationship between them.</Description>
         </Target>
-        <Target code="F|E-8" name="E-8">
+        <Target code="F|E-8" name="E">
           <Description>Define, evaluate, and compare functions.</Description>
         </Target>
-        <Target code="NBT|E-KG" name="E-KG">
+        <Target code="NBT|E-KG" name="E">
           <Description>Work with numbers 11-19 to gain foundations for place value.</Description>
         </Target>
         <Target code="A-APR|F" name="F">
           <Description>Algebra: Perform arithmetic operations on polynomials.</Description>
         </Target>
-        <Target code="NBT|F-1" name="F-1">
+        <Target code="NBT|F-1" name="F">
           <Description>Understand place value.</Description>
         </Target>
-        <Target code="MD|F-2" name="F-2">
+        <Target code="MD|F-2" name="F">
           <Description>Measure and estimate lengths in standard units.</Description>
         </Target>
-        <Target code="NF|F-3" name="F-3">
+        <Target code="NF|F-3" name="F">
           <Description>Develop understanding of fractions as numbers.</Description>
         </Target>
-        <Target code="NF|F-4" name="F-4">
+        <Target code="NF|F-4" name="F">
           <Description>Extend understanding of fractions equivalence and ordering.</Description>
         </Target>
-        <Target code="NF|F-5" name="F-5">
+        <Target code="NF|F-5" name="F">
           <Description>Apply and extend previous understandings of multiplication and division to multiply and divide fractions.</Description>
         </Target>
-        <Target code="EE|F-6" name="F-6">
+        <Target code="EE|F-6" name="F">
           <Description>Reason about and solve one-variable equations and inequalities.</Description>
         </Target>
-        <Target code="G|F-7" name="F-7">
+        <Target code="G|F-7" name="F">
           <Description>Solve real-life and mathematical problems involving angle measure, area, surface area, and volume.</Description>
         </Target>
-        <Target code="F|F-8" name="F-8">
+        <Target code="F|F-8" name="F">
           <Description>Use functions to model relationships between quantities.</Description>
         </Target>
-        <Target code="MD|F-KG" name="F-KG">
+        <Target code="MD|F-KG" name="F">
           <Description>Describe and compare measurable attributes.</Description>
         </Target>
         <Target code="A-CED|G" name="G">
           <Description>Algebra: Create equations that describe numbers or relationships</Description>
         </Target>
-        <Target code="NBT|G-1" name="G-1">
+        <Target code="NBT|G-1" name="G">
           <Description>Use place value understanding and properties of operations to add and subtract.</Description>
         </Target>
-        <Target code="MD|G-2" name="G-2">
+        <Target code="MD|G-2" name="G">
           <Description>Relate addition and subtraction to length.</Description>
         </Target>
-        <Target code="MD|G-3" name="G-3">
+        <Target code="MD|G-3" name="G">
           <Description>Solve problems involving measurement and estimation of intervals of time, liquid volumes, and masses of objects.</Description>
         </Target>
-        <Target code="NF|G-4" name="G-4">
+        <Target code="NF|G-4" name="G">
           <Description>Build fractions from unit fractions by applying and extending previous understandings of operations on whole numbers.</Description>
         </Target>
-        <Target code="MD|G-5" name="G-5">
+        <Target code="MD|G-5" name="G">
           <Description>Convert like measurement units within a given measurement system.</Description>
         </Target>
-        <Target code="EE|G-6" name="G-6">
+        <Target code="EE|G-6" name="G">
           <Description>Represent and analyze quantitative relationships between dependent and independent variables.</Description>
         </Target>
-        <Target code="SP|G-7" name="G-7">
+        <Target code="SP|G-7" name="G">
           <Description>Use random sampling to draw inferences about a population.</Description>
         </Target>
-        <Target code="G|G-8" name="G-8">
+        <Target code="G|G-8" name="G">
           <Description>Understand congruence and similarity using physical models, transparencies, or geometry software.</Description>
         </Target>
-        <Target code="MD|G-KG" name="G-KG">
+        <Target code="MD|G-KG" name="G">
           <Description>Classify objects and count the number of objects in each category.</Description>
         </Target>
         <Target code="A-REI|H" name="H">
           <Description>Algebra: Understand solving equations as a process of reasoning and explain the reasoning.</Description>
         </Target>
-        <Target code="MD|H-1" name="H-1">
+        <Target code="MD|H-1" name="H">
           <Description>Measure lengths indirectly and by iterating length units.</Description>
         </Target>
-        <Target code="MD|H-2" name="H-2">
+        <Target code="MD|H-2" name="H">
           <Description>Work with time and money.</Description>
         </Target>
-        <Target code="MD|H-3" name="H-3">
+        <Target code="MD|H-3" name="H">
           <Description>Represent and interpret data.</Description>
         </Target>
-        <Target code="NF|H-4" name="H-4">
+        <Target code="NF|H-4" name="H">
           <Description>Understand decimal notation for fractions, and compare decimal fractions.</Description>
         </Target>
-        <Target code="MD|H-5" name="H-5">
+        <Target code="MD|H-5" name="H">
           <Description>Represent and interpret data.</Description>
         </Target>
-        <Target code="G|H-6" name="H-6">
+        <Target code="G|H-6" name="H">
           <Description>Solve real-world and mathematical problems involving area, surface area, and volume.</Description>
         </Target>
-        <Target code="SP|H-7" name="H-7">
+        <Target code="SP|H-7" name="H">
           <Description>Draw informal comparative inferences about two populations</Description>
         </Target>
-        <Target code="G|H-8" name="H-8">
+        <Target code="G|H-8" name="H">
           <Description>Understand and apply the Pythagorean Theorem.</Description>
         </Target>
-        <Target code="G|H-KG" name="H-KG">
+        <Target code="G|H-KG" name="H">
           <Description>Identify and describe shapes (squares, circles, triangles, rectangles, hexagons, cubes, cones, cylinders, and spheres).</Description>
         </Target>
         <Target code="A-REI|I" name="I">
           <Description>Algebra: Solve equations and inequalities in one variable.</Description>
         </Target>
-        <Target code="MD|I-1" name="I-1">
+        <Target code="MD|I-1" name="I">
           <Description>Tell and write time.</Description>
         </Target>
-        <Target code="MD|I-2" name="I-2">
+        <Target code="MD|I-2" name="I">
           <Description>Represent and interpret data.</Description>
         </Target>
-        <Target code="MD|I-3" name="I-3">
+        <Target code="MD|I-3" name="I">
           <Description>Geometric measurement: understand concepts of area and relate area to multiplication and to addition.</Description>
         </Target>
-        <Target code="MD|I-4" name="I-4">
+        <Target code="MD|I-4" name="I">
           <Description>Solve problems involving measurement and conversion of measurement from a larger unit to a smaller unit.</Description>
         </Target>
-        <Target code="MD|I-5" name="I-5">
+        <Target code="MD|I-5" name="I">
           <Description>Geometric measurement: understand concepts of volume and relate volume to multiplication and to addition.</Description>
         </Target>
-        <Target code="SP|I-6" name="I-6">
+        <Target code="SP|I-6" name="I">
           <Description>Develop understanding of statistical variability.</Description>
         </Target>
-        <Target code="SP|I-7" name="I-7">
+        <Target code="SP|I-7" name="I">
           <Description>Investigate chance processes and develop, use, and evaluate probability models.</Description>
         </Target>
-        <Target code="G|I-8" name="I-8">
+        <Target code="G|I-8" name="I">
           <Description>Solve real-world and mathematical problems involving volume of cylinders, cones, and spheres.</Description>
         </Target>
-        <Target code="G|I-KG" name="I-KG">
+        <Target code="G|I-KG" name="I">
           <Description>Analyze, compare, create, and compose shapes.</Description>
         </Target>
         <Target code="A-REI|J" name="J">
           <Description>Algebra: Represent and solve equations and inequalities graphically.</Description>
         </Target>
-        <Target code="MD|J-1" name="J-1">
+        <Target code="MD|J-1" name="J">
           <Description>Represent and interpret data.</Description>
         </Target>
-        <Target code="G|J-2" name="J-2">
+        <Target code="G|J-2" name="J">
           <Description>Reason with shapes and their attributes.</Description>
         </Target>
-        <Target code="MD|J-3" name="J-3">
+        <Target code="MD|J-3" name="J">
           <Description>Geometric measurement: recognize perimeter as an attribute of plane figures and distinguish between linear and area measures.</Description>
         </Target>
-        <Target code="MD|J-4" name="J-4">
+        <Target code="MD|J-4" name="J">
           <Description>Represent and interpret data.</Description>
         </Target>
-        <Target code="G|J-5" name="J-5">
+        <Target code="G|J-5" name="J">
           <Description>Graph points on the coordinate plane to solve real-world and mathematical problems.</Description>
         </Target>
-        <Target code="SP|J-6" name="J-6">
+        <Target code="SP|J-6" name="J">
           <Description>Summarize and describe distributions.</Description>
         </Target>
-        <Target code="SP|J-8" name="J-8">
+        <Target code="SP|J-8" name="J">
           <Description>Investigate patterns of association in bivariate data.</Description>
         </Target>
         <Target code="F-IF|K" name="K">
           <Description>Functions: Understand the concept of a function and use function notation.</Description>
         </Target>
-        <Target code="G|K-1" name="K-1">
+        <Target code="G|K-1" name="K">
           <Description>Reason with shapes and their attributes.</Description>
         </Target>
-        <Target code="G|K-3" name="K-3">
+        <Target code="G|K-3" name="K">
           <Description>Reason with shapes and their attributes.</Description>
         </Target>
-        <Target code="MD|K-4" name="K-4">
+        <Target code="MD|K-4" name="K">
           <Description>Geometric measurement: understand concepts of angle and measure angles.</Description>
         </Target>
-        <Target code="G|K-5" name="K-5">
+        <Target code="G|K-5" name="K">
           <Description>Classify two-dimensional figures into categories based on their properties.</Description>
         </Target>
         <Target code="F-IF|L" name="L">
           <Description>Functions: Interpret functions that arise in applications in terms of the context.</Description>
         </Target>
-        <Target code="G|L-4" name="L-4">
+        <Target code="G|L-4" name="L">
           <Description>Draw and identify lines and angles, and classify shapes by properties of their lines and angles.</Description>
         </Target>
         <Target code="F-IF|M" name="M">

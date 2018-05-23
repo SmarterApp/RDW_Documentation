@@ -14,8 +14,8 @@
     * [Reconciliation Report](#reconciliation-report)
     * [Unknown School](#unknown-school)
     * [Duplicate Schools](#duplicate-schools)
-    * [Invalid Student Group](#invalid-group)
     * [Empty Student Report](#empty-report)
+    * [Invalid Student Group](#invalid-group)
     * [Missing Student Group](#missing-student-group)
     * [Can't See Student Group](#missing-student-group-one-user)
     * [Unable To Admin District](#unable-to-admin-district)
@@ -423,6 +423,62 @@ use reporting;
 delete s from school s where s.natural_id like '%0000000' and not exists (select sg.id from student_group sg where sg.school_id = s.id) and not exists (select e.id from exam e where e.school_id = s.id);
 ```
 
+<a name="empty-report"></a>
+#### Student Report - Empty PDF
+
+Support verified that the report is really empty. With the low bandwidth with support we really only know the school
+name, "Awesome Academy" and that the incident happened yesterday. All the initial work will be in MySQL, reporting:
+
+* Get school info, specifically the id, in this case id=6470
+    ```sql
+    SELECT * FROM school WHERE name LIKE 'Awesome Academy%';
+    ```
+* Find a user report record(s) for that school:
+    ```sql
+    SELECT * FROM user_report WHERE report_request LIKE '%schoolID":6470%';
+    ```
+    * {"@class":"org.opentestsystem.rdw.reporting.common.report.SchoolGradeExamReportRequest","schoolYear":2018,"language":"eng","name":"Awesome Academy 2018","order":"STUDENT_NAME","schoolId":6470,"gradeId":11}
+    * schoolId: 6470
+    * gradeId: 11
+    * schoolYear: 2018
+* See what exam data we have matching those criteria
+    ```sql
+    select count(*) from exam where school_id=6470 and school_year=2018 and grade_id=11;
+    +----------+
+    | count(*) |
+    +----------+
+    |        0 |
+    +----------+
+    ```
+* Oops. What's up with that?
+    ```sql
+    select grade_id, count(*) cnt from exam where school_id=6470 and school_year=2018 group by grade_id;
+    +----------+-----+
+    | grade_id | cnt |
+    +----------+-----+
+    |       12 |   9 |
+    +----------+-----+
+    ```
+
+There is no grade 11 exam data, it is grade 12. The user will have to specify grade 12 when requesting the report.
+But that's not possible. So this is clearly a bug: the system should use the assessment grade when filtering results
+for the printed report.
+
+<a name="failed-group"></a>
+#### Student Group - Failed Import
+
+If a student group import fails, the system retains the intermediate data to help when diagnosing the problem. This is an advanced effort usually requiring tier 3 support which won't be detailed here. However, it does require that that intermediate data be deleted.
+
+If you know the import that failed, cleaning up the data is easy, something like:
+```sql
+DELETE FROM upload_student_group WHERE import_id = 33962;
+```
+
+If individual failures were not addressed, deleting all "old" entries may be more appropriate. For example, to delete failures more than 3 days old:
+```sql
+DELETE usg FROM upload_student_group usg JOIN import i ON i.id = usg.import_id WHERE i.updated < TIMESTAMPADD(DAY, -3, CURRENT_TIMESTAMP);
+```
+
 <a name="invalid-group"></a>
 #### Student Groups - Invalid Upload Status
 
@@ -485,47 +541,6 @@ group_name,school_natural_id,school_year,subject_code,student_ssid,group_user_lo
 
 The problem is the S3 loader doesn't have the necessary `ENCLOSED BY '"'` clause so it is failing to parse the first
 column properly. 
-
-<a name="empty-report"></a>
-#### Student Report - Empty PDF
-
-Support verified that the report is really empty. With the low bandwidth with support we really only know the school
-name, "Awesome Academy" and that the incident happened yesterday. All the initial work will be in MySQL, reporting: 
-
-* Get school info, specifically the id, in this case id=6470
-    ```sql
-    SELECT * FROM school WHERE name LIKE 'Awesome Academy%';
-    ```
-* Find a user report record(s) for that school:
-    ```sql
-    SELECT * FROM user_report WHERE report_request LIKE '%schoolID":6470%';
-    ```
-    * {"@class":"org.opentestsystem.rdw.reporting.common.report.SchoolGradeExamReportRequest","schoolYear":2018,"language":"eng","name":"Awesome Academy 2018","order":"STUDENT_NAME","schoolId":6470,"gradeId":11}
-    * schoolId: 6470
-    * gradeId: 11
-    * schoolYear: 2018
-* See what exam data we have matching those criteria
-    ```sql
-    select count(*) from exam where school_id=6470 and school_year=2018 and grade_id=11;
-    +----------+
-    | count(*) |
-    +----------+
-    |        0 |
-    +----------+
-    ```
-* Oops. What's up with that?
-    ```sql
-    select grade_id, count(*) cnt from exam where school_id=6470 and school_year=2018 group by grade_id;
-    +----------+-----+
-    | grade_id | cnt |
-    +----------+-----+
-    |       12 |   9 |
-    +----------+-----+
-    ```
-
-There is no grade 11 exam data, it is grade 12. The user will have to specify grade 12 when requesting the report.
-But that's not possible. So this is clearly a bug: the system should use the assessment grade when filtering results
-for the printed report.
 
 <a name="missing-student-group"></a>
 #### Missing Student Group

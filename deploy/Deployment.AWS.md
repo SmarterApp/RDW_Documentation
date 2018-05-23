@@ -73,6 +73,9 @@ This section records all details that will facilitate configuration and maintena
 * Reconciliation report S3 bucket:
     * name: recon-bucket
     * user: name, accesskey/secretkey
+* Log collection:
+    * GELF sink: 1.2.3.4:12201
+    * Source name: opus-prod
 * Import:
     * end-point: import.sbac.org
     * ELB id: [aws-randomization]
@@ -512,8 +515,11 @@ and the data marts. This is a good time to verify that the required connectivity
               # value: /
         kubectl create -f deploy/kube-config/influxdb
         ```
-* [ ] Install and configure supporting services (autoscaler, rabbit, wkthmltopdf, configuration service)
+* [ ] Install and configure supporting services (autoscaler, logging daemonset, rabbit, wkthmltopdf, configuration service)
     1. Edit cluster-autoscaler.yml to verify --nodes option matches cluster configuration
+    1. Edit fluentd-gelf.yml to set the GELF_HOST and the daemonset name.
+        * Set GELF_HOST to the accessible IP address.
+        * Set `metadata.name` to a name that is meaningful when filtering in Graylog. This value will appear as the "source" in Graylog messages.
     1. Edit configuration-service.yml to set git repo and credentials, and encrypt key
     1. Create the services:
     ```bash

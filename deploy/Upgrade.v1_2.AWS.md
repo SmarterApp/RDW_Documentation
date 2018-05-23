@@ -112,6 +112,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
             * Change `app:` to `reporting:`.  <-- seriously?! look into this
             * Set `app.client` to `SBAC` (this is the client-id). Set `app.state.code` to `CA`.
             * Delete `tenant:` line (and move things around if necessary) so those properties are now under `reporting:`
+                * Probably want to put `transfer-access-enabled: true` in here (and remove from other config files)
     * [ ] Ingest services.
         * [ ] Import service, edit `rdw-ingest-import-service.yml`
             * Set `security.permission-service.endpoint` (copy from reporting webapp config)
@@ -130,6 +131,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
             * Move any properties under `tenant:` to be under `reporting:`
             * Move all properties under `app:` to `rdw-reporting-webapp.yml` and change to be under `reporting:`
             (when you're done there will be no properties under `app:` in the reporting service config file)
+            * Add `spring.writable_datasource` and set url and credentials. Perhaps a copy from `spring.datasource` but make sure it is not read-only.
         * [ ] Reporting webapp, edit `rdw-reporting-webapp.yml`
             * Copy `app:` properties from `rdw-reporting-service.yml` and put them under `reporting:`
                 * Simplify `analytics.trackingId` to `analytics-tracking-id`
@@ -262,6 +264,8 @@ All cluster deployment and configuration is stored in version control, so nothin
     # migrate olap (this may take a while)
     TODO - redshift
     ```
+    * [ ] Cleanup. Some of this should make it into the flyway scripts but if they don't:
+        * `DELETE FROM warehouse.upload_student_group`
 * [ ] Merge deployment and configuration branches. This can be done via command line or via the repository UI (if you use the repository UI, make sure to checkout and pull the latest `master`). Here are the command line actions:
     ```bash
     cd ~/git/RDW_Deploy_Opus

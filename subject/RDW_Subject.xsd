@@ -67,8 +67,8 @@
       <xs:sequence>
         <!-- The performance levels available for assessments of this type -->
         <xs:element ref="PerformanceLevels"/>
-        <!-- Subscore definitions for assessments of this type -->
-        <xs:element ref="SubScoring" minOccurs="0"/>
+        <!-- Claim score definitions for assessments of this type -->
+        <xs:element ref="ClaimScoring" minOccurs="0"/>
       </xs:sequence>
       <!-- The assessment type being defined. Must be "ica", "iab" or "sum" -->
       <xs:attribute name="code" use="required" type="AssessmentTypeCode"/>
@@ -128,12 +128,10 @@
   </xs:element>
 
   <!--
-    This element controls the performance levels at which sub scores for the
+    This element controls the performance levels at which claim scores for the
     parent assessment type are reported.
-    NOTE that for SBAC assessments, this represents the performance levels
-    of Claim and Target-level scores.
   -->
-  <xs:element name="SubScoring">
+  <xs:element name="ClaimScoring">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="PerformanceLevels"/>
@@ -211,7 +209,7 @@
         <xs:element name="ClaimAchievementMessage" type="xs:string"/>
         <!-- The performance level messages for the student's overall performance -->
         <xs:element ref="ReportPerformanceLevels"/>
-        <!-- The subscore messages -->
+        <!-- The claim score messages -->
         <xs:element ref="ReportClaims"/>
       </xs:sequence>
       <!-- The target assessment type code -->

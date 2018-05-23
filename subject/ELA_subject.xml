@@ -15,13 +15,13 @@
         <PerformanceLevel level="3" name="Met Standard" color="green-dark"/>
         <PerformanceLevel level="4" name="Exceeded Standard" color="blue-dark"/>
       </PerformanceLevels>
-      <SubScoring>
+      <ClaimScoring>
         <PerformanceLevels>
           <PerformanceLevel level="1" name="Below Standard" color="aqua"/>
           <PerformanceLevel level="2" name="Near Standard" color="textured-blue"/>
           <PerformanceLevel level="3" name="Above Standard" color="blue-dark"/>
         </PerformanceLevels>
-      </SubScoring>
+      </ClaimScoring>
     </AssessmentType>
     <AssessmentType code="iab">
       <PerformanceLevels>
@@ -37,13 +37,13 @@
         <PerformanceLevel level="3" name="Met Standard" color="green-dark"/>
         <PerformanceLevel level="4" name="Exceeded Standard" color="blue-dark"/>
       </PerformanceLevels>
-      <SubScoring>
+      <ClaimScoring>
         <PerformanceLevels>
           <PerformanceLevel level="1" name="Below Standard" color="aqua"/>
           <PerformanceLevel level="2" name="Near Standard" color="textured-blue"/>
           <PerformanceLevel level="3" name="Above Standard" color="blue-dark"/>
         </PerformanceLevels>
-      </SubScoring>
+      </ClaimScoring>
     </AssessmentType>
   </AssessmentTypes>
   <DepthsOfKnowledge>

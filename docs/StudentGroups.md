@@ -30,13 +30,14 @@ Please refer to the next section for additional details and clarification.
 ### SIS Integration
 
 1. Create the student group file. This will involve transforming the source data into the required [CSV file format](#csv-file-format).
-1. Acquire a password grant access token. See [Auth API](API.md#authentication-and-authorization)
-    1. You will need the URL of the OAuth2 end-point for the SmarterBalanced SSO system.
-    1. You will need your client credentials. These are issued by SmarterBalanced for trusted vendors.
-    1. You will need credentials for a system user with permissions to create groups for all the schools involved. Users
+2. Acquire a password grant access token. See [Auth API](API.md#authentication-and-authorization)
+    * You will need the URL of the OAuth2 end-point for the SmarterBalanced SSO system.
+    * You will need your client credentials. These are issued by SmarterBalanced for trusted vendors.
+    * You will need credentials for a system user with permissions to create groups for all the schools involved. Users
     are created and managed in ART. The required permission is `GROUP_WRITE` and is typically granted with the `GROUP_ADMIN` role.
-    1. The access token should be stored so it can be used in the next step. How this is done depends on the client
-    technology being used. A valid access token looks like a UUID.
+    * The access token should be stored so it can be used in the next step. How this is done depends on the client
+    technology being used. A valid access token looks like a UUID.  
+
 This is a sample response for an access token:
 ```json
 {
@@ -61,11 +62,12 @@ If the user credentials are wrong:
     "error_description": "The provided access grant is invalid, expired, or revoked."
 }
 ```
-1. Post the student group file. See [Groups API](API.md#groups-endpoints)
-    1. You will need the URL of the RDW import service.
-    1. You will need the access token from the previous step.
-    1. The response will either be an error with a message explaining the problem or metadata with status ACCEPTED
-    indicating that the file was accepted and will be processed.
+3. Post the student group file. See [Groups API](API.md#groups-endpoints)
+    * You will need the URL of the RDW import service.
+    * You will need the access token from the previous step.
+    * The response will either be an error with a message explaining the problem or metadata with status ACCEPTED
+    indicating that the file was accepted and will be processed.  
+
 This is a sample response from posting a group file:
 ```json
 {
@@ -118,8 +120,9 @@ And an error example (the header line of the CSV file was corrupted):
   }
 }
 ```
-1. (Optional) Check import status. As often as desired you may query the system for the status of the import. The
+4. (Optional) Check import status. As often as desired you may query the system for the status of the import. The
 response will either be an error with a message explaining the problem or success with status PROCESSED.
+
 This is a sample response:
 ```json
 {

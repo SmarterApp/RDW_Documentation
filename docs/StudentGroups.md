@@ -120,8 +120,9 @@ And an error example (the header line of the CSV file was corrupted):
   }
 }
 ```
-1. (Optional) Check import status. As often as desired you may query the system for the status of the import. The
+4. (Optional) Check import status. As often as desired you may query the system for the status of the import. The
 response will either be an error with a message explaining the problem or success with status PROCESSED.
+
 This is a sample response:
 ```json
 {

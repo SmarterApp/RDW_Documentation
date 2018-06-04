@@ -88,7 +88,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * [ ] Fix/change memory settings:
             * `admin-service.yml`
                 * Reduce requests/limits memory to 500M (it was probably 750M or higher)
-            * `aggregate-service.yml`
+            * `aggregate-service.yml`  (defaults to -Xmx768m, what's wrong with that with 1G?)
                 * Set requests/limits memory to at least 800M
                 * Set max heap size by setting environment variable `MAX_HEAP_SIZE = "-Xmx600m"`
             * `report-processor-service.yml`
@@ -109,8 +109,11 @@ The goal of this step is to make changes to everything that doesn't directly aff
 * [ ] Changes to configuration files in `RDW_Config_Opus`. There are annotated configuration files in the `config` folder in the `RDW` repository; use those to help guide edits.
     * [ ] Common service properties.
         * Edit `application.yml`
-            * Change `app:` to `reporting:`.  <-- seriously?! look into this
-            * Set `app.client` to `SBAC` (this is the client-id). Set `app.state.code` to `CA`.
+            * Change `app:` to `reporting:`. Many of these have good defaults and are optional but it could have
+                * school-year: 2018
+                * client: SBAC
+                * state.code: CA
+                * state.name: California
             * Delete `tenant:` line (and move things around if necessary) so those properties are now under `reporting:`
                 * Probably want to put `transfer-access-enabled: true` in here (and remove from other config files)
     * [ ] Ingest services.
@@ -213,11 +216,36 @@ All cluster deployment and configuration is stored in version control, so nothin
     cd ~/git/RDW_Deploy_Opus
     git checkout master; git pull
     ```
-* [ ] Upgrade cluster. If the version of the cluster is old (< 1.7 at the time of this writing), consider upgrading it.
+* [ ] Upgrade cluster. If the version of the cluster is old (< 1.8 at the time of this writing), consider upgrading it.
+    * Install the latest kops. Details depend on environment, good place to start: https://github.com/kubernetes/kops.
+    On my Mac i ended up doing this (which also upgrade my kubernetes-cli, kubectl):
     ```bash
-    kops upgrade cluster --name awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+    $ brew update
+    $ brew upgrade kops
+    $ kops version
+    Version 1.9.0 (git-6741158)
     ```
+    * To see Kubernetes version, do something like:
+    ```bash
+    $ kops export kubecfg awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store
+    $ kubectl version
+    Client Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.2", GitCommit:"81753b10df112992bf51bbc2c2f85208aad78335", GitTreeState:"clean", BuildDate:"2018-05-12T04:12:12Z", GoVersion:"go1.9.6", Compiler:"gc", Platform:"darwin/amd64"}
+    Server Version: version.Info{Major:"1", Minor:"6", GitVersion:"v1.6.13", GitCommit:"14ea65f53cdae4a5657cf38cfc8d7349b75b5512", GitTreeState:"clean", BuildDate:"2017-11-22T20:19:06Z", GoVersion:"go1.7.6", Compiler:"gc", Platform:"linux/amd64"}
+    ```
+    * Yeah that's old (1.6.13), let's upgrade using kops. Note distinction between `upgrade` and `update` in these commands. You can (and probably should) submit the commands without `--yes` first to see what each will do.
+    ```bash
+    $ kops upgrade cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+    ITEM                             PROPERTY           OLD                                                     NEW
+    Cluster                          KubernetesVersion  1.6.13                                                  1.9.6
+    InstanceGroup/master-us-west-2a  Image              kope.io/k8s-1.6-debian-jessie-amd64-hvm-ebs-2018-01-14  kope.io/k8s-1.9-debian-jessie-amd64-hvm-ebs-2018-03-11
+    InstanceGroup/nodes              Image              kope.io/k8s-1.6-debian-jessie-amd64-hvm-ebs-2018-01-14  kope.io/k8s-1.9-debian-jessie-amd64-hvm-ebs-2018-03-11
 
+    $ kops update cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+    (lots of output)
+
+    $ kops rolling-update cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+    (lots of output about nodes/pods being cordoned, evicted, drained)
+    ```
 * [ ] TODO - figure out how to handle migration of IABs and Longitudinal fact tables to the olap data mart
     * Recommend wiping the olap data mart during the upgrade and allowing the migrate to go; it will take an hour or two to migrate everything.
     If we take that approach we should wipe the Redshift data before applying schema changes.
@@ -235,7 +263,12 @@ All cluster deployment and configuration is stored in version control, so nothin
    |1.2.0.2|V1_2_0_2__elas_date.sql|25.28641667|
    |1.2.0.3|V1_2_0_3__iab_dashboard_exam_index.sql|50.55576667|
    |1.2.0.4|V1_2_0_4__add_grade_order.sql|0.00538333|
-   
+   ```
+   ./gradlew \
+     -Pdatabase_url=jdbc:mysql://rdw-aurora-uat.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306 -Pdatabase_user=sbac -Pdatabase_password=sbac4rdw \
+     migrateReporting
+   ```
+
    * [ ] TODO: Aurora/warehouse :
    
     |version  | script       |  execution_time (in min) | 
@@ -244,8 +277,20 @@ All cluster deployment and configuration is stored in version control, so nothin
     |1.2.0.1|V1_2_0_1__elas_audit.sql|0.01543333|
     |1.2.0.2|V1_2_0_2__ccs_for_summatives.sql|0.00030000|
     |1.2.0.3|V1_2_0_3__add_grade_order.sql|0.00291667|
+   ```
+   ./gradlew \
+     -Pdatabase_url=jdbc:mysql://rdw-aurora-uat.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306 -Pdatabase_user=sbac -Pdatabase_password=sbac4rdw \
+     migrateWarehouse
+   ```
 
    * [ ] Redshift : TODO
+   Wipe out olap and migrate_olap, starting fresh
+   ```
+   ./gradlew \
+     -Pdatabase_url=jdbc:mysql://rdw-aurora-uat.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306 -Pdatabase_user=sbac -Pdatabase_password=sbac4rdw \
+     -Predshift_url=jdbc:redshift://rdw-qa.cibkulpjrgtr.us-west-2.redshift.amazonaws.com/uat -Predshift_user=awsuat -Predshift_password=sbac4rdw \
+     cleanMigrate_olap cleanReporting_olap migrateMigrate_olap migrateReporting_olap
+   ```
 
     ```bash
     # get latest version of the schema
@@ -301,7 +346,9 @@ All cluster deployment and configuration is stored in version control, so nothin
     kubectl apply -f reporting-webapp.yml
    ```
 Check the logs of the services.
-* [ ] Load data - TODO
+* [ ] Load data
+    * TODO - are the summative assessment packages loaded?
+    * TODO - any other instructions
 * [ ] Run data validation scripts.
     * TODO - instructions
 * [ ] Miscellaneous cleanup

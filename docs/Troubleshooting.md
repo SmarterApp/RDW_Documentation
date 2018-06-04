@@ -754,29 +754,103 @@ There are a number of API end-points that support the reporting webapp. These en
 
 <a name="user-context"></a>
 #### User Context
-To get metadata about the user's context: navigate to https://reporting.smarterbalanced.org/api/reporting-service/user. This should return a JSON payload that includes some useful context information about the user. For example:
+To get metadata about the user's context: navigate to https://reporting.smarterbalanced.org/api/reporting-service/user. This should return a payload that includes some useful context information about the user including permissions and authorities. For example:
 ```json
 {
-  "firstName": "MixedRoles",
-  "lastName": "Acosta",
-  "permissions": [],
-  "schools": [],
-  "groups": [],
-  "settings": {
-    "minItemDataYear": 2016,
-    "uiLanguages": [
-      "es"
-    ],
-    "reportLanguages": [
-      "es"
-    ],
-    "irisVendorId": "2B3C34BF-064C-462A-93EA-41E9E3EB8333",
-    "analyticsTrackingId": "UA-102446884-1",
-    "interpretiveGuideUrl": "https://portal.smarterbalanced.org/library/en/reporting-system-interpretive-guide.pdf",
-    "userGuideUrl": "https://portal.smarterbalanced.org/library/en/reporting-system-user-guide.pdf",
-    "transferAccess": true
+  "username": "mlaffoon@fairwaytech.com",
+  "authorities": [
+    {
+      "authority": "PERM_DATA_WRITE"
+    },
+    {
+      "authority": "PERM_GROUP_PII_READ"
+    },
+    {
+      "authority": "PERM_GROUP_READ"
+    },
+    {
+      "authority": "PERM_GROUP_WRITE"
+    },
+    {
+      "authority": "ROLE_ASMTDATALOAD"
+    },
+    {
+      "authority": "ROLE_GROUP_ADMIN"
+    },
+    {
+      "authority": "ROLE_PII_GROUP"
+    }
+  ],
+  "accountNonExpired": true,
+  "accountNonLocked": true,
+  "credentialsNonExpired": true,
+  "enabled": true,
+  "id": "5aff0274e4b03dd700aff595",
+  "email": "user@example.com",
+  "firstName": "User",
+  "lastName": "Test",
+  "permissionsById": {
+    "GROUP_PII_READ": {
+      "id": "GROUP_PII_READ",
+      "scope": {
+        "districtGroupIds": [],
+        "districtIds": [],
+        "institutionGroupIds": [],
+        "institutionIds": [],
+        "statewide": true
+      }
+    },
+    "GROUP_WRITE": {
+      "id": "GROUP_WRITE",
+      "scope": {
+        "districtGroupIds": [],
+        "districtIds": [
+          1,
+          2
+        ],
+        "institutionGroupIds": [],
+        "institutionIds": [],
+        "statewide": false
+      }
+    },
+    "GROUP_READ": {
+      "id": "GROUP_READ",
+      "scope": {
+        "districtGroupIds": [],
+        "districtIds": [
+          1,
+          2
+        ],
+        "institutionGroupIds": [],
+        "institutionIds": [],
+        "statewide": true
+      }
+    },
+    "DATA_WRITE": {
+      "id": "DATA_WRITE",
+      "scope": {
+        "districtGroupIds": [],
+        "districtIds": [],
+        "institutionGroupIds": [],
+        "institutionIds": [],
+        "statewide": true
+      }
+    }
   }
 }
+```
+
+A user's groups may be seen by navigating to https://reporting.smarterbalanced.org/api/reporting-service/groups:
+```json
+[
+  {
+    "id": 244,
+    "name": "Katz G1",
+    "schoolName": "Katz Field",
+    "schoolId": 5,
+    "userCreated": false
+  }
+]
 ```
 
 <a name="user-organizations"></a>

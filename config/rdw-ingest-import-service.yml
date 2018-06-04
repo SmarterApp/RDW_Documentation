@@ -31,17 +31,26 @@ management:
 #  security:
 #    enabled: false
 
+# Common settings (these should be set in application.yml and shared)
+#reporting:
+#  # The client and state code is used when validating roles/permissions granted in ART.
+#  client: SBAC
+#  state:
+#    code: CA
+
 # OAuth2 configuration.
 # The user of the REST API must have data load permissions granted at the client or state level,
 # so the client and state values must be set to match the permissions granted in ART.
-# The URL is used to fetch info for the OAuth2 token, so it must have a placeholder for the token.
+# The OAuth2 URL is used to fetch info for the token, so it must have a placeholder for the token.
 # For example, https://host/auth/oauth2/tokeninfo?access_token={access_token}. There is no default
-# value for the URL, it must be provided.
+# value for the URL, it must be provided. The permission-service end-point should correspond to the
+# RESTful interface, for example https://host/rest.
 security:
-#  client: SBAC
-#  state: CA
   oauth2:
     token-info-url:
+  permission-service:
+#    component: Reporting
+    endpoint:
 
 # Server configuration.
 # Use the defaults unless you really know what you're doing.

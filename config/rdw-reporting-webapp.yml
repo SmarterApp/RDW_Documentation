@@ -48,6 +48,18 @@ reporting:
 #    code: CA
 #    name: California
 
+  # Target Report configuration
+#  target-report:
+
+  # The target reports display "Insufficient Data" when the standard error of the calculation is greater than 0.2.
+  # This is the default value provided by Smarter Balanced in the scoring calculation documentations and should
+  # only be changed if you really know why you are changing it.
+#    insufficient-data-cutoff: 0.2
+
+  # Target reports are only shown when there are a minimum number of students included in the report.
+  # Setting this to 0 means it will always be shown (even with a single student).
+#    min-number-of-students: 0
+
   # By default the system does not allow users to see test results from institutions outside their
   # permissions. Setting this property true allows users to see all test results for students
   # regardless of where the test was administered, if they have PII for the student.

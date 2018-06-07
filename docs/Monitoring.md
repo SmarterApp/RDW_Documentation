@@ -21,6 +21,7 @@ Monitoring RDW applications includes monitoring:
     * [Log Collection](#log-collection)
     * [Log Messages](#log-messages)
 * [Application Status](#application-status)
+* [Missing Data Report](#missing-data-report)
 
 ### Database 
 There are a number of tables that provide useful information about the state of the system.
@@ -467,3 +468,10 @@ The applications present the Spring Boot Actuator endpoints as well as the Smart
 
 
 [1]: ./Troubleshooting.md
+
+
+### Missing Data Report
+These reports are executed on the production `warehouse` database and provide the summary diagnostic indicating the missing key data elements.
+> **NOTE**: These are CPU intensive reports that may take minutes to run. It is strongly advisable to run them during the maintenance window, and while the system is inactive and the exam processors are paused.
+
+The SQL scripts for the reports could be found in [RDW_Schema](https://github.com/SmarterApp/RDW_Schema) under the `warehouse/sql` folder.

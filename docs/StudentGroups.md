@@ -10,6 +10,7 @@ Quick Links:
     * [Sample Bash Script](#sample-bash-script)
 * [CSV File Format](#csv-file-format)
     * [Sample File](#sample-file)
+* [SQL Groups](#sql-groups)
 
 ### Overview
 
@@ -233,4 +234,44 @@ ME6thGradeMath,88800120012001,2018,,,sinstructor@example.com
 ME6thGradeMath,88800120012001,2018,,SSID010,
 ME6thGradeMath,88800120012001,2018,,SSID011,
 ME6thGradeMath,88800120012001,2018,,SSID012,
+```
+
+### SQL Groups
+
+It may be useful to generate a groups file from existing data. This query pulls in all the students and all the users
+logins:
+```sql
+SELECT * FROM (
+  SELECT
+    sg.name        AS group_name,
+    sch.natural_id AS school_natural_id,
+    sg.school_year,
+    sub.code       AS subject_code,
+    stu.ssid       AS student_ssid,
+    NULL           AS group_user_login
+  FROM student_group sg
+    JOIN school sch ON sg.school_id = sch.id
+    JOIN student_group_membership sgm ON sg.id = sgm.student_group_id
+    JOIN student stu ON sgm.student_id = stu.id
+    LEFT JOIN subject sub ON sg.subject_id = sub.id
+  union
+  select
+    sg.name        AS group_name,
+    sch.natural_id AS school_natural_id,
+    sg.school_year,
+    sub.code       AS subject_code,
+    NULL           AS student_ssid,
+    usg.user_login AS group_user_login
+  from student_group sg
+    JOIN school sch ON sg.school_id = sch.id
+    JOIN user_student_group usg ON sg.id = usg.student_group_id
+    LEFT JOIN subject sub ON sg.subject_id = sub.id
+) data
+ORDER BY group_name, subject_code, student_ssid
+```
+
+Depending on the SQL client you are using you'll need to manipulate the output to get the file into CSV format.
+For example, using a linux mysql client:
+```bash
+mysql -u username -p -h host warehouse < groups.sql | sed 's/\t/,/g;s/NULL//g' > groups.csv
 ```

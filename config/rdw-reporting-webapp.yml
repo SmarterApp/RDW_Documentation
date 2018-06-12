@@ -22,7 +22,7 @@ permissionservice:
 #  component: Reporting
   endpoint:
 
-# Tenant configuration
+# Tenant configuration. Some of these may be in application.yml common settings.
 reporting:
   analytics-tracking-id:
 
@@ -97,7 +97,6 @@ server:
 # Spring application configuration
 spring:
   # Datasource configuration.
-  # NOTE: this section changed between 1.0 and 1.1.
   # Use defaults for most of the settings, except server, username and password.
   # The url-server should be set to the host and port, e.g. localhost:3306 or
   # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
@@ -108,16 +107,20 @@ spring:
 #      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
 #      &characterEncoding=${spring.datasource.character-encoding:utf8}\
 #      &useCompression=${spring.datasource.use-compression:true}\
+#      &connectTimeout=${spring.datasource.connect-timeout:10000}\
+#      &socketTimeout=${spring.datasource.socket-timeout:40000}\
 #      "
     url-server:
     username:
     password:
 #    testWhileIdle: true
 #    validationQuery: SELECT 1
+#    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
 #    initialSize: 4
 #    maxActive: 10
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=30)"
 
   # Session cache configuration.
   # The default is to not cache session data. To enable caching (using redis), set the
@@ -127,6 +130,12 @@ spring:
   redis:
     host:
     port:
+
+  # HTTP configuration. The default values for this should be good.
+#  http:
+#    multipart:
+#      max-file-size: 500MB
+#      max-request-size: 500MB
 
 # Netflix zuul configuration.
 # The URLs must be set to match the environment, e.g. http://admin-service, the other defaults should be fine.

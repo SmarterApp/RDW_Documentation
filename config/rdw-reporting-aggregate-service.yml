@@ -50,7 +50,9 @@ app:
 #    repository:
 #      refresh-cron: "0 0 2 * * *"
 
-reporting:
+# Common settings. Normally set in application.yml.
+#reporting:
+#  school-year: 2018
 #  state:
 #    code: CA
 #    name: California
@@ -77,6 +79,8 @@ spring:
 #    url: "\
 #       jdbc:redshift://${spring.olap_datasource.url-server:localhost:5432}/${spring.olap_datasource.url-db:dev}\
 #       ?ApplicationName=rdw-reporting-aggregate-service\
+#      &loginTimeout=${spring.olap_datasource.connect-timeout:10}\
+#      &socketTimeout=${spring.olap_datasource.socket-timeout:0}\
 #       "
     url-server:
 #    url-db: dev
@@ -84,6 +88,7 @@ spring:
     password:
 #    testWhileIdle: true
 #    validationQuery: SELECT 1
+#    validationQueryTimeout: 30000
 #    driverClassName: com.amazon.redshift.jdbc42.Driver
 
   # RabbitMQ configuration.

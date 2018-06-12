@@ -27,6 +27,11 @@ reporting:
   # regardless of where the test was administered, if they have PII for the student.
 #  transfer-access-enabled: false
 
+  # The english learner attribute for students may be "lep" or "elas". This controls which filters
+  # are available in the reporting UI. Default is elas.
+#  english-learners:
+#    - elas
+
 logging:
   level:
     # this outputs a couple INFO messages every 5 minutes, annoying

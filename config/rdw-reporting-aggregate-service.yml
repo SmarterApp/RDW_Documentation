@@ -57,6 +57,18 @@ app:
 #    code: CA
 #    name: California
 
+  # Target Report configuration
+#  target-report:
+
+  # The target reports display "Insufficient Data" when the standard error of the calculation is greater than 0.2.
+  # This is the default value provided by Smarter Balanced in the scoring calculation documentations and should
+  # only be changed if you really know why you are changing it.
+#    insufficient-data-cutoff: 0.2
+
+  # Target reports are only shown when there are a minimum number of students included in the report.
+  # Setting this to 0 means it will always be shown (even with a single student).
+#    min-number-of-students: 0
+
 # Server configuration.
 # Use the defaults unless you really know what you're doing.
 server:

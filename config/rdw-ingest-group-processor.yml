@@ -54,6 +54,7 @@ spring:
 #      &connectTimeout=${spring.datasource.connect-timeout:10000}\
 #      &socketTimeout=${spring.datasource.socket-timeout:130000}\
 #      "
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:120})"
     url-server:
     username:
     password:
@@ -64,7 +65,6 @@ spring:
 #    initialize: false
 #    maxActive: 10
 #    initialSize: 4
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=120)"
 
   # RabbitMQ configuration.
   # There are no default values. The host must be set based on the orchestration environment

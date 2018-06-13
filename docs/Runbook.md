@@ -256,8 +256,8 @@ This service provides the back-end API for reports against the OLAP data store, 
 The [Annotated Configuration](../config/rdw-reporting-aggregate-service.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m which is low and should be increased in all but the smallest environments. Based on recent experiments this should be set to -Xmx600m or higher. The off-heap is about 240MB so the container should have a memory limit of at least 850M.
-The [Sample Kubernetes Spec](../deploy/aggregate-service.yml) runs a single replica with increased heap size and memory limit.
+The default max heap size is -Xmx768m which should be fine for most environments, perhaps it could be lowered (no less than 600m) in small environments. The off-heap is about 240MB so the container should have a memory limit of 1G.
+The [Sample Kubernetes Spec](../deploy/aggregate-service.yml) runs a single replica with default settings.
 
 
 <a name="admin-service"></a>

@@ -88,9 +88,9 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * [ ] Fix/change memory settings:
             * `admin-service.yml`
                 * Reduce requests/limits memory to 500M (it was probably 750M or higher)
-            * `aggregate-service.yml`  (defaults to -Xmx768m, what's wrong with that with 1G?)
-                * Set requests/limits memory to at least 800M
-                * Set max heap size by setting environment variable `MAX_HEAP_SIZE = "-Xmx600m"`
+            * `aggregate-service.yml`
+                * Set requests/limits memory to 1G
+                * Use default heap size; remove any `MAX_HEAP_SIZE` environment variable.
             * `report-processor-service.yml`
                 * Set requests/limits memory to at least 750M
                 * Set max heap size by setting environment variable `MAX_HEAP_SIZE = "-Xmx500m"`

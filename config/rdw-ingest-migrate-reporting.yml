@@ -55,6 +55,7 @@ spring:
 #      &connectTimeout=${spring.reporting_datasource.connect-timeout:10000}\
 #      &socketTimeout=${spring.reporting_datasource.socket-timeout:130000}\
 #      "
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.reporting_datasource.query-timeout:120})"
     url-server:
     username:
     password:
@@ -65,7 +66,6 @@ spring:
 #    initialize: false
 #    maxActive: 10
 #    initialSize: 4
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=120)"
 
   warehouse_datasource:
 #    url: "\
@@ -76,6 +76,7 @@ spring:
 #      &connectTimeout=${spring.warehouse_datasource.connect-timeout:10000}\
 #      &socketTimeout=${spring.warehouse_datasource.socket-timeout:130000}\
 #      "
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.warehouse_datasource.query-timeout:120})"
     url-server:
     username:
     password:
@@ -86,4 +87,3 @@ spring:
 #    initialize: false
 #    maxActive: 10
 #    initialSize: 4
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=120)"

@@ -76,6 +76,7 @@ spring:
 #      &connectTimeout=${spring.datasource.connect-timeout:10000}\
 #      &socketTimeout=${spring.datasource.socket-timeout:40000}\
 #      "
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:30})"
     url-server:
     username:
     password:
@@ -87,7 +88,6 @@ spring:
 #    maxActive: 20
 #    initialSize: 4
 #    maxWait: 10000
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=30)"
 
   # HTTP configuration. The default values for this should be good.
 #  http:

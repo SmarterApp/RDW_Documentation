@@ -37,17 +37,15 @@ spec:
         resources:
           requests:
             cpu: 500m
-            memory: 850M
+            memory: 1G
           limits:
             cpu: 500m
-            memory: 850M
+            memory: 1G
         env:
         - name: CONFIG_SERVICE_URL
           value: "http://configuration-service"
         - name: CONFIG_SERVICE_ENABLED
           value: "true"
-        - name: MAX_HEAP_SIZE
-          value: "-Xmx600m"
         ports:
         - containerPort: 8080
         - containerPort: 8008

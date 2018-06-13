@@ -34,6 +34,7 @@ spring:
 #      &connectTimeout=${spring.datasource.connect-timeout:10000}\
 #      &socketTimeout=${spring.datasource.socket-timeout:40000}\
 #      "
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:30})"
     url-server:
     username:
     password:
@@ -44,7 +45,6 @@ spring:
 #    initialize: false
 #    maxActive: 10
 #    initialSize: 4
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=30)"
 
 # Task configuration.
 # By default, all tasks are disabled.

@@ -246,6 +246,18 @@ All cluster deployment and configuration is stored in version control, so nothin
     $ kops rolling-update cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
     (lots of output about nodes/pods being cordoned, evicted, drained)
     ```
+* [ ] Upgrade cluster system services
+    * Get latest heapster, tweak and apply
+    TODO - flesh this out and verify it is ok
+    ```bash
+    cd ~/git/heapster
+    # may need to discard changes to grafana spec file
+    # git checkout -- deploy/kube-config/influxdb/grafana.yaml
+    git pull
+    # edit and tweak the spec file per deployment instructions
+    vi deploy/kube-config/influxdb/grafana.yaml
+    kubectl apply -f ~/git/heapster/deploy/kube-config/influxdb
+    ```
 * [ ] TODO - figure out how to handle migration of IABs and Longitudinal fact tables to the olap data mart
     * Recommend wiping the olap data mart during the upgrade and allowing the migrate to go; it will take an hour or two to migrate everything.
     If we take that approach we should wipe the Redshift data before applying schema changes.

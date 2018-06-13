@@ -1,32 +1,40 @@
 # Runbook
 
-**Intended Audience**: the runbook describes behavior and configuration options of the various applications in the [Reporting Data Warehouse](../README.md) (RDW). Operations, system administration, developers, and tier 3 support may find it useful.
+**Intended Audience**: The runbook describes behavior and configuration options of the various applications in the [Reporting Data Warehouse](../README.md) (RDW). Operations, system administration, developers, and tier 3 support may find it useful.
 
 ### Table of Contents
 
-1. [Common Conventions](#common)
-1. [Import Service](#import-service)
-1. [Package Processor](#package-processor)
-1. [Exam Processor](#exam-processor)
-1. [Group Processor](#group-processor)
-1. [Migrate Reporting](#migrate-reporting)
-1. [Migrate OLAP](#migrate-olap)
-1. [Task Service](#task-service)
-1. [Reporting Web App](#reporting-webapp)
-1. [Reporting Service](#reporting-service)
-1. [Aggregate Service](#aggregate-service)
-1. [Report Processor](#report-processor)
-1. [PDF Generator](#pdf-generator)
-
-### Other Resources
-
-1. [Import and Migrate](Runbook.ImportMigrate.md)
-1. [Manual Data Modification](Runbook.ManualDataModifications.md)
-1. [Bulk Delete Exams](Runbook.BulkDeleteExams.md)
-1. [Embargo](Runbook.Embargo.md)
-1. [Language Support](Runbook.LanguageSupport.md)
-1. [Data Specifications](Runbook.DataSpecifications.md)
-1. [Archive Tenant](Runbook.ArchiveTenant.md)
+1. Application Overview
+  1. [Common Conventions](#common)
+  1. [Import Service](#import-service)
+  1. [Package Processor](#package-processor)
+  1. [Exam Processor](#exam-processor)
+  1. [Group Processor](#group-processor)
+  1. [Migrate Reporting](#migrate-reporting)
+  1. [Migrate OLAP](#migrate-olap)
+  1. [Task Service](#task-service)
+  1. [Reporting Web App](#reporting-webapp)
+  1. [Reporting Service](#reporting-service)
+  1. [Aggregate Service](#aggregate-service)
+  1. [Report Processor](#report-processor)
+  1. [PDF Generator](#pdf-generator)
+1. [System Configuration](#system-configuration)
+  1. [Assessment Packages](#assessment-packages)
+  1. [Accommodations](#accommodations)
+  1. [Instructional Resources](#instructional-resources)
+  1. [Normative Data](#normative-data)
+  1. [Student Groups](#student-groups)
+  1. [Target Exclusions](#target-exclusions)
+  1. [Transfer Enabled](#transfer-enabled)
+  1. [English Learners](#english-learners)
+1. [Embargo](#embargo)
+1. Advanced Resources
+  1. [Import and Migrate](Runbook.ImportMigrate.md)
+  1. [Manual Data Modification](Runbook.ManualDataModifications.md)
+  1. [Bulk Delete Exams](Runbook.BulkDeleteExams.md)
+  1. [Language Support](Runbook.LanguageSupport.md)
+  1. [Data Specifications](Runbook.DataSpecifications.md)
+  1. [Archive Tenant](Runbook.ArchiveTenant.md)
 
 <a name="common"></a>
 ## Common Service Conventions
@@ -294,10 +302,114 @@ This service is not java-based and does not support changing the heap size.
 The [Sample Kubernetes Spec](../deploy/wkhtmltopdf-service.yml) runs four replicas.
 
 
+## System Configuration
+
+Once the system is deployed it is necessary to configure the system by loading assessments, accommodations, instructional resources, student groups, normative data, etc. There are also end-user features that may be enabled or disabled.
+
+#### Assessment Packages
+
+The assessment packages define the tests that are administered to the students. They include performance parameters which enable the student results to be appropriately interpreted.
+SmarterBalanced provides these packages; specifically, there is a `Tabulator` tool which produces a CSV file that is loaded into the warehouse. In general this will be done during the break between school years, but sometimes updates are necessary to correct data. Loading the packages is an IT/DevOps function and requires data load permissions:
+```bash
+export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
+curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018.csv https://import.sbac.org/packages/imports
+```
+
+#### Accommodations
+
+Accommodations describe inline and external resources that may be made available to students during testing. Loading them into the warehouse allows them to be displayed properly in student reports.
+SmarterBalanced provides this [file][4]. In general this will be loaded at the same time as the assessment packages. Loading the file is an IT/DevOps function and requires data load permissions:
+```bash
+export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
+curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@accommodations.xml https://import.sbac.org/accommodations/imports
+```
+
+#### Instructional Resources
+
+Instructional resources are links to content that help teachers address common core topics.
+Although organization-specific resources may be configured in the system by administrative users, the SmarterBalanced "system" resources must be loaded by IT/DevOps. There is a SQL script to facilitate this; because these resources are proprietary they are not included in this public repository.
+```bash
+mysql -h rdw-prod-reporting-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com -u root -p < load_instructional_resources.sql
+```
+
+#### Normative Data
+
+Normative or percentile data allows teachers and administrators to compare their students' performance against the entire student population.
+SmarterBalanced provides this data. The system must be configured to enable the viewing of percentiles, and the data must be loaded. This will be done by IT/DevOps.
+To enable the feature, modify the `application.yml` configuration file (the reporting application must be restarted after this change):
+```yml
+reporting:
+  percentile-display-enabled: true
+```
+Then load the [normative data](Norms.md).
+```bash
+export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
+curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@norms.csv https://import.sbac.org/norms/imports
+```
+
+#### Student Groups
+
+Student groups provide a focused view of test results for teachers and school administrators. The system supports "assigned" groups configured by administrators and "teacher-created" groups. The teacher created groups are managed by teachers in the reporting UI but the assigned groups must be loaded into the system either in the admin section or by directly posting files to the RESTful API.
+The reporting UI, including the admin section, is documented in the user guide. Posting files is described in detail in [Student Groups](Student Groups.md).
+
+#### Target Exclusions
+
+Assessment items are categorized into broad "claims" and more specific "targets". The reporting UI provides target-level reporting. But not all targets have enough coverage to provide statistically significant conclusions so they are excluded from these reports (note that these exclusions are applied on top of other restrictions in the system, for example, target reports are only available for summative assessments, only claim 1 math targets are included, etc.)
+Because the exclusions vary for assessments, the system allows these exclusions to be configured. This is done by IT/DevOps adding entries to a table (after modifying the table, a migration must be triggered as well).
+How the assessments and targets are determined will depend on the source of the knowledge. Typically the natural ids are known, and the target's claim must be included for uniqueness, so the SQL for a single exclusion might look like:
+```sql
+INSERT INTO asmt_target_exclusion
+  SELECT a.id AS asmt_id, t.id AS target_id FROM
+    (SELECT id FROM asmt WHERE natural_id = '(SBAC)SBAC-OP-G5E-2017-COMBINED-Spring-2017-2018') a
+    JOIN
+    (SELECT t.id FROM target t JOIN claim c ON t.claim_id = c.id WHERE c.code = '1-LT' AND t.natural_id = '5-4') t
+
+-- trigger migration
+INSERT INTO import(status, content, contentType, digest)
+  SELECT 1, ic.id, 'target exclusions', left(uuid(), 8) from import_content ic where name = 'PACKAGE';
+```
+
+#### Transfer Enabled
+
+The system controls visibility of students and their test results based on permissions granted at the institution level. For example, a teacher may have PII group permissions to see test results for their class given at their school. There is an optional feature that allows users to see test results for their students that were administered at another institution. By default this feature is disabled. To enable it, IT/DevOps may add the following property to the `application.yml` configuration file:
+```yml
+reporting:
+  transfer-access-enabled: true
+```
+
+#### English Learners
+
+There are different systems for categorizing english learners. The system supports two of them, Limited English Proficiency (LEP) and English Language Acquisition Status (ELAS). Only one should be used, the default is ELAS; this should correspond to the other systems in the testing ecosystem, especially the test delivery system. To switch to use LEP, IT/DevOps may change the following property in the `application.yml` configuration file:
+```yml
+reporting:
+  english-learners:
+    - lep
+```
+
+
+## Embargo
+
+Embargo is a feature where summative test results are held back until all the data is available and validated. An embargo affects the viewing of individual test results separately from aggregate report data. Lifting the embargo releases test results.
+
+When individual test results are embargoed, those results will not be visible in the reporting UI to normal users. Similarly, when aggregate test results are embargoed, those reports will not be visible in the aggregate reporting UI to normal users. Embargo administrators will be able to see the results (and the UI will have a notice to that effect) regardless of embargo settings.
+
+Embargo is set at the state and district levels. Districts may release test results while the state is still embargoed. However, once a state releases test results (i.e. lifts the embargo), all results for all districts are released, regardless of the district embargo settings.
+
+Embargo settings are managed in the Admin UI. The functionality will be available if a user has embargo write permissions for the state or districts.
+
+#### Import and Migrate
+As discussed in the [Import and Migrate](Runbook.migrate.md) the embargo setting is migrated as part of the general ingest process. Although not recommended, it is possible to manually modify embargo settings. For example, to lift the statewide embargo on individual test results for the school year 2018, then trigger the migration:
+```sql
+UPDATE state_embargo SET individual=0 WHERE school_year=2018;
+INSERT INTO import (status, content, contentType, digest) VALUES (1, 6, 'lift embargo', 'lift embargo 2017-12-12');
+```
+
+
 ---
 [1]: https://docs.spring.io/spring-boot/docs/1.5.2.RELEASE/reference/htmlsingle/#boot-features-external-config
 [2]: https://docs.spring.io/spring-boot/docs/1.5.2.RELEASE/reference/htmlsingle/#common-application-properties
 [3]: https://docs.spring.io/spring-boot/docs/1.5.2.RELEASE/reference/htmlsingle/#production-ready-endpoints
+[4]: https://github.com/SmarterApp/AccessibilityAccommodationConfigurations/blob/master/AccessibilityConfig.xml
  
 
 			 

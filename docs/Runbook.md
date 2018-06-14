@@ -218,7 +218,7 @@ The [Sample Kubernetes Spec](../deploy/task-service.yml) runs a single replica.
 
 <a name="reporting-webapp"></a>
 ## Reporting Web App
-This is the main reporting web application used by customers. It provides the UI experience for all users, including functionality like managing student groups (which used to be in a separate admin webapp). It is horizontally scalable with each process handling 2000-3000 concurrent users (this deployment is expected to have up to 15000 concurrent users).
+This is the main reporting web application used by customers. It provides the UI experience for all users, including admin functionality. It is horizontally scalable with each process handling about 2000 concurrent users (this deployment is expected to have up to 15000 concurrent users).
 
 The reporting web app is a UI-only application that handles some security (SSO redirects) and the presentation of data. All the "heavy lifting" of querying data is handled by the API services.
 
@@ -284,7 +284,7 @@ This processor generates reports. It is horizontally scalable and many instances
 The [Annotated Configuration](../config/rdw-reporting-report-processor.yml) describes the properties and their effects.
 
 #### Deployment Spec
-The default max heap size is -Xmx384m and should be increased in all but the smallest environments. The off-heap overhead is about 240MB so the container should have a memory limit of about 650M.
+The default max heap size is -Xmx384m and should be increased in all but the smallest environments (very large, multi-student PDF reports may cause memory pressure). The off-heap overhead is about 240MB so the container should have a memory limit of about 650M.
 The [Sample Kubernetes Spec](../deploy/report-processor-service.yml) runs two replicas with increased heap size and memory limit.
 
 

@@ -210,22 +210,18 @@ All cluster deployment and configuration is stored in version control, so nothin
 ### Upgrade
 
 * [ ] Upgrade cluster. If the version of the cluster is old (< 1.8 at the time of this writing), consider upgrading it.
-    * Install the latest kops. Details depend on environment, good place to start: https://github.com/kubernetes/kops.
-    On my Mac i ended up doing this (which also upgrade my kubernetes-cli, kubectl):
+    * Verify version:
     ```bash
-    $ brew update
-    $ brew upgrade kops
     $ kops version
     Version 1.9.0 (git-6741158)
-    ```
-    * To see Kubernetes version, do something like:
-    ```bash
     $ kops export kubecfg awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store
     $ kubectl version
     Client Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.2", GitCommit:"81753b10df112992bf51bbc2c2f85208aad78335", GitTreeState:"clean", BuildDate:"2018-05-12T04:12:12Z", GoVersion:"go1.9.6", Compiler:"gc", Platform:"darwin/amd64"}
     Server Version: version.Info{Major:"1", Minor:"6", GitVersion:"v1.6.13", GitCommit:"14ea65f53cdae4a5657cf38cfc8d7349b75b5512", GitTreeState:"clean", BuildDate:"2017-11-22T20:19:06Z", GoVersion:"go1.7.6", Compiler:"gc", Platform:"linux/amd64"}
     ```
-    * Yeah that's old (1.6.13), let's upgrade using kops. Note distinction between `upgrade` and `update` in these commands. You can (and probably should) submit the commands without `--yes` first to see what each will do.
+    Client utils are up-to-date. If they aren't upgrade them, good place to start: https://github.com/kubernetes/kops.
+    Server is (very) old (1.6.13), let's upgrade the cluster.
+    * Upgrade cluster. Note distinction between `upgrade` and `update` in these commands. You can (and probably should) submit the commands without `--yes` first to see what each will do.
     ```bash
     $ kops upgrade cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
     ITEM                             PROPERTY           OLD                                                     NEW
@@ -239,6 +235,7 @@ All cluster deployment and configuration is stored in version control, so nothin
     $ kops rolling-update cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
     (lots of output about nodes/pods being cordoned, evicted, drained)
     ```
+    The last step (rolling update) can take a long time (perhaps an hour or more). This is a good opportunity to jump down a couple steps and start the schema migration.
 * [ ] Upgrade cluster system services
     * Get latest heapster, tweak and apply
     TODO - flesh this out and verify it is ok

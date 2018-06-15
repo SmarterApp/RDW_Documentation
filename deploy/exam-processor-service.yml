@@ -15,7 +15,7 @@ spec:
         image: smarterbalanced/rdw-ingest-exam-processor:1.2.0-RELEASE
         readinessProbe:
           httpGet:
-            path: /health.json
+            path: /health
             port: 8008
           initialDelaySeconds: 60
           periodSeconds: 60

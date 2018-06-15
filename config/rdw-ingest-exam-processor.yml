@@ -21,7 +21,7 @@ server:
 # SBAC assessment validation settings.
 # These are used to do basic validation of assessments and test results.
 # The default settings should be good.
-sbac:
+validation:
 #  scaleScore:
 #    min: 1500
 #    max: 3500

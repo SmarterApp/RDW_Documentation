@@ -119,6 +119,8 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * Import service, edit `rdw-ingest-import-service.yml`
             * Set `security.permission-service.endpoint` (copy from reporting webapp config)
             * Remove `security.state` if present
+        * Package processor, edit `rdw-ingest-package-processor.yml`
+            * Add Amazon S3 credentials to configuration (copy from import-service)
     * Reporting services.
         * Admin service, edit `rdw-reporting-admin-service.yml`
             * Change `app:` to `reporting:`

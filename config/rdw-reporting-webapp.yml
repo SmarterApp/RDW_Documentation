@@ -43,7 +43,6 @@ reporting:
   # use the "redirect:url" format.  For example, redirect:http://reporting-site.com
 #  landing-page-url: forward:/landing.html
 
-
   # Historical results may not have item level data. This setting controls UI options for items,
   # it should be set to the beginning of the first school year that has item level data.
 #  min-item-data-year: 2016

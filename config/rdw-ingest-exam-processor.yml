@@ -79,3 +79,18 @@ spring:
 #      max-attempts: 4
 #      delay: 30
 #      multiplier: 2
+
+# Enforcing configurable data elements to be required. 
+# The complete list can be found in ConfigurableDataElement.java in https://github.com/SmarterApp/RDW_Ingest
+# Defaults are good.
+#validation:
+# requiredDataElements:
+#    - FirstName
+#    - LastOrSurname
+#    - Birthdate
+#    - Sex
+#    - EconomicDisadvantageStatus
+#    - IDEAIndicator
+#    - SessionId
+#    - Completeness
+#    - AdministrationCondition

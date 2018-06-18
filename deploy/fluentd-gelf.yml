@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
-  name: fluentd-gelf
+  name: opus-prod
   namespace: kube-system
   labels:
     k8s-app: fluentd-gelf-logging
@@ -23,7 +23,7 @@ spec:
         image: xbernpa/fluentd-kubernetes-gelf
         env:
           - name: GELF_HOST
-            value: "172.31.29.71"
+            value: "1.2.3.4"
           - name: GELF_PORT
             value: "12201"
           - name: GELF_PROTOCOL

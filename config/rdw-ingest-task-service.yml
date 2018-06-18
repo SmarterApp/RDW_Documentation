@@ -21,7 +21,6 @@ server:
 # Spring application configuration.
 spring:
   # Datasource configuration.
-  # NOTE: this section changed between 1.0 and 1.1.
   # Use defaults for most of the settings except server, username and password.
   # The url-server should be set to the host and port, e.g. localhost:3306 or
   # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
@@ -32,12 +31,16 @@ spring:
 #      ?useSSL=${spring.datasource.use-ssl:false}\
 #      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
 #      &characterEncoding=${spring.datasource.character-encoding:utf8}\
+#      &connectTimeout=${spring.datasource.connect-timeout:10000}\
+#      &socketTimeout=${spring.datasource.socket-timeout:40000}\
 #      "
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:30})"
     url-server:
     username:
     password:
 #    testWhileIdle: true
 #    validationQuery: SELECT 1
+#    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
 #    maxActive: 10

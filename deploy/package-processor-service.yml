@@ -15,7 +15,7 @@ spec:
         image: smarterbalanced/rdw-ingest-package-processor:1.2.0-RELEASE
         readinessProbe:
           httpGet:
-            path: /health.json
+            path: /health
             port: 8008
           initialDelaySeconds: 60
           periodSeconds: 60
@@ -24,10 +24,10 @@ spec:
         resources:
           requests:
             cpu: 200m
-            memory: 400M
+            memory: 500M
           limits:
             cpu: 300m
-            memory: 500M
+            memory: 600M
         env:
         - name: CONFIG_SERVICE_URL
           value: "http://configuration-service"

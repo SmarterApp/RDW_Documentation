@@ -38,20 +38,6 @@ server:
 #    max-connections: 2
 #    max-threads: 2
 
-# SBAC assessment validation settings.
-# These are used to do basic validation of assessments and test results.
-# The default settings should be good.
-sbac:
-#  scaleScore:
-#    min: 1500
-#    max: 3500
-#  thetaScore:
-#    min: -5
-#    max: 5
-#  itemScore:
-#    min: -1
-#    max: 20
-
 # Spring application configuration.
 spring:
   # Datasource configuration.
@@ -66,12 +52,18 @@ spring:
 #      ?useSSL=${spring.datasource.use-ssl:false}\
 #      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
 #      &characterEncoding=${spring.datasource.character-encoding:utf8}\
+#      &rewriteBatchedStatements=${spring.datasource.rewrite-batched-statements:true}\
+#      &noAccessToProcedureBodies=${spring.datasource.no-access-to-procedure-bodies:true}\
+#      &connectTimeout=${spring.datasource.connect-timeout:10000}\
+#      &socketTimeout=${spring.datasource.socket-timeout:130000}\
 #      "
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:120})"
     url-server:
     username:
     password:
 #    testWhileIdle: true
 #    validationQuery: SELECT 1
+#    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
 #    maxActive: 10
@@ -84,3 +76,17 @@ spring:
     host:
     username:
     password:
+
+# SBAC assessment validation settings.
+# These are used to do basic validation of assessments and test results.
+# The default settings should be good.
+#validation:
+#  scaleScore:
+#    min: 1500
+#    max: 3500
+#  thetaScore:
+#    min: -5
+#    max: 5
+#  itemScore:
+#    min: -1
+#    max: 20

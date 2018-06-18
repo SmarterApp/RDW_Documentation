@@ -21,7 +21,6 @@ It involves some minor technical changes:
 * Fix/change the memory settings for all apps
 * Reorganize application and tenant properties
 
-TODO - Because there are schema changes, the data warehouse and reporting data mart must be migrated. This may take a couple hours depending on the amount of data involved. Combined with the non-trivial changes to the system configuration, this means the upgrade process may take 2-4 hours. It is important to alert the user base and any 3rd party data feeds of the extended downtime required for this upgrade.
 
 The high level steps for the upgrade include:
 * [Notification](#notification)
@@ -164,9 +163,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
       "system-news": "<h2 class=\"blue-dark h3 mb-md\">Note</h2><div class=\"summary-reports-container mb-md\"><p>Item level data and session IDs are not available for tests administered prior to the 2017-18 school year.</p></div>"
     },
     ```
-* [ ] TODO - any other prep
-
-* [ ] Run data validation scripts. These scripts compare data between the warehouse and the data marts.
+* [ ] (Optional) Run data validation scripts. These scripts compare data between the warehouse and the data marts.
     * TODO - describe this
 * [ ] (Optional) "Before" Smoke Test. You may want to go through some of the steps of the smoke test before doing the
 upgrade, just to make sure any problems are new. This may require temporarily providing access for your QA volunteers.
@@ -238,7 +235,6 @@ All cluster deployment and configuration is stored in version control, so nothin
     The last step (rolling update) can take a long time (perhaps an hour or more). This is a good opportunity to jump down a couple steps and start the schema migration.
 * [ ] Upgrade cluster system services
     * Get latest heapster, tweak and apply
-    TODO - flesh this out and verify it is ok
     ```bash
     cd ~/git/heapster
     # may need to discard changes to grafana spec file
@@ -313,11 +309,7 @@ All cluster deployment and configuration is stored in version control, so nothin
     kubectl apply -f reporting-webapp.yml
    ```
 Check the logs of the services.
-* [ ] Load data
-    * TODO - are the summative assessment packages loaded?
-    * TODO - any other instructions
-* [ ] Run data validation scripts.
-    * TODO - instructions
+* [ ] (Optional) Run data validation scripts.
 * [ ] Miscellaneous cleanup
     * [ ] Restore traffic to site (from static web page)
     * [ ] Notify 3rd party to restore data feeds

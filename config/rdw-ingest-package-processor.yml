@@ -18,20 +18,6 @@ server:
 #    max-connections: 2
 #    max-threads: 2
 
-# SBAC assessment validation settings.
-# These are used to do basic validation of assessments and test results.
-# The default settings should be good.
-validation:
-#  scaleScore:
-#    min: 1500
-#    max: 3500
-#  thetaScore:
-#    min: -5
-#    max: 5
-#  itemScore:
-#    min: -1
-#    max: 20
-
 # Spring application configuration.
 spring:
   # Datasource configuration.
@@ -70,3 +56,17 @@ spring:
     host:
     username:
     password:
+
+# SBAC assessment validation settings.
+# These are used to do basic validation of assessments and test results.
+# The default settings should be good.
+#validation:
+#  scaleScore:
+#    min: 1500
+#    max: 3500
+#  thetaScore:
+#    min: -5
+#    max: 5
+#  itemScore:
+#    min: -1
+#    max: 20

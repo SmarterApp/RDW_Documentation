@@ -38,7 +38,7 @@ reporting:
   # To provide an external page/site use the "redirect:url" format.  For example, redirect:http://external-site.com/access-denied
 #  access-denied-url: forward:/assets/public/access-denied.html
 
-  # When a user is not logged in and access the root of the web application, they are presented with a landing page. The
+  # When a user is not logged in and accesses the root of the web application, they are presented with a landing page. The
   # default page provides a screen with a link to login by linking to "/home".  To provide an external page/site
   # use the "redirect:url" format.  For example, redirect:http://reporting-site.com
 #  landing-page-url: forward:/landing.html

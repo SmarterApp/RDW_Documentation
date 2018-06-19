@@ -76,7 +76,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
             * `migrate-olap-service.yml`
             * `migrate-reporting-service.yml`
             * `task-service.yml`
-        * Note: the ingest services should not require changes to max heap size or container memory limits but please refer to the runbook (https://github.com/SmarterApp/RDW/blob/develop/docs/Runbook.md#common) for guidance.
+        * Note: the ingest services should not require changes to max heap size or container memory limits but please refer to the runbook (https://github.com/SmarterApp/RDW/blob/master/docs/Runbook.md#common) for guidance.
     * Reporting services. Only the image version needs to be changed.
         * Change image version to `1.2.0-RELEASE` in the following files:
             * `admin-service.yml`

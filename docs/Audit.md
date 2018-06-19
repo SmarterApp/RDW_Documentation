@@ -26,7 +26,7 @@
 - **TRT**: Is an initialism for an instance of a test result in the Smarter Balanced [Test Results Transmission Format](http://www.smarterapp.org/specs/TestResultsTransmissionFormat.html) where the content adheres to the [Test Results Data Model](http://www.smarterapp.org/news/2015/08/26/DataModelAndSamples.html).
 - **Ingest**: Ingest is the process of receiving a submission of data and loading it into the data warehouse.
 - **Exam**: Each test result submitted or migrated from legacy data is stored as an exam in the data warehouse.
-- **Warehouse Schema**: The warehouse schema is the source of truth for reporting in the data warehouse and is used to populate user reporting and analytical reporting schemas. All schemas are defined in the [SmarterApp/RDW_Schema](https://github.com/SmarterApp/RDW_Schema) repository.  The warehouse schema is in the [SmarterApp/RDW_Schema/warehouse](https://github.com/SmarterApp/RDW_Schema/tree/develop/warehouse) folder.
+- **Warehouse Schema**: The warehouse schema is the source of truth for reporting in the data warehouse and is used to populate user reporting and analytical reporting schemas. All schemas are defined in the [SmarterApp/RDW_Schema](https://github.com/SmarterApp/RDW_Schema) repository.  The warehouse schema is in the [SmarterApp/RDW_Schema/warehouse](https://github.com/SmarterApp/RDW_Schema/tree/master/warehouse) folder.
 - **State Changes**: Auditing tracks entity changes.
   - **Create**: A new entity is added to the warehouse.  This is not audited, however, there is an import record that records attributes of the submission.
   - **Update**: A request to change a previously created entity.  This is audited as an update.

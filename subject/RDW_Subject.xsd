@@ -100,6 +100,18 @@
       <xs:attribute name="level" use="required" type="LevelOfPerformance"/>
       <!-- The display string for the performance level -->
       <xs:attribute name="name" use="required" type="xs:string"/>
+      <!--
+        The short display string for the performance level. This value may be displayed rather than the "name"
+        attribute when visual space is a concern.  It may be displayed along with the "suffix" attribute value.
+        It may be visually styled differently than the suffix.
+        This value will default to the "name" value if undefined.
+       -->
+      <xs:attribute name="shortName" type="xs:string"/>
+      <!--
+        The suffix display string for the performance level.  This value may be displayed after the "shortName"
+        attribute and may be visually styled differently than the "shortName" text.
+      -->
+      <xs:attribute name="suffix" type="xs:string"/>
       <!-- The display color of the performance level -->
       <xs:attribute name="color" use="required" type="Color"/>
     </xs:complexType>

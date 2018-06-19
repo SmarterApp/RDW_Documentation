@@ -10,38 +10,38 @@
   <AssessmentTypes>
     <AssessmentType code="ica">
       <PerformanceLevels standardCutoff="3">
-        <PerformanceLevel level="1" name="Did Not Meet Standard" color="maroon"/>
-        <PerformanceLevel level="2" name="Nearly Met Standard" color="gray-darkest"/>
-        <PerformanceLevel level="3" name="Met Standard" color="green-dark"/>
-        <PerformanceLevel level="4" name="Exceeded Standard" color="blue-dark"/>
+        <PerformanceLevel level="1" name="Did Not Meet Standard" shortName="Did Not Meet" suffix="Standard" color="maroon"/>
+        <PerformanceLevel level="2" name="Nearly Met Standard" shortName="Nearly Met" suffix="Standard" color="gray-darkest"/>
+        <PerformanceLevel level="3" name="Met Standard" shortName="Met" suffix="Standard" color="green-dark"/>
+        <PerformanceLevel level="4" name="Exceeded Standard" shortName="Exceeded" suffix="Standard" color="blue-dark"/>
       </PerformanceLevels>
       <ClaimScoring>
         <PerformanceLevels>
-          <PerformanceLevel level="1" name="Below Standard" color="aqua"/>
-          <PerformanceLevel level="2" name="Near Standard" color="textured-blue"/>
-          <PerformanceLevel level="3" name="Above Standard" color="blue-dark"/>
+          <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="aqua"/>
+          <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="textured-blue"/>
+          <PerformanceLevel level="3" name="Above Standard" shortName="Above" suffix="Standard" color="blue-dark"/>
         </PerformanceLevels>
       </ClaimScoring>
     </AssessmentType>
     <AssessmentType code="iab">
       <PerformanceLevels>
-        <PerformanceLevel level="1" name="Below Standard" color="aqua"/>
-        <PerformanceLevel level="2" name="Near Standard" color="textured-blue"/>
-        <PerformanceLevel level="3" name="Above Standard" color="blue-dark"/>
+        <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="aqua"/>
+        <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="textured-blue"/>
+        <PerformanceLevel level="3" name="Above Standard" shortName="Above" suffix="Standard" color="blue-dark"/>
       </PerformanceLevels>
     </AssessmentType>
     <AssessmentType code="sum">
       <PerformanceLevels standardCutoff="3">
-        <PerformanceLevel level="1" name="Did Not Meet Standard" color="maroon"/>
-        <PerformanceLevel level="2" name="Nearly Met Standard" color="gray-darkest"/>
-        <PerformanceLevel level="3" name="Met Standard" color="green-dark"/>
-        <PerformanceLevel level="4" name="Exceeded Standard" color="blue-dark"/>
+        <PerformanceLevel level="1" name="Did Not Meet Standard" shortName="Did Not Meet" suffix="Standard" color="maroon"/>
+        <PerformanceLevel level="2" name="Nearly Met Standard" shortName="Nearly Met" suffix="Standard" color="gray-darkest"/>
+        <PerformanceLevel level="3" name="Met Standard" shortName="Met" suffix="Standard" color="green-dark"/>
+        <PerformanceLevel level="4" name="Exceeded Standard" shortName="Exceeded" suffix="Standard" color="blue-dark"/>
       </PerformanceLevels>
       <ClaimScoring>
         <PerformanceLevels>
-          <PerformanceLevel level="1" name="Below Standard" color="aqua"/>
-          <PerformanceLevel level="2" name="Near Standard" color="textured-blue"/>
-          <PerformanceLevel level="3" name="Above Standard" color="blue-dark"/>
+          <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="aqua"/>
+          <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="textured-blue"/>
+          <PerformanceLevel level="3" name="Above Standard" shortName="Above" suffix="Standard" color="blue-dark"/>
         </PerformanceLevels>
       </ClaimScoring>
     </AssessmentType>

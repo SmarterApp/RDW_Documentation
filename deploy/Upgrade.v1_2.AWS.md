@@ -164,7 +164,46 @@ The goal of this step is to make changes to everything that doesn't directly aff
     },
     ```
 * [ ] (Optional) Run data validation scripts. These scripts compare data between the warehouse and the data marts.
-    * TODO - describe this
+    * You'll need the version of RDW_Schema that was used to install the *current* installation; in this case it is
+    probably the tagged 1.1.0 commit:
+    ```bash
+    # get v1.1 version of the schema
+    cd ~/git/RDW_Schema
+    git fetch --all --tags --prune
+    git checkout 1.1.0
+    cd validation
+    ```
+    * If desired, there is a `README.md` that details the use of the script.
+    * Create a secrets file for the environment, e.g. `secrets/opus.sh`, filling in the secrets:
+    ```bash
+    #!/usr/bin/env bash
+
+    warehouse_host=rdw-aurora-opus-warehouse.cugsexobhx8t.us-west-2.rds.amazonaws.com
+    warehouse_port=3306
+    warehouse_schema=warehouse
+    warehouse_user=
+    warehouse_password=
+
+    reporting_host=rdw-aurora-opus-reporting.cugsexobhx8t.us-west-2.rds.amazonaws.com
+    reporting_port=3306
+    reporting_schema=reporting
+    reporting_user=
+    reporting_password=
+
+    reporting_olap_host=rdw.cibkulpjrgtr.us-west-2.redshift.amazonaws.com
+    reporting_olap_port=5439
+    reporting_olap_db=opus
+    reporting_olap_user=
+    reporting_olap_password=
+    ```
+    * Validate reporting data:
+    ```bash
+    ./validate-migration.sh secrets/opus.sh reporting
+    ```
+    This will produce a new `results-<date>` folder, with sub-folders. Each sub-folder has the results of a single
+    validation. If there is a `warehouse_reporting.diff` file in a sub-folder, inspect it. There are some legitimate
+    issues (e.g. cumulative rounding errors when summing std-err values) but, in general, there should be no diffs
+    unless there have been manual tweaks to the data.
 * [ ] (Optional) "Before" Smoke Test. You may want to go through some of the steps of the smoke test before doing the
 upgrade, just to make sure any problems are new. This may require temporarily providing access for your QA volunteers.
 
@@ -309,7 +348,14 @@ All cluster deployment and configuration is stored in version control, so nothin
     kubectl apply -f reporting-webapp.yml
    ```
 Check the logs of the services.
-* [ ] (Optional) Run data validation scripts.
+* [ ] (Optional) Run data validation scripts. Once the data migration is complete (you can see this by monitoring the
+log for the migrate-reporting service), you may re-run the validation scripts.
+    ```bash
+    cd ~/git/RDW_Schema
+    git checkout master; git pull
+    cd validation
+    ./validate-migration.sh secrets/opus.sh reporting
+    ```
 * [ ] Miscellaneous cleanup
     * [ ] Restore traffic to site (from static web page)
     * [ ] Notify 3rd party to restore data feeds

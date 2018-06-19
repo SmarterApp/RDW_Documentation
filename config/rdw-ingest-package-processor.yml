@@ -6,6 +6,26 @@
 # Properties that have a reasonable default value are commented out.
 # Other properties are not commented out and must be provided.
 
+# Archive configuration
+# The package processor expects subject definition payloads to be archived rather than
+# transmitted in the ingest message. Although archiving may be done in a local file system
+# during development, the preferred solution is to use AWS S3 to provide the same archive to
+# both the import-service and the package-processor.  AWS S3 requires credentials.
+# For S3, the root should be the protocol and the bucket, e.g. s3://my-archive-bucket.
+# The AWS access key should be for a programmatic AWS user. The secretKey should be encrypted.
+# The bucket should be in the same region as the deployment (to reduce costs).
+# There are no default values for these properties and they must be provided.
+archive:
+  root:
+  cloud:
+    aws:
+      credentials:
+        accessKey:
+        secretKey:
+      region:
+        auto: false
+        static: us-west-2
+
 # The actuator end-point is on a different port with no security because it is expected to be
 # exposed only in a private subnet. Use the default settings unless you really know what you
 # are doing.

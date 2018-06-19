@@ -26,13 +26,22 @@ permissionservice:
 reporting:
   analytics-tracking-id:
 
-#  external-links:
-#    interpretive-guide: https://portal.smarterbalanced.org/library/en/reporting-system-interpretive-guide.pdf
-#    user-guide: https://portal.smarterbalanced.org/library/en/reporting-system-user-guide.pdf
+#  interpretive-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-interpretive-guide.pdf
+#  user-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-user-guide.pdf
 
   # IRiS configuration.
   # The vendor id is provided by SmarterBalanced
   iris-vendor-id:
+
+  # When a user is logged into SSO but does not have proper permissions to access the reporting application
+  # an Access Denied page is displayed.  The default is a basic page presented within the application.
+  # To provide an external page/site use the "redirect:url" format.  For example, redirect:http://external-site.com/access-denied
+#  access-denied-url: forward:/assets/public/access-denied.html
+
+  # When a user is not logged in and accesses the root of the web application, they are presented with a landing page. The
+  # default page provides a screen with a link to login by linking to "/home".  To provide an external page/site
+  # use the "redirect:url" format.  For example, redirect:http://reporting-site.com
+#  landing-page-url: forward:/landing.html
 
   # Historical results may not have item level data. This setting controls UI options for items,
   # it should be set to the beginning of the first school year that has item level data.

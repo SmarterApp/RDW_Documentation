@@ -314,8 +314,8 @@ export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-in
 curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018.csv https://import.sbac.org/subjects/imports
 ```
 >NOTE: To optimize the exams ingest throughput the subjects' related data are cached in the Exam Processor and Reporting services. It is required to:
-> 1. Stop all Exam Processors before ingesting subject
-> 2. Ingest the subject
+> 1. Stop all Exam Processors before ingesting a subject XML
+> 2. Ingest the subject XML
 > 3. Re-start the Exam Processors after the successful subject changes
 > 4. Wait for migration from warehouse to reporting to complete
 > 5. Re-start the Reporting services

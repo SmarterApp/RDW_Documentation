@@ -347,7 +347,15 @@ All cluster deployment and configuration is stored in version control, so nothin
     git push origin master
     git push origin --delete v1_2; git branch -d v1_2
     ```
-* [ ] Redeploy services. 
+* (Optional) Although there should be no problem, now is an okay time to verify db connectivity/routing/permissions.
+    ```bash
+    kubectl run -it --rm --image=mysql:5.6 mysql-client -- mysql -h rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com -P 3306 -uusername -ppassword warehouse
+    kubectl run -it --rm --image=mysql:5.6 mysql-client -- mysql -h rdw-opus-reporting.cimuvo5urx1e.us-west-2.rds.amazonaws.com -P 3306 -uusername -ppassword reporting
+
+    kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus
+    kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus
+    ```
+* [ ] Redeploy services.
     ```bash
     cd ~/git/RDW_Deploy_Opus
     # ingest services

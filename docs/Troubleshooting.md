@@ -66,35 +66,26 @@ The simplest diagnostic is to look at a pod's logs, either downloading them or t
 ```bash
 kubectl logs migrate-reporting-deployment-3157337915-34zqn > migrate.log
 kubectl logs -f migrate-reporting-deployment-3157337915-34zqn
+kubetail migrate
 ```
 
-To get a pod's diagnostic status, you'll need two sessions: one to port-forward and the other to curl. One way to do this is to use `screen`:
+All the services support Spring Actuator and SmarterBalanced Diagnostic end-points which you can query using curl.
+The pods have `jq` installed which can be used to pretty-print the json responses:
 
 ```bash
-screen
-kubectl port-forward migrate-reporting-deployment-3157337915-34zqn 8008
-Ctrl-A, C
 # the SBAC diagnostic status
-curl http://localhost:8008/status?level=5
+kubectl exec -it migrate-reporting-deployment-3157337915-34zqn curl http://localhost:8008/status?level=5 | jq .
 # all the Spring actuator end-points are available, e.g.:
-curl http://localhost:8008/health
-curl http://localhost:8008/env
-curl http://localhost:8008/configprops
+kubectl exec -it migrate-reporting-deployment-3157337915-34zqn curl http://localhost:8008/health | jq .
+kubectl exec -it migrate-reporting-deployment-3157337915-34zqn curl http://localhost:8008/env | jq .
+kubectl exec -it migrate-reporting-deployment-3157337915-34zqn curl http://localhost:8008/configprops | jq .
 ```
 
-You can start a shell in a pod but know that these are thin Alpine images. You'll likely need to install any utility you need. Messing with an image isn't a good long-term idea but it can get you through troubleshooting. For example, suppose you want to try hitting an image's own status end-point from within the image:
+You can start a shell in a pod but know that these are thin Alpine images. You'll likely need to install any utility you need. Messing with an image isn't a good long-term idea but it can get you through troubleshooting. For example, in one debugging session we wanted to run the AWS CLI from within a pod. No stable aws-cli apk so:
 
 ```bash
-$ kubectl exec migrate-reporting[k8s-randomization] -it /bin/sh
-# apk -v --update add curl jq
-# curl http://localhost:8008/health | jq .
-```
+kubectl exec -it migrate-reporting-deployment-3157337915-34zqn /bin/sh
 
-Whenever a `curl` command is presented in this document it is assumed one of these two techniques is being used.
-
-In one debugging session we wanted to run the AWS CLI from within a pod. No stable aws-cli apk so:
-
-```bash
 apk -v --update add python py-pip groff less mailcap 
 pip install --upgrade awscli s3cmd python-magic
 apk -v --purge del py-pip

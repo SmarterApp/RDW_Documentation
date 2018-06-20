@@ -259,6 +259,10 @@ All cluster deployment and configuration is stored in version control, so nothin
     ```
     Client utils are up-to-date. If they aren't upgrade them, good place to start: https://github.com/kubernetes/kops.
     Server is (very) old (1.6.13), let's upgrade the cluster.
+    * Capture cluster configuration for posterity (and possible error recovery).
+    ```bash
+    $ kops get cluster -o yaml > cluster.v1_1.yml
+    ```
     * Upgrade cluster. Note distinction between `upgrade` and `update` in these commands. You can (and probably should) submit the commands without `--yes` first to see what each will do.
     ```bash
     $ kops upgrade cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes

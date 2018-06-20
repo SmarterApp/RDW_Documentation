@@ -247,6 +247,7 @@ All cluster deployment and configuration is stored in version control, so nothin
 
 ### Upgrade
 
+* [ ] Gentle reminder to start `screen` on the ops machine so steps may be run in parallel.
 * [ ] Upgrade cluster. If the version of the cluster is old (< 1.8 at the time of this writing), consider upgrading it.
     * Verify version:
     ```bash
@@ -319,6 +320,17 @@ All cluster deployment and configuration is stored in version control, so nothin
           -Predshift_url=jdbc:redshift://rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus -Predshift_user=root -Predshift_password=password \
           cleanMigrate_olap migrateMigrate_olap cleanReporting_olap migrateReporting_olap
         ```
+    * After wiping the reporting olap database you'll need to re-grant permissions.
+    I suspect only the `... ON ALL TABLES ...` commands are needed (because database and schema are not recreated).
+    ```sql
+	\connect opus
+	GRANT ALL ON SCHEMA reporting to rdwopusingest;
+    GRANT ALL ON ALL TABLES IN SCHEMA reporting TO rdwopusingest;
+	GRANT ALL ON SCHEMA reporting to rdwopusreporting;
+    GRANT ALL ON ALL TABLES IN SCHEMA reporting TO rdwopusreporting;
+	ALTER USER rdwopusingest SET SEARCH_PATH TO reporting;
+	ALTER USER rdwopusreporting SET SEARCH_PATH TO reporting;
+    ```
 * [ ] Merge deployment and configuration branches. This can be done via command line or via the repository UI (if you use the repository UI, make sure to checkout and pull the latest `master`). Here are the command line actions:
     ```bash
     cd ~/git/RDW_Deploy_Opus

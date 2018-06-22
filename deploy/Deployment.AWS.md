@@ -6,14 +6,15 @@
 
 > **NOTE:** these instructions were originally written for a v1.0 installation. The v1.0 -> v1.1 upgrade instructions were then merged, but the consolidated instructions haven't been thoroughly tested for a clean v1.1 installation. 
 
-**TODO - instructions for creating OpenAM oauth2 agent client id/password?**
-
 ### Table Of Contents
 * [Reference](#reference)
 * [Checklist](#checklist)
 * [Updating Applications](#updating-applications)
 * [Scalability](#performance-and-scalability)
 * [Sizing Kubernetes Cluster](#sizing-kubernetes-cluster)
+
+### Other Resources
+* [Deprovisioning Instructions](Deprovisioning.AWS.md)
 
 <a name="reference"></a>
 ### Summary / Reference
@@ -72,6 +73,9 @@ This section records all details that will facilitate configuration and maintena
 * Reconciliation report S3 bucket:
     * name: recon-bucket
     * user: name, accesskey/secretkey
+* Log collection:
+    * GELF sink: 1.2.3.4:12201
+    * Source name: opus-prod
 * Import:
     * end-point: import.sbac.org
     * ELB id: [aws-randomization]
@@ -161,25 +165,7 @@ This section records all details that will facilitate configuration and maintena
         # verify this is version 5.6
         mysql --version
         ```
-    * [ ] Install `psql`, e.g. `sudo yum install postgresql`. Install just the client, not the server! After installing check the connection to Redshift.
-        ```bash
-        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=root --password --dbname=dev
-        ```
-        * [ ] (Optional) Configure psql to automatically connect. One way to do this ...
-            * Create `~/.pg_service.conf` with something like this: 
-                 ```ini
-                [rdw]
-                host=rdw-opus.[aws-randomization]
-                port=5439
-                dbname=dev
-                user=root
-                password=password
-                ```
-             NOTE: there is a password in there so do something like `chmod 0600 ~/.pg_service.conf` to protect it.
-             * Add to `.bashrc` (and source it)
-                ```bash
-                export PGSERVICE=rdw 
-                 ```
+    * [ ] Install `psql`, e.g. `sudo yum install postgresql`. Install just the client, not the server!
     * [ ] Install git (requires sudo)
         ```bash
          sudo yum -y install git
@@ -201,7 +187,17 @@ This section records all details that will facilitate configuration and maintena
         ```
 * [ ] SBAC Application Prerequisites. These are non-RDW applications that are maintained as part of the SBAC ecosystem. They run independently of RDW and are not part of the Kubernetes cluster.
     * [ ] SSO. 
-        * Create OpenAM OAuth2 client.
+        * Create OpenAM OAuth2 client. The steps for this vary but here are the highlights:
+            * Navigate to the OpenAM site and login with an administrative account.
+            * Go to `Access Control`, selecting the appropriate realm, e.g. `sbac`
+            * Go to `Agents`, `Oauth 2.0 Client`
+            * Create a new client, noting name and password.
+            * Typically, a group is used to manage settings:
+                * Edit the newly created client, assign the `Group` to, for example, sbac_client_group, and then Save.
+                * Continue editing, set the `Inheritance Settings` to include at least:
+                    * `Default Scope(s)`
+                    * `ID Token Signed Response Algorithm`
+                    * `Scope(s)`
         * *Record the host and client info in the reference.*
     * [ ] ART. 
         * [ ] Create ingest user for the task service user. This is used by the task service to fetch organization information from ART and submit it to the import service. As such it should have `Administrator`, `State Coordinator` and `ASMTDATALOAD` roles at the state level for `CA`.
@@ -360,11 +356,30 @@ NOTE: the security and routing for Redshift can be tricky, especially if the clu
         * 2 nodes, dc2.large 
         * opus VPC, use cluster subnet group, security group, etc. that were just created
     1. *Record the end-point URLs, root username/password in the reference.*
+    1. Check the connection to Redshift. From ops server:
+        ```bash
+        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=root --password --dbname=dev
+        ```
+        * (Optional) Configure psql to automatically connect. One way to do this ...
+            * Create `~/.pg_service.conf` with something like this:
+                 ```ini
+                [rdw]
+                host=rdw-opus.[aws-randomization]
+                port=5439
+                dbname=dev
+                user=root
+                password=password
+                ```
+             NOTE: there is a password in there so do something like `chmod 0600 ~/.pg_service.conf` to protect it.
+             * Add to `.bashrc` (and source it)
+                ```bash
+                export PGSERVICE=rdw
     1. Create database and users. The users shown here have both role (ingest/reporting) and environment in their name because this is an example for when the Redshift instance is used by all environments. Obviously, if this is for a single environment these could be rdwingest/rdwreporting. Using psql, `psql --host=rdw.[aws-randomization] --port=5439 --username=root --password --dbname=dev`:
         ```sql
         CREATE USER rdwopusingest PASSWORD 'password';
         CREATE USER rdwopusreporting PASSWORD 'password';
         CREATE DATABASE opus;
+        -- TODO - making rdwopusingest the OWNER should be unnecessary once vacuum/analyze handling is cleaned up
         ALTER DATABASE opus OWNER TO rdwopusingest;
         \connect opus
         CREATE SCHEMA reporting;
@@ -500,8 +515,11 @@ and the data marts. This is a good time to verify that the required connectivity
               # value: /
         kubectl create -f deploy/kube-config/influxdb
         ```
-* [ ] Install and configure supporting services (autoscaler, rabbit, wkthmltopdf, configuration service)
+* [ ] Install and configure supporting services (autoscaler, logging daemonset, rabbit, wkthmltopdf, configuration service)
     1. Edit cluster-autoscaler.yml to verify --nodes option matches cluster configuration
+    1. Edit fluentd-gelf.yml to set the GELF_HOST and the daemonset name.
+        * Set GELF_HOST to the accessible IP address.
+        * Set `metadata.name` to a name that is meaningful when filtering in Graylog. This value will appear as the "source" in Graylog messages.
     1. Edit configuration-service.yml to set git repo and credentials, and encrypt key
     1. Create the services:
     ```bash
@@ -516,8 +534,7 @@ and the data marts. This is a good time to verify that the required connectivity
 * [ ] Install and configure backend RDW services. This step glosses over a **lot** of configuration details, highlighting just a few high-level steps. Read the architecture and runbook documents, and the annotated configuration files to fully understand all the configuration options.
     1. Generate encrypted passwords/secrets and set in configuration files. Need configuration service port-forward or exec into pod and install curl.
         ```bash
-        kubectl port-forward configuration-deployment-xxx 8888 
-        curl -X POST --data-urlencode "my+secret" http://localhost:8888/encrypt
+        kubectl exec -it configuration-deployment-xxx -- curl -X POST --data-urlencode "my+secret" http://localhost:8888/encrypt
         ```
     1. Set datasource urls, username, passwords in configuration files.
     1. Set S3 bucket, region, access key, secret key in configuration files.
@@ -529,13 +546,13 @@ and the data marts. This is a good time to verify that the required connectivity
     1. Create services.
         ```bash
         # ingest services
-        kubectl create -f exam-processor-service.yml
-        kubectl create -f group-processor-service.yml
-        kubectl create -f import-service.yml     
-        kubectl create -f package-processor-service.yml
-        kubectl create -f migrate-olap-service.yml
-        kubectl create -f migrate-reporting-service.yml
-        kubectl create -f task-service.yml
+        kubectl apply -f exam-processor-service.yml
+        kubectl apply -f group-processor-service.yml
+        kubectl apply -f import-service.yml
+        kubectl apply -f package-processor-service.yml
+        kubectl apply -f migrate-olap-service.yml
+        kubectl apply -f migrate-reporting-service.yml
+        kubectl apply -f task-service.yml
         # reporting services
         kubectl apply -f admin-service.yml
         kubectl apply -f aggregate-service.yml
@@ -606,6 +623,10 @@ and the data marts. This is a good time to verify that the required connectivity
     1. There are other data that may need to be applied directly to the database. These require site-specific scripts so are not included here. Examples include:
         * Adjust assessment labels. 
         * Load instructional resources.
+* [ ] Miscellaneous tasks.
+    * [ ] Set up scheduled task to do Redshift `ANALYZE`. Please refer to [Analyze & Vacuum](../docs/Performance.md#redshift-analyze-and-vacuum).
+    * [ ] Set up centralized log collection. Please refer to [Log Collection](../docs/Monitoring.md#log-collection).
+    * [ ] Set up application monitoring.
         
 ### Updating Applications
 When software updates are available there may be a number of steps involved in deploying them.
@@ -613,6 +634,15 @@ When software updates are available there may be a number of steps involved in d
 1. There may be configuration changes required. The CHANGELOG should give an indication of this, and the source history for the project can be reviewed. Configuration changes may be made just before new software is deployed -- they won't affect the running software and will be loaded as the new software comes online.
 1. There may be schema changes required. The CHANGELOG should give an indication of this, and the source history for the project can be reviewed. Schema changes can take a while and the coordination can be tricky. All but the most trivial schema changes require downtime of the system.
 1. Use the rollout capability of Kubernetes to deploy changes.
+
+##### Configuration Change
+Sometimes just a simple change to configuration is required. After making the change this trick can be used to force Kubernetes to "bounce" the applications:
+1. Make the configuration changes and commit them.
+2. Trick Kubernetes into thinking the deployment spec has changed. Using the webapp as an example,
+    ```bash
+    export DATE_PATCH="{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
+    kubectl patch deployment reporting-webapp-deployment -p "$DATE_PATCH"
+    ```
 
 ##### Software Patch
 The simplest update is a backward compatible patch, usually to deploy an urgent bug fix. The major and minor versions don't change, there is no significant schema change, and only minor configuration changes expected. Typically only one or a few applications are being updated. 
@@ -627,7 +657,8 @@ The simplest update is a backward compatible patch, usually to deploy an urgent 
     
 ##### Major Version Upgrades
 Major version updates often require additional steps. Please refer to specific documentation:
-* [Upgrade v1.1](Upgrade.AWS.md)
+* [Upgrade v1.1](Upgrade.v1_1.AWS.md)
+* [Upgrade v1.2](Upgrade.v1_2.AWS.md)
 
 
 ### Performance and Scalability
@@ -661,6 +692,8 @@ Redshift queue is saturated. A couple examples:
   * Aggregate-report service pool size = 15
   * Aggregate-report consumer concurrency = 2
 
+If Redshift performance seems poor please refer to [Redshift Performance Tuning](../docs/PerformanceTuning.Redshift.md).
+
 ### Sizing Kubernetes Cluster
 Deciding how many nodes and what size they should be requires some consideration (and a little math).
 
@@ -693,3 +726,19 @@ If this were deployed using m4.xlarge nodes (C = 4), N >= 10600 / 3700 = 2.9, it
 The alert reader will note that larger nodes provide higher overall capacity with larger headroom per node. However, having a single gigantic node is also a bad idea since it fails HA considerations, OS resource constraints, etc. And a node that large is likely to be more expensive per CPU unit. It is a trade-off. Our general advice is to use m4.xlarge nodes.
 
 > NOTE: this discussion is about the standard nodes in a cluster. Master nodes may be sized much smaller: 1000m, 2Gi is sufficient. Given the choices on AWS this implies m4.large master nodes.
+
+
+### Useful Tricks
+
+#### Run a Database Client Pod
+
+Although the jump server may be used to access the database, a client pod installed in the cluster is the best test of
+connectivity and routing.
+
+```bash
+# mysql-client (MySQL/Aurora)
+kubectl run -it --rm --image=mysql:5.6 mysql-client -- mysql -h hostname -P port -uusername -ppassword opus
+# psql (PostgreSQL/Redshift)
+kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@host:5439/opus
+```
+

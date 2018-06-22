@@ -1,7 +1,6 @@
 ## Bulk Delete Exams
 
-**Intended Audience**: This document provides instructions for bulk deleting exams from the Reporting Data Warehouse. Knowledge of SQL and access to the production databases is required.
-Operations will find this useful if and only if a bulk delete operation is required.
+**Intended Audience**: This document provides instructions for bulk deleting exams from the [Reporting Data Warehouse](../README.md) (RDW). Additional information is available in the main [Runbook](Runbook.md) and for the related issues of [Import and Migrate](Runbook.migrate.md) and [Manual Data Modifications](Runbook.ManualDataModifications.md). Knowledge of SQL and access to the production databases is required. Operations will find this useful if and only if a bulk delete operation is required.
 
 Deleting exams includes:
 * marking exams as deleted in the warehouse
@@ -9,11 +8,7 @@ Deleting exams includes:
 
 > **NOTE**: Modifying a large volume of data needs to be done with the consideration of how data is [migrated](Runbook.migrate.md#modify-lots-of-content).
 > Since migrating this changes may take time, it is **strongly advisable to perform this task during the maintenance window, and while the system is quiescent 
-and the exam processors are paused.**.   
-
-### Other Resources
-1. [Import and Migrate](Runbook.migrate.md)
-2. [Manual Data Modifications](Runbook.ManualDataModifications.md) 
+and the exam processors are paused**.   
 
 ### Warehouse exam data store
 Test result data (aka exams) depends on the following data being pre-loaded:

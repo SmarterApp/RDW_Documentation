@@ -1,9 +1,8 @@
 ## Auditing
-This document describes auditing in RDW and provides sample queries for analyzing audit data.
+**Intended Audience**: This document describes auditing in the [Reporting Data Warehouse](../README.md) (RDW) and provides sample queries for analyzing audit data. It provides *system and database adminstrators* information on what is audited and where it is stored. *Developers and analysts* with knowledge of SQL and the necessary permissions can use this as a guide to query exam and student modifications.
 
 ### Table of Contents
 
-* [Intended audience](#intended-audience)
 * [Terminology](#terminology)
 * [What is audited?](#what-is-audited)
 * [Where is audit data stored?](#where-is-audit-data-stored)
@@ -22,17 +21,12 @@ This document describes auditing in RDW and provides sample queries for analyzin
     * [Clear a specific student group](#clear-a-specific-student-group)
     * [Clear all student groups for a specific school](#clear-all-student-groups-for-a-specific-school)
 
-### Intended audience
-The intended audience should be familiar with database technology and querying a database with SQL.
-- **System and Database Administrators**: This document provides administrators information on what is audited in the warehouse and where it is stored.
-- **Developers and Analysts**: Developers and analysts with knowledge of SQL and the appropriate permissions can use this document as a guide to querying exam and student modifications.
-
 ### Terminology
 - **Test Result**: When a student takes a test the results are transmitted to the data warehouse.
-- **TRT**: Is an acronym for an instance of a test result in the Smarter Balanced [Test Results Transmission Format](http://www.smarterapp.org/specs/TestResultsTransmissionFormat.html) where the content adheres to the [Test Results Data Model](http://www.smarterapp.org/news/2015/08/26/DataModelAndSamples.html).
+- **TRT**: Is an initialism for an instance of a test result in the Smarter Balanced [Test Results Transmission Format](http://www.smarterapp.org/specs/TestResultsTransmissionFormat.html) where the content adheres to the [Test Results Data Model](http://www.smarterapp.org/news/2015/08/26/DataModelAndSamples.html).
 - **Ingest**: Ingest is the process of receiving a submission of data and loading it into the data warehouse.
 - **Exam**: Each test result submitted or migrated from legacy data is stored as an exam in the data warehouse.
-- **Warehouse Schema**: The warehouse schema is the source of truth for reporting in the data warehouse and is used to populate user reporting and analytical reporting schemas. All schemas are defined in the [SmarterApp/RDW_Schema](https://github.com/SmarterApp/RDW_Schema) repository.  The warehouse schema is in the [SmarterApp/RDW_Schema/warehouse](https://github.com/SmarterApp/RDW_Schema/tree/develop/warehouse) folder.
+- **Warehouse Schema**: The warehouse schema is the source of truth for reporting in the data warehouse and is used to populate user reporting and analytical reporting schemas. All schemas are defined in the [SmarterApp/RDW_Schema](https://github.com/SmarterApp/RDW_Schema) repository.  The warehouse schema is in the [SmarterApp/RDW_Schema/warehouse](https://github.com/SmarterApp/RDW_Schema/tree/master/warehouse) folder.
 - **State Changes**: Auditing tracks entity changes.
   - **Create**: A new entity is added to the warehouse.  This is not audited, however, there is an import record that records attributes of the submission.
   - **Update**: A request to change a previously created entity.  This is audited as an update.

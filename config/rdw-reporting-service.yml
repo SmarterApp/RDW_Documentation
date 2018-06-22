@@ -13,33 +13,6 @@ management:
 #  security:
 #    enabled: false
 
-# Application configuration
-app:
-  analytics:
-    trackingId:
-
-#  external-links:
-#    interpretive-guide: https://portal.smarterbalanced.org/library/en/reporting-system-interpretive-guide.pdf
-#    user-guide: https://portal.smarterbalanced.org/library/en/reporting-system-user-guide.pdf
-
-  # IRiS configuration.
-  # The vendor id is provided by SmarterBalanced
-  iris:
-    vendorId:
-
-  # Historical results may not have item level data. This setting controls UI options for items,
-  # it should be set to the beginning of the first school year that has item level data.
-#  min-item-data-year: 2016
-
-  # Installed language configuration (optional).
-  # These are lists of available languages, not including english (which is always available).
-  # Details for these properties are covered in the language runbook.
-#  report-languages:
-#  ui-languages:
-
-#  state:
-#    code: CA
-#    name: California
 
 # IRiS item files
 # root is the root location of the files [ s3://some-bucket/ | file:///itembank/items/ | classpath: ]
@@ -59,6 +32,22 @@ cloud:
     region:
       auto: false
       static: us-west-2
+
+# Common settings. Normally set in application.yml.
+#reporting:
+  # english-learners should be lep or elas
+#  english-learners:
+#    - elas
+
+#  school-year: 2018
+#  state:
+#    code: CA
+#    name: California
+
+  # By default the system does not allow users to see test results from institutions outside their
+  # permissions. Setting this property true allows users to see all test results for students
+  # regardless of where the test was administered, if they have PII for the student.
+#  transfer-access-enabled: false
 
 # Server configuration.
 # Use the defaults unless you really know what you're doing.
@@ -85,20 +74,41 @@ spring:
 #      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
 #      &characterEncoding=${spring.datasource.character-encoding:utf8}\
 #      &useCompression=${spring.datasource.use-compression:true}\
+#      &connectTimeout=${spring.datasource.connect-timeout:10000}\
+#      &socketTimeout=${spring.datasource.socket-timeout:40000}\
 #      "
     url-server:
     username:
     password:
 #    testWhileIdle: true
 #    validationQuery: SELECT 1
+#    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
 #    initialSize: 4
 #    maxActive: 10
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=30)"
 
-# Tenant configuration.
-tenant:
-  # By default the system does not allow users to see test results from institutions outside their
-  # permissions. Setting this property true allows users to see all test results for students
-  # regardless of where the test was administered, if they have PII for the student.
-#  transfer-access-enabled: false
+  writable_datasource:
+#    url: "\
+#      jdbc:mysql://${spring.writable_datasource.url-server:localhost:3306}/${spring.writable_datasource.url-schema:reporting}\
+#      ?useSSL=${spring.writable_datasource.use-ssl:false}\
+#      &useLegacyDatetimeCode=${spring.writable_datasource.use-legacy-datetime-code:false}\
+#      &characterEncoding=${spring.writable_datasource.character-encoding:utf8}\
+#      &rewriteBatchedStatements=${spring.writable_datasource.rewrite-batched-statements:true}\
+#      &useCompression=${spring.writable_datasource.use-compression:true}\
+#      &connectTimeout=${spring.writable_datasource.connect-timeout:10000}\
+#      &socketTimeout=${spring.writable_datasource.socket-timeout:40000}\
+#      "
+    url-server:
+    username:
+    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    validationQueryTimeout: 10000
+#    driverClassName: com.mysql.jdbc.Driver
+#    initialize: false
+#    initialSize: 4
+#    maxActive: 10
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=30)"
+

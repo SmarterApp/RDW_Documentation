@@ -5,16 +5,18 @@
 # Arguably this is an implementation detail so some of the properties that appear in this file are
 # also annotated in the files for the individual services that use them.
 
-app:
+reporting:
+  client: SBAC
+
   # The embargo feature applies its rules for only the current school year, so it must be configured.
   # Although there is a default value for this setting (2018), it should be explicitly configured.
   school-year: 2018
 
+  # Used throughout the applications, the state code/name.
   state:
     code: CA
     name: California
 
-tenant:
   # The percentile feature displays percentiles derived from normative data so teachers can better
   # evaluate the performance of their students. Because this requires additional configuration data
   # that may not be available to a tenant, this feature is disabled by default.
@@ -24,6 +26,11 @@ tenant:
   # permissions. Setting this property true allows users to see all test results for students
   # regardless of where the test was administered, if they have PII for the student.
 #  transfer-access-enabled: false
+
+  # The english learner attribute for students may be "lep" or "elas". This controls which filters
+  # are available in the reporting UI. Default is elas.
+#  english-learners:
+#    - elas
 
 logging:
   level:

@@ -12,10 +12,10 @@ spec:
     spec:
       containers:
       - name: migrate-reporting
-        image: smarterbalanced/rdw-ingest-migrate-reporting:1.1.0-RELEASE
+        image: smarterbalanced/rdw-ingest-migrate-reporting:1.2.0-RELEASE
         readinessProbe:
           httpGet:
-            path: /health.json
+            path: /health
             port: 8008
           initialDelaySeconds: 60
           periodSeconds: 60
@@ -24,7 +24,7 @@ spec:
         resources:
           requests:
             cpu: 200m
-            memory: 1G
+            memory: 800M
           limits:
             cpu: 300m
             memory: 1G

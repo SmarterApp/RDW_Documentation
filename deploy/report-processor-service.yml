@@ -29,10 +29,10 @@ spec:
     spec:
       containers:
       - name: report-processor
-        image: smarterbalanced/rdw-reporting-report-processor:1.1.1-RELEASE
+        image: smarterbalanced/rdw-reporting-report-processor:1.2.0-RELEASE
         readinessProbe:
           httpGet:
-            path: /health.json
+            path: /health
             port: 8008
           initialDelaySeconds: 60
           periodSeconds: 60
@@ -41,15 +41,17 @@ spec:
         resources:
           requests:
             cpu: 200m
-            memory: 850M
+            memory: 800M
           limits:
             cpu: 300m
-            memory: 850M
+            memory: 800M
         env:
         - name: CONFIG_SERVICE_URL
           value: "http://configuration-service"
         - name: CONFIG_SERVICE_ENABLED
           value: "true"
+        - name: MAX_HEAP_SIZE
+          value: "-Xmx512m"
         ports:
         - containerPort: 8080
         - containerPort: 8008

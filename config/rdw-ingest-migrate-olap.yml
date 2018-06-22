@@ -18,11 +18,6 @@ server:
 #    max-connections: 2
 #    max-threads: 2
 
-# The embargo feature applies its rules for only the current school year, so it must be configured.
-# Although there is a default value for this setting (2018), it should be explicitly configured.
-app:
-  school-year:
-
 # Migrate uses S3 to stage data. Although the data is written to by Aurora and read by Redshift
 # the service must have a configured archive service to manage the files. All values must be
 # provided.
@@ -47,15 +42,21 @@ migrate:
       role:
 
   # The batch size is the number of records migrated in one iteration. The aggregate data store is
-  # very good at ingesting large data sets so this value can be large and defaults to 500,000.
-  # Increasing it can improve migrate performance but values over 1,000,000 require a large Redshift
+  # very good at ingesting large data sets so this value can be large and defaults to 10,000,000.
+  # Increasing it can improve migrate performance but values over 10,000,000 require a large Redshift
   # instance.
   # By default the migration is scheduled to run once a day at 1:00 am (GMT). If this is changed, it should
   # be coordinated to happen before the repository cache flush in rdw-reporting-aggregate-service.yml.
 #  olap-batch:
-#    size: 500000
+#    size: 10000000
 #    # every day at 1:00 am
 #    run-cron: "0 0 1 * * *"
+
+# The embargo feature applies its rules for only the current school year, so it must be configured.
+# Although there is a default value for this setting (2018), it should be explicitly configured.
+# Normally this will be a shared setting in application.yml.
+reporting:
+  school-year:
 
 # Spring application configuration.
 spring:
@@ -70,12 +71,15 @@ spring:
 #      ?useSSL=${spring.migrate_datasource.use-ssl:false}\
 #      &useLegacyDatetimeCode=${spring.migrate_datasource.use-legacy-datetime-code:false}\
 #      &characterEncoding=${spring.migrate_datasource.character-encoding:utf8}\
+#      &connectTimeout=${spring.migrate_datasource.connect-timeout:10000}\
+#      &socketTimeout=${spring.migrate_datasource.socket-timeout:0}\
 #      "
     url-server:
     username:
     password:
 #    testWhileIdle: true
 #    validationQuery: SELECT 1
+#    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
 #    maxActive: 10
@@ -85,6 +89,8 @@ spring:
 #    url: "\
 #      jdbc:redshift://${spring.olap_datasource.url-server:localhost:5432}/${spring.olap_datasource.url-db:dev}\
 #      ?ApplicationName=rdw-ingest-migrate-olap\
+#      &loginTimeout=${spring.olap_datasource.connect-timeout:10}\
+#      &socketTimeout=${spring.olap_datasource.socket-timeout:0}\
 #      "
     url-server:
 #    url-db: dev
@@ -92,6 +98,7 @@ spring:
     password:
 #    testWhileIdle: true
 #    validationQuery: SELECT 1
+#    validationQueryTimeout: 30000
 #    driverClassName: com.amazon.redshift.jdbc42.Driver
 
   warehouse_datasource:
@@ -100,12 +107,15 @@ spring:
 #      ?useSSL=${spring.warehouse_datasource.use-ssl:false}\
 #      &useLegacyDatetimeCode=${spring.warehouse_datasource.use-legacy-datetime-code:false}\
 #      &characterEncoding=${spring.warehouse_datasource.character-encoding:utf8}\
+#      &connectTimeout=${spring.warehouse_datasource.connect-timeout:10000}\
+#      &socketTimeout=${spring.warehouse_datasource.socket-timeout:0}\
 #      "
     url-server:
     username:
     password:
 #    testWhileIdle: true
 #    validationQuery: SELECT 1
+#    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
 #    maxActive: 10

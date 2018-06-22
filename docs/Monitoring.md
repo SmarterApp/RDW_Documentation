@@ -2,9 +2,9 @@
 
 **NOTE: please avoid putting environment-specific details _especially secrets and sensitive information_ in this document.**
 
-**Intended Audience**: this document provides information for monitoring the Reporting Data Warehouse. Operations and system administrators will find it useful.
+**Intended Audience**: this document provides information for monitoring the [Reporting Data Warehouse](../README.md). Operations and system administrators will find it useful.
 
-Monitoring RDW applications includes monitoring:
+Monitoring RDW applications includes:
 
 * [Database](#database)
     * [Import Status](#import-status)
@@ -15,11 +15,13 @@ Monitoring RDW applications includes monitoring:
     * [Monitor Migrate Rate](#monitor-migrate-rate)
     * [System Use By Date](#system-use-by-date)
     * [Organization Queries](#organization-queries)
+    * [Exam Distribution](#exam-distribution)
 * [Logging](#logging)
     * [Log Level](#log-level)
     * [Log Collection](#log-collection)
     * [Log Messages](#log-messages)
 * [Application Status](#application-status)
+* [Missing Data Report](#missing-data-report)
 
 ### Database 
 There are a number of tables that provide useful information about the state of the system.
@@ -33,7 +35,7 @@ $ mysql -h host -u username -p --batch warehouse < myquery.sql | sed 's/\t/,/g' 
 ```
 
 #### Import Status
-As data is accepted into the system an import record is created. Once the data is processed the status of the import record is updated to reflect success or a number of different error conditions. Monitoring the import table will catch any such issues. A query against the `warehouse` that counts all failures:
+As data is accepted into the system an import record is created. Once the data is processed the status of the import record is updated to reflect success or a number of different error conditions. Monitoring the import table will catch any such issues. A query against the `warehouse` that counts all test result import failures:
 
 ```sql
 SELECT s.name status,  i.count
@@ -90,18 +92,59 @@ For any of the queries, a non-empty result set indicates that there is unprocess
 [Troubleshooting][1] to resolve issues.
 
 #### Monitor Ingest Speed
-A new ingest request is captured by the ACCEPTED status of the import. Once the data is loaded into the `warehouse` the status is updated accordingly. Each ingest is different and hence the processing time will vary, but in general it is expected to take less than a minute.
+A new ingest request is captured by the ACCEPTED status of the import. Once the data is loaded into the warehouse `status` and `updated` is updated accordingly. Each ingest is different and hence the processing time will vary, but in general it is expected to take less than a minute.
 
-To monitor for slow imports:
+One way to monitor for slow imports is to find all ACCEPTED imports with old `updated` values, something like:
 
 ```sql
-SELECT count(*) FROM import WHERE status = 0 AND updated > (CURRENT_TIMESTAMP + INTERVAL 60 SECOND);
+SELECT count(*) FROM import WHERE status = 0 AND updated < (CURRENT_TIMESTAMP - INTERVAL 60 SECOND);
++----------+
+| count(*) |
++----------+
+|        3 |
++----------+
 ```
-If there are slow imports please refer to [Troubleshooting][1] to resolve. Although not urgent, this will affect the timeliness of the reporting data.
+Although not urgent, persistent import slowness will affect the timeliness of the reporting data.
+
+The processing time of an import can be calculated by comparing the `created` and `updated` values. This can be used to look at historical import performance, for example:
+```sql
+SELECT minutes, COUNT(*) AS count FROM (SELECT TIMESTAMPDIFF(MINUTE, created, updated) minutes FROM import) sub GROUP BY minutes;
++---------+----------+
+| minutes | count    |
++---------+----------+
+|       0 | 10949991 |
+|       1 |      388 |
+|       2 |       68 |
+|       3 |       10 |
+|       4 |        3 |
+...
+```
 
 #### Monitor Time-To-Warehouse
-Test results include the completed-at timestamp. Using the import create time we can calculate the time it takes for the test delivery and scoring system to get the results to the `warehouse`.
+Obviously the data warehouse can't know much about the processing of test results before they arrive. However, test results include the completed-at timestamp. Using the import create time we can calculate the time it takes for the test delivery and scoring system to get the results to the warehouse.
 
+This first query calculates the delay in days; it is simple but relatively fast:
+```sql
+SELECT delay, COUNT(*) count FROM
+(SELECT id, TIMESTAMPDIFF(DAY, completed_at, created) delay FROM exam WHERE deleted=0 AND school_year=2018) sub
+GROUP BY delay
+ORDER BY delay;
++-------+----------+
+| delay |    count |
++-------+----------+
+|     0 |  4260712 |
+|     1 |    49475 |
+|     2 |    34749 |
+|     3 |    32485 |
+...
+|   194 |       30 |
+|   204 |        2 |
+|   205 |        2 |
+|   207 |        1 |
++-------+----------+
+```
+
+This query attempts to dynamically set the bucket size, by hour for the first 24 hours, then by day. It is slow, use with care:
 ```sql
 SELECT
   CASE WHEN last_24_hours.id IS NOT NULL THEN timestampdiff(HOUR, completed_at, created) ELSE timestampdiff(DAY, completed_at, created) END AS delay,
@@ -228,6 +271,30 @@ GROUP BY d.id
 ORDER BY d.natural_id;
 ```
 
+#### Exam Distribution
+It's informative to look at the distribution of exams received by the system.
+Honestly, this is just a good place to store some useful queries we've used.
+
+* By type and administration condition
+    ```sql
+    -- exam distribution by type and administration condition
+    SELECT t.code as asmt, a.code as admin, count FROM
+      (SELECT type_id, administration_condition_id, count(*) AS count FROM exam GROUP BY type_id, administration_condition_id) sub
+      JOIN asmt_type t ON t.id=sub.type_id
+      JOIN administration_condition a ON a.id=sub.administration_condition_id;
+
+    +------+-------+---------+
+    | asmt | admin | count   |
+    +------+-------+---------+
+    | iab  | Valid |  597972 |
+    | iab  | SD    | 2466952 |
+    | iab  | NS    | 9555055 |
+    | ica  | Valid |   51037 |
+    | ica  | SD    |  203293 |
+    | ica  | NS    |  462427 |
+    +------+-------+---------+
+    ```
+
 ### Logging
 
 #### Log Level
@@ -310,85 +377,23 @@ $ curl http://localhost:8008/loggers/org.opentestsystem.rdw.ingest.processor
 Note that setting the log level via the actuator end-point will be in effect only for the currently running process. Other instances of the process will not be affected, and restarting the process will revert back to the configured log levels.
 
 #### Log Collection
-The approach is to use fluentd on the nodes to tail logs and forward entries to a central service like Elasticsearch. If you ask six developers how to install and configure fluentd in a kubernetes cluster you'll get a dozen different answers. If you want to do a little reading:
+The approach is to use fluentd on the nodes to tail logs and forward entries to a central service like Elasticsearch or Graylog. If you ask six people how to install and configure fluentd in a kubernetes cluster you'll get a dozen different answers. If you want to do a little reading:
 
 * [Overview of Kubernetes logging](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
 * [Kubernetes logging with Elasticsearch/Kibana](https://kubernetes.io/docs/tasks/debug-application-cluster/logging-elasticsearch-kibana/)
 * [Kubernetes logging with Fluentd](https://docs.fluentd.org/v0.12/articles/kubernetes-fluentd)
 * [Logging to AWS Elasticsearch from Kubernetes](https://medium.com/@while1eq1/logging-to-aws-elasticsearch-service-from-kubernetes-855ad0959251)
+* [Alternative to below using Fluentd to send logs to GELF/Graylog](https://github.com/xbernpa/fluentd-kubernetes-gelf/)
 
-What we did:
+It is left as an exercise for the reader to set up the service that will catch the logs. When configuring the system
+there must be a route from the nodes in the cluster to the service for whatever protocol is appropriate.
 
-1. Create an AWS Elasticsearch instance. From the AWS Elasticsearch Service dashboard, `Create a new domain`:
-    * Name: rdw-qa
-    * Latest version (5.5)
-    * Instance: ts.small.elasticsearch (1)
-    * Storage: EBS 30GB (for now)
-    * Public (for now)
-1. Set access policy to allow full control from within VPC. For now, allow access from the interwebs too:
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "*"
-      },
-      "Action": "es:*",
-      "Resource": "arn:aws:es:region:id:domain/rdw-qa/*",
-      "Condition": {
-        "IpAddress": {
-          "aws:SourceIp": "172.31.0.0/16"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "*"
-      },
-      "Action": "es:*",
-      "Resource": "arn:aws:es:region:id:domain/rdw-qa/*",
-      "Condition": {
-        "IpAddress": {
-          "aws:SourceIp": [
-            "0.0.0.0/0"
-          ]
-        }
-      }
-    }
-  ]
-}
-```
-1. Note ES settings:
-    * Endpoint: https://search-rdw-qa-[AWS-randomization]
-    * Domain ARN: arn:aws:es:region:id:domain/rdw-qa
-    * Kibana: https://search-rdw-qa-[AWS-randomization]/_plugin/kibana/
-1. Test:
-```bash
-$ curl https://search-rdw-qa-[AWS-randomization]
-{
-  "name" : "YbZyaKb",
-  "cluster_name" : "id:rdw-qa",
-  "cluster_uuid" : "...",
-  "version" : {
-    "number" : "5.5.2",
-    "build_hash" : "b2f0c09",
-    "build_date" : "2017-08-21T22:31:55.076Z",
-    "build_snapshot" : false,
-    "lucene_version" : "6.6.0"
-  },
-  "tagline" : "You Know, for Search"
-}
-```
-1. Deploy fluentd agents to collect logs from each node.
-```bash
-kubectl apply -f fluentd.yml
-```
-1. TODO - how to access kibana without opening it to the whole world
+We have provided a Kubernetes spec for a fluentd DaemonSet that sends logs to a GELF endpoint, [fluentd-gelf.yml](../deploy/fluentd-gelf.yml).
+Modify the spec to set the host and port then deploy it, `kubectl apply -f fluentd-gelf.yml`.
 
-    
+Once the logs are rolling in, create filters using the Kubernetes metadata.
+
+
 #### Log Messages
 These are log messages that can be used to trigger alerts about rare but expected issues. In general, all ERROR 
 messages should trigger alerts, and messages at INFO, DEBUG, TRACE levels may be safely ignored. This section is
@@ -463,3 +468,10 @@ The applications present the Spring Boot Actuator endpoints as well as the Smart
 
 
 [1]: ./Troubleshooting.md
+
+
+### Missing Data Report
+These reports are executed on the production `warehouse` database and provide the summary diagnostic indicating the missing key data elements.
+> **NOTE**: These are CPU intensive reports that may take minutes to run. It is strongly advisable to run them during the maintenance window, and while the system is inactive and the exam processors are paused.
+
+The SQL scripts for the reports could be found in [RDW_Schema](https://github.com/SmarterApp/RDW_Schema) under the `warehouse/sql` folder.

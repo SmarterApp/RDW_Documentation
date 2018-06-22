@@ -726,3 +726,19 @@ If this were deployed using m4.xlarge nodes (C = 4), N >= 10600 / 3700 = 2.9, it
 The alert reader will note that larger nodes provide higher overall capacity with larger headroom per node. However, having a single gigantic node is also a bad idea since it fails HA considerations, OS resource constraints, etc. And a node that large is likely to be more expensive per CPU unit. It is a trade-off. Our general advice is to use m4.xlarge nodes.
 
 > NOTE: this discussion is about the standard nodes in a cluster. Master nodes may be sized much smaller: 1000m, 2Gi is sufficient. Given the choices on AWS this implies m4.large master nodes.
+
+
+### Useful Tricks
+
+#### Run a Database Client Pod
+
+Although the jump server may be used to access the database, a client pod installed in the cluster is the best test of
+connectivity and routing.
+
+```bash
+# mysql-client (MySQL/Aurora)
+kubectl run -it --rm --image=mysql:5.6 mysql-client -- mysql -h hostname -P port -uusername -ppassword opus
+# psql (PostgreSQL/Redshift)
+kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@host:5439/opus
+```
+

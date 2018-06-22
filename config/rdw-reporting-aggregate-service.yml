@@ -18,13 +18,12 @@ app:
   # Aggregate report configuration.
 #  aggregate-reports:
 #    api-enabled: false
+#    assessment-types: ica,sum,iab
+#    statewide-user-assessment-types: sum
+#    state-aggregate-assessment-types: sum
 #    custom-aggregate-report-repository:
 #      organization-partition-size: 10
 #    query-pool-size: 6
-    # By default only ICA and Summative test results are included in Aggregate Reports at the
-    # district and school level, while state reports are restricted to just Summatives.
-#    assessment-types: ica,sum
-#    statewide-user-assessment-types: sum
 
   # Report archive configuration.
   # Although the location may be a local file system the preferred solution is to write to AWS S3,

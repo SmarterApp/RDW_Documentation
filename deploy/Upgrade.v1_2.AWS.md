@@ -76,7 +76,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
             * `migrate-olap-service.yml`
             * `migrate-reporting-service.yml`
             * `task-service.yml`
-        * Note: the ingest services should not require changes to max heap size or container memory limits but please refer to the runbook (https://github.com/SmarterApp/RDW/blob/develop/docs/Runbook.md#common) for guidance.
+        * Note: the ingest services should not require changes to max heap size or container memory limits but please refer to the runbook (https://github.com/SmarterApp/RDW/blob/master/docs/Runbook.md#common) for guidance.
     * Reporting services. Only the image version needs to be changed.
         * Change image version to `1.2.0-RELEASE` in the following files:
             * `admin-service.yml`
@@ -247,6 +247,7 @@ All cluster deployment and configuration is stored in version control, so nothin
 
 ### Upgrade
 
+* [ ] Gentle reminder to start `screen` on the ops machine so steps may be run in parallel.
 * [ ] Upgrade cluster. If the version of the cluster is old (< 1.8 at the time of this writing), consider upgrading it.
     * Verify version:
     ```bash
@@ -259,6 +260,10 @@ All cluster deployment and configuration is stored in version control, so nothin
     ```
     Client utils are up-to-date. If they aren't upgrade them, good place to start: https://github.com/kubernetes/kops.
     Server is (very) old (1.6.13), let's upgrade the cluster.
+    * Capture cluster configuration for posterity (and possible error recovery).
+    ```bash
+    $ kops get cluster -o yaml > cluster.v1_1.yml
+    ```
     * Upgrade cluster. Note distinction between `upgrade` and `update` in these commands. You can (and probably should) submit the commands without `--yes` first to see what each will do.
     ```bash
     $ kops upgrade cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
@@ -315,6 +320,17 @@ All cluster deployment and configuration is stored in version control, so nothin
           -Predshift_url=jdbc:redshift://rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus -Predshift_user=root -Predshift_password=password \
           cleanMigrate_olap migrateMigrate_olap cleanReporting_olap migrateReporting_olap
         ```
+    * After wiping the reporting olap database you'll need to re-grant permissions.
+    I suspect only the `... ON ALL TABLES ...` commands are needed (because database and schema are not recreated).
+    ```sql
+	\connect opus
+	GRANT ALL ON SCHEMA reporting to rdwopusingest;
+    GRANT ALL ON ALL TABLES IN SCHEMA reporting TO rdwopusingest;
+	GRANT ALL ON SCHEMA reporting to rdwopusreporting;
+    GRANT ALL ON ALL TABLES IN SCHEMA reporting TO rdwopusreporting;
+	ALTER USER rdwopusingest SET SEARCH_PATH TO reporting;
+	ALTER USER rdwopusreporting SET SEARCH_PATH TO reporting;
+    ```
 * [ ] Merge deployment and configuration branches. This can be done via command line or via the repository UI (if you use the repository UI, make sure to checkout and pull the latest `master`). Here are the command line actions:
     ```bash
     cd ~/git/RDW_Deploy_Opus
@@ -331,7 +347,15 @@ All cluster deployment and configuration is stored in version control, so nothin
     git push origin master
     git push origin --delete v1_2; git branch -d v1_2
     ```
-* [ ] Redeploy services. 
+* (Optional) Although there should be no problem, now is an okay time to verify db connectivity/routing/permissions.
+    ```bash
+    kubectl run -it --rm --image=mysql:5.6 mysql-client -- mysql -h rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com -P 3306 -uusername -ppassword warehouse
+    kubectl run -it --rm --image=mysql:5.6 mysql-client -- mysql -h rdw-opus-reporting.cimuvo5urx1e.us-west-2.rds.amazonaws.com -P 3306 -uusername -ppassword reporting
+
+    kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus
+    kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus
+    ```
+* [ ] Redeploy services.
     ```bash
     cd ~/git/RDW_Deploy_Opus
     # ingest services

@@ -163,7 +163,7 @@ This end-point may be used to get the credentials of the current user. This is p
     ```
 * Error Response:
   * Code: 401 (Unauthorized) if token is missing or invalid.
-  * Code: 403 (Forbidden) if token doesn't provide the `ASTMDATALOAD` role.
+  * Code: 403 (Forbidden) if token doesn't provide RDW authentication.
 * Sample Call (curl):
 ```bash
 curl --header "Authorization:Bearer {access_token}" https://import-service/imports/user

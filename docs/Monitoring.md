@@ -4,7 +4,7 @@
 
 **Intended Audience**: this document provides information for monitoring the [Reporting Data Warehouse](../README.md). Operations and system administrators will find it useful.
 
-Monitoring RDW applications includes monitoring:
+Monitoring RDW applications includes:
 
 * [Database](#database)
     * [Import Status](#import-status)
@@ -35,7 +35,7 @@ $ mysql -h host -u username -p --batch warehouse < myquery.sql | sed 's/\t/,/g' 
 ```
 
 #### Import Status
-As data is accepted into the system an import record is created. Once the data is processed the status of the import record is updated to reflect success or a number of different error conditions. Monitoring the import table will catch any such issues. A query against the `warehouse` that counts all failures:
+As data is accepted into the system an import record is created. Once the data is processed the status of the import record is updated to reflect success or a number of different error conditions. Monitoring the import table will catch any such issues. A query against the `warehouse` that counts all test result import failures:
 
 ```sql
 SELECT s.name status,  i.count

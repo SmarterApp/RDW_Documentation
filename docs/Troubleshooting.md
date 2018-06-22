@@ -2,6 +2,8 @@
 
 **NOTE: please avoid putting environment-specific details _especially secrets and sensitive information_ in this document.**
 
+**Intended Audience**: this document provides information for troubleshooting the [Reporting Data Warehouse](../README.md). Operations, support and system administrators will find it useful.
+
 ### Table of Contents
 
 * [Kubernetes](#kubernetes)
@@ -36,7 +38,7 @@ All work is done from a properly configured workstation, bastion or jump server.
 # replace cfgname and S3 location with environment-specific values
 kops export kubecfg cfgname --state s3://kops-state-store 
 ```
-It is also assumed that a mysql client with connectivity to the databases is installed.
+It is also assumed that mysql and psql clients are installed with connectivity to the databases.
 
 <a name="working-with-nodes"></a>
 #### Working With Nodes
@@ -61,7 +63,8 @@ rabbit-deployment-2895814383-gjqcd              1/1       Running   0          1
 ...
 ```
 
-The simplest diagnostic is to look at a pod's logs, either downloading them or tailing them:
+The simplest diagnostic is to look at a pod's logs, either downloading them or tailing them.
+Refer to [Logging](Monitoring.md#logging) for more information on configuring logs.
 
 ```bash
 kubectl logs migrate-reporting-deployment-3157337915-34zqn > migrate.log

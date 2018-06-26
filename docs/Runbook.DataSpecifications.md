@@ -15,7 +15,7 @@ Test results (aka exams) are pushed into the RDW using the [Test Result Transmis
 
 This section further clarifies the data in the TRT, including requirements specific to the RDW.
 
-| Required Field | Comment |
+| Mandatory Field | Comment |
 | -------------- | ------- |
 | Test@name | This is the unique assessment id |
 | Test@subject | Used for validation |
@@ -24,10 +24,11 @@ This section further clarifies the data in the TRT, including requirements speci
 | Test@academicYear | Used for validation |
 | Examinee - StudentIdentifier | This may be de-identified but must be the same  year over year |
 | ExamineeRelationship - SchoolId | This may be de-identified but must be the same year over year, and the value must be in ART |
+| ExamineeAttribute@GradeLevelWhenAssessed |  |
 | Opportunity@oppId | This is the unique id for a test |
 | Opportunity@dateCompleted |  |
 
-TODO - once complete, copy required and optional fields from https://confluence.fairwaytech.com/display/SBACDW/sow-24+-+Phase+2+De-identified+data%2C+allow+injest+where+fields+marked+optional+in+Test+Results+not+loaded
+All other TRT data elements could be configured to be required or optional. For example please refer to the [annotated configuration](../config/rdw-ingest-exam-processor.yml).
 
 ---
 [1]: http://www.smarterapp.org/documents/TestResultsTransmissionFormat.pdf

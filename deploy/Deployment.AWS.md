@@ -409,7 +409,7 @@ NOTE: the security and routing for Redshift can be tricky, especially if the clu
          reporting | administration_condition         | table | root
          reporting | asmt                             | table | root
         ...
-        opus=> VACUUM REINDEX fact_student_exam;
+        opus=> VACUUM REINDEX exam;
         VACUUM
         opus=> VACUUM;
         VACUUM

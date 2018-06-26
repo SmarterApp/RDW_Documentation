@@ -432,7 +432,9 @@
       <xs:enumeration value="gray-lighter"/>
       <xs:enumeration value="gray-lightest"/>
       <xs:enumeration value="white"/>
-      <xs:enumeration value="textured-blue"/>
+      <xs:enumeration value="sb-iab-red"/>
+      <xs:enumeration value="sb-iab-yellow"/>
+      <xs:enumeration value="sb-iab-green"/>
     </xs:restriction>
   </xs:simpleType>
 

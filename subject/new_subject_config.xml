@@ -2,7 +2,7 @@
 <Subject xmlns="http://www.smarterbalanced.org/RDW_Subject"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://www.smarterbalanced.org/RDW_Subject RDW_Subject.xsd"
-         code="new_subject"
+         code="newsubject"
          name="New Subject">
   <Messages>
     <Message key="standard-description"><![CDATA[The new subject standard has this definition.]]></Message>
@@ -297,6 +297,16 @@
                 <ReportPerformanceLevel level="4"><![CDATA[ICA 4 - {0} claim 5 Nibh sit amet commodo nulla facilisi nullam. Sit amet porttitor dolor morbi non arcu quis.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="5"><![CDATA[ICA 5 - {0} claim 5 Dui accumsan sit amet nulla. Metus dictum at tempor commodo ullamcorper a lacus.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="6"><![CDATA[ICA 6 - {0} claim 5 Massa tempor nec feugiat nisl pretium fusce. Convallis aenean et tortor at risus viverra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="CLAIM_6">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[ICA 1 - {0} claim 6 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[ICA 2 - {0} claim 6 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[ICA 3 - {0} claim 6 A lacus vestibulum sed arcu non odio. Morbi non arcu risus quis.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="4"><![CDATA[ICA 4 - {0} claim 6 Nibh sit amet commodo nulla facilisi nullam. Sit amet porttitor dolor morbi non arcu quis.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="5"><![CDATA[ICA 5 - {0} claim 6 Dui accumsan sit amet nulla. Metus dictum at tempor commodo ullamcorper a lacus.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="6"><![CDATA[ICA 6 - {0} claim 6 Massa tempor nec feugiat nisl pretium fusce. Convallis aenean et tortor at risus viverra.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
             </ReportClaim>
           </ReportClaims>
@@ -1070,7 +1080,7 @@
             <ReportPerformanceLevel level="3"><![CDATA[SUM Grade 11 level 3 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[SUM Grade 11 level 4 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="5"><![CDATA[SUM Grade 11 level 5 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
-            <ReportPerformanceLevel level="5"><![CDATA[SUM Grade 11 level 6 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="6"><![CDATA[SUM Grade 11 level 6 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
           <ReportClaims>
             <ReportClaim code="CLAIM_1">

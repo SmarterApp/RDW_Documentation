@@ -102,23 +102,30 @@ a delete condition that matches your deletion criteria. Skip step 3.3 since `rep
 ### Purging from OLAP data mart
 If exams were deleted using soft-delete and migration (see above) there is no need to do this: the system has already deleted the records in the OLAP data mart.
 
+The following tables contain exams's data:
+- `exam`: contains ICA and Summative exams
+- `iab_exam`: contains IAB exams
+- `exam_longitudinal`: contains Summative exams
+- `exam_claim_score`: contains scored claim data for ICA and Summative exams
+- `exam_target_score`: contains scored target data for Summative exams
+
 To delete exams bypassing the soft-delete step:
- 
+ >> Note: depending on the type of data to be deleted the below steps need to be repeated for the tables listed above
 1. Count the number of records to be deleted and verify that it matches your expectations.
 ```sql 
-SELECT count(*) FROM fact_student_exam WHERE {delete condition here};
+SELECT count(*) FROM exam WHERE {delete condition here};
 ```
 2. Count the number of records that should be left after you purge the data. Save this number for post-validation.
 ```sql 
-SELECT count(*) FROM exam WHERE deleted {delete condition here};
+SELECT count(*) FROM exam WHERE {delete condition here};
 ```
 3. Delete exams related data: 
 ```sql 
- DELETE FROM fact_student_exam WHERE {delete condition here};
+ DELETE FROM exam WHERE {delete condition here};
 ```
 4. Count the number of records and compare it to the count from the step 2 above. The numbers must match.
 ```sql 
-SELECT count(*) FROM fact_student_exam;
+SELECT count(*) FROM exam;
 ```
 
 

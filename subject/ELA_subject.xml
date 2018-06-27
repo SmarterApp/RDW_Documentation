@@ -660,7 +660,7 @@
     </ReportGrade>
   </ReportGrades>
   <Claims>
-    <Claim code="SOCK_LS" name="Listening" organizational="false" displayOrder="2">
+    <Claim code="SOCK_LS" name="Listening" organizational="false" displayOrder="3">
       <Icon>fa-lightbulb-o</Icon>
     </Claim>
     <Claim code="SOCK_R" name="Reading" organizational="false" displayOrder="1">
@@ -1180,7 +1180,7 @@
         </Target>
       </Targets>
     </Claim>
-    <Claim code="2-W" name="Writing" displayOrder="3">
+    <Claim code="2-W" name="Writing" displayOrder="2">
       <Icon>fa-edit</Icon>
       <Description>Write Effectively - Students can produce effective and well-grounded writing for a range of purposes and audiences.</Description>
       <Targets>

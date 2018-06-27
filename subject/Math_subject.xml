@@ -562,7 +562,7 @@
     </ReportGrade>
   </ReportGrades>
   <Claims>
-    <Claim code="SOCK_2" name="PSMDA (Problem Solving and Modeling &amp; Data Analysis)" organizational="false" displayOrder="2">
+    <Claim code="SOCK_2" name="Problem Solving and Modeling &amp; Data Analysis" organizational="false" displayOrder="2">
       <Icon>fa-edit</Icon>
     </Claim>
     <Claim code="1" name="Concepts and Procedures" displayOrder="1">

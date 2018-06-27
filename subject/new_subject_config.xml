@@ -6,6 +6,9 @@
          name="New Subject">
   <Messages>
     <Message key="standard-description"><![CDATA[The new subject standard has this definition.]]></Message>
+    <Message key="iab.performance-info"><![CDATA[Student scores on each Interim Assessment Block are assigned to one of three reporting categories (Bottom, Middle, Top). The standard is based on the minimum scale score for the 'Average' achievement level on the Interim Comprehensive and summative assessments (the score that separates Levels 3 and 4).]]></Message>
+    <Message key="ica.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of six achievement levels (Very Bad, Bad, Okay, Average, Good, and Great) based on the scale score.]]></Message>
+    <Message key="sum.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of six achievement levels (Very Bad, Bad, Okay, Average, Good, and Great) based on the scale score.]]></Message>
   </Messages>
   <AssessmentTypes>
     <AssessmentType code="ica">

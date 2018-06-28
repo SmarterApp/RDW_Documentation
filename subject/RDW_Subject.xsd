@@ -67,7 +67,11 @@
       <xs:sequence>
         <!-- The performance levels available for assessments of this type -->
         <xs:element ref="PerformanceLevels"/>
-        <!-- Claim score definitions for assessments of this type -->
+        <!--
+          Claim score definitions for assessments of this type.
+          NOTE: Only ica and sum assessment types support claim scoring, iab assessment
+          types do not allow claim scoring.
+        -->
         <xs:element ref="ClaimScoring" minOccurs="0"/>
       </xs:sequence>
       <!-- The assessment type being defined. Must be "ica", "iab" or "sum" -->
@@ -90,13 +94,19 @@
         has achieved a "successful" level of performance and is used in the
         reporting application to group the data visualization into "below" and
         "at or above" performance level groups.
+        NOTE: iab assessments do not support a standard cutoff, only ica and sum assessments
+        support the standardCutoff attribute.
       -->
       <xs:attribute name="standardCutoff" type="LevelOfPerformance"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="PerformanceLevel">
     <xs:complexType>
-      <!-- The integer value of the level. -->
+      <!--
+        The integer value of the level.
+        NOTE: Performance levels must start at 1 and continue sequentially up to 6
+        NOTE: iab assessment types only support 3 performance levels
+      -->
       <xs:attribute name="level" use="required" type="LevelOfPerformance"/>
       <!-- The display string for the performance level -->
       <xs:attribute name="name" use="required" type="xs:string"/>

@@ -16,7 +16,7 @@
     <Message key="sum.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of six achievement levels (Very Bad, Bad, Okay, Average, Good, and Great) based on the scale score.]]></Message>
   </Messages>
   <AssessmentTypes>
-    <AssessmentType code="ica">
+    <AssessmentType code="ica" name="Interum">
       <PerformanceLevels standardCutoff="4">
         <PerformanceLevel level="1" name="Very Bad" color="maroon"/>
         <PerformanceLevel level="2" name="Bad" color="red"/>
@@ -36,14 +36,14 @@
         </PerformanceLevels>
       </ClaimScoring>
     </AssessmentType>
-    <AssessmentType code="iab">
+    <AssessmentType code="iab" name="Teaching">
       <PerformanceLevels>
         <PerformanceLevel level="1" name="Bottom" color="red-dark"/>
         <PerformanceLevel level="2" name="Middle" color="gray-dark"/>
         <PerformanceLevel level="3" name="Top" color="teal"/>
       </PerformanceLevels>
     </AssessmentType>
-    <AssessmentType code="sum">
+    <AssessmentType code="sum" name="Final">
       <PerformanceLevels standardCutoff="4">
         <PerformanceLevel level="1" name="Very Bad" color="maroon"/>
         <PerformanceLevel level="2" name="Bad" color="red"/>

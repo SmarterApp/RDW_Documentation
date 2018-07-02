@@ -76,6 +76,8 @@
       </xs:sequence>
       <!-- The assessment type being defined. Must be "ica", "iab" or "sum" -->
       <xs:attribute name="code" use="required" type="AssessmentTypeCode"/>
+      <!-- This is the display name for the assessment type. -->
+      <xs:attribute name="name" use="required" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

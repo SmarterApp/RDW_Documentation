@@ -16,7 +16,7 @@
     <Message key="sum.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of four achievement levels (Standard Not Met, Standard Nearly Met, Standard Met, and Standard Exceeded) based on the scale score.]]></Message>
   </Messages>
   <AssessmentTypes>
-    <AssessmentType code="ica">
+    <AssessmentType code="ica" name="ICA">
       <PerformanceLevels standardCutoff="3">
         <PerformanceLevel level="1" name="Did Not Meet Standard" shortName="Did Not Meet" suffix="Standard" color="maroon"/>
         <PerformanceLevel level="2" name="Nearly Met Standard" shortName="Nearly Met" suffix="Standard" color="gray-darkest"/>
@@ -31,14 +31,14 @@
         </PerformanceLevels>
       </ClaimScoring>
     </AssessmentType>
-    <AssessmentType code="iab">
+    <AssessmentType code="iab" name="IAB">
       <PerformanceLevels>
         <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
         <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>
         <PerformanceLevel level="3" name="Above Standard" shortName="Above" suffix="Standard" color="sb-iab-green"/>
       </PerformanceLevels>
     </AssessmentType>
-    <AssessmentType code="sum">
+    <AssessmentType code="sum" name="Summative">
       <PerformanceLevels standardCutoff="3">
         <PerformanceLevel level="1" name="Did Not Meet Standard" shortName="Did Not Meet" suffix="Standard" color="maroon"/>
         <PerformanceLevel level="2" name="Nearly Met Standard" shortName="Nearly Met" suffix="Standard" color="gray-darkest"/>

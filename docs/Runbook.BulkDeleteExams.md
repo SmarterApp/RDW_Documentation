@@ -130,7 +130,7 @@ SELECT count(*) FROM exam;
 
 
 ### Purging exam auditing data in the warehouse
-[Clear Audit Trail](Audit.md#clear-audit)
+[Clear Audit Trail](Runbook.Audit.md#clear-audit)
 
 <a name="purging-from-warehouse"></a>
 ### Purging from data warehouse

@@ -47,10 +47,10 @@ spring:
   # The password should be encrypted.
   reporting_datasource:
 #    url: "\
-#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:reporting}\
-#      ?useSSL=${spring.datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
+#      jdbc:mysql://${spring.reporting_datasource.url-server:localhost:3306}/${spring.reporting_datasource.url-schema:reporting}\
+#      ?useSSL=${spring.reporting_datasource.use-ssl:false}\
+#      &useLegacyDatetimeCode=${spring.reporting_datasource.use-legacy-datetime-code:false}\
+#      &characterEncoding=${spring.reporting_datasource.character-encoding:utf8}\
 #      &rewriteBatchedStatements=${spring.reporting_datasource.rewrite-batched-statements:true}\
 #      &connectTimeout=${spring.reporting_datasource.connect-timeout:10000}\
 #      &socketTimeout=${spring.reporting_datasource.socket-timeout:130000}\
@@ -69,10 +69,10 @@ spring:
 
   warehouse_datasource:
 #    url: "\
-#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:warehouse}\
-#      ?useSSL=${spring.datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
+#      jdbc:mysql://${spring.warehouse_datasource.url-server:localhost:3306}/${spring.warehouse_datasource.url-schema:warehouse}\
+#      ?useSSL=${spring.warehouse_datasource.use-ssl:false}\
+#      &useLegacyDatetimeCode=${spring.warehouse_datasource.use-legacy-datetime-code:false}\
+#      &characterEncoding=${spring.warehouse_datasource.character-encoding:utf8}\
 #      &connectTimeout=${spring.warehouse_datasource.connect-timeout:10000}\
 #      &socketTimeout=${spring.warehouse_datasource.socket-timeout:130000}\
 #      "

@@ -131,6 +131,7 @@ spring:
 #      &connectTimeout=${spring.datasource.connect-timeout:10000}\
 #      &socketTimeout=${spring.datasource.socket-timeout:40000}\
 #      "
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:30})"
     url-server:
     username:
     password:
@@ -141,7 +142,6 @@ spring:
 #    initialize: false
 #    initialSize: 4
 #    maxActive: 10
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=30)"
 
   # Session cache configuration.
   # The default is to not cache session data. To enable caching (using redis), set the

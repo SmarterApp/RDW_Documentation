@@ -13,7 +13,7 @@ Things to put in here:
 
 Test results (aka exams) are pushed into the RDW using the [Test Result Transmission][1] (TRT) format using the [Exam Endpoints](API.md#exam-endpoints). The TRT is a flexible format so additional clarification may be found in the [Logical Data Model][2]. If there is a conflict between the two, the logical data model should be used as the source of truth.
 
-This section further clarifies the data in the TRT, including requirements specific to the RDW.
+This section further clarifies the data in the TRT, including requirements specific to the RDW. The following data fields are always required:
 
 | Mandatory Field | Comment |
 | -------------- | ------- |
@@ -28,7 +28,36 @@ This section further clarifies the data in the TRT, including requirements speci
 | Opportunity@oppId | This is the unique id for a test |
 | Opportunity@dateCompleted |  |
 
-All other TRT data elements could be configured to be required or optional. For example please refer to the [annotated configuration](../config/rdw-ingest-exam-processor.yml).
+All other TRT data elements are optional. The RDW allows certain optional fields to be configured to be required, and the default settings do have some fields required.
+
+| Optional Field | Default Setting |
+| -------------- | --------------- |
+| FirstName | Required |
+| LastOrSurname | Required |
+| MiddleName| Optional |
+| Birthdate | Required |
+| Sex | Required |
+| FirstEntryDateIntoUSSchool | Optional |
+| LEPStatus | Optional |
+| LimitedEnglishProficiencyEntryDate | Optional |
+| LEPExitDate | Optional |
+| EnglishLanguageProficiencyLevel | Optional |
+| TitleIIILanguageInstructionProgramType | Optional |
+| EnglishLanguageAcquisitionStatus | Optional |
+| EnglishLanguageAcquisitionStatusStartDate | Optional |
+| IDEAIndicator | Required |
+| Section504Status | Optional |
+| EconomicDisadvantageStatus | Required |
+| MigrantStatus | Optional |
+| LanguageCode | Optional |
+| PrimaryDisabilityType | Optional |
+| Ethnicity | Optional |
+| SessionId | Required |
+| Completeness | Required |
+| AdministrationCondition | Required |
+| ExamItems | Optional |
+
+Please refer to the [annotated configuration](../config/rdw-ingest-exam-processor.yml) for the most up-to-date list of default settings. In `https://github.com/SmarterApp/RDW_Ingest` look for `exam-processor/src/main/java/org/opentestsystem/rdw/ingest/processor/model/ConfigurableDataElement.java` which has the list of configurable fields.
 
 #### Missing Data
 

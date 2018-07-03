@@ -78,6 +78,11 @@
       <xs:attribute name="code" use="required" type="AssessmentTypeCode"/>
       <!-- This is the display name for the assessment type. -->
       <xs:attribute name="name" use="required" type="xs:string"/>
+      <!--
+        This is an optional longer version of the display name for the assessment type.
+        If not provided, it will default to the "name" value.
+      -->
+      <xs:attribute name="longName" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

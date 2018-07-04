@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  NOTE that the xmlns, xmlns:xsi, and xsi:schemaLocation attributes are only used for local validation
-  and must be removed before submitting to the RDW system.
-  EXAMPLE: <Subject code="newsubject" name="New Subject">...</Subject>
--->
-<Subject xmlns="http://www.smarterbalanced.org/RDW_Subject"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://www.smarterbalanced.org/RDW_Subject RDW_Subject.xsd"
-         code="newsubject"
+<Subject code="newsubject"
          name="New Subject">
   <Messages>
     <Message key="standard-description"><![CDATA[The new subject standard has this definition.]]></Message>

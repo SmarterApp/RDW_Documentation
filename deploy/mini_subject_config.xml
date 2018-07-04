@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Subject code="minisub"
+         name="Mini Subject">
+  <Messages>
+    <Message key="standard-description"><![CDATA[The mini subject standard has this definition.]]></Message>
+    <Message key="ica.performance-info"><![CDATA[Student scores on Interim Comprehensive assessments are assigned to one of two achievement levels (Fail, Pass) based on the scale score.]]></Message>
+  </Messages>
+  <AssessmentTypes>
+    <AssessmentType code="ica" name="ICA" longName="Interim">
+      <PerformanceLevels standardCutoff="2">
+        <PerformanceLevel level="1" name="Fail" color="maroon"/>
+        <PerformanceLevel level="2" name="Pass" color="green"/>
+      </PerformanceLevels>
+      <ClaimScoring>
+        <PerformanceLevels>
+          <PerformanceLevel level="1" name="Fail" color="maroon"/>
+          <PerformanceLevel level="2" name="Pass" color="green"/>
+        </PerformanceLevels>
+      </ClaimScoring>
+    </AssessmentType>
+  </AssessmentTypes>
+  <DepthsOfKnowledge>
+    <DepthOfKnowledge level="1" name="First DOK">
+      <Reference><![CDATA[https://portal.smarterbalanced.org/library/en/english-language-artsliteracy-content-specifications.pdf#page=54]]></Reference>
+    </DepthOfKnowledge>
+    <DepthOfKnowledge level="2" name="Second DOK">
+      <Reference><![CDATA[https://portal.smarterbalanced.org/library/en/english-language-artsliteracy-content-specifications.pdf#page=54]]></Reference>
+    </DepthOfKnowledge>
+    <DepthOfKnowledge level="3" name="Third DOK">
+      <Reference><![CDATA[https://portal.smarterbalanced.org/library/en/english-language-artsliteracy-content-specifications.pdf#page=54]]></Reference>
+    </DepthOfKnowledge>
+  </DepthsOfKnowledge>
+  <ItemDifficulties>
+    <ItemDifficulty gradeCode="06" moderateLowEnd="-0.88783" difficultLowEnd="0.88783"/>
+    <ItemDifficulty gradeCode="07" moderateLowEnd="-0.7215" difficultLowEnd="1.06739"/>
+    <ItemDifficulty gradeCode="08" moderateLowEnd="-0.47018" difficultLowEnd="1.34599"/>
+  </ItemDifficulties>
+  <ReportGrades>
+    <ReportGrade code="06">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="ica">
+          <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade six academic standards for mini subject and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the two claims (i.e., areas) that together make up English language arts/literacy: Reading, Writing, Listening, and Research/Inquiry. These four claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade six. If {0} received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[ICA Grade 6 level 1 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[ICA Grade 6 level 2 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="CLAIM_1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[ICA 1 - {0} claim 1 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[ICA 2 - {0} claim 1 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="CLAIM_2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[ICA 1 - {0} claim 2 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[ICA 2 - {0} claim 2 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
+    <ReportGrade code="07">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="ica">
+          <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade seven California academic standards for English language arts/literacy and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the four claims (i.e., areas) that together make up English language arts/literacy: Reading, Writing, Listening, and Research/Inquiry. These four claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade seven. If {0} received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[ICA Grade 7 level 1 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[ICA Grade 7 level 2 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="CLAIM_1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[ICA 1 - {0} claim 1 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[ICA 2 - {0} claim 1 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="CLAIM_2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[ICA 1 - {0} claim 2 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[ICA 2 - {0} claim 2 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
+    <ReportGrade code="08">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="ica">
+          <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade eight academic standards for mini subject and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the four claims (i.e., areas) that together make up mini subject: Reading, Writing, Listening, and Research/Inquiry. These four claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade eight. If {0} received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[ICA Grade 8 level 1 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[ICA Grade 8 level 2 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="CLAIM_1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[ICA 1 - {0} claim 1 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[ICA 2 - {0} claim 1 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="CLAIM_2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[ICA 1 - {0} claim 2 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[ICA 2 - {0} claim 2 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
+  </ReportGrades>
+  <Claims>
+    <Claim code="CLAIM_1" name="Claim One" displayOrder="1">
+      <Icon>fa-envelope</Icon>
+      <Description>Claim One: Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</Description>
+      <Targets>
+        <Target code="1-1" name="1">
+          <Description>Target 1: Tristique magna sit amet purus gravida quis blandit turpis. Laoreet non curabitur gravida arcu.</Description>
+        </Target>
+        <Target code="2-1" name="2">
+          <Description>Target 2: Ac turpis egestas sed tempus urna et pharetra. Etiam erat velit scelerisque in. Pulvinar sapien et ligula ullamcorper.</Description>
+        </Target>
+      </Targets>
+    </Claim>
+    <Claim code="CLAIM_2" name="Claim Two" displayOrder="2">
+      <Icon>fa-database</Icon>
+      <Description>Claim Two: Egestas congue quisque egestas diam in arcu cursus euismod.</Description>
+      <Targets>
+        <Target code="3-1" name="3">
+          <Description>Target 4: Tortor consequat id porta nibh venenatis cras sed felis. Consequat ac felis donec et odio.</Description>
+        </Target>
+        <Target code="4-1" name="4">
+          <Description>Target 5: Proin sed libero enim sed. Aliquet nec ullamcorper sit amet risus nullam eget. Fusce id velit ut tortor. </Description>
+        </Target>
+      </Targets>
+    </Claim>
+    <Claim code="NA" name="NA" scorable="false">
+      <Description>NA</Description>
+    </Claim>
+  </Claims>
+  <Standards>
+    <Standard code="1.2.3">
+      <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. A) Apply the understanding that usage is a matter of convention, can change over time, and is sometimes contested.]]></Description>
+    </Standard>
+    <Standard code="2.3.4">
+      <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. B) Resolve issues of complex or contested usage, consulting references (e.g., Merriam-Webster’s Dictionary of English Usage, Garner’s Modern American Usage) as needed.]]></Description>
+    </Standard>
+    <Standard code="3.4.5">
+      <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. A) Observe hyphenation conventions.]]></Description>
+    </Standard>
+  </Standards>
+</Subject>

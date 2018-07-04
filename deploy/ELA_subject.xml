@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  NOTE that the xmlns, xmlns:xsi, and xsi:schemaLocation attributes are only used for local validation
-  and must be removed before submitting to the RDW system.
-  EXAMPLE: <Subject code="ELA" name="ELA">...</Subject>
--->
-<Subject xmlns="http://www.smarterbalanced.org/RDW_Subject"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://www.smarterbalanced.org/RDW_Subject RDW_Subject.xsd"
-         code="ELA"
+<Subject code="ELA"
          name="ELA">
   <Messages>
     <Message key="standard-description"><![CDATA[This column reflects the Common Core State Standard(s) associated with a test item. Test items may be associated with more than one standard.  For example, a question that asks students to evaluate research sources may assess both reading and research skills.  For more information, see the <a href=\"https://portal.smarterbalanced.org/library/en/english-language-artsliteracy-content-specifications.pdf\" target=\"_blank\">English Language Arts Content Specifications</a>.]]></Message>

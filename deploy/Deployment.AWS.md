@@ -609,6 +609,11 @@ and the data marts. This is a good time to verify that the required connectivity
         ```bash
         curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@accommodations.xml https://import.sbac.org/accommodations/imports
         ```
+    1. Load subjects.  The subject definitions register the assessment subjects available in the system.  Each subject definition contains the associated performance levels, difficulty cutpoints, targets, claims, etc that define an assessment subject.  By default the system is pre-registered with Math and ELA as available subjects.  However, the associated definition files must still be imported to define display text.
+        ```bash
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@Math_subject.xml https://import.sbac.org/subjects/imports
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@ELA_subject.xml https://import.sbac.org/subjects/imports
+        ```
     1. Load assessment packages. These are created by the tabulator; they are not provided here because they are proprietary in nature. For each file:
         ```bash
         curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018.csv https://import.sbac.org/packages/imports

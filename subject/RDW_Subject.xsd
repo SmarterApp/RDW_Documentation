@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.smarterbalanced.org/RDW_Subject"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           targetNamespace="http://www.smarterbalanced.org/RDW_Subject">
+
+  <!--
+    This defines the root Subject element contains the subject definition.
+  -->
+  <xs:element name="Subject">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Messages"/>
+        <xs:element ref="AssessmentTypes"/>
+        <xs:element ref="DepthsOfKnowledge"/>
+        <xs:element ref="ItemDifficulties"/>
+        <xs:element ref="ReportGrades"/>
+        <xs:element ref="Claims"/>
+        <xs:element ref="Standards"/>
+      </xs:sequence>
+      <!-- The subject code must be unique across the entire system and all vendors. -->
+      <xs:attribute name="code" use="required" type="String10"/>
+      <!-- This is the display name for the subject. -->
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    Message elements define unstructured subject-scoped text that is displayed to users.
+    For example, the "standards-description" message is displayed to the users as an
+    informational popover describing the contents of a "Standards" column within an
+    assessment item display table.
+  -->
+  <xs:element name="Messages">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="Message"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Message">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <!-- The message key must be unique for this Subject. -->
+          <xs:attribute name="key" use="required" type="xs:string"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    AssessmentType elements define the behavior of assessments for this subject
+    within the context of a specific assessment type.
+    A subject may have up to 3 assessment types defined, one each for
+    "iab", "ica" or "sum"
+  -->
+  <xs:element name="AssessmentTypes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="3" ref="AssessmentType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AssessmentType">
+    <xs:complexType>
+      <xs:sequence>
+        <!-- The performance levels available for assessments of this type -->
+        <xs:element ref="PerformanceLevels"/>
+        <!--
+          Claim score definitions for assessments of this type.
+          NOTE: Only ica and sum assessment types support claim scoring, iab assessment
+          types do not allow claim scoring.
+        -->
+        <xs:element ref="ClaimScoring" minOccurs="0"/>
+      </xs:sequence>
+      <!-- The assessment type being defined. Must be "ica", "iab" or "sum" -->
+      <xs:attribute name="code" use="required" type="AssessmentTypeCode"/>
+      <!-- This is the display name for the assessment type. -->
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <!--
+        This is an optional longer version of the display name for the assessment type.
+        If not provided, it will default to the "name" value.
+      -->
+      <xs:attribute name="longName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    PerformanceLevel elements define the available performance levels within
+    the parent context.
+    There must be between 1..6 sequential performance levels defined.
+  -->
+  <xs:element name="PerformanceLevels">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="6" ref="PerformanceLevel"/>
+      </xs:sequence>
+      <!--
+        This optional attribute defines the performance level at which a student
+        has achieved a "successful" level of performance and is used in the
+        reporting application to group the data visualization into "below" and
+        "at or above" performance level groups.
+        NOTE: iab assessments do not support a standard cutoff, only ica and sum assessments
+        support the standardCutoff attribute.
+      -->
+      <xs:attribute name="standardCutoff" type="LevelOfPerformance"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PerformanceLevel">
+    <xs:complexType>
+      <!--
+        The integer value of the level.
+        NOTE: Performance levels must start at 1 and continue sequentially up to 6
+        NOTE: iab assessment types only support 3 performance levels
+      -->
+      <xs:attribute name="level" use="required" type="LevelOfPerformance"/>
+      <!-- The display string for the performance level -->
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <!--
+        The short display string for the performance level. This value may be displayed rather than the "name"
+        attribute when visual space is a concern.  It may be displayed along with the "suffix" attribute value.
+        It may be visually styled differently than the suffix.
+        This value will default to the "name" value if undefined.
+       -->
+      <xs:attribute name="shortName" type="xs:string"/>
+      <!--
+        The suffix display string for the performance level.  This value may be displayed after the "shortName"
+        attribute and may be visually styled differently than the "shortName" text.
+      -->
+      <xs:attribute name="suffix" type="xs:string"/>
+      <!-- The display color of the performance level -->
+      <xs:attribute name="color" use="required" type="Color"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    ItemDifficulty elements define the difficulty cut-points used to calculate
+    whether an assessment item is easy, moderate, or difficult.
+  -->
+  <xs:element name="ItemDifficulties">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ItemDifficulty"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ItemDifficulty">
+    <xs:complexType>
+      <!-- The grade of this cutpoint -->
+      <xs:attribute name="gradeCode" use="required" type="GradeCode"/>
+      <!-- Assessment Items with a difficulty below the level are defined as "Easy" -->
+      <xs:attribute name="moderateLowEnd" use="required" type="xs:decimal"/>
+      <!-- Assessment Items with a difficulty above this level are defined as "Difficult" -->
+      <xs:attribute name="difficultLowEnd" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    This element controls the performance levels at which claim scores for the
+    parent assessment type are reported.
+  -->
+  <xs:element name="ClaimScoring">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="PerformanceLevels"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    DepthOfKnowledge elements define the depth-of-knowledge value that each
+    assessment item is assessing.
+    There must be between 1..n sequential depths defined.
+  -->
+  <xs:element name="DepthsOfKnowledge">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="DepthOfKnowledge"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DepthOfKnowledge">
+    <xs:complexType>
+      <xs:sequence>
+        <!-- URI to an externally-reachable resource to provide more information -->
+        <xs:element name="Reference" type="xs:anyURI"/>
+      </xs:sequence>
+      <!-- The integer value of the depth. -->
+      <xs:attribute name="level" use="required" type="KnowledgeDepth"/>
+      <!-- The display value of the depth. -->
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    ReportGrade elements define the detailed display messages describing a student's
+    performance in generated PDF reports.
+    Each ReportGrade contains messages for each assessment type
+    report.
+    ReportGrades are used only for "ica" and "sum" assessment types,
+    the "iab" reports do not contain subject-scoped messages.
+  -->
+  <xs:element name="ReportGrades">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ReportGrade"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportGrade">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ReportAssessmentTypes" maxOccurs="2"/>
+      </xs:sequence>
+      <!-- The target assessment grade -->
+      <xs:attribute name="code" use="required" type="GradeCode"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    ReportAssessmentType elements define the report messages for a particular
+    grade and assessment type.
+  -->
+  <xs:element name="ReportAssessmentTypes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ReportAssessmentType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportAssessmentType">
+    <xs:complexType>
+      <xs:sequence>
+        <!-- The performance-agnostic overall achievement message -->
+        <xs:element name="OverallAchievementMessage" type="xs:string"/>
+        <!-- The performance-agnostic sub-score achievement message -->
+        <xs:element name="ClaimAchievementMessage" type="xs:string"/>
+        <!-- The performance level messages for the student's overall performance -->
+        <xs:element ref="ReportPerformanceLevels"/>
+        <!-- The claim score messages -->
+        <xs:element ref="ReportClaims"/>
+      </xs:sequence>
+      <!-- The target assessment type code -->
+      <xs:attribute name="code" use="required" type="AssessmentTypeCode"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    ReportPerformanceLevel elements define the report messages for a particular
+    grade, assessment type, and performance level.
+  -->
+  <xs:element name="ReportPerformanceLevels">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ReportPerformanceLevel"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportPerformanceLevel">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <!--
+            The target performance level.  This must reference an existing
+            PerformanceLevel@level value in the XML document.
+          -->
+          <xs:attribute name="level" use="required" type="LevelOfPerformance"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    ReportClaim elements define the report messages for a particular
+    grade, assessment type, scorable claim and performance level.
+  -->
+  <xs:element name="ReportClaims">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ReportClaim"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReportClaim">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ReportPerformanceLevels"/>
+      </xs:sequence>
+      <!--
+        The target category.  This must reference an existing scorable Claim@code
+        value in the XML document.
+      -->
+      <xs:attribute name="code" use="required" type="String10"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    Claim elements define the scorable and organizational claims and targets referenced
+    by assessment items and TRT exam results.
+    It is recommended that claims be both scorable and organizational to allow for consistent organization of items.
+  -->
+  <xs:element name="Claims">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="Claim"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Claim">
+    <xs:complexType>
+      <xs:sequence>
+        <!--
+          Optional display icon for displaying when displaying this claim
+          to users or generating reports.
+          All free Font Awesome icons are available https://fontawesome.com/icons?d=gallery&m=free
+        -->
+        <xs:element minOccurs="0" name="Icon" type="xs:string"/>
+        <!--
+          Optional description for displaying this claim to users or
+          generating reports.
+        -->
+        <xs:element minOccurs="0" name="Description" type="xs:string"/>
+        <!-- Optional target sub-classifications of this claim -->
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Targets"/>
+      </xs:sequence>
+      <!--
+        The code for this claim.  NOTE that codes are required to be
+        unique within the same subject, but not across separate subjects.
+      -->
+      <xs:attribute name="code" use="required" type="String10"/>
+      <!-- The display name for this claim. -->
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <!--
+        True if this claim is scorable and we are required to persist
+        Student result scores against this claim.
+      -->
+      <xs:attribute name="scorable" default="true" type="xs:boolean"/>
+      <!--
+        True if this claim is organizational and there exist assessment
+        items that will reference this claim.
+      -->
+      <xs:attribute name="organizational" default="true" type="xs:boolean"/>
+      <!--
+        Optional attribute declaring display order when displaying
+        scorable claims.  Claims will be displayed in ascending order.
+      -->
+      <xs:attribute name="displayOrder" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    Target elements define the most granular classification of an assessment item.
+    They exist as a sub-category of claims.  Each target must belong to a single claim.
+  -->
+  <xs:element name="Targets">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="Target"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Target">
+    <xs:complexType>
+      <xs:sequence>
+        <!--
+          Optional description for displaying this target to users or
+          generating reports.
+        -->
+        <xs:element minOccurs="0" name="Description" type="xs:string"/>
+      </xs:sequence>
+      <!--
+        The code for this target.  NOTE that codes are required to be
+        unique within the same parent claim, but not across separate claims.
+      -->
+      <xs:attribute name="code" use="required" type="String10"/>
+      <!-- The display name for this target. -->
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+    Standard elements declare externally-defined standards referenced
+    by assessment items.
+  -->
+  <xs:element name="Standards">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="Standard"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Standard">
+    <xs:complexType>
+      <xs:sequence>
+        <!-- The standard description displayed to users -->
+        <xs:element name="Description" type="xs:string"/>
+      </xs:sequence>
+      <!-- The unique standard code referenced by assessment items -->
+      <xs:attribute name="code" use="required" type="String20"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- The Assessment Type codes available within the RDW system -->
+  <xs:simpleType name="AssessmentTypeCode">
+    <xs:restriction base="xs:string">
+      <!-- Interim Assessment Blocks -->
+      <xs:enumeration value="iab"/>
+      <!-- Interim Comprehensive Assessment -->
+      <xs:enumeration value="ica"/>
+      <!-- Summative Assessment -->
+      <xs:enumeration value="sum"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- A length-limited string -->
+  <xs:simpleType name="String10">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="10"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- A length-limited string -->
+  <xs:simpleType name="String20">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="20"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- The colors available within the RDW system -->
+  <xs:simpleType name="Color">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="blue"/>
+      <xs:enumeration value="blue-dark"/>
+      <xs:enumeration value="teal"/>
+      <xs:enumeration value="aqua"/>
+      <xs:enumeration value="green"/>
+      <xs:enumeration value="green-dark"/>
+      <xs:enumeration value="orange"/>
+      <xs:enumeration value="red"/>
+      <xs:enumeration value="red-dark"/>
+      <xs:enumeration value="maroon"/>
+      <xs:enumeration value="black"/>
+      <xs:enumeration value="gray-darkest"/>
+      <xs:enumeration value="gray-darker"/>
+      <xs:enumeration value="gray-dark"/>
+      <xs:enumeration value="gray"/>
+      <xs:enumeration value="gray-light"/>
+      <xs:enumeration value="gray-lighter"/>
+      <xs:enumeration value="gray-lightest"/>
+      <xs:enumeration value="white"/>
+      <xs:enumeration value="sb-iab-red"/>
+      <xs:enumeration value="sb-iab-yellow"/>
+      <xs:enumeration value="sb-iab-green"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- The performance levels available within the RDW system -->
+  <xs:simpleType name="LevelOfPerformance">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="6"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- DepthOfKnowledge depth must be a positive value greater than or equal to 1 -->
+  <xs:simpleType name="KnowledgeDepth">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- The assessment grades available within the RDW system -->
+  <xs:simpleType name="GradeCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="UG"/>
+      <xs:enumeration value="IT"/>
+      <xs:enumeration value="PR"/>
+      <xs:enumeration value="PK"/>
+      <xs:enumeration value="TK"/>
+      <xs:enumeration value="KG"/>
+      <xs:enumeration value="01"/>
+      <xs:enumeration value="02"/>
+      <xs:enumeration value="03"/>
+      <xs:enumeration value="04"/>
+      <xs:enumeration value="05"/>
+      <xs:enumeration value="06"/>
+      <xs:enumeration value="07"/>
+      <xs:enumeration value="08"/>
+      <xs:enumeration value="09"/>
+      <xs:enumeration value="10"/>
+      <xs:enumeration value="11"/>
+      <xs:enumeration value="12"/>
+      <xs:enumeration value="13"/>
+      <xs:enumeration value="PS"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

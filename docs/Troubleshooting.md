@@ -2,6 +2,8 @@
 
 **NOTE: please avoid putting environment-specific details _especially secrets and sensitive information_ in this document.**
 
+**Intended Audience**: this document provides information for troubleshooting the [Reporting Data Warehouse](../README.md). Operations, support and system administrators will find it useful.
+
 ### Table of Contents
 
 * [Kubernetes](#kubernetes)
@@ -14,8 +16,8 @@
     * [Reconciliation Report](#reconciliation-report)
     * [Unknown School](#unknown-school)
     * [Duplicate Schools](#duplicate-schools)
-    * [Invalid Student Group](#invalid-group)
     * [Empty Student Report](#empty-report)
+    * [Invalid Student Group](#invalid-group)
     * [Missing Student Group](#missing-student-group)
     * [Can't See Student Group](#missing-student-group-one-user)
     * [Unable To Admin District](#unable-to-admin-district)
@@ -36,7 +38,7 @@ All work is done from a properly configured workstation, bastion or jump server.
 # replace cfgname and S3 location with environment-specific values
 kops export kubecfg cfgname --state s3://kops-state-store 
 ```
-It is also assumed that a mysql client with connectivity to the databases is installed.
+It is also assumed that mysql and psql clients are installed with connectivity to the databases.
 
 <a name="working-with-nodes"></a>
 #### Working With Nodes
@@ -61,40 +63,32 @@ rabbit-deployment-2895814383-gjqcd              1/1       Running   0          1
 ...
 ```
 
-The simplest diagnostic is to look at a pod's logs, either downloading them or tailing them:
+The simplest diagnostic is to look at a pod's logs, either downloading them or tailing them.
+Refer to [Logging](Monitoring.md#logging) for more information on configuring logs.
 
 ```bash
 kubectl logs migrate-reporting-deployment-3157337915-34zqn > migrate.log
 kubectl logs -f migrate-reporting-deployment-3157337915-34zqn
+kubetail migrate
 ```
 
-To get a pod's diagnostic status, you'll need two sessions: one to port-forward and the other to curl. One way to do this is to use `screen`:
+All the services support Spring Actuator and SmarterBalanced Diagnostic end-points which you can query using curl.
+The pods have `jq` installed which can be used to pretty-print the json responses:
 
 ```bash
-screen
-kubectl port-forward migrate-reporting-deployment-3157337915-34zqn 8008
-Ctrl-A, C
 # the SBAC diagnostic status
-curl http://localhost:8008/status?level=5
+kubectl exec -it migrate-reporting-deployment-3157337915-34zqn curl http://localhost:8008/status?level=5 | jq .
 # all the Spring actuator end-points are available, e.g.:
-curl http://localhost:8008/health
-curl http://localhost:8008/env
-curl http://localhost:8008/configprops
+kubectl exec -it migrate-reporting-deployment-3157337915-34zqn curl http://localhost:8008/health | jq .
+kubectl exec -it migrate-reporting-deployment-3157337915-34zqn curl http://localhost:8008/env | jq .
+kubectl exec -it migrate-reporting-deployment-3157337915-34zqn curl http://localhost:8008/configprops | jq .
 ```
 
-You can start a shell in a pod but know that these are thin Alpine images. You'll likely need to install any utility you need. Messing with an image isn't a good long-term idea but it can get you through troubleshooting. For example, suppose you want to try hitting an image's own status end-point from within the image:
+You can start a shell in a pod but know that these are thin Alpine images. You'll likely need to install any utility you need. Messing with an image isn't a good long-term idea but it can get you through troubleshooting. For example, in one debugging session we wanted to run the AWS CLI from within a pod. No stable aws-cli apk so:
 
 ```bash
-$ kubectl exec migrate-reporting[k8s-randomization] -it /bin/sh
-# apk -v --update add curl jq
-# curl http://localhost:8008/health | jq .
-```
+kubectl exec -it migrate-reporting-deployment-3157337915-34zqn /bin/sh
 
-Whenever a `curl` command is presented in this document it is assumed one of these two techniques is being used.
-
-In one debugging session we wanted to run the AWS CLI from within a pod. No stable aws-cli apk so:
-
-```bash
 apk -v --update add python py-pip groff less mailcap 
 pip install --upgrade awscli s3cmd python-magic
 apk -v --purge del py-pip
@@ -423,6 +417,62 @@ use reporting;
 delete s from school s where s.natural_id like '%0000000' and not exists (select sg.id from student_group sg where sg.school_id = s.id) and not exists (select e.id from exam e where e.school_id = s.id);
 ```
 
+<a name="empty-report"></a>
+#### Student Report - Empty PDF
+
+Support verified that the report is really empty. With the low bandwidth with support we really only know the school
+name, "Awesome Academy" and that the incident happened yesterday. All the initial work will be in MySQL, reporting:
+
+* Get school info, specifically the id, in this case id=6470
+    ```sql
+    SELECT * FROM school WHERE name LIKE 'Awesome Academy%';
+    ```
+* Find a user report record(s) for that school:
+    ```sql
+    SELECT * FROM user_report WHERE report_request LIKE '%schoolID":6470%';
+    ```
+    * {"@class":"org.opentestsystem.rdw.reporting.common.report.SchoolGradeExamReportRequest","schoolYear":2018,"language":"eng","name":"Awesome Academy 2018","order":"STUDENT_NAME","schoolId":6470,"gradeId":11}
+    * schoolId: 6470
+    * gradeId: 11
+    * schoolYear: 2018
+* See what exam data we have matching those criteria
+    ```sql
+    select count(*) from exam where school_id=6470 and school_year=2018 and grade_id=11;
+    +----------+
+    | count(*) |
+    +----------+
+    |        0 |
+    +----------+
+    ```
+* Oops. What's up with that?
+    ```sql
+    select grade_id, count(*) cnt from exam where school_id=6470 and school_year=2018 group by grade_id;
+    +----------+-----+
+    | grade_id | cnt |
+    +----------+-----+
+    |       12 |   9 |
+    +----------+-----+
+    ```
+
+There is no grade 11 exam data, it is grade 12. The user will have to specify grade 12 when requesting the report.
+But that's not possible. So this is clearly a bug: the system should use the assessment grade when filtering results
+for the printed report.
+
+<a name="failed-group"></a>
+#### Student Group - Failed Import
+
+If a student group import fails, the system retains the intermediate data to help when diagnosing the problem. This is an advanced effort usually requiring tier 3 support which won't be detailed here. However, it does require that that intermediate data be deleted.
+
+If you know the import that failed, cleaning up the data is easy, something like:
+```sql
+DELETE FROM upload_student_group WHERE import_id = 33962;
+```
+
+If individual failures were not addressed, deleting all "old" entries may be more appropriate. For example, to delete failures more than 3 days old:
+```sql
+DELETE usg FROM upload_student_group usg JOIN import i ON i.id = usg.import_id WHERE i.updated < TIMESTAMPADD(DAY, -3, CURRENT_TIMESTAMP);
+```
+
 <a name="invalid-group"></a>
 #### Student Groups - Invalid Upload Status
 
@@ -485,47 +535,6 @@ group_name,school_natural_id,school_year,subject_code,student_ssid,group_user_lo
 
 The problem is the S3 loader doesn't have the necessary `ENCLOSED BY '"'` clause so it is failing to parse the first
 column properly. 
-
-<a name="empty-report"></a>
-#### Student Report - Empty PDF
-
-Support verified that the report is really empty. With the low bandwidth with support we really only know the school
-name, "Awesome Academy" and that the incident happened yesterday. All the initial work will be in MySQL, reporting: 
-
-* Get school info, specifically the id, in this case id=6470
-    ```sql
-    SELECT * FROM school WHERE name LIKE 'Awesome Academy%';
-    ```
-* Find a user report record(s) for that school:
-    ```sql
-    SELECT * FROM user_report WHERE report_request LIKE '%schoolID":6470%';
-    ```
-    * {"@class":"org.opentestsystem.rdw.reporting.common.report.SchoolGradeExamReportRequest","schoolYear":2018,"language":"eng","name":"Awesome Academy 2018","order":"STUDENT_NAME","schoolId":6470,"gradeId":11}
-    * schoolId: 6470
-    * gradeId: 11
-    * schoolYear: 2018
-* See what exam data we have matching those criteria
-    ```sql
-    select count(*) from exam where school_id=6470 and school_year=2018 and grade_id=11;
-    +----------+
-    | count(*) |
-    +----------+
-    |        0 |
-    +----------+
-    ```
-* Oops. What's up with that?
-    ```sql
-    select grade_id, count(*) cnt from exam where school_id=6470 and school_year=2018 group by grade_id;
-    +----------+-----+
-    | grade_id | cnt |
-    +----------+-----+
-    |       12 |   9 |
-    +----------+-----+
-    ```
-
-There is no grade 11 exam data, it is grade 12. The user will have to specify grade 12 when requesting the report.
-But that's not possible. So this is clearly a bug: the system should use the assessment grade when filtering results
-for the printed report.
 
 <a name="missing-student-group"></a>
 #### Missing Student Group
@@ -739,29 +748,103 @@ There are a number of API end-points that support the reporting webapp. These en
 
 <a name="user-context"></a>
 #### User Context
-To get metadata about the user's context: navigate to https://reporting.smarterbalanced.org/api/reporting-service/user. This should return a JSON payload that includes some useful context information about the user. For example:
+To get metadata about the user's context: navigate to https://reporting.smarterbalanced.org/api/reporting-service/user. This should return a payload that includes some useful context information about the user including permissions and authorities. For example:
 ```json
 {
-  "firstName": "MixedRoles",
-  "lastName": "Acosta",
-  "permissions": [],
-  "schools": [],
-  "groups": [],
-  "settings": {
-    "minItemDataYear": 2016,
-    "uiLanguages": [
-      "es"
-    ],
-    "reportLanguages": [
-      "es"
-    ],
-    "irisVendorId": "2B3C34BF-064C-462A-93EA-41E9E3EB8333",
-    "analyticsTrackingId": "UA-102446884-1",
-    "interpretiveGuideUrl": "https://portal.smarterbalanced.org/library/en/reporting-system-interpretive-guide.pdf",
-    "userGuideUrl": "https://portal.smarterbalanced.org/library/en/reporting-system-user-guide.pdf",
-    "transferAccess": true
+  "username": "mlaffoon@fairwaytech.com",
+  "authorities": [
+    {
+      "authority": "PERM_DATA_WRITE"
+    },
+    {
+      "authority": "PERM_GROUP_PII_READ"
+    },
+    {
+      "authority": "PERM_GROUP_READ"
+    },
+    {
+      "authority": "PERM_GROUP_WRITE"
+    },
+    {
+      "authority": "ROLE_ASMTDATALOAD"
+    },
+    {
+      "authority": "ROLE_GROUP_ADMIN"
+    },
+    {
+      "authority": "ROLE_PII_GROUP"
+    }
+  ],
+  "accountNonExpired": true,
+  "accountNonLocked": true,
+  "credentialsNonExpired": true,
+  "enabled": true,
+  "id": "5aff0274e4b03dd700aff595",
+  "email": "user@example.com",
+  "firstName": "User",
+  "lastName": "Test",
+  "permissionsById": {
+    "GROUP_PII_READ": {
+      "id": "GROUP_PII_READ",
+      "scope": {
+        "districtGroupIds": [],
+        "districtIds": [],
+        "institutionGroupIds": [],
+        "institutionIds": [],
+        "statewide": true
+      }
+    },
+    "GROUP_WRITE": {
+      "id": "GROUP_WRITE",
+      "scope": {
+        "districtGroupIds": [],
+        "districtIds": [
+          1,
+          2
+        ],
+        "institutionGroupIds": [],
+        "institutionIds": [],
+        "statewide": false
+      }
+    },
+    "GROUP_READ": {
+      "id": "GROUP_READ",
+      "scope": {
+        "districtGroupIds": [],
+        "districtIds": [
+          1,
+          2
+        ],
+        "institutionGroupIds": [],
+        "institutionIds": [],
+        "statewide": true
+      }
+    },
+    "DATA_WRITE": {
+      "id": "DATA_WRITE",
+      "scope": {
+        "districtGroupIds": [],
+        "districtIds": [],
+        "institutionGroupIds": [],
+        "institutionIds": [],
+        "statewide": true
+      }
+    }
   }
 }
+```
+
+A user's groups may be seen by navigating to https://reporting.smarterbalanced.org/api/reporting-service/groups:
+```json
+[
+  {
+    "id": 244,
+    "name": "Katz G1",
+    "schoolName": "Katz Field",
+    "schoolId": 5,
+    "userCreated": false
+  }
+]
 ```
 
 <a name="user-organizations"></a>

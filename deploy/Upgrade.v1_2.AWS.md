@@ -21,7 +21,6 @@ It involves some minor technical changes:
 * Fix/change the memory settings for all apps
 * Reorganize application and tenant properties
 
-TODO - Because there are schema changes, the data warehouse and reporting data mart must be migrated. This may take a couple hours depending on the amount of data involved. Combined with the non-trivial changes to the system configuration, this means the upgrade process may take 2-4 hours. It is important to alert the user base and any 3rd party data feeds of the extended downtime required for this upgrade.
 
 The high level steps for the upgrade include:
 * [Notification](#notification)
@@ -68,8 +67,8 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * rabbit service
         * configuration service
         * wkhtmltopdf service
-    * [ ] Ingest services.
-        * [ ] Change image version to `1.2.0-RELEASE` in the following files:
+    * Ingest services.
+        * Change image version to `1.2.0-RELEASE` in the following files:
             * `import-service.yml`
             * `package-processor-service.yml`
             * `group-processor-service.yml`
@@ -77,20 +76,20 @@ The goal of this step is to make changes to everything that doesn't directly aff
             * `migrate-olap-service.yml`
             * `migrate-reporting-service.yml`
             * `task-service.yml`
-        * Note: the ingest services should not require changes to max heap size or container memory limits
-    * [ ] Reporting services. Only the image version needs to be changed.
-        * [ ] Change image version to `1.2.0-RELEASE` in the following files:
+        * Note: the ingest services should not require changes to max heap size or container memory limits but please refer to the runbook (https://github.com/SmarterApp/RDW/blob/master/docs/Runbook.md#common) for guidance.
+    * Reporting services. Only the image version needs to be changed.
+        * Change image version to `1.2.0-RELEASE` in the following files:
             * `admin-service.yml`
             * `aggregate-service.yml`
             * `report-processor-service.yml`
             * `reporting-service.yml`
             * `reporting-webapp.yml`
-        * [ ] Fix/change memory settings:
+        * Fix/change memory settings:
             * `admin-service.yml`
                 * Reduce requests/limits memory to 500M (it was probably 750M or higher)
             * `aggregate-service.yml`
-                * Set requests/limits memory to at least 800M
-                * Set max heap size by setting environment variable `MAX_HEAP_SIZE = "-Xmx600m"`
+                * Set requests/limits memory to 1G
+                * Use default heap size; remove any `MAX_HEAP_SIZE` environment variable.
             * `report-processor-service.yml`
                 * Set requests/limits memory to at least 750M
                 * Set max heap size by setting environment variable `MAX_HEAP_SIZE = "-Xmx500m"`
@@ -99,7 +98,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
                 * Set max heap size by setting environment variable `MAX_HEAP_SIZE = "-Xmx500m"`
             * `reporting-webapp.yml`
                 * Set requests/limits memory to at least 1G
-    * [ ] Commit changes
+    * Commit changes
         ```bash
         cd ~/git/RDW_Deploy_Opus
         git add *
@@ -107,27 +106,36 @@ The goal of this step is to make changes to everything that doesn't directly aff
         git push 
         ```
 * [ ] Changes to configuration files in `RDW_Config_Opus`. There are annotated configuration files in the `config` folder in the `RDW` repository; use those to help guide edits.
-    * [ ] Common service properties.
+    * Common service properties.
         * Edit `application.yml`
-            * Change `app:` to `reporting:`.
+            * Change `app:` to `reporting:`. Many of these have good defaults and are optional but it could have
+                * school-year: 2018
+                * client: SBAC
+                * state.code: CA
+                * state.name: California
             * Delete `tenant:` line (and move things around if necessary) so those properties are now under `reporting:`
-    * [ ] Ingest services.
-        * [ ] Migrate Olap service, edit `rdw-ingest-migrate-olap.yml`
-            * TODO - change batch size?
-    * [ ] Reporting services.
-        * [ ] Admin service, edit `rdw-reporting-admin-service.yml`
+                * Probably want to put `transfer-access-enabled: true` in here (and remove from other config files)
+    * Ingest services.
+        * Import service, edit `rdw-ingest-import-service.yml`
+            * Set `security.permission-service.endpoint` (copy from reporting webapp config)
+            * Remove `security.state` if present
+        * Package processor, edit `rdw-ingest-package-processor.yml`
+            * Add Amazon S3 credentials to configuration (copy from import-service)
+    * Reporting services.
+        * Admin service, edit `rdw-reporting-admin-service.yml`
             * Change `app:` to `reporting:`
-        * [ ] Aggregate service, edit `rdw-reporting-aggregate-service.yml`
+        * Aggregate service, edit `rdw-reporting-aggregate-service.yml`
             * If `app.state` exists, change it to be under `reporting.state` (but this is probably specified in `application.yml`)
-        * [ ] Report processor, edit `rdw-reporting-report-processor.yml`
+        * Report processor, edit `rdw-reporting-report-processor.yml`
             * If `app.state` exists, change it to be under `reporting.state` (but this is probably specified in `application.yml`)
             * Move any properties under `tenant:` to be under `reporting:`
-        * [ ] Reporting service, edit `rdw-reporting-service.yml`
+        * Reporting service, edit `rdw-reporting-service.yml`
             * If `app.state` exists, change it to be under `reporting.state` (but this is probably specified in `application.yml`)
             * Move any properties under `tenant:` to be under `reporting:`
             * Move all properties under `app:` to `rdw-reporting-webapp.yml` and change to be under `reporting:`
             (when you're done there will be no properties under `app:` in the reporting service config file)
-        * [ ] Reporting webapp, edit `rdw-reporting-webapp.yml`
+            * Add `spring.writable_datasource` and set url and credentials. Perhaps a copy from `spring.datasource` but make sure it is not read-only.
+        * Reporting webapp, edit `rdw-reporting-webapp.yml`
             * Copy `app:` properties from `rdw-reporting-service.yml` and put them under `reporting:`
                 * Simplify `analytics.trackingId` to `analytics-tracking-id`
                 * Simplify `iris.vendorId` to `iris-vendor-id`
@@ -144,11 +152,60 @@ The goal of this step is to make changes to everything that doesn't directly aff
         git add *
         git commit -am "Changes for v1.2"
         git push 
-        ```        
-* [ ] TODO - any other prep
+        ```
+* [ ] Permissions
+    * Because of a quirk in the permissions service there must be a permission associated with every role so, for the
+    Reporting component add a `DATA_WRITE` permission and associate it with the role `ASMTDATALOAD`.
+* [ ] Translations
+    * Verify there are no custom entries in the reporting.translation table. If there are, create an `en.json` with the
+    custom values. For example,
+    ```json
+    ...
+    "html": {
+      "system-news": "<h2 class=\"blue-dark h3 mb-md\">Note</h2><div class=\"summary-reports-container mb-md\"><p>Item level data and session IDs are not available for tests administered prior to the 2017-18 school year.</p></div>"
+    },
+    ```
+* [ ] (Optional) Run data validation scripts. These scripts compare data between the warehouse and the data marts.
+    * You'll need the version of RDW_Schema that was used to install the *current* installation; in this case it is
+    probably the tagged 1.1.0 commit:
+    ```bash
+    # get v1.1 version of the schema
+    cd ~/git/RDW_Schema
+    git fetch --all --tags --prune
+    git checkout 1.1.0
+    cd validation
+    ```
+    * If desired, there is a `README.md` that details the use of the script.
+    * Create a secrets file for the environment, e.g. `secrets/opus.sh`, filling in the secrets:
+    ```bash
+    #!/usr/bin/env bash
 
-* [ ] Run data validation scripts. These scripts compare data between the warehouse and the data marts.
-    * TODO - describe this
+    warehouse_host=rdw-aurora-opus-warehouse.cugsexobhx8t.us-west-2.rds.amazonaws.com
+    warehouse_port=3306
+    warehouse_schema=warehouse
+    warehouse_user=
+    warehouse_password=
+
+    reporting_host=rdw-aurora-opus-reporting.cugsexobhx8t.us-west-2.rds.amazonaws.com
+    reporting_port=3306
+    reporting_schema=reporting
+    reporting_user=
+    reporting_password=
+
+    reporting_olap_host=rdw.cibkulpjrgtr.us-west-2.redshift.amazonaws.com
+    reporting_olap_port=5439
+    reporting_olap_db=opus
+    reporting_olap_user=
+    reporting_olap_password=
+    ```
+    * Validate reporting data:
+    ```bash
+    ./validate-migration.sh secrets/opus.sh reporting
+    ```
+    This will produce a new `results-<date>` folder, with sub-folders. Each sub-folder has the results of a single
+    validation. If there is a `warehouse_reporting.diff` file in a sub-folder, inspect it. There are some legitimate
+    issues (e.g. cumulative rounding errors when summing std-err values) but, in general, there should be no diffs
+    unless there have been manual tweaks to the data.
 * [ ] (Optional) "Before" Smoke Test. You may want to go through some of the steps of the smoke test before doing the
 upgrade, just to make sure any problems are new. This may require temporarily providing access for your QA volunteers.
 
@@ -190,42 +247,89 @@ All cluster deployment and configuration is stored in version control, so nothin
 
 ### Upgrade
 
-* [ ] Get the latest deploy repo
+* [ ] Gentle reminder to start `screen` on the ops machine so steps may be run in parallel.
+* [ ] Upgrade cluster. If the version of the cluster is old (< 1.8 at the time of this writing), consider upgrading it.
+    * Verify version:
     ```bash
-    cd ~/git/RDW_Deploy_Opus
-    git checkout master; git pull
+    $ kops version
+    Version 1.9.0 (git-6741158)
+    $ kops export kubecfg awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store
+    $ kubectl version
+    Client Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.2", GitCommit:"81753b10df112992bf51bbc2c2f85208aad78335", GitTreeState:"clean", BuildDate:"2018-05-12T04:12:12Z", GoVersion:"go1.9.6", Compiler:"gc", Platform:"darwin/amd64"}
+    Server Version: version.Info{Major:"1", Minor:"6", GitVersion:"v1.6.13", GitCommit:"14ea65f53cdae4a5657cf38cfc8d7349b75b5512", GitTreeState:"clean", BuildDate:"2017-11-22T20:19:06Z", GoVersion:"go1.7.6", Compiler:"gc", Platform:"linux/amd64"}
     ```
-* [ ] Upgrade cluster. If the version of the cluster is old (< 1.7 at the time of this writing), consider upgrading it.
+    Client utils are up-to-date. If they aren't upgrade them, good place to start: https://github.com/kubernetes/kops.
+    Server is (very) old (1.6.13), let's upgrade the cluster.
+    * Capture cluster configuration for posterity (and possible error recovery).
     ```bash
-    kops upgrade cluster --name awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+    $ kops get cluster -o yaml > cluster.v1_1.yml
     ```
+    * Upgrade cluster. Note distinction between `upgrade` and `update` in these commands. You can (and probably should) submit the commands without `--yes` first to see what each will do.
+    ```bash
+    $ kops upgrade cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+    ITEM                             PROPERTY           OLD                                                     NEW
+    Cluster                          KubernetesVersion  1.6.13                                                  1.9.6
+    InstanceGroup/master-us-west-2a  Image              kope.io/k8s-1.6-debian-jessie-amd64-hvm-ebs-2018-01-14  kope.io/k8s-1.9-debian-jessie-amd64-hvm-ebs-2018-03-11
+    InstanceGroup/nodes              Image              kope.io/k8s-1.6-debian-jessie-amd64-hvm-ebs-2018-01-14  kope.io/k8s-1.9-debian-jessie-amd64-hvm-ebs-2018-03-11
 
-* [ ] TODO - figure out how to handle migration of IABs and Longitudinal fact tables to the olap data mart
-    * Recommend wiping the olap data mart during the upgrade and allowing the migrate to go; it will take an hour or two to migrate everything.
-    If we take that approach we should wipe the Redshift data before applying schema changes.
+    $ kops update cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+    (lots of output)
 
-* [ ] Apply schema changes. If the warehouse and reporting databases are separate it will be more efficient to run the migration tasks in parallel. Use multiple terminal sessions (or `screen`) and run them at the same time.
-   * Estimated schema changes run time:
-   * [ ] Aurora/reporting : 1 hours (to drop and recrete FK on the exam table)
-   * [ ] Aurora/warehouse : TODO
-   * [ ] Redshift : TODO
-
+    $ kops rolling-update cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+    (lots of output about nodes/pods being cordoned, evicted, drained)
+    ```
+    The last step (rolling update) can take a long time (perhaps an hour or more). This is a good opportunity to jump down a couple steps and start the schema migration.
+* [ ] Upgrade cluster system services
+    * Get latest heapster, tweak and apply
+    ```bash
+    cd ~/git/heapster
+    # may need to discard changes to grafana spec file
+    # git checkout -- deploy/kube-config/influxdb/grafana.yaml
+    git pull
+    # edit and tweak the spec file per deployment instructions
+    vi deploy/kube-config/influxdb/grafana.yaml
+    kubectl apply -f ~/git/heapster/deploy/kube-config/influxdb
+    ```
+* [ ] Apply schema changes.
+    * Get the latest version of the schema and check the state of the databases.
     ```bash
     # get latest version of the schema
     cd ~/git/RDW_Schema
     git checkout master; git pull
-    
+
     # test credentials and state of databases
-    ./gradlew -Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" -Pdatabase_user=user -Pdatabase_password=password infoWarehouse
-    ./gradlew -Pdatabase_url="jdbc:mysql://rdw-aurora-reporting-[aws-randomization]:3306/" -Pdatabase_user=user -Pdatabase_password=password infoReporting
-    TODO - redshift
-    
-    # migrate warehouse (this may take a while)
-    ./gradlew -Pdatabase_url="jdbc:mysql://rdw-aurora-warehouse-[aws-randomization]:3306/" -Pdatabase_user=user -Pdatabase_password=password migrateWarehouse    
-    # migrate reporting (this may take a while)
-    ./gradlew -Pdatabase_url="jdbc:mysql://rdw-aurora-reporting-[aws-randomization]:3306/" -Pdatabase_user=user -Pdatabase_password=password migrateReporting
-    # migrate olap (this may take a while)
-    TODO - redshift
+    ./gradlew -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password infoWarehouse
+
+    ./gradlew -Pdatabase_url="jdbc:mysql://rdw-opus-reporting.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password infoReporting
+
+    ./gradlew -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password \
+      -Predshift_url=jdbc:redshift://rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus -Predshift_user=root -Predshift_password=password infoMigrate_olap infoReporting_olap
+    ```
+    * Continue, migrating data. If the warehouse and reporting databases are separate it will be more efficient to run the migration tasks in parallel. Use multiple terminal sessions (or `screen`) and run them at the same time.
+        * Warehouse
+        ```bash
+        ./gradlew -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password migrateWarehouse
+        ```
+        * Reporting
+        ```bash
+        ./gradlew -Pdatabase_url="jdbc:mysql://rdw-opus-reporting.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password migrateReporting
+        ```
+        * Reporting OLAP. We will be wiping out the olap data and remigrating everything.
+        ```bash
+        ./gradlew -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password \
+          -Predshift_url=jdbc:redshift://rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus -Predshift_user=root -Predshift_password=password \
+          cleanMigrate_olap migrateMigrate_olap cleanReporting_olap migrateReporting_olap
+        ```
+    * After wiping the reporting olap database you'll need to re-grant permissions.
+    I suspect only the `... ON ALL TABLES ...` commands are needed (because database and schema are not recreated).
+    ```sql
+	\connect opus
+	GRANT ALL ON SCHEMA reporting to rdwopusingest;
+    GRANT ALL ON ALL TABLES IN SCHEMA reporting TO rdwopusingest;
+	GRANT ALL ON SCHEMA reporting to rdwopusreporting;
+    GRANT ALL ON ALL TABLES IN SCHEMA reporting TO rdwopusreporting;
+	ALTER USER rdwopusingest SET SEARCH_PATH TO reporting;
+	ALTER USER rdwopusreporting SET SEARCH_PATH TO reporting;
     ```
 * [ ] Merge deployment and configuration branches. This can be done via command line or via the repository UI (if you use the repository UI, make sure to checkout and pull the latest `master`). Here are the command line actions:
     ```bash
@@ -243,7 +347,15 @@ All cluster deployment and configuration is stored in version control, so nothin
     git push origin master
     git push origin --delete v1_2; git branch -d v1_2
     ```
-* [ ] Redeploy services. 
+* (Optional) Although there should be no problem, now is an okay time to verify db connectivity/routing/permissions.
+    ```bash
+    kubectl run -it --rm --image=mysql:5.6 mysql-client -- mysql -h rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com -P 3306 -uusername -ppassword warehouse
+    kubectl run -it --rm --image=mysql:5.6 mysql-client -- mysql -h rdw-opus-reporting.cimuvo5urx1e.us-west-2.rds.amazonaws.com -P 3306 -uusername -ppassword reporting
+
+    kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus
+    kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus
+    ```
+* [ ] Redeploy services.
     ```bash
     cd ~/git/RDW_Deploy_Opus
     # ingest services
@@ -262,9 +374,14 @@ All cluster deployment and configuration is stored in version control, so nothin
     kubectl apply -f reporting-webapp.yml
    ```
 Check the logs of the services.
-* [ ] Load data - TODO
-* [ ] Run data validation scripts.
-    * TODO - instructions
+* [ ] (Optional) Run data validation scripts. Once the data migration is complete (you can see this by monitoring the
+log for the migrate-reporting service), you may re-run the validation scripts.
+    ```bash
+    cd ~/git/RDW_Schema
+    git checkout master; git pull
+    cd validation
+    ./validate-migration.sh secrets/opus.sh reporting
+    ```
 * [ ] Miscellaneous cleanup
     * [ ] Restore traffic to site (from static web page)
     * [ ] Notify 3rd party to restore data feeds

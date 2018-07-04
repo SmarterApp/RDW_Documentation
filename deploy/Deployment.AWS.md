@@ -6,8 +6,6 @@
 
 > **NOTE:** these instructions were originally written for a v1.0 installation. The v1.0 -> v1.1 upgrade instructions were then merged, but the consolidated instructions haven't been thoroughly tested for a clean v1.1 installation. 
 
-**TODO - instructions for creating OpenAM oauth2 agent client id/password?**
-
 ### Table Of Contents
 * [Reference](#reference)
 * [Checklist](#checklist)
@@ -75,6 +73,9 @@ This section records all details that will facilitate configuration and maintena
 * Reconciliation report S3 bucket:
     * name: recon-bucket
     * user: name, accesskey/secretkey
+* Log collection:
+    * GELF sink: 1.2.3.4:12201
+    * Source name: opus-prod
 * Import:
     * end-point: import.sbac.org
     * ELB id: [aws-randomization]
@@ -186,7 +187,17 @@ This section records all details that will facilitate configuration and maintena
         ```
 * [ ] SBAC Application Prerequisites. These are non-RDW applications that are maintained as part of the SBAC ecosystem. They run independently of RDW and are not part of the Kubernetes cluster.
     * [ ] SSO. 
-        * Create OpenAM OAuth2 client.
+        * Create OpenAM OAuth2 client. The steps for this vary but here are the highlights:
+            * Navigate to the OpenAM site and login with an administrative account.
+            * Go to `Access Control`, selecting the appropriate realm, e.g. `sbac`
+            * Go to `Agents`, `Oauth 2.0 Client`
+            * Create a new client, noting name and password.
+            * Typically, a group is used to manage settings:
+                * Edit the newly created client, assign the `Group` to, for example, sbac_client_group, and then Save.
+                * Continue editing, set the `Inheritance Settings` to include at least:
+                    * `Default Scope(s)`
+                    * `ID Token Signed Response Algorithm`
+                    * `Scope(s)`
         * *Record the host and client info in the reference.*
     * [ ] ART. 
         * [ ] Create ingest user for the task service user. This is used by the task service to fetch organization information from ART and submit it to the import service. As such it should have `Administrator`, `State Coordinator` and `ASMTDATALOAD` roles at the state level for `CA`.
@@ -398,7 +409,7 @@ NOTE: the security and routing for Redshift can be tricky, especially if the clu
          reporting | administration_condition         | table | root
          reporting | asmt                             | table | root
         ...
-        opus=> VACUUM REINDEX fact_student_exam;
+        opus=> VACUUM REINDEX exam;
         VACUUM
         opus=> VACUUM;
         VACUUM
@@ -504,8 +515,11 @@ and the data marts. This is a good time to verify that the required connectivity
               # value: /
         kubectl create -f deploy/kube-config/influxdb
         ```
-* [ ] Install and configure supporting services (autoscaler, rabbit, wkthmltopdf, configuration service)
+* [ ] Install and configure supporting services (autoscaler, logging daemonset, rabbit, wkthmltopdf, configuration service)
     1. Edit cluster-autoscaler.yml to verify --nodes option matches cluster configuration
+    1. Edit fluentd-gelf.yml to set the GELF_HOST and the daemonset name.
+        * Set GELF_HOST to the accessible IP address.
+        * Set `metadata.name` to a name that is meaningful when filtering in Graylog. This value will appear as the "source" in Graylog messages.
     1. Edit configuration-service.yml to set git repo and credentials, and encrypt key
     1. Create the services:
     ```bash
@@ -712,3 +726,19 @@ If this were deployed using m4.xlarge nodes (C = 4), N >= 10600 / 3700 = 2.9, it
 The alert reader will note that larger nodes provide higher overall capacity with larger headroom per node. However, having a single gigantic node is also a bad idea since it fails HA considerations, OS resource constraints, etc. And a node that large is likely to be more expensive per CPU unit. It is a trade-off. Our general advice is to use m4.xlarge nodes.
 
 > NOTE: this discussion is about the standard nodes in a cluster. Master nodes may be sized much smaller: 1000m, 2Gi is sufficient. Given the choices on AWS this implies m4.large master nodes.
+
+
+### Useful Tricks
+
+#### Run a Database Client Pod
+
+Although the jump server may be used to access the database, a client pod installed in the cluster is the best test of
+connectivity and routing.
+
+```bash
+# mysql-client (MySQL/Aurora)
+kubectl run -it --rm --image=mysql:5.6 mysql-client -- mysql -h hostname -P port -uusername -ppassword opus
+# psql (PostgreSQL/Redshift)
+kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@host:5439/opus
+```
+

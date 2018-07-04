@@ -51,34 +51,34 @@ mysql> UPDATE setting SET value = 'FALSE' WHERE name = 'AUDIT_TRIGGER_ENABLE';
 ```
 4. Find and copy one of the queries that matches your rules for the delete.
 
-4.1 Delete based on the test administration year
-```sql 
-SELECT id FROM exam WHERE school_year = 2010;  -- replace with your administration year
-```
-4.2 Delete based on the date range of when the test result was completed
-```sql 
-SELECT id FROM exam WHERE completed_at >= '2017-03-15 09:12:14.729000' AND completed_at <= '2017-03-15 09:12:14.729000'  -- replace with your completed at dates
-```
-4.3 Delete based on a specific school
-```sql 
-SELECT e.id FROM exam e JOIN school s ON s.id = e.school_id WHERE s.natural_id = 'school_natural_id_here'; -- replace with your school id
-```
-4.4 Delete based on a specific assessment
-```sql 
-SELECT e.id FROM exam e JOIN asmt a ON a.id = e.asmt_id WHERE a.natural_id = 'asmt_natural_id_here'; -- replace with your assessment id
-```
-4.5 Delete based on the manner of administration (Standardized or Nonstandardized)
-```sql 
-SELECT e.id FROM exam e JOIN administration_condition a ON a.id = e.administration_condition_id WHERE a.code = 'SD'; -- use 'SD' for Standardized and 'NS' for Nonstandardized
-```
-4.6 Delete based on the Valid/Invalid
-```sql 
-SELECT e.id FROM exam e JOIN administration_condition a ON a.id = e.administration_condition_id WHERE a.code = 'Valid'; -- use 'Valid' for Valid and 'IN' for Invalid
-```
+    4.1 Delete based on the test administration year
+    ```sql
+    SELECT id FROM exam WHERE school_year = 2010;  -- replace with your administration year
+    ```
+    4.2 Delete based on the date range of when the test result was completed
+    ```sql
+    SELECT id FROM exam WHERE completed_at >= '2017-03-15 09:12:14.729000' AND completed_at <= '2017-03-15 09:12:14.729000'  -- replace with your completed at dates
+    ```
+    4.3 Delete based on a specific school
+    ```sql
+    SELECT e.id FROM exam e JOIN school s ON s.id = e.school_id WHERE s.natural_id = 'school_natural_id_here'; -- replace with your school id
+    ```
+    4.4 Delete based on a specific assessment
+    ```sql
+    SELECT e.id FROM exam e JOIN asmt a ON a.id = e.asmt_id WHERE a.natural_id = 'asmt_natural_id_here'; -- replace with your assessment id
+    ```
+    4.5 Delete based on the manner of administration (Standardized or Nonstandardized)
+    ```sql
+    SELECT e.id FROM exam e JOIN administration_condition a ON a.id = e.administration_condition_id WHERE a.code = 'SD'; -- use 'SD' for Standardized and 'NS' for Nonstandardized
+    ```
+    4.6 Delete based on the Valid/Invalid
+    ```sql
+    SELECT e.id FROM exam e JOIN administration_condition a ON a.id = e.administration_condition_id WHERE a.code = 'Valid'; -- use 'Valid' for Valid and 'IN' for Invalid
+    ```
 
-5. Open SQL script for bulk delete exams (found in [RDW_Schema](https://github.com/SmarterApp/RDW_Schema) under the `warehouse` folder) and replace the placeholder in STEP 1 with the copied query.
-Continue with the steps in this SQL file.
-6. Verify that migrate(s) is/are running and wait for them to complete.
+5. Open SQL script for bulk delete exams ([RDW_Schema](https://github.com/SmarterApp/RDW_Schema) as `warehouse/sql/bulk_delete_exam.sql`) and replace the placeholder in STEP 1 with the copied query.
+Continue with the steps in the SQL file.
+6. Verify that the migrate processes are running and wait for them to complete.
 
 ### Post-validating exam deletion
 8. Execute validation script (from step 2 above) to reconcile warehouse and reporting data mart(s). 
@@ -100,30 +100,37 @@ To delete exams bypassing the soft-delete step, follow instructions for [Purging
 a delete condition that matches your deletion criteria. Skip step 3.3 since `reporting` data mart does not have this table.
 
 ### Purging from OLAP data mart
-If exams were deleted using soft-delete and migration (see above) there is no need to do this: the system has already deleted the records in the OLAP data mart.
+If exams were deleted using soft-delete and migration (see above) there is no need to do this: the system automatically deletes the records in the OLAP data mart during migration.
+
+The following tables contain exams's data:
+- `exam`: contains ICA and Summative exams
+- `iab_exam`: contains IAB exams
+- `exam_longitudinal`: contains Summative exams
+- `exam_claim_score`: contains scored claim data for ICA and Summative exams
+- `exam_target_score`: contains scored target data for Summative exams
 
 To delete exams bypassing the soft-delete step:
- 
+> Note: depending on the type of data to be deleted the below steps need to be repeated for the tables listed above
 1. Count the number of records to be deleted and verify that it matches your expectations.
 ```sql 
-SELECT count(*) FROM fact_student_exam WHERE {delete condition here};
+SELECT count(*) FROM exam WHERE {delete condition here};
 ```
 2. Count the number of records that should be left after you purge the data. Save this number for post-validation.
 ```sql 
-SELECT count(*) FROM exam WHERE deleted {delete condition here};
+SELECT count(*) FROM exam WHERE {delete condition here};
 ```
 3. Delete exams related data: 
 ```sql 
- DELETE FROM fact_student_exam WHERE {delete condition here};
+ DELETE FROM exam WHERE {delete condition here};
 ```
 4. Count the number of records and compare it to the count from the step 2 above. The numbers must match.
 ```sql 
-SELECT count(*) FROM fact_student_exam;
+SELECT count(*) FROM exam;
 ```
 
 
 ### Purging exam auditing data in the warehouse
-[Clear Audit Trail](Audit.md#clear-audit)
+[Clear Audit Trail](Runbook.Audit.md#clear-audit)
 
 <a name="purging-from-warehouse"></a>
 ### Purging from data warehouse

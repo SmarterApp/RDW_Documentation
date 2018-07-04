@@ -8,23 +8,22 @@ Before updating resources in this project, please reference [Contributing](CONTR
 ## Document Links
 RDW is a suite of applications with lots of moving parts. These documents provide additional information for understanding, deploying and maintaining them.
 
-1. [Main README (this file)](README.md)
-1. [Architecture](docs/Architecture.md)
-1. [Runbook](docs/Runbook.md)
-1. [Monitoring](docs/Monitoring.md)
-1. [Troubleshooting](docs/Troubleshooting.md)
-1. [Performance](docs/Performance.md)
-1. [Deployment Checklist](deploy/Deployment.AWS.md) and [Deprovisioning Instuctions](deploy/Deprovisioning.AWS.md)
-1. [API](docs/API.md)
-1. [Auditing](docs/Audit.md)
+* [Main README (this file)](README.md)
+* [Architecture](docs/Architecture.md)
+* [Runbook](docs/Runbook.md)
+* [Monitoring](docs/Monitoring.md)
+* [Troubleshooting](docs/Troubleshooting.md)
+* [Performance](docs/Performance.md)
+* [Deployment Checklist](deploy/Deployment.AWS.md) and [Deprovisioning Instructions](deploy/Deprovisioning.AWS.md)
+* [API](docs/API.md)
 
 ## Project Repositories
 RDW is separated into multiple project repositories. Each repo has documentation for building and testing.
 
-1. [Ingest](https://github.com/SmarterApp/RDW_Ingest) is the primary data store for the system and is responsible for accepting and processing most data coming into the system.
-1. [Reporting](https://github.com/SmarterApp/RDW_Reporting) is the UI (and supporting stack) for end-users to view test results.
-1. [Common](https://github.com/SmarterApp/RDW_Common) is a collection of modules shared by multiple projects.
-1. [Schema](https://github.com/SmarterApp/RDW_Schema) has scripts for creating the various database schemas.
+* [Ingest](https://github.com/SmarterApp/RDW_Ingest) is the primary data store for the system and is responsible for accepting and processing most data coming into the system.
+* [Reporting](https://github.com/SmarterApp/RDW_Reporting) is the UI (and supporting stack) for end-users to view test results.
+* [Common](https://github.com/SmarterApp/RDW_Common) is a collection of modules shared by multiple projects.
+* [Schema](https://github.com/SmarterApp/RDW_Schema) has scripts for creating the various database schemas.
 
 
 ## License

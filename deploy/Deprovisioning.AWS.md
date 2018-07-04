@@ -193,7 +193,7 @@ DROP DATABASE opus;
 
 
 <a name="shared-services"></a>
-### Shared SBAC Services
+### Delete or reconfigure shared SBAC services
 
 RDW runs as part of the SBAC ecosystem which consists of other services that may have been modified to integrate RDW. If the shared services will be left running (e.g. to support other applications), then RDW-specific settings should be reverted. If other RDW tenants are using the shared services then only remove routes for the tenant being deprovisioned.
 
@@ -251,7 +251,7 @@ Although this will remove most resources created for the cluster there may be so
 
 
 <a name="cleanup-aws"></a>
-### AWS Resources
+### Clean up AWS resources
 
 The preceding steps clean up a lot of AWS resource but there are a few others.
 

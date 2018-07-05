@@ -6,7 +6,19 @@
     <Message key="ica.performance-info"><![CDATA[Student scores on Interim assessments are assigned to one of two achievement levels (Fail, Pass) based on the scale score.]]></Message>
   </Messages>
   <AssessmentTypes>
-    <AssessmentType code="ica" name="ICA" longName="Interim">
+    <AssessmentType code="ica" name="Initial">
+      <PerformanceLevels standardCutoff="2">
+        <PerformanceLevel level="1" name="Fail" color="maroon"/>
+        <PerformanceLevel level="2" name="Pass" color="green"/>
+      </PerformanceLevels>
+      <ClaimScoring>
+        <PerformanceLevels>
+          <PerformanceLevel level="1" name="Fail" color="maroon"/>
+          <PerformanceLevel level="2" name="Pass" color="green"/>
+        </PerformanceLevels>
+      </ClaimScoring>
+    </AssessmentType>
+    <AssessmentType code="sum" name="Final">
       <PerformanceLevels standardCutoff="2">
         <PerformanceLevel level="1" name="Fail" color="maroon"/>
         <PerformanceLevel level="2" name="Pass" color="green"/>
@@ -60,6 +72,28 @@
             </ReportClaim>
           </ReportClaims>
         </ReportAssessmentType>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0} took a Mini Subject assessment based on the grade six academic standards for Mini Subject and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the two achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the two claims (i.e., areas) that together make up Mini Subject assessments. If {0} received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[SUM Grade 6 level 1 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[SUM Grade 6 level 2 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="CLAIM_1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[SUM 1 - {0} claim 1 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[SUM 2 - {0} claim 1 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="CLAIM_2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[SUM 1 - {0} claim 2 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[SUM 2 - {0} claim 2 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
       </ReportAssessmentTypes>
     </ReportGrade>
     <ReportGrade code="07">
@@ -86,6 +120,28 @@
             </ReportClaim>
           </ReportClaims>
         </ReportAssessmentType>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0} took a Mini Subject assessment based on the grade sevent academic standards for Mini Subject and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the two achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the two claims (i.e., areas) that together make up Mini Subject assessments. If {0} received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[SUM Grade 7 level 1 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[SUM Grade 7 level 2 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="CLAIM_1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[SUM 1 - {0} claim 1 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[SUM 2 - {0} claim 1 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="CLAIM_2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[SUM 1 - {0} claim 2 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[SUM 2 - {0} claim 2 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
       </ReportAssessmentTypes>
     </ReportGrade>
     <ReportGrade code="08">
@@ -108,6 +164,28 @@
               <ReportPerformanceLevels>
                 <ReportPerformanceLevel level="1"><![CDATA[ICA 1 - {0} claim 2 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
                 <ReportPerformanceLevel level="2"><![CDATA[ICA 2 - {0} claim 2 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0} took a Mini Subject assessment based on the grade eight academic standards for Mini Subject and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the two achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the two claims (i.e., areas) that together make up Mini Subject assessments. If {0} received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[SUM Grade 8 level 1 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[SUM Grade 8 level 2 - {0} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="CLAIM_1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[SUM 1 - {0} claim 1 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[SUM 2 - {0} claim 1 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="CLAIM_2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[SUM 1 - {0} claim 2 Nulla porttitor massa id neque aliquam. Sollicitudin aliquam ultrices sagittis orci a.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[SUM 2 - {0} claim 2 In hendrerit gravida rutrum quisque non. Donec enim diam vulputate ut pharetra.]]></ReportPerformanceLevel>
               </ReportPerformanceLevels>
             </ReportClaim>
           </ReportClaims>

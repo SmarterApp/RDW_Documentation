@@ -1216,7 +1216,7 @@
       </Targets>
     </Claim>
     <Claim code="CLAIM_6" name="Claim Six" displayOrder="6">
-      <Icon>fa-balance-scale</Icon>
+      <Icon>fa-pencil-square-o</Icon>
       <Description>Claim Six: Suscipit tellus mauris a diam maecenas sed enim ut sem.</Description>
       <Targets>
         <Target code="13-1" name="13">

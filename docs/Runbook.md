@@ -305,16 +305,16 @@ The [Sample Kubernetes Spec](../deploy/wkhtmltopdf-service.yml) runs four replic
 
 ## System Configuration
 
-Once the system is deployed it is necessary to configure the system by loading subjects, assessments, accommodations, instructional resources, student groups, normative data, etc. There are also end-user features that may be enabled or disabled.
+Once the system is deployed it is necessary to configure the system by loading subjects, assessments, accommodations, instructional resources, student groups, normative data. There are also end-user features that may be enabled or disabled.
 
 #### Subjects
-The subject XML defines subject's attributes for the RDW system. It is tenant's responsibility to define a subject XML based on the RDW_Subject.xsd. SmarterBalanced's Math and ELA subjects XML are included into this package. Subjects must be loaded into the system before assessment packages. The system allows for subject's updates but only for the data attributes that have not been used by the system at the time of the update. 
+The subject XML defines a subject's attributes for the RDW system. It is the tenant's responsibility to define a subject XML based on the schema, [RDW_Subject.xsd](https://github.com/SmarterApp/RDW_Common/blob/master/model/src/main/resources/RDW_Subject.xsd). SmarterBalanced's Math and ELA subjects XML may be found in the `deploy` folder of this project. Subjects must be loaded into the system before assessment packages. The system allows for subject updates but only for the data attributes that have not been used by the system at the time of the update.
 Loading the packages is an IT/DevOps function and requires data load permissions:
 ```bash
 export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
-curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018.csv https://import.sbac.org/subjects/imports
+curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@Math_subject.csv https://import.sbac.org/subjects/imports
 ```
->NOTE: To optimize the exams ingest throughput the subjects' related data are cached in the Exam Processor and Reporting services (Admin Service, Aggregate Service, Reporting Service, Report Processor, and Webapp.) It is required to:
+>NOTE: To optimize system performance, subject data is cached in the Exam Processor and Reporting services (Admin Service, Aggregate Service, Reporting Service, Report Processor, and Webapp). When subjects are loaded please do the following:
 > 1. Stop all Exam Processors before ingesting a subject XML
 > 2. Ingest the subject XML
 > 3. Re-start the Exam Processors after the successful subject changes
@@ -324,7 +324,7 @@ curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018
 #### Assessment Packages
 
 The assessment packages define the tests that are administered to the students. They include performance parameters which enable the student results to be appropriately interpreted.
-SmarterBalanced provides these packages; specifically, there is a `Tabulator` tool which produces a CSV file that is loaded into the warehouse. In general this will be done during the break between school years, but sometimes updates are necessary to correct data. Loading the packages is an IT/DevOps function and requires data load permissions:
+SmarterBalanced provides these packages; specifically, there is a `Tabulator` tool which produces a CSV file that is loaded into the warehouse. In general this will be done during the break between school years, but sometimes updates are necessary to correct data. *Note that `subject` data must be loaded before loading assessments*. Loading the packages is an IT/DevOps function and requires data load permissions:
 ```bash
 export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
 curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018.csv https://import.sbac.org/packages/imports
@@ -356,7 +356,7 @@ To enable the feature, modify the `application.yml` configuration file (the repo
 reporting:
   percentile-display-enabled: true
 ```
-Then load the [normative data](Norms.md).
+Then load the [normative data](Norms.md). *Note that assessments must be loaded before normative data*.
 ```bash
 export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
 curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@norms.csv https://import.sbac.org/norms/imports
@@ -365,7 +365,7 @@ curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@norms.csv
 #### Student Groups
 
 Student groups provide a focused view of test results for teachers and school administrators. The system supports "assigned" groups configured by administrators and "teacher-created" groups. The teacher created groups are managed by teachers in the reporting UI but the assigned groups must be loaded into the system either in the admin section or by directly posting files to the RESTful API.
-The reporting UI, including the admin section, is documented in the user guide. Posting files is described in detail in [Student Groups](Student Groups.md).
+The reporting UI, including the admin section, is documented in the user guide. Posting files is described in detail in [Student Groups](StudentGroups.md).
 
 #### Target Exclusions
 
@@ -391,6 +391,7 @@ The system controls visibility of students and their test results based on permi
 reporting:
   transfer-access-enabled: true
 ```
+Any time a configuration option is changed, the affected services must be restarted. For the transfer enabled flag, restart the `report-processor` instances.
 
 #### English Learners
 
@@ -400,7 +401,7 @@ reporting:
   english-learners:
     - lep
 ```
-
+This setting is used by all the reporting services so they should be restarted: `aggregate-service`, `report-processor`, `reporting-service`, `reporting-webapp`.
 
 ## Embargo
 

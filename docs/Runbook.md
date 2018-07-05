@@ -15,8 +15,9 @@
     * [Task Service](#task-service)
     * [Reporting Web App](#reporting-webapp)
     * [Reporting Service](#reporting-service)
-    * [Aggregate Service](#aggregate-service)
     * [Report Processor](#report-processor)
+    * [Aggregate Service](#aggregate-service)
+    * [Admin Service](#admin-service)
     * [PDF Generator](#pdf-generator)
 * [System Configuration](#system-configuration)
     * [Assessment Packages](#assessment-packages)
@@ -82,7 +83,7 @@ the off-heap is 150MB-240MB. The heap varies and is described for each service.
 
 The memory allocation is controlled by a few settings:
 * Heap size. This tells java how much memory to give the application. Every application has a default value but that may not be optimal for a specific environment. This is controlled by setting an environment variable recognized by the docker command, `MAX_HEAP_SIZE`, which should look like the java setting, e.g. `-Xmx500m`.
-* Container memory request/limit. This tells the orchestration framework how much memory to allow a pod. The framework will typically stop a pod that blows through that limit so it is important to coordinate this value with the heap size. A rule of thumb is to make the container limit a bit larger than the sum of the off-heap and max heap size. Obviously, if the framework is killing containers due to memory limits, this values should be increased.
+* Container memory request/limit. This tells the orchestration framework how much memory to allow a pod. The framework will typically stop a pod that blows through that limit so it is important to coordinate this value with the heap size. A rule of thumb is to make the container limit a bit larger than the sum of the off-heap and max heap size. Obviously, if the framework is killing containers due to memory limits, this value should be increased.
 * Java options. It is not recommended to use this except in extraordinary circumstances, but the docker image command recognizes the environment variable `JAVA_OPTS` and will add it to the java command line when starting the application.
 
 Together, these can be used to fine-tune memory utilization. As an example the following (contrived) snippet gives an application extra startup memory (initial heap size), larger max heap size, and more container memory:
@@ -247,6 +248,20 @@ The default max heap size is -Xmx384m and should be increased in all but the sma
 The [Sample Kubernetes Spec](../deploy/reporting-service.yml) runs a single replica with increased heap size and memory limit.
 
 
+<a name="report-processor"></a>
+## Report Processor
+This processor generates reports. It is horizontally scalable and many instances should be run to deal with reporting load.
+
+![Report Processor](report-processor.png)
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-reporting-report-processor.yml) describes the properties and their effects.
+
+#### Deployment Spec
+The default max heap size is -Xmx384m and should be increased in all but the smallest environments (very large, multi-student PDF reports may cause memory pressure). The off-heap overhead is about 240MB so the container should have a memory limit of about 650M.
+The [Sample Kubernetes Spec](../deploy/report-processor-service.yml) runs two replicas with increased heap size and memory limit.
+
+
 <a name="aggregate-service"></a>
 ## Aggregate Service
 This service provides the back-end API for reports against the OLAP data store, i.e. aggregate reports. It is horizontally scalable; however, the OLAP data store is typically the bottleneck and running many instances of this service may not result in better overall throughput.
@@ -275,21 +290,7 @@ The default max heap size is -Xmx384m which should be fine for most environments
 The [Sample Kubernetes Spec](../deploy/admin-service.yml) runs a single replica.
 
 
-<a name="report-processor"></a>
-## Report Processor
-This processor generates reports. It is horizontally scalable and many instances should be run to deal with reporting load.
-
-![Report Processor](report-processor.png)
-
-#### Configuration
-The [Annotated Configuration](../config/rdw-reporting-report-processor.yml) describes the properties and their effects.
-
-#### Deployment Spec
-The default max heap size is -Xmx384m and should be increased in all but the smallest environments (very large, multi-student PDF reports may cause memory pressure). The off-heap overhead is about 240MB so the container should have a memory limit of about 650M.
-The [Sample Kubernetes Spec](../deploy/report-processor-service.yml) runs two replicas with increased heap size and memory limit.
-
-
-<a name="reporting-webapp"></a>
+<a name="pdf-generator"></a>
 ## PDF Generator
 This application converts HTML to PDF. It is used by the report processor. It is horizontally scalable and many instances should be run to deal with reporting load. Note the PDF generator is not a Spring Boot application: it doesn't use the central configuration server, it doesn't have the same actuator end-points, and logging is different.
 

@@ -189,7 +189,7 @@ Data is migrated based on import status (PROCESSED) and created/updated timestam
 
 ![Migrate OLAP](migrate-olap.png)
 
-The migrate service is controlled by two conditions: the user-controlled run state and the system-generated enabled state. The status end-points can be used to see the current status and pause/resume the service.
+The migrate service is controlled by two conditions: the user-controlled run state and the system-generated enabled state. The status end-points can be used to see the current status and pause/resume the service. Please refer to [Troubleshooting Migrate](Troubleshooting.md#migrate) for more details.
 
 #### Configuration
 The [Annotated Configuration](../config/rdw-ingest-migrate-olap.yml) describes the properties and their effects.
@@ -383,7 +383,11 @@ INSERT INTO asmt_target_exclusion
 
 -- trigger migration
 INSERT INTO import(status, content, contentType, digest)
-  SELECT 1, ic.id, 'target exclusions', left(uuid(), 8) from import_content ic where name = 'PACKAGE';
+  SELECT 0, ic.id, 'target exclusions', left(uuid(), 8) from import_content ic where name = 'PACKAGE';
+
+SELECT LAST_INSERT_ID() INTO @import_id;
+UPDATE asmt SET update_import_id = @import_id WHERE natural_id = '(SBAC)SBAC-OP-G5E-2017-COMBINED-Spring-2017-2018';
+UPDATE import SET status = 1 WHERE id = @import_id;
 ```
 
 #### Transfer Enabled

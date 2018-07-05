@@ -162,6 +162,9 @@ ORDER BY bucket DESC, delay;
 There is a script that reports on data discrepancies between the data warehouse and the reporting data mart(s). Detailed instructions for running that scripts and interpreting the results can be found in [RDW_Schema](https://github.com/SmarterApp/RDW_Schema) under the `validation` folder.
 
 #### Monitor Migrate Failures
+
+There are two migrate services: Migrate Reporting and Migrate OLAP. The below instructions have samples for the Migrate Reporting. They could be applied to Migrate OLAP as well, by replacing the database/schema names to `warehouse` database/`migrate_olap` schema.
+
 The migrate process is managed by the “migrate-reporting” service. It records progress and status in the migrate table in the `reporting` database. For all possible migrate statuses please refer to `migrate_status` table:
 
 ```sql

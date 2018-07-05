@@ -170,6 +170,8 @@ It looks like a number of schools are parented by a state. You can see the paylo
 <a name="migrate"></a>
 #### Migrate
 
+There are two migrate services: Migrate Reporting and Migrate OLAP. The below instructions have samples for the Migrate Reporting. They could be applied to Migrate OLAP by replacing the service and/or database schema names to reference the appropriate instances.
+
 The migrate service is responsible for moving data from the data warehouse to the reporting data mart. As a Spring Boot application, the migrate reporting service can be paused/resumed. This will temporarily suspend the migrate task which may be desired to perform upgrades, etc. This is independent of the migrate service disabling itself when an error occurs. Simply POST an empty body to `pause` or `resume` end-point.
 
 To see the current status of the migrate service:

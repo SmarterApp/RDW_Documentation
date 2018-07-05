@@ -17,7 +17,7 @@ The warehouse database contains data from different data sources. Every data ele
 | ORGANIZATION | **school**, school_group, district, district_group | Uploaded by the Update Organizations task. |
 | EXAM | **exam**, student, exam_item, exam_available_accommodation, exam_claim_score | Ingested from TRTs. |
 | GROUPS | **student_group**, student, student_group_membership, user_student_group | [Student Groups](StudentGroups.md) |
-| SUBJECT| **subject**, claim, common_core_standard, depth_of_knowledge, item_difficulty_cuts, subject_asmt_type, subject_claim_score, subject_translation, target | [Configurable Subject] (TODO: add link to sample)|
+| SUBJECT| **subject**, claim, common_core_standard, depth_of_knowledge, item_difficulty_cuts, subject_asmt_type, subject_claim_score, subject_translation, target | [Configurable Subjects](Runbook.md#subjects) |
 
 <a name="import-id"></a>
 #### Import table and Import ID

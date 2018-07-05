@@ -4,6 +4,7 @@
   <Messages>
     <Message key="standard-description"><![CDATA[The mini subject standard has this definition.]]></Message>
     <Message key="ica.performance-info"><![CDATA[Student scores on Interim assessments are assigned to one of two achievement levels (Fail, Pass) based on the scale score.]]></Message>
+    <Message key="sum.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of six achievement levels (Very Bad, Bad, Okay, Average, Good, and Great) based on the scale score.]]></Message>
   </Messages>
   <AssessmentTypes>
     <AssessmentType code="ica" name="Initial">

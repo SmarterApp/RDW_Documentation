@@ -8,8 +8,8 @@ The warehouse database contains data from different data sources. Every data ele
 #### Supported import content to table mapping
 |Content Type   | Table       |  Comment  | 
 |-------------- | ----------- |---------- |
-| n/a | asmt_type, subject, subject_claim_score import_content, import_status, import, language | Considered critical data. Must be pre-loaded as part of the initial schema set. Cannot be modified later. |
-| CODES | administration_condition, common_core_standard, grade, completeness, ethnicity, gender, claim, depth_of_knowledge, math_practice, item_trait_score, target | Pre-loaded from SBAC blueprints and specifications. Allows for manual updates. |
+| n/a | asmt_type, subject,  import_content, import_status, import, language | Considered critical data. Must be pre-loaded as part of the initial schema set. Cannot be modified later. |
+| CODES | administration_condition, grade, completeness, ethnicity, gender,  math_practice, item_trait_score | Pre-loaded from SBAC blueprints and specifications. Allows for manual updates. |
 | CODES | accommodation, accommodation_translation | Ingested using the [Import Service API](https://github.com/SmarterApp/RDW_Ingest/blob/master/import-service/API.md) and [SBAC Accessbility Accomodataion Configuration](https://github.com/SmarterApp/AccessibilityAccommodationConfigurations/tree/RDW_DataWarehouse). |
 | NORMS | percentile, percentile_score | [Norms Data](Norms.md) |
 | EMBARGO | state_embargo, district_embargo | Embargo settings are edited using the Admin UI. |
@@ -17,6 +17,7 @@ The warehouse database contains data from different data sources. Every data ele
 | ORGANIZATION | **school**, school_group, district, district_group | Uploaded by the Update Organizations task. |
 | EXAM | **exam**, student, exam_item, exam_available_accommodation, exam_claim_score | Ingested from TRTs. |
 | GROUPS | **student_group**, student, student_group_membership, user_student_group | [Student Groups](StudentGroups.md) |
+| SUBJECT| **subject**, claim, common_core_standard, depth_of_knowledge, item_difficulty_cuts, subject_asmt_type, subject_claim_score, subject_translation, target | [Configurable Subjects](Runbook.md#subjects) |
 
 <a name="import-id"></a>
 #### Import table and Import ID

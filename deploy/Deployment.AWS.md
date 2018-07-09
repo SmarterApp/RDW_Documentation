@@ -139,23 +139,29 @@ This section records all details that will facilitate configuration and maintena
         * Key Pair: rdw-key
         * Verify connectivity (username = centos)
         * Install ssh credentials for ops users
-    * [ ] Install kops and kubectl (requires sudo)
+    * [ ] Install kops and kubectl (requires sudo). Kubernetes changes quickly so these instructions may not be current.
+    Please refer to https://kubernetes.io/docs/getting-started-guides/kops/, https://kubernetes.io/docs/tasks/tools/install-kubectl/
+    or search the internet for up-to-date advice. Using native package management is always better than the manual
+    process outlined here.
         ```bash
         # from https://kubernetes.io/docs/getting-started-guides/kops/
         sudo yum install -y wget
-        wget https://github.com/kubernetes/kops/releases/download/1.7.0/kops-linux-amd64
+        wget https://github.com/kubernetes/kops/releases/download/1.9.1/kops-linux-amd64
         chmod +x kops-linux-amd64
         sudo mv kops-linux-amd64 /usr/local/bin/kops
         kops version
         ```
         ```bash
         # from https://kubernetes.io/docs/tasks/tools/install-kubectl/
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.7.3/bin/linux/amd64/kubectl
+        curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.9.1/bin/linux/amd64/kubectl
         chmod +x ./kubectl
         sudo mv ./kubectl /usr/local/bin/kubectl
         kubectl version
-        # each user will want to do this for auto-completion support - TODO: this doesn't work!  _get_comp_words_by_ref
-        echo "source <(kubectl completion bash)" >> ~/.bashrc
+        ```
+        ```bash
+        # from https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion
+        # kubectl can generate its own auto-completion script; use that to enable it for users if necessary
+        kubectl completion bash >> ~/.bashrc
         ```
     * [ ] Install MySQL client
         ```bash
@@ -379,7 +385,6 @@ NOTE: the security and routing for Redshift can be tricky, especially if the clu
         CREATE USER rdwopusingest PASSWORD 'password';
         CREATE USER rdwopusreporting PASSWORD 'password';
         CREATE DATABASE opus;
-        -- TODO - making rdwopusingest the OWNER should be unnecessary once vacuum/analyze handling is cleaned up
         ALTER DATABASE opus OWNER TO rdwopusingest;
         \connect opus
         CREATE SCHEMA reporting;
@@ -409,7 +414,7 @@ NOTE: the security and routing for Redshift can be tricky, especially if the clu
          reporting | administration_condition         | table | root
          reporting | asmt                             | table | root
         ...
-        opus=> VACUUM REINDEX fact_student_exam;
+        opus=> VACUUM REINDEX exam;
         VACUUM
         opus=> VACUUM;
         VACUUM
@@ -608,6 +613,11 @@ and the data marts. This is a good time to verify that the required connectivity
     1. Load accommodations. Need an appropriate accommodations.xml file. There is a copy included here but the source of truth is: https://github.com/SmarterApp/AccessibilityAccommodationConfigurations/blob/master/AccessibilityConfig.xml.
         ```bash
         curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@accommodations.xml https://import.sbac.org/accommodations/imports
+        ```
+    1. Load subjects.  The subject definitions register the assessment subjects available in the system.  Each subject definition contains the associated performance levels, difficulty cutpoints, targets, claims, etc that define an assessment subject.  By default the system is pre-registered with Math and ELA as available subjects.  However, the associated definition files must still be imported to define display text.
+        ```bash
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@Math_subject.xml https://import.sbac.org/subjects/imports
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@ELA_subject.xml https://import.sbac.org/subjects/imports
         ```
     1. Load assessment packages. These are created by the tabulator; they are not provided here because they are proprietary in nature. For each file:
         ```bash

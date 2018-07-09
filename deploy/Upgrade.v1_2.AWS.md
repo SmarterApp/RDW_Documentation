@@ -355,17 +355,33 @@ All cluster deployment and configuration is stored in version control, so nothin
     kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus
     kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus
     ```
-* [ ] Redeploy services.
+* [ ] Redeploy ingest services. Since we are loading subject definitions, start only the import service and package processor.
+    ```bash
+    cd ~/git/RDW_Deploy_Opus
+    # ingest services
+    kubectl apply -f package-processor-service.yml
+    kubectl apply -f import-service.yml
+    ```
+* [ ] Import Math and ELA subject definitions.  The standard ELA and Math definition XML files can be found in this project in the `deploy` directory.
+    * Import the Math and ELA definition XML files
+        ```bash
+        export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@Math_subject.xml https://import.sbac.org/subjects/imports
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@ELA_subject.xml https://import.sbac.org/subjects/imports
+        ```
+* [ ] Redeploy ingest services.
     ```bash
     cd ~/git/RDW_Deploy_Opus
     # ingest services
     kubectl apply -f exam-processor-service.yml
     kubectl apply -f group-processor-service.yml
-    kubectl apply -f package-processor-service.yml
-    kubectl apply -f import-service.yml
     kubectl apply -f migrate-reporting-service.yml
     kubectl apply -f migrate-olap-service.yml
     kubectl apply -f task-service.yml
+    ```
+* [ ] Redeploy reporting services.
+    ```bash
+    cd ~/git/RDW_Deploy_Opus
     # reporting services
     kubectl apply -f admin-service.yml
     kubectl apply -f aggregate-service.yml

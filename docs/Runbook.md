@@ -15,8 +15,9 @@
     * [Task Service](#task-service)
     * [Reporting Web App](#reporting-webapp)
     * [Reporting Service](#reporting-service)
-    * [Aggregate Service](#aggregate-service)
     * [Report Processor](#report-processor)
+    * [Aggregate Service](#aggregate-service)
+    * [Admin Service](#admin-service)
     * [PDF Generator](#pdf-generator)
 * [System Configuration](#system-configuration)
     * [Assessment Packages](#assessment-packages)
@@ -35,6 +36,7 @@
     * [Language Support](Runbook.LanguageSupport.md)
     * [Data Specifications](Runbook.DataSpecifications.md)
     * [Archive Tenant](Runbook.ArchiveTenant.md)
+    * [PII Audit Data](Runbook.Audit.md)
 
 <a name="common"></a>
 ## Common Service Conventions
@@ -81,7 +83,7 @@ the off-heap is 150MB-240MB. The heap varies and is described for each service.
 
 The memory allocation is controlled by a few settings:
 * Heap size. This tells java how much memory to give the application. Every application has a default value but that may not be optimal for a specific environment. This is controlled by setting an environment variable recognized by the docker command, `MAX_HEAP_SIZE`, which should look like the java setting, e.g. `-Xmx500m`.
-* Container memory request/limit. This tells the orchestration framework how much memory to allow a pod. The framework will typically stop a pod that blows through that limit so it is important to coordinate this value with the heap size. A rule of thumb is to make the container limit a bit larger than the sum of the off-heap and max heap size. Obviously, if the framework is killing containers due to memory limits, this values should be increased.
+* Container memory request/limit. This tells the orchestration framework how much memory to allow a pod. The framework will typically stop a pod that blows through that limit so it is important to coordinate this value with the heap size. A rule of thumb is to make the container limit a bit larger than the sum of the off-heap and max heap size. Obviously, if the framework is killing containers due to memory limits, this value should be increased.
 * Java options. It is not recommended to use this except in extraordinary circumstances, but the docker image command recognizes the environment variable `JAVA_OPTS` and will add it to the java command line when starting the application.
 
 Together, these can be used to fine-tune memory utilization. As an example the following (contrived) snippet gives an application extra startup memory (initial heap size), larger max heap size, and more container memory:
@@ -187,7 +189,7 @@ Data is migrated based on import status (PROCESSED) and created/updated timestam
 
 ![Migrate OLAP](migrate-olap.png)
 
-The migrate service is controlled by two conditions: the user-controlled run state and the system-generated enabled state. The status end-points can be used to see the current status and pause/resume the service.
+The migrate service is controlled by two conditions: the user-controlled run state and the system-generated enabled state. The status end-points can be used to see the current status and pause/resume the service. Please refer to [Troubleshooting Migrate](Troubleshooting.md#migrate) for more details.
 
 #### Configuration
 The [Annotated Configuration](../config/rdw-ingest-migrate-olap.yml) describes the properties and their effects.
@@ -246,6 +248,20 @@ The default max heap size is -Xmx384m and should be increased in all but the sma
 The [Sample Kubernetes Spec](../deploy/reporting-service.yml) runs a single replica with increased heap size and memory limit.
 
 
+<a name="report-processor"></a>
+## Report Processor
+This processor generates reports. It is horizontally scalable and many instances should be run to deal with reporting load.
+
+![Report Processor](report-processor.png)
+
+#### Configuration
+The [Annotated Configuration](../config/rdw-reporting-report-processor.yml) describes the properties and their effects.
+
+#### Deployment Spec
+The default max heap size is -Xmx384m and should be increased in all but the smallest environments (very large, multi-student PDF reports may cause memory pressure). The off-heap overhead is about 240MB so the container should have a memory limit of about 650M.
+The [Sample Kubernetes Spec](../deploy/report-processor-service.yml) runs two replicas with increased heap size and memory limit.
+
+
 <a name="aggregate-service"></a>
 ## Aggregate Service
 This service provides the back-end API for reports against the OLAP data store, i.e. aggregate reports. It is horizontally scalable; however, the OLAP data store is typically the bottleneck and running many instances of this service may not result in better overall throughput.
@@ -274,21 +290,7 @@ The default max heap size is -Xmx384m which should be fine for most environments
 The [Sample Kubernetes Spec](../deploy/admin-service.yml) runs a single replica.
 
 
-<a name="report-processor"></a>
-## Report Processor
-This processor generates reports. It is horizontally scalable and many instances should be run to deal with reporting load.
-
-![Report Processor](report-processor.png)
-
-#### Configuration
-The [Annotated Configuration](../config/rdw-reporting-report-processor.yml) describes the properties and their effects.
-
-#### Deployment Spec
-The default max heap size is -Xmx384m and should be increased in all but the smallest environments (very large, multi-student PDF reports may cause memory pressure). The off-heap overhead is about 240MB so the container should have a memory limit of about 650M.
-The [Sample Kubernetes Spec](../deploy/report-processor-service.yml) runs two replicas with increased heap size and memory limit.
-
-
-<a name="reporting-webapp"></a>
+<a name="pdf-generator"></a>
 ## PDF Generator
 This application converts HTML to PDF. It is used by the report processor. It is horizontally scalable and many instances should be run to deal with reporting load. Note the PDF generator is not a Spring Boot application: it doesn't use the central configuration server, it doesn't have the same actuator end-points, and logging is different.
 
@@ -304,12 +306,27 @@ The [Sample Kubernetes Spec](../deploy/wkhtmltopdf-service.yml) runs four replic
 
 ## System Configuration
 
-Once the system is deployed it is necessary to configure the system by loading assessments, accommodations, instructional resources, student groups, normative data, etc. There are also end-user features that may be enabled or disabled.
+Once the system is deployed it is necessary to configure the system by loading subjects, assessments, accommodations, instructional resources, student groups, normative data. There are also end-user features that may be enabled or disabled.
+
+#### Subjects
+The subject XML defines a subject's attributes for the RDW system. It is the tenant's responsibility to define a subject XML based on the schema, [RDW_Subject.xsd](https://github.com/SmarterApp/RDW_Common/blob/master/model/src/main/resources/RDW_Subject.xsd). SmarterBalanced's [Math](../deploy/Math_subject.xml) and [ELA](../deploy/ELA_subject.xml) subjects XML may be found in the `deploy` folder of this project. Subjects must be loaded into the system before assessment packages. The system allows for subject updates but only for the data attributes that have not been used by the system at the time of the update.
+We have also proved two additional sample subject definition XMLs as samples/templates for additional subjects: [Sample Subject](../deploy/new_subject_config.xml) and [Mini Subject.](../deploy/mini_subject_config.xml)
+Loading the packages is an IT/DevOps function and requires data load permissions:
+```bash
+export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
+curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@Math_subject.csv https://import.sbac.org/subjects/imports
+```
+>NOTE: To optimize system performance, subject data is cached in the Exam Processor and Reporting services (Admin Service, Aggregate Service, Reporting Service, Report Processor, and Webapp). When subjects are loaded please do the following:
+> 1. Stop all Exam Processors before ingesting a subject XML
+> 2. Ingest the subject XML
+> 3. Re-start the Exam Processors after the successful subject changes
+> 4. Wait for migration from warehouse to reporting to complete
+> 5. Re-start the Reporting services
 
 #### Assessment Packages
 
 The assessment packages define the tests that are administered to the students. They include performance parameters which enable the student results to be appropriately interpreted.
-SmarterBalanced provides these packages; specifically, there is a `Tabulator` tool which produces a CSV file that is loaded into the warehouse. In general this will be done during the break between school years, but sometimes updates are necessary to correct data. Loading the packages is an IT/DevOps function and requires data load permissions:
+SmarterBalanced provides these packages; specifically, there is a `Tabulator` tool which produces a CSV file that is loaded into the warehouse. In general this will be done during the break between school years, but sometimes updates are necessary to correct data. *Note that `subject` data must be loaded before loading assessments*. Loading the packages is an IT/DevOps function and requires data load permissions:
 ```bash
 export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
 curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018.csv https://import.sbac.org/packages/imports
@@ -341,7 +358,7 @@ To enable the feature, modify the `application.yml` configuration file (the repo
 reporting:
   percentile-display-enabled: true
 ```
-Then load the [normative data](Norms.md).
+Then load the [normative data](Norms.md). *Note that assessments must be loaded before normative data*.
 ```bash
 export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
 curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@norms.csv https://import.sbac.org/norms/imports
@@ -350,7 +367,7 @@ curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@norms.csv
 #### Student Groups
 
 Student groups provide a focused view of test results for teachers and school administrators. The system supports "assigned" groups configured by administrators and "teacher-created" groups. The teacher created groups are managed by teachers in the reporting UI but the assigned groups must be loaded into the system either in the admin section or by directly posting files to the RESTful API.
-The reporting UI, including the admin section, is documented in the user guide. Posting files is described in detail in [Student Groups](Student Groups.md).
+The reporting UI, including the admin section, is documented in the user guide. Posting files is described in detail in [Student Groups](StudentGroups.md).
 
 #### Target Exclusions
 
@@ -366,7 +383,11 @@ INSERT INTO asmt_target_exclusion
 
 -- trigger migration
 INSERT INTO import(status, content, contentType, digest)
-  SELECT 1, ic.id, 'target exclusions', left(uuid(), 8) from import_content ic where name = 'PACKAGE';
+  SELECT 0, ic.id, 'target exclusions', left(uuid(), 8) from import_content ic where name = 'PACKAGE';
+
+SELECT LAST_INSERT_ID() INTO @import_id;
+UPDATE asmt SET update_import_id = @import_id WHERE natural_id = '(SBAC)SBAC-OP-G5E-2017-COMBINED-Spring-2017-2018';
+UPDATE import SET status = 1 WHERE id = @import_id;
 ```
 
 #### Transfer Enabled
@@ -376,6 +397,7 @@ The system controls visibility of students and their test results based on permi
 reporting:
   transfer-access-enabled: true
 ```
+Any time a configuration option is changed, the affected services must be restarted. For the transfer enabled flag, restart the `report-processor` instances.
 
 #### English Learners
 
@@ -385,7 +407,7 @@ reporting:
   english-learners:
     - lep
 ```
-
+This setting is used by all the reporting services so they should be restarted: `aggregate-service`, `report-processor`, `reporting-service`, `reporting-webapp`.
 
 ## Embargo
 

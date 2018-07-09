@@ -35,18 +35,6 @@
    More details on configuring IRIS can be found on the IRIS README if needed here: https://github.com/SmarterApp/TDS_IRIS
     * The IRIS Encryption key is set in Tomcat's context file: `context.xml`. With Ubuntu and Tomcat 7 this file is located `/etc/tomcat/context.xml` but may differ depending on the operating system. Add the following line within the `<Context>` element in the context file:
         * `<Parameter name="tds.iris.EncryptionKey" override="false" value="24 character or more alphanumeric Encryption key" />`
-TODO - DO NOT Enable Compression! It breaks the deployed tomcat. We will investigate     
-    * Enable Compression. Edit `/etc/tomcat/server.xml`, under the `<Service name="Catalina">` tag, add 
-    attributes to the `<Connector>` element (yes, it is `compressableMimeType`):
-        ```text
-        <Connector ...
-            acceptCount="10"
-            maxThreads="8"
-            useSendfile="false"
-            compression="on" 
-            compressionMinSize="2048"
-            compressableMimeType="text/html,text/xml,text/plain,text/css,text/javascript,application/javascript"
-        ```
     * Restart Tomcat
         * `sudo service tomcat start`
 1. Copy item content to `/home/tomcat7/content/`.

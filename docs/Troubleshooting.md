@@ -170,13 +170,14 @@ It looks like a number of schools are parented by a state. You can see the paylo
 <a name="migrate"></a>
 #### Migrate
 
+There are two migrate services: Migrate Reporting and Migrate OLAP. The below instructions have samples for the Migrate Reporting. They could be applied to Migrate OLAP by replacing `migrate-reporting` service with `migrate-olap`, and `reporting.migrate` with `warehouse` database /`migrate-olap.migrate`. 
+
 The migrate service is responsible for moving data from the data warehouse to the reporting data mart. As a Spring Boot application, the migrate reporting service can be paused/resumed. This will temporarily suspend the migrate task which may be desired to perform upgrades, etc. This is independent of the migrate service disabling itself when an error occurs. Simply POST an empty body to `pause` or `resume` end-point.
 
 To see the current status of the migrate service:
 
 ```bash
-$ kubectl exec migrate-reporting[k8s-randomization] -it /bin/sh
-# curl http://localhost:8008/status
+$ kubectl exec -it migrate-reporting[k8s-randomization] curl http://localhost:8008/status
 {
   "statusText": "Ideal",
   "statusRating": 2,
@@ -193,10 +194,10 @@ $ kubectl exec migrate-reporting[k8s-randomization] -it /bin/sh
 To pause/resume the migrate service:
 
 ```bash
-# curl -X POST http://localhost:8008/pause
+$ kubectl exec -it migrate-reporting[k8s-randomization] -- curl -X POST http://localhost:8008/pause
 true
 
-# curl http://localhost:8008/status
+$ kubectl exec -it migrate-reporting[k8s-randomization] curl http://localhost:8008/status
 {
   "statusText": "Warning",
   "statusRating": 2,
@@ -209,10 +210,11 @@ true
   }
 }
 
-# curl -X POST http://localhost:8008/resume
+$ kubectl exec -it migrate-reporting[k8s-randomization] -- curl -X POST http://localhost:8008/resume
 true
 ```
 
+##### Restart Migrations
 The migrate reporting service will disable itself if there is an error during processing. You can see this by getting the status (see above) which will contain `"lifecycle": "running,disabled"`. Once the cause of the problem has been resolved the service can be enabled by adjusting the status of the most recent migrate task in the reporting database. Connect with your favorite SQL client using a write-enabled account and change the status to `-10` setting a message to explain. Note: if the status of the most recent migrate entry is not `10` or `-20` there is something else wrong, please contact a system administrator to help.
 
 ```bash
@@ -229,62 +231,18 @@ Query OK, 1 row affected (0.04 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
 ```
 
-#### TODO - clean this up, it was just copied from another document
-
-#####  Disabled service 
-
-The migrate reporting service will disable itself if there is an error during processing. You can see this by
-getting the service status or analyzing the logs.
-
-#####  Finding the cause of the failure
-To research the cause of the service failure:
-
-* check the status and message in the `reporting.migrate` table: 
-```sql
-mysql> select * from reporting.migrate order by id desc limit 1;
-```
-* review the service logs for error messages.
-
 ###### Failed Migrate
-A migrate job may fail. In this case the status of the most recent migrate will be `-20` and there should be a message in the record. If the message does not provide enough information about the failure, check the batch table:
+When a migrate job fails, the status of the most recent migrate will be `-20` and there should be a message in the record. If the message does not provide enough information about the failure, check the batch table:
 
 ```sql
-mysql> SELECT be.* FROM reporting.migrate m JOIN spring_batch_reporting.BATCH_JOB_EXECUTION be ON be.JOB_INSTANCE_ID = m.job_id WHERE m.id = 124
+mysql> SELECT be.* FROM reporting.migrate m JOIN spring_batch_reporting.BATCH_JOB_EXECUTION be ON be.JOB_INSTANCE_ID = m.job_id WHERE m.id = 1443;
 ```
-If you see any failed SQLs in the logs, you can manually analyze the data in the `staging` db. 
-Data in the `staging` schema will be left at the state of the failure. You do not need to worry about cleaning this data, the system will do it automatically on the restart. 
+If you see any failed SQLs in the logs, you can manually analyze the data in the `staging` db. Data in the `staging` schema will be left at the state of the failure. You do not need to worry about cleaning this data, the system will do it automatically on the restart.
 
 It is important to resolve the underlying problem before you [Restart Migrations](#restart-migrations).
 
 ###### Zombie Migrate
 A migrate job may not complete. Although this should not happen during normal operation, if the status of the most recent migrate remains at `10` for a long time, it may be a zombie. You may be able to glean some information by looking at the batch table as with [Failed Migrate](#failed-migrate). It is safe to simply abandon the migrate record and [Restart Migrations](#restart-migrations).
-
-###### Blocked Migrate
-A migrate job could be blocked by an import in the `warehouse`. The records are migrated in chunks of contiguous import ids. If the next chunk has at least one import that stays in the status 0, the migrate will be blocked at that record and will disable itself. The log file will emit a warning like:
-
-```text
-WARN  MigrateReportingJobRunner    : migrate job blocked by import record 9512156
-```
-Although this seldom happens during regular operation, it can occur if there is a problem with the message queue, or if a process fails unexpectedly. To fix it, resubmit the import record. 
-The migrate process will automatically continue once the import record is adjusted.
-
-##### Restart Migrations
-Once the cause of the problem has been resolved the service can be enabled by adjusting the status of the most recent migrate task in the reporting database. Connect with your favorite SQL client using a write-enabled account and change the status to -10 (Abandoned) setting a message to explain.
-
-```sql
-mysql> select * from reporting.migrate order by id desc limit 1;
-+------+--------+--------+-----------------+----------------+----------------------------+----------------------------+---------+
-| id   | job_id | status | first_import_id | last_import_id | created                    | updated                    | message |
-+------+--------+--------+-----------------+----------------+----------------------------+----------------------------+---------+
-| 1443 |   1443 |    -20 |         1434005 |        1435004 | 2017-06-13 14:31:57.582819 | 2017-06-13 14:34:00.395498 | NULL    |
-+------+--------+--------+-----------------+----------------+----------------------------+----------------------------+---------+
-1 row in set (0.04 sec)
-
-mysql> update reporting.migrate set status=-10, message='manually abandoned, fixed problem' where id=1443;
-```
-
-
-
 
 
 <a name="reconciliation-report"></a>

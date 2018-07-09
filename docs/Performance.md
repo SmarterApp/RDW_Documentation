@@ -14,14 +14,10 @@ In general to get the best performance from your Redshift Database, you must ens
 Because data is regularly ingested and rarely deleted from RDW, it is important to analyze regularly but vacuuming should seldom be necessary. Based on empirical observations, analyzing every week or two is sufficient.
 Operations should set up a scheduled task to analyze the reporting schema. There is a utility that may be used: https://github.com/awslabs/amazon-redshift-utils/tree/master/src/AnalyzeVacuumUtility.
 
-TODO - test and otherwise vet this:
 Using examples from [deployment](../deploy/Deployment.AWS.md] an invocation to analyze may look like this:
 ```
 python analyze-vacuum-schema.py --db opus --db-user root --db-pwd password --db-host rdw-opus.[aws-randomization] --schema-name reporting  --output-file ./test.log --vacuum-flag false --analyze-flag true --stats-off-pct 10
 ```
-
-TODO - create a deployment package for AWS Lambda and instructions for setting up the lambda function
-TODO   https://docs.aws.amazon.com/lambda/latest/dg/python-programming-model-handler-types.html
 
 In the event that setting up a scheduled task is problematic, the system can be configured to analyze after every (daily) migration. This requires that the redshift user configured for the migration process be the OWNER of the reporting schema. In the configuration file for migrate-olap:
 ```

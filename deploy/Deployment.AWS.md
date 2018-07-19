@@ -666,9 +666,27 @@ The simplest update is a backward compatible patch, usually to deploy an urgent 
     ```
     
 ##### Major Version Upgrades
-Major version updates often require additional steps. Please refer to specific documentation:
+Major version updates often require additional steps, particularly if there are significant schema or configuration changes.
+These changes may require taking the system offline while data is migrated or other non-trivial changes are made. To minimize the downtime, try to do as much work as possible before starting the upgrade.
+
+1. Branch deployment and configuration changes. Make the changes in the branch so they are ready to merge during the
+upgrade process. The specific changes depend on the upgrade; at the very least the image version will be changed in the
+deployment yaml files.
+1. This is a good time to run the data validation scripts to verify the system is in good shape. If time and resources
+allow, a "before" smoke test is a good idea too.
+1. Divert traffic from services, disable ops monitoring of services.
+1. Scale down the processes.
+1. Upgrade the cluster (Kubernetes) if necessary.
+1. Apply schema changes.
+1. Merge deployment and configuration branches.
+1. Redeploy the services.
+1. Check logs to make sure services are happy.
+1. Run data validation scripts to verify data was migrated properly. Do an "after" smoke test.
+
+These instructions are intentionally vague, please refer to documentation for specific upgrades:
 * [Upgrade v1.1](Upgrade.v1_1.AWS.md)
 * [Upgrade v1.2](Upgrade.v1_2.AWS.md)
+* [Upgrade v1.2.1](Upgrade.v1_2_1.AWS.md)
 
 
 ### Performance and Scalability

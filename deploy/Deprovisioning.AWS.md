@@ -45,9 +45,6 @@ These instructions use both the AWS console and AWS S3 command-line. This is bec
     ```bash
     aws s3 rb s3://rdw-opus-archive --force
     ```
-1. [ ] Delete the kops state store bucket using the console (because this bucket should be versioned).
-    * Sign into AWS and navigate to the S3 Management Console
-    * Select the `kops-rdw-opus-state-store` bucket, click **Delete Bucket** and follow directions to confirm.
 
 #### Redis
 
@@ -62,9 +59,7 @@ There are many AWS resources associated with a Redis cluster including parameter
 1. [ ] Capture information about the cluster. Note there will typically be a single replication group with multiple clusters, e.g.
     ```bash
     aws elasticache describe-replication-groups --replication-group-id rdw-opus-redis
-    aws elasticache describe-cache-clusters --cache-cluster-id rdw-opus-redis-001
-    aws elasticache describe-cache-clusters --cache-cluster-id rdw-opus-redis-002
-    aws elasticache describe-cache-clusters --cache-cluster-id rdw-opus-redis-003
+    aws elasticache describe-cache-clusters --cache-cluster-id rdw-opus-redis
     ```
     And/or you can see this information in the console by selecting the cluster.
 1. [ ] Delete Cluster (Replication Group)
@@ -112,7 +107,7 @@ The procedure for deleting a database cluster varies depending on how it was cre
     # delete cluster with final snapshot
     aws rds delete-db-cluster --db-cluster-identifier rdw-opus-reporting-cluster --final-db-snapshot-identifier rdw-opus-reporting
     # delete cluster without final snapshot
-    aws rds delete-db-cluster --db-cluster-identifier rdw-opus-reporting-cluster --skip-final-snapshot true
+    aws rds delete-db-cluster --db-cluster-identifier rdw-opus-reporting-cluster --skip-final-snapshot
 
     # delete instance with final snapshot
     aws rds delete-db-instance --db-instance-identifier rdw-opus-reporting --final-db-snapshot-identifier rdw-opus-reporting
@@ -254,6 +249,10 @@ Although this will remove most resources created for the cluster there may be so
 ### Clean up AWS resources
 
 The preceding steps clean up a lot of AWS resource but there are a few others.
+
+1. [ ] Delete the kops state store bucket using the console (because this bucket should be versioned).
+    * Sign into AWS and navigate to the S3 Management Console
+    * Select the `kops-rdw-opus-state-store` bucket, click **Delete Bucket** and follow directions to confirm.
 
 #### IAM Groups/Roles/Users
 

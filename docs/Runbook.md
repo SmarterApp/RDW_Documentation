@@ -20,6 +20,7 @@
     * [Admin Service](#admin-service)
     * [PDF Generator](#pdf-generator)
 * [System Configuration](#system-configuration)
+    * [Subjects](#subjects)
     * [Assessment Packages](#assessment-packages)
     * [Accommodations](#accommodations)
     * [Instructional Resources](#instructional-resources)

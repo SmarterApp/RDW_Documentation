@@ -369,7 +369,7 @@ These schools should be removed from ART. Then they must be deleted from RDW by 
 never remove schools from RDW. 
 ```sql
 use warehouse;
-delete s from school s where s.natural_id like '%0000000' and not exists (select sg.id from student_group sg where sg.school_id = s.id) and not exists (select es.id from exam_student es where es.school_id = s.id);
+delete s from school s where s.natural_id like '%0000000' and not exists (select sg.id from student_group sg where sg.school_id = s.id) and not exists (select e.id from exam e where e.school_id = s.id);
 
 use reporting;
 delete s from school s where s.natural_id like '%0000000' and not exists (select sg.id from student_group sg where sg.school_id = s.id) and not exists (select e.id from exam e where e.school_id = s.id);

@@ -243,14 +243,14 @@ SELECT p.date, IFNULL(s.count, 0) count FROM prod p
   
 -- cumulative unique schools (may be a bit slow)
 SELECT p.date, count(DISTINCT sub.sid) FROM prod p 
-  LEFT JOIN (SELECT DATE(e.updated) date, es.school_id sid FROM exam e JOIN exam_student es ON es.id = e.exam_student_id WHERE e.updated > '2017-09-07' and e.deleted = 0) sub
+  LEFT JOIN (SELECT DATE(e.updated) date, e.school_id sid FROM exam e WHERE e.updated > '2017-09-07' and e.deleted = 0) sub
     ON sub.date <= p.date
   GROUP BY p.date
   ORDER BY p.date;
   
 -- cumulative unique students (may be a bit slow)
 SELECT p.date, count(DISTINCT sub.sid) FROM prod p 
-  LEFT JOIN (SELECT DATE(e.updated) date, es.student_id sid FROM exam e JOIN exam_student es ON es.id = e.exam_student_id WHERE e.updated > '2017-09-07' and e.deleted = 0) sub
+  LEFT JOIN (SELECT DATE(e.updated) date, e.student_id sid FROM exam e WHERE e.updated > '2017-09-07' and e.deleted = 0) sub
     ON sub.date <= p.date
   GROUP BY p.date
   ORDER BY p.date; 
@@ -260,16 +260,17 @@ SELECT p.date, count(DISTINCT sub.sid) FROM prod p
 As part of the suite of SmarterBalanced applications, the RDW uses ART to get organization information. Part of maintenance of ART is knowing which organizations are being used and which aren't. Here are a couple queries against the `warehouse` that may help with that.
 
 ```sql
--- schools with counts of exams (deleted or not) 
-SELECT s.natural_id AS school_id, concat('"', s.name, '"') AS school_name, count(es.id) AS exam_count FROM school s 
-  LEFT JOIN exam_student es ON es.school_id = s.id
+-- schools with counts of exams (deleted or not), omitting schools with no exams
+SELECT s.natural_id AS school_id, concat('"', s.name, '"') AS school_name, count(e.id) AS exam_count FROM school s
+  LEFT JOIN exam e ON e.school_id = s.id
 GROUP BY s.id
+HAVING count(e.id) > 0
 ORDER BY s.natural_id;
 
--- districts with counts of exams (deleted or not)
-SELECT d.natural_id AS district_id, concat('"', d.name, '"') AS district_name, count(es.id) AS exam_count FROM district d
+-- districts with counts of exams (deleted or not), including all districts even those without exams
+SELECT d.natural_id AS district_id, concat('"', d.name, '"') AS district_name, count(e.id) AS exam_count FROM district d
   JOIN school s ON s.district_id = d.id
-  LEFT JOIN exam_student es ON es.school_id = s.id
+  LEFT JOIN exam e ON e.school_id = s.id
 GROUP BY d.id
 ORDER BY d.natural_id;
 ```

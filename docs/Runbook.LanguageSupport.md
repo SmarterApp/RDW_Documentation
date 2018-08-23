@@ -28,6 +28,10 @@ NOTE: A translation JSON file is not required to be "complete." For example, to 
 }
 ```
 
+> So how do you know what values to override? In the example above, how could you possibly know `"common-ngx"`? The main webapp text can be found in https://github.com/SmarterApp/RDW_Reporting/blob/master/webapp/src/main/webapp/src/assets/i18n/en.json. Search that file for the text you see and then you can get the key for it.
+> If you don't find the text in there (assuming you are looking at the correct version of the file), then the verbiage is part of the [subject configuration](./Runbook.md#subjects).
+
+
 #### Reporting Webapp UI Language Installation
 Adding an available language to the reporting webapp UI involves configuring the application to announce both the presence and location of additional languages.
 * The `reporting.ui-languages` property contains a list of languages that are available to the system in addition to English.

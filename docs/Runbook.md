@@ -309,6 +309,16 @@ The [Sample Kubernetes Spec](../deploy/wkhtmltopdf-service.yml) runs four replic
 
 Once the system is deployed it is necessary to configure the system by loading subjects, assessments, accommodations, instructional resources, student groups, normative data. There are also end-user features that may be enabled or disabled.
 
+#### School Year
+The system restricts reporting to the "known" school years. Verify that the `school_year` table has all the desired years (usually this means adding the upcoming school year to the table) and trigger a `CODES` migration as described in [Manual Data Modifictions](./Runbook.ManualDataModifications).
+```sql
+mysql> USE warehouse;
+mysql> INSERT INTO school_year (year) VALUES (2019);
+mysql> INSERT INTO import(status, content, contentType, digest) VALUES (1, 3, 'add school year 2019', 'add school year 2019');
+```
+
+The embargo feature requires the current school year be set. In the common configuration file (usually `application.yml`) set `reporting.school_year` to the appropriate value and restart the migration and reporting applications.
+
 #### Subjects
 The subject XML defines a subject's attributes for the RDW system. It is the tenant's responsibility to define a subject XML based on the schema, [RDW_Subject.xsd](https://github.com/SmarterApp/RDW_Common/blob/master/model/src/main/resources/RDW_Subject.xsd). SmarterBalanced's [Math](../deploy/Math_subject.xml) and [ELA](../deploy/ELA_subject.xml) subjects XML may be found in the `deploy` folder of this project. Subjects must be loaded into the system before assessment packages. The system allows for subject updates but only for the data attributes that have not been used by the system at the time of the update.
 We have also proved two additional sample subject definition XMLs as samples/templates for additional subjects: [Sample Subject](../deploy/new_subject_config.xml) and [Mini Subject.](../deploy/mini_subject_config.xml)

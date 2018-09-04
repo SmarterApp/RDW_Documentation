@@ -10,12 +10,12 @@ Language translation values are represented as JSON files.  Each language is rep
 Additionally, although the application ships with English as a default embedded language, tenants may install an `en.json` file to override any display text in the reporting application.
 The language files must exist in a location that is accessible by the reporting services.  We recommend using the configuration repository as a simple accessible hosting location that also provides change tracking.
 
-#### Reporting Language File Creation and Installation
+#### Reporting Language File Creation
 To create a new language JSON file, it is easiest to start from the existing English values, translate them, and save the result as a new language JSON file.
-To retrieve the current translations for a given language, log into the reporting application and make a call to `https://my-reporting-application/api/translations/{xx}?include-ui=true` to download the full language source for a language identified by its two-character code. (Example: `en` for English)<br>
-The `?include-ui=true` parameter includes translation messages that only apply to the UI and may be omitted if installing a language that only applies to generated reports (PDF, Aggregate, etc).<br>
-The downloaded JSON may then be translated into any language and saved to the configuration repository as a xx.json file. (Example: `/i18n/es.json`)<br>
-See below for how to configure the reporting system to use your translated JSON file to provide translation options to the user.<br>
+To retrieve the current translations for a given language, log into the reporting application and make a call to `https://my-reporting-application/api/translations/{xx}?include-ui=true` to download the full language source for a language identified by its two-character code. (Example: `en` for English).
+The `?include-ui=true` parameter includes translation messages that only apply to the UI and may be omitted if installing a language that only applies to generated reports (PDF, Aggregate, etc).
+The downloaded JSON may then be translated into any language and saved to the configuration repository as a xx.json file. (Example: `/i18n/es.json`).
+See below for how to configure the reporting system to use your translated JSON file to provide translation options to the user.
 
 NOTE: A translation JSON file is not required to be "complete." For example, to override just the footer text in English from the default value, you may install an `en.json` file that contains only the new footer message:
 
@@ -31,29 +31,53 @@ NOTE: A translation JSON file is not required to be "complete." For example, to 
 > So how do you know what values to override? In the example above, how could you possibly know `"common-ngx"`? The main webapp text can be found in https://github.com/SmarterApp/RDW_Reporting/blob/master/webapp/src/main/webapp/src/assets/i18n/en.json. Search that file for the text you see and then you can get the key for it.
 > If you don't find the text in there (assuming you are looking at the correct version of the file), then the verbiage is part of the [subject configuration](./Runbook.md#subjects).
 
+#### Reporting Language File Installation
+The language files will be served by the configuration server so the file(s) must be added to the configuration repository.
+We recommend a convention of putting them in a sub-folder, `i18n`, so the repo file structure may look like:
+```
+RDW_Config
+   i18n
+      en.json
+      es.json
+   application.yml
+   rdw-reporting-aggregate-service.yml
+   rdw-reporting-report-processor.yml
+   rdw-reporting-webapp.yml
+   ...
+```
 
-#### Reporting Webapp UI Language Installation
-Adding an available language to the reporting webapp UI involves configuring the application to announce both the presence and location of additional languages.
-* The `reporting.ui-languages` property contains a list of languages that are available to the system in addition to English.
-  Additional languages should be specified using their ISO-standard two-character language code.
-* The `reporting.translation-location` property contains the URL-prefix used to retrieve advertised language files.
-* The example below registers Spanish as an additional UI language and specifies that `es.json` can be found in the
-  configuration repository at `/i18n/es.json` on the `master` branch.
-    
+The location of the translation files is indicated by adding a configuration property for the `webapp`, `report-processor`
+and `aggregate` services. Because it is used by multiple services, we recommend putting this configuration property in
+the shared `application.yml` (the alternative is to repeat this configuration in `rdw-reporting-webapp.yml`,
+`rdw-reporting-report-processor.yml` and `rdw-reporting-aggregate-service.yml`):
+
+**application.yml**
+```yaml
+reporting:
+  translation-location: "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
+```
+
+> NOTE: the placeholder property `spring.cloud.config.uri` is set to use the environment variable `CONFIG_SERVICE_URL`
+> by default. That is part of bootstrapping the application to find the configuration server.
+
+#### Reporting Webapp UI Language Configuration
+Once the translation file is created and made available through the configuration server the reporting webapp UI must be
+configured to enable any new language(s). The `reporting.ui-languages` property contains a list of languages that are
+available to the system in addition to English. Additional languages should be specified using their ISO-standard
+two-character language code. The example below registers Spanish as an additional UI language:
+
 **rdw-reporting-webapp.yml**
 ```yaml
 reporting:
   # en is always available as an embedded language
   ui-languages:
     - es
-  translation-location: "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
 ```
 
-#### Report Processor Language Installation
-Adding an available language to use when generating reports is slightly different from adding a UI language above, but has the same requirements of providing a translation file and configuring the webapp UI to announce a languages availability.
-1. Configuring the webapp UI application to announce the presence of an additional report-processor language.
-    * The `reporting.report-languages` property contains a list of languages that are available for reports in addition to English.
-    * The example below registers Spanish as an additional report-processor language
+#### Report Processor Language Configuration
+Adding an available language to use when generating reports is slightly different from adding a UI language above, but has
+the same requirements of providing a translation file and configuring the webapp UI to announce a languages availability.
+It uses the `reporting.report-languages` property:
 
 **rdw-reporting-webapp.yml**
 ```yaml
@@ -61,16 +85,6 @@ reporting:
   # en is always available as an embedded language
   report-languages:
     - es
-```
-2. Configuring the report-processor application to configure the location of additional translation properties files.
-    * The `reporting.translation-location` property contains the URL-prefix used to retrieve advertised language files.
-    * The example below specifies that Spanish translation values can be found in the configuration 
-    repository at `/i18n/es.json` on the `master` branch.
-
-**rdw-reporting-report-processor.yml**
-```yaml
-reporting:
-  translation-location: "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
 ```
 
 #### Language Cross-References

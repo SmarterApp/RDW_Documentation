@@ -30,6 +30,7 @@
     * [Target Exclusions](#target-exclusions)
     * [Transfer Enabled](#transfer-enabled)
     * [English Learners](#english-learners)
+    * [Ethnicity](#ethnicity)
 * [Embargo](#embargo)
 * Advanced Resources
     * [Import and Migrate](Runbook.ImportMigrate.md)
@@ -429,6 +430,35 @@ reporting:
     - lep
 ```
 This setting is used by all the reporting services so they should be restarted: `aggregate-service`, `report-processor`, `reporting-service`, `reporting-webapp`.
+
+#### Ethnicity
+
+Although there are federal standards for student ethnicity, some states have different requirements. To change the list of ethnicities in the system there are two things that must be changed: the allowed ethnicities (in the database) and the ethnicity list in the language file.
+
+Modifying the database is a [manual data modification](./Runbook.ManualDataModifications.md). Add or delete entries in the ethnicity table and then trigger a migration:
+```sql
+USE warehouse;
+DELETE FROM ethnicity WHERE code = 'Filipino';
+INSERT INTO import (status, content, contentType, digest) VALUES (1, 3, 'update ethnicity', 'update ethnicity');
+```
+
+Updating the language file is detailed in [language support](./Runbook.LanguageSupport.md). The section that needs to be updated (for this example, remove the `"Filipino"` line):
+```json
+{
+  ...
+  "common": {
+    ...
+    "ethnicity": {
+      "AmericanIndianOrAlaskaNative": "American Indian or Alaska Native",
+      "Asian": "Asian",
+      "BlackOrAfricanAmerican": "Black or African American",
+      "DemographicRaceTwoOrMoreRaces": "Demographic Race of Two or More",
+      "Filipino": "Filipino",
+      "HispanicOrLatinoEthnicity": "Hispanic/Latino",
+      "NativeHawaiianOrOtherPacificIslander": "Native Hawaiian or Pacific Islander",
+      "White": "White"
+    },
+```
 
 ## Embargo
 

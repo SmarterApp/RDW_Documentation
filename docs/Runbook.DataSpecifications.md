@@ -2,13 +2,6 @@
 
 **Intended Audience**: This document contains information on data specifications in the [Reporting Data Warehouse](../README.md) (RDW). Additional information is available in the main [Runbook](Runbook.md). *Operations and system administration* may find this useful. It is a good reference for *developers*.
 
-Things to put in here:
-
-* links to SB TRT spec, logical data model, etc.
-* discussion of required fields
-* schemas for warehouse, reporting data mart, aggregate data mart
-* 
-
 ### Test Results
 
 Test results (aka exams) are pushed into the RDW using the [Test Result Transmission][1] (TRT) format using the [Exam Endpoints](API.md#exam-endpoints). The TRT is a flexible format so additional clarification may be found in the [Logical Data Model][2]. If there is a conflict between the two, the logical data model should be used as the source of truth.
@@ -58,6 +51,46 @@ All other TRT data elements are optional. The RDW allows certain optional fields
 | ExamItems | Optional |
 
 Please refer to the [annotated configuration](../config/rdw-ingest-exam-processor.yml) for the most up-to-date list of default settings. In `https://github.com/SmarterApp/RDW_Ingest` look for `exam-processor/src/main/java/org/opentestsystem/rdw/ingest/processor/model/ConfigurableDataElement.java` which has the list of configurable fields.
+
+#### Configurable Data Transformation
+
+The system allows data transformations to be applied to test results before they are processed. This feature is intended
+for situations where the test results provider cannot (or will not) provide clean, compliant data. The raw payload is
+archived, and the transformation is applied before the content is processed. Currently, the only supported transformations
+are XSLT 1.0 and 2.0.
+
+To enable this, configure the exam-processor, `rdw-ingest-exam-processor.yml`, to specify an XSLT resource.
+```yaml
+transformations:
+  exam: "binary-${spring.cloud.config.uri}/*/*/master/xslt/exam.xsl"
+```
+
+Sample transformation:
+```xml
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:output method="xml" omit-xml-declaration="yes" indent="yes"/>
+
+  <!-- identity rule copies everything by default -->
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- this rule removes leading 10 from item bank key -->
+  <xsl:template match="Item[starts-with(@bankKey, '10')]/@bankKey">
+    <xsl:attribute name="bankKey">
+      <xsl:value-of select="substring(., 3)"/>
+    </xsl:attribute>
+  </xsl:template>
+
+</xsl:stylesheet>
+```
+
+> NOTE: it is critical to test the transformation before using it. There is no mechanism in the application to test,
+> use an online tester like https://www.freeformatter.com/xsl-transformer.html. If the XSLT is invalid the system will
+> log an error (exam-processor log) and ignore it but, if the transformation is valid and does the wrong thing, the
+> system has no way to know that.
 
 #### Missing Data
 

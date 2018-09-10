@@ -66,6 +66,16 @@ spring:
 #      delay: 30
 #      multiplier: 2
 
+# Transformations are applied to exam payloads before they are parsed and
+# loaded as TDSReports. They are intended as a last resort when the 3rd party
+# submitting the results are providing bad or malformed data. It is better,
+# of course, to have conforming input without needing transformation.
+# Currently only transformations using XSLT 1.0 and 2.0 are supported.
+# There are NO default settings for this: by default no transformations will
+# loaded or applied.
+#transformations:
+#  exam: "binary-${spring.cloud.config.uri}/*/*/master/xslt/exam.xsl"
+
 # SBAC assessment validation settings.
 # The default settings should be good.
 #validation:

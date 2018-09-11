@@ -17,7 +17,7 @@ with no downtime using a rolling update. However, there is one new capability th
 
 ### Prep Work
 
-As noted in [Configurable Data Transformation](../docs/Runbook.DataSpecifications#configurable-data-transformation) this
+As noted in [Configurable Data Transformation](../docs/Runbook.DataSpecifications.md#configurable-data-transformation) this
 feature allows an XSLT to be applied to TRTs as they are processed. Before upgrading the exam-processor service, the
 desired XSLT file should be authored and tested. Once it is working, it needs to be added to the repository for the
 configuration server.

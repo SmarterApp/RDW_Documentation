@@ -77,10 +77,10 @@ Sample transformation:
     </xsl:copy>
   </xsl:template>
 
-  <!-- this rule removes leading 10 from item bank key -->
-  <xsl:template match="Item[starts-with(@bankKey, '10')]/@bankKey">
+  <!-- this rule changes item bank key from 10200 to 200 -->
+  <xsl:template match="Item/@bankKey['10200']">
     <xsl:attribute name="bankKey">
-      <xsl:value-of select="substring(., 3)"/>
+      <xsl:value-of select="'200'"/>
     </xsl:attribute>
   </xsl:template>
 

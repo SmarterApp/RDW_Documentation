@@ -2,7 +2,7 @@
 
 **Intended Audience**: this document provides detailed instructions for upgrading the [Reporting Data Warehouse (RDW)](../README.md) applications in an AWS environment from v1.2.1 to v1.2.2. Operations and system administrators will find it useful.
 
-It is assume that the official deployment and upgrade instructions were used for the current installation. Please refer to that documentation for general guidelines.
+It is assumed that the official deployment and upgrade instructions were used for the current installation. Please refer to that documentation for general guidelines.
 
 ### Overview
 

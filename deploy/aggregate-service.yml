@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: aggregate-service
-        image: smarterbalanced/rdw-reporting-aggregate-service:1.2.0-RELEASE
+        image: smarterbalanced/rdw-reporting-aggregate-service:1.2.1-RELEASE
         imagePullPolicy: Always
         readinessProbe:
           httpGet:

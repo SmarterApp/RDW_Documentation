@@ -687,6 +687,7 @@ These instructions are intentionally vague, please refer to documentation for sp
 * [Upgrade v1.1](Upgrade.v1_1.AWS.md)
 * [Upgrade v1.2](Upgrade.v1_2.AWS.md)
 * [Upgrade v1.2.1](Upgrade.v1_2_1.AWS.md)
+* [Upgrade v1.2.2](Upgrade.v1_2_2.AWS.md)
 
 
 ### Performance and Scalability

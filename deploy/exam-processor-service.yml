@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: exam-processor
-        image: smarterbalanced/rdw-ingest-exam-processor:1.2.0-RELEASE
+        image: smarterbalanced/rdw-ingest-exam-processor:1.2.2-RELEASE
         readinessProbe:
           httpGet:
             path: /health

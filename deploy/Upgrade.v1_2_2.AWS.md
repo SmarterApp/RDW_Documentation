@@ -1,6 +1,9 @@
 ## Upgrade v1.2.2 <- v1.2.1
 
-**Intended Audience**: this document provides detailed instructions for upgrading the [Reporting Data Warehouse (RDW)](../README.md) applications in an AWS environment from v1.2.1 to v1.2.2. Operations and system administrators will find it useful.
+> Note: There was another minor update to the exam processor after this document was written.
+> Instead of using 1.2.2, it is recommended to use 1.2.3 which supports XSLT 2.0.
+
+**Intended Audience**: this document provides detailed instructions for upgrading the [Reporting Data Warehouse (RDW)](../README.md) applications in an AWS environment from v1.2.1 to ~~v1.2.2~~ v1.2.3. Operations and system administrators will find it useful.
 
 It is assumed that the official deployment and upgrade instructions were used for the current installation. Please refer to that documentation for general guidelines.
 
@@ -25,7 +28,7 @@ configuration server.
 Because the changes are minimal and will be applied immediately these instructions do not use branches to make changes.
 If desired, branching may still be done to adhere to internal processes.
 
-* [ ] Make changes to the configuration repository (in the `master` branch).
+* [ ] To use the exam data transformation feature, make changes to the configuration repository (in the `master` branch).
     * Add a folder, `xslt`, and the XSLT file, e.g. `exam.xsl`.
     * Modify `rdw-ingest-exam-processor.yml` to specify the exam transformation:
     ```yaml
@@ -34,9 +37,9 @@ If desired, branching may still be done to adhere to internal processes.
     ```
     * Commit the changes.
 * [ ] Make changes to the deployment repository (in the `master` branch).
-NOTE: only two services *need* to be upgraded to 1.2.2. The other services *may* be upgraded but have no changes since 1.2.1.
+NOTE: only two services *need* to be upgraded. The other services *may* be upgraded but have no changes since 1.2.1.
     * Modify `reporting-webapp.yml` and set the image to `smarterbalanced/rdw-reporting-webapp:1.2.2-RELEASE`
-    * Modify `exam-processor-service.yml` and set the image to `smarterbalanced/rdw-ingest-exam-processor:1.2.2-RELEASE`
+    * Modify `exam-processor-service.yml` and set the image to `smarterbalanced/rdw-ingest-exam-processor:1.2.3-RELEASE`
     * Commit the changes.
 * [ ] Upgrade the services.
     * Using Kubernetes, this will do a rolling upgrade without downtime.

@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: migrate-olap
-        image: smarterbalanced/rdw-ingest-migrate-olap:1.2.1-RELEASE
+        image: smarterbalanced/rdw-ingest-migrate-olap:1.2.3-RELEASE
         imagePullPolicy: Always
         readinessProbe:
           httpGet:

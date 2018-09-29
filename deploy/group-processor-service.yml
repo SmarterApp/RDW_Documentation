@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: group-processor
-        image: smarterbalanced/rdw-ingest-group-processor:1.2.1-RELEASE
+        image: smarterbalanced/rdw-ingest-group-processor:1.2.3-RELEASE
         readinessProbe:
           httpGet:
             path: /health

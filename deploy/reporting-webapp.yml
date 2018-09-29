@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
       - name: reporting-webapp
-        image: smarterbalanced/rdw-reporting-webapp:1.2.2-RELEASE
+        image: smarterbalanced/rdw-reporting-webapp:1.2.3-RELEASE
         readinessProbe:
           httpGet:
             path: /health

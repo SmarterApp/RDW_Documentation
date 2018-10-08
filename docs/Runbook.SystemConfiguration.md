@@ -18,7 +18,7 @@
     * [Ethnicity](#ethnicity)
 * [System Configuration Changes for a New School Year](#new-school-year)
 
-<a name="system-configuration></a>
+<a name="system-configuration"></a>
 ### System Configuration
 
 Once the system is deployed it is necessary to configure the system by loading subjects, assessments, accommodations, instructional resources, student groups, normative data. There are also end-user features that may be enabled or disabled.
@@ -172,7 +172,7 @@ Updating the language file is detailed in [language support](./Runbook.LanguageS
     },
 ```
 
-<a name="new-school-year></a>
+<a name="new-school-year"></a>
 ### System Configuration Changes for a New School Year
 
 As the new school year approaches, there are configuration and data changes that will be necessary.

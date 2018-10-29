@@ -18,7 +18,6 @@
     * [Duplicate Schools](#duplicate-schools)
     * [Empty Student Report](#empty-report)
     * [Invalid Student Group](#invalid-group)
-    * [Missing Student Group](#missing-student-group)
     * [Can't See Student Group](#missing-student-group-one-user)
     * [Unable To Admin District](#unable-to-admin-district)
     * [ART Organization Data](#art-organization-data)

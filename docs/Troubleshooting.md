@@ -434,120 +434,39 @@ DELETE usg FROM upload_student_group usg JOIN import i ON i.id = usg.import_id W
 <a name="invalid-group"></a>
 #### Student Groups - Invalid Upload Status
 
-A number of users were having problems uploading student group CSV files. One of them provided a screen shot showing
-that the file was accepted but then switch to Upload Status `Invalid` (Upload ID = 234). The information provided by the user varies; typically they know their email and might know the upload id since it is displayed on the screen.
+A number of users were having problems uploading student group CSV files. The information provided by the user varies; typically they know their email, the filename, and might know the upload id since it is displayed on the screen.
 
-A quick check in the database shows that the status is invalid but the error message isn't that useful:
+Student group uploads are treated like any other import so the `import` table should have a useful error message for failures:
 ```sql
-mysql> select * from upload_student_group_batch where id = 234 \G
+SELECT * FROM import WHERE content=5 AND id=11924138 \G
 *************************** 1. row ***************************
-      id: 234
-  digest: E5157285E83BEC46273F441696A9FA7E
-  status: -1
- creator: user@example.com
- created: 2017-09-28 21:41:40.137750
- updated: 2017-09-28 21:41:42.786444
- message: Problem processing Batch: 234
-filename: Sample Unified.csv
+         id: 11924138
+     status: -3
+    content: 5
+contentType: application/vnd.ms-excel
+     digest: EDEA24EA68A26DDB09748D0CA7946F0E
+      batch: Math_Groups.csv
+    creator: emily.district@example.com
+    created: 2018-06-25 20:47:54.519963
+    updated: 2018-06-25 20:47:54.619206
+    message: Row: 0 Failure: File does not appear to be a valid CSV with a header row
 ```
 
 If they provide their email and not the id, something like this may be more appropriate:
 ```sql
-mysql> select * from upload_student_group_batch where creator = 'user@school.org' and message is not null \G
-*************************** 78. row ***************************
-      id: 14669
-  digest: D91B31A2650C0D75206155E1A4AB39B7
-  status: -1
- creator: user@school.org
- created: 2018-01-13 02:02:00.053236
- updated: 2018-01-13 02:02:00.201750
- message: Problem processing Batch: 14669
-filename: Harding test.csv
+SELECT * FROM import WHERE content=5 AND creator = 'emily.district@example.com' AND message IS NOT NULL \G
+*************************** 1. row ***************************
+         id: 11924139
+     status: -3
+    content: 5
+contentType: application/vnd.ms-excel
+     digest: 132326A86BCAC928724A52E4BF507453
+      batch: Math_Groups.csv
+    creator: emily.district@example.com
+    created: 2018-06-25 20:50:25.371528
+    updated: 2018-06-25 20:50:25.377604
+    message: Row: 159062 Failure: School [01612590130146] is out-of-order: sort CSV by school, group, year
 ```
-
-A dump of the log was more useful. The process is the group-processor
-```bash
-kubectl logs group-processor-deployment-1684562224-r8km9 > log.txt
-view log.txt
-...
-2017-09-28 21:41:40.148  INFO 1 --- [ROUPS.default-1] o.o.r.i.g.GroupProcessorConfiguration    : Received payload: {"digest":"E5157285E83BEC46273F441696A9FA7E","uploadId":234}
-2017-09-28 21:41:42.784 ERROR 1 --- [ROUPS.default-1] o.o.r.i.g.s.impl.DefaultGroupProcessor   : Problem processing batch: 234
-
-org.springframework.jdbc.UncategorizedSQLException: PreparedStatementCallback; uncategorized SQLException for SQL [LOAD DATA FROM S3 ? INTO TABLE upload_student_group FIELDS TERMINATED BY ',' IGNORE 1 LINES (@vgroup_name, @vschool_natural_id, school_year, @vsubject_code, @vstudent_ssid, @vgroup_user_login) SET
-  batch_id = ?,
-  group_name = TRIM(REPLACE(@vgroup_name, '\r', '')),
-  school_natural_id = TRIM(REPLACE(@vschool_natural_id, '\r', '')),
-  subject_code = nullif(TRIM(REPLACE(@vsubject_code, '\r', '')), ''),
-  student_ssid = nullif(TRIM(REPLACE(@vstudent_ssid, '\r', '')), ''),
-  group_user_login = nullif(TRIM(REPLACE(@vgroup_user_login, '\r', '')), '')]; SQL state [HY000]; error code [1366]; Incorrect integer value: ' Period 1"' for column 'school_year' at row 1; nested exception is java.sql.SQLException: Incorrect integer value: ' Period 1"' for column 'school_year' at row 1
-...
-```
-
-Looking at the uploaded file (either from user or from S3):
-```csv
-group_name,school_natural_id,school_year,subject_code,student_ssid,group_user_login
-"Smith, John, Period 1",37682966039010,2018,All,1178197650,jsmith@example.com
-"Smith, John, Period 1",37682966039010,2018,All,1307844641,jsmith@example.com
-...
-```
-
-The problem is the S3 loader doesn't have the necessary `ENCLOSED BY '"'` clause so it is failing to parse the first
-column properly. 
-
-<a name="missing-student-group"></a>
-#### Missing Student Group
-A user complained that they were uploading student group CSV files successfully but that the groups are not appearing.
-* User is melissa@fubar.org
-
-Let's see if the uploads are in there:
-```sql
-select * from upload_student_group_batch sgb where sgb.creator='mespi5@lausd.net' and sgb.status=1;
-+------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
-| id   | digest                           | status | creator          | created                    | updated                    | message | filename            |
-+------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
-|  924 | 91038F3D58C079FC446EEE6C7EF49035 |      1 | mespi5@lausd.net | 2017-10-19 04:09:35.985610 | 2017-10-19 04:09:36.509949 |         | kenastondone.csv    |
-|  984 | 49E2C7AB31A78B7D310771F191589E1D |      1 | mespi5@lausd.net | 2017-10-19 20:22:40.659808 | 2017-10-19 20:22:40.887697 |         | done2.csv           |
-...
-| 8709 | 487EE591DCDE5C245CC90F8F13F5F327 |      1 | mespi5@lausd.net | 2017-11-30 06:10:07.019702 | 2017-11-30 06:10:07.218732 |         | maxwellnew4.csv     |
-| 8710 | 2BC77BF6CD1F8BEAF61C4AEB9346EA79 |      1 | mespi5@lausd.net | 2017-11-30 06:12:36.422368 | 2017-11-30 06:12:39.371562 |         | Mancilla7.csv       |
-+------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
-44 rows in set (0.01 sec)
-```
-
-Yup, looks good. So, are there any student groups associated with any of those records?
-```sql
-select sgb.id, sgb.digest, sgb.creator, sgb.filename, count(sg.id) as groups from upload_student_group_batch sgb
-  join import i on i.content=5 and sgb.id = i.batch
-  join student_group sg on sg.import_id=i.id
-where sgb.creator='mespi5@lausd.net' and sgb.status=1
-group by sgb.id;
-Empty set (0.05 sec)
-```
-
-Yikes, that's not good. Let's try that another way:
-```sql
-select sgb.* from upload_student_group_batch sgb
-  left outer join import i on i.content=5 and i.batch = sgb.id
-where sgb.status=1 and sgb.creator='mespi5@lausd.net'
-  and i.id is null;
-+------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
-| id   | digest                           | status | creator          | created                    | updated                    | message | filename            |
-+------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
-|  924 | 91038F3D58C079FC446EEE6C7EF49035 |      1 | mespi5@lausd.net | 2017-10-19 04:09:35.985610 | 2017-10-19 04:09:36.509949 |         | kenastondone.csv    |
-|  984 | 49E2C7AB31A78B7D310771F191589E1D |      1 | mespi5@lausd.net | 2017-10-19 20:22:40.659808 | 2017-10-19 20:22:40.887697 |         | done2.csv           |
-...
-| 8708 | FD2DFBAC33E9A2DBB3ECE4F12EE99DBD |      1 | mespi5@lausd.net | 2017-11-30 06:08:52.794912 | 2017-11-30 06:08:53.042526 |         | Keuper6.csv         |
-| 8709 | 487EE591DCDE5C245CC90F8F13F5F327 |      1 | mespi5@lausd.net | 2017-11-30 06:10:07.019702 | 2017-11-30 06:10:07.218732 |         | maxwellnew4.csv     |
-| 8710 | 2BC77BF6CD1F8BEAF61C4AEB9346EA79 |      1 | mespi5@lausd.net | 2017-11-30 06:12:36.422368 | 2017-11-30 06:12:39.371562 |         | Mancilla7.csv       |
-+------+----------------------------------+--------+------------------+----------------------------+----------------------------+---------+---------------------+
-44 rows in set, 65535 warnings (1.43 sec)
-```
-
-That confirms that the files were processed "successfully" but no student groups were created. Using the `digest` values, we can inspect the files. Looking closely at the files, it is apparent that the newline character is `0x0D` aka `CR` aka `\r`. Our parser doesn't know how to deal with that, it is expecting `\n` (aka `0x0A` aka `LF`) or `\r\n` to be the newline. 
-
-Ask the user to switch to that by saving in Windows CSV format.
-
-Might also file a JIRA to properly handle the various newline characters.
 
 <a name="missing-student-group-one-user"></a>
 #### One User Can't See Student Group
@@ -596,30 +515,22 @@ Screen shots show that a student group was successfully uploaded but the teacher
     |            43404 | skirk@fubar.org       |
     +------------------+-----------------------+    
     ``` 
-* This matches the CSV provided in the JIRA, except one user is missing. Given what we know about the processing of the CSV this doesn't make sense. Let's see what was actually uploaded to the system. We need the digest for the file so we can find it in S3. For student group upload that requires an extra join:
+* This matches the CSV provided in the JIRA, except one user is missing. Given what we know about the processing of the CSV this doesn't make sense. Let's see what was actually uploaded to the system. We need the digest for the file so we can find it in S3:
 
     ```sql
-    select * from import i join upload_student_group_batch b on b.id=i.batch where i.id=2797758 \G
+    SELECT * FROM import WHERE id=2797758 \G
     *************************** 1. row ***************************
              id: 2797758
          status: 1
         content: 5
     contentType: group batch
-         digest: 13070
-          batch: 2839
-        creator: NULL
+         digest: 9A462BCD48E9AB16999F3D52EC6C5DA1
+          batch: DistrictELApractice11thgrade.csv
+        creator: emily.district@fubar.org
         created: 2017-11-01 23:02:44.947794
         updated: 2017-11-01 23:02:46.682500
         message: NULL
-             id: 2839
-         digest: 9A462BCD48E9AB16999F3D52EC6C5DA1
-         status: 1
-        creator: briancurwick@rjusd.org
-        created: 2017-11-01 23:02:42.088673
-        updated: 2017-11-01 23:02:46.708171
-        message: 
-       filename: DistrictELApractice11thgrade.csv    
-    ``` 
+    ```
 * Retrieving the file from S3 shows a CSV file that is not the same as the sample, specifically the rows for that 9th user are not in it. User error. 
 
 

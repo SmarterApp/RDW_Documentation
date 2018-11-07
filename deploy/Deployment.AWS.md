@@ -285,7 +285,7 @@ This section records all details that will facilitate configuration and maintena
         kops validate cluster
         kubectl get nodes --show-labels
         ```
-* [ ] Create Aurora instances. The system requires two aurora instances, `warehouse` and `reporting`. If the installation is small and cost is a concern, a single instance may be used.
+* [ ] Create Aurora instances. The system requires two aurora instances, `warehouse` and `reporting`. If the installation is small and cost is a concern, a single instance may be used; adapt instructions if this is done.
     1. Create Parameter Groups
         * Family: aurora5.6, Type: DB Parameter Group, Name: rdw-opus-warehouse, Description: DB Params for RDW Opus Warehouse
         * Family: aurora5.6, Type: DB Cluster Parameter Group, Name: rdw-opus-warehouse, Description: DB Cluster Params for RDW Opus Warehouse
@@ -447,7 +447,12 @@ NOTE: the security and routing for Redshift can be tricky, especially if the clu
         aws rds add-role-to-db-cluster --db-cluster-identifier rdw-opus-warehouse-cluster --role-arn arn:aws:iam::479572410002:role/rdsRdwOpusArchiveRole
         aws rds modify-db-cluster-parameter-group --db-cluster-parameter-group-name rdw-opus-warehouse --parameters ParameterName=aws_default_s3_role,ParameterValue=arn:aws:iam::479572410002:role/rdsRdwOpusArchiveRole,ApplyMethod=immediate
         ```
-    1. Create a role to allow Redshift access to the S3 bucket using console or CLI. **Note:** if the cluster is being used in multiple environments, there will be multiple policies to add to the role.   
+    1. Associate the RDW/S3 role with the reporting DB Cluster to allow access to the S3 bucket using console or CLI. (http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Aurora.Authorizing.AWSServices.AddRoleToDBCluster.html)
+        ```bash
+        aws rds add-role-to-db-cluster --db-cluster-identifier rdw-opus-reporting-cluster --role-arn arn:aws:iam::479572410002:role/rdsRdwOpusArchiveRole
+        aws rds modify-db-cluster-parameter-group --db-cluster-parameter-group-name rdw-opus-reporting --parameters ParameterName=aws_default_s3_role,ParameterValue=arn:aws:iam::479572410002:role/rdsRdwOpusArchiveRole,ApplyMethod=immediate
+        ```
+    1. Create a role to allow Redshift access to the S3 bucket using console or CLI. **Note:** if the cluster is being used in multiple environments, there will be multiple policies to add to the role.
         ```bash
         aws iam create-role --role-name redshiftRdwOpusArchiveAccess --description "Redshift access to rdw-opus-archive" --assume-role-policy-document file://RedshiftRoleTrustPolicy.json
         aws iam attach-role-policy --role-name redshiftRdwOpusArchiveAccess --policy-arn arn:aws:iam::478575410002:policy/AllowRdwOpusArchiveBucket

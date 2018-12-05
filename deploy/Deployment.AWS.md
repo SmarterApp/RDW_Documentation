@@ -681,7 +681,7 @@ deployment yaml files.
 allow, a "before" smoke test is a good idea too.
 1. Divert traffic from services, disable ops monitoring of services.
 1. Scale down the processes.
-1. Upgrade the cluster (Kubernetes) if necessary.
+1. Upgrade the cluster (Kubernetes) if necessary (see below).
 1. Apply schema changes.
 1. Merge deployment and configuration branches.
 1. Redeploy the services.
@@ -694,11 +694,60 @@ These instructions are intentionally vague, please refer to documentation for sp
 * [Upgrade v1.2.1](Upgrade.v1_2_1.AWS.md)
 * [Upgrade v1.2.2](Upgrade.v1_2_2.AWS.md)
 
+<a name="upgrading_the_cluster"></a>
+##### Upgrading the Cluster
+When doing a (major) software upgrade, there is an opportunity to upgrade the cluster (Kubernetes). If the version of
+the cluster is old (< 1.10 at the time of this writing) or has recommended security patches, consider upgrading it.
+This example comes from an upgrade done in 2018.
+
+* Verify version:
+```bash
+$ kops version
+Version 1.9.0 (git-6741158)
+$ kops export kubecfg awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store
+$ kubectl version
+Client Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.2", GitCommit:"81753b10df112992bf51bbc2c2f85208aad78335", GitTreeState:"clean", BuildDate:"2018-05-12T04:12:12Z", GoVersion:"go1.9.6", Compiler:"gc", Platform:"darwin/amd64"}
+Server Version: version.Info{Major:"1", Minor:"6", GitVersion:"v1.6.13", GitCommit:"14ea65f53cdae4a5657cf38cfc8d7349b75b5512", GitTreeState:"clean", BuildDate:"2017-11-22T20:19:06Z", GoVersion:"go1.7.6", Compiler:"gc", Platform:"linux/amd64"}
+```
+Client utils are up-to-date. If they aren't upgrade them, good place to start: https://github.com/kubernetes/kops.
+In general, the client utils are backward-compatible and can be upgraded well past the server version.
+Server is (very) old (1.6.13), let's upgrade the cluster.
+* Capture cluster configuration for posterity (and possible error recovery).
+```bash
+$ kops get cluster -o yaml --state s3://kops-awsopus-sbac-org-state-store > cluster.yml
+```
+* Upgrade cluster. Note distinction between `upgrade` and `update` in these commands.
+For all these commands, you should first execute them without `--yes` to see what they will do. It is a good idea to
+capture the output for posterity.
+You can either automatically upgrade the cluster to the latest version, or manually upgrade to a specific version.
+```bash
+# This command usually upgrades to the next minor release
+$ kops upgrade cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+ITEM                             PROPERTY           OLD                                                     NEW
+Cluster                          KubernetesVersion  1.6.13                                                  1.9.6
+InstanceGroup/master-us-west-2a  Image              kope.io/k8s-1.6-debian-jessie-amd64-hvm-ebs-2018-01-14  kope.io/k8s-1.9-debian-jessie-amd64-hvm-ebs-2018-03-11
+InstanceGroup/nodes              Image              kope.io/k8s-1.6-debian-jessie-amd64-hvm-ebs-2018-01-14  kope.io/k8s-1.9-debian-jessie-amd64-hvm-ebs-2018-03-11
+
+# Alternatively, you can edit the cluster directly and set the target version
+# Set the kubernetesVersion to the target version (e.g. v1.10.11)
+$ kops edit cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store
+
+$ kops update cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+(lots of output)
+
+$ kops rolling-update cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
+(lots of output about nodes/pods being cordoned, evicted, drained)
+```
+The last step (rolling update) can take a long time (perhaps an hour or more).
 
 ### Performance and Scalability
-The main reporting webapp with 750m CPU and 1G memory will support about 2000 concurrent users. The reporting service supports the individual test result queries and should be able to support about the same, 2000 concurrent users per pod with 500m CPU and 750M memory. 
+The main reporting webapp with 750m CPU and 1G memory will support about 2000 concurrent users. The reporting service
+supports the individual test result queries and should be able to support about the same, 2000 concurrent users per pod
+with 500m CPU and 750M memory.
 
-NOTE: When allocating pod memory please consider the ratio of memory/processor for the nodes. It is silly to restrict memory if it is just going to go to waste because of CPU allocation. So, if the nodes have a 4/1 memory to processor ratio then the allocation should be similarly scaled: using the webapp as an example, it requires 750m processor so giving it 4*750m = 3G memory would be okay. That said, none of these services will do much with >2G, so cap it.
+NOTE: When allocating pod memory please consider the ratio of memory/processor for the nodes. It is silly to restrict
+memory if it is just going to go to waste because of CPU allocation. So, if the nodes have a 4/1 memory to processor
+ratio then the allocation should be similarly scaled: using the webapp as an example, it requires 750m processor so giving it 4*750m = 3G memory would be okay. That said, none of these services will do much with >2G, so cap it.
  
 Redshift is the backing OLAP data mart for the aggregate reports. Redshift deals with lots of data and is not 
 particularly good at high concurrency. The RDW architecture attempts to mitigate this but know that Redshift itself

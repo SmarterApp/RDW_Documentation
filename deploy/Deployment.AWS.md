@@ -146,14 +146,14 @@ This section records all details that will facilitate configuration and maintena
         ```bash
         # from https://kubernetes.io/docs/getting-started-guides/kops/
         sudo yum install -y wget
-        wget https://github.com/kubernetes/kops/releases/download/1.9.1/kops-linux-amd64
+        wget https://github.com/kubernetes/kops/releases/download/1.10.0/kops-linux-amd64
         chmod +x kops-linux-amd64
         sudo mv kops-linux-amd64 /usr/local/bin/kops
         kops version
         ```
         ```bash
         # from https://kubernetes.io/docs/tasks/tools/install-kubectl/
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.9.1/bin/linux/amd64/kubectl
+        curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl
         chmod +x ./kubectl
         sudo mv ./kubectl /usr/local/bin/kubectl
         kubectl version

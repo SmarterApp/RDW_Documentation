@@ -237,18 +237,14 @@ Query OK, 1 row affected (0.04 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
 ```
 
-Starting with version 1.3 there is another way to enable migrate that doesn't require mysql write permissions. As noted
-above, the cause of the problem must be resolved or else the service will disabled itself. Additionally this will work
-only if the status is -20:
+Starting with version 1.3 there is another way to enable migrate that doesn't require mysql write permissions. As noted above, the cause of the problem must be resolved or else the service will disabled itself. Additionally this will work only if the status is -20:
 
 ```bash
 $ kubectl exec -it migrate-reporting[k8s-randomization] -- curl -X POST http://localhost:8008/migrate/enable
 true
 ```
 
-Version 1.3 also introduced a way to trigger an immediate migrate. This may be useful when the migrate-olap service is
-re-enabled, since that migrate typically runs only daily (migrate-reporting typically runs every minute so this trick
-isn't that useful). To trigger an immediate migrate for a running, enabled migrate service:
+Version 1.3 also introduced a way to trigger an immediate migrate. This may be useful when the migrate-olap service is re-enabled, since that migrate typically runs only daily (migrate-reporting typically runs every minute so this trick isn't that useful). To trigger an immediate migrate for a running, enabled migrate service:
 
 ```bash
 $ kubectl exec -it migrate-olap[k8s-randomization] -- curl -X POST http://localhost:8008/migrate

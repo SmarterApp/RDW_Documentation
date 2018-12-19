@@ -842,6 +842,67 @@ This task removes old user reports. This is typically scheduled to happen once a
 curl -X POST http://localhost:8008/removeStaleReports
 ```
 
+#### Migrate Task
+The migrate tasks move data from the main data warehouse to the reporting data stores. If there are problems the migrate
+tasks will disable themselves by marking a record in the database. To re-enable migrate, DevOps needs to diagnose the
+problem and then update that record in a specific way. To help with this, there is an actuator end-point to update the
+record properly. NOTE: if the underlying problem is not addressed, the migrate service will disable itself again.
+
+* Host: migrate-olap service, migrate-reporting service
+* URL: `/migrate/enable`
+* Method: `POST`
+* Success Response:
+  * Code: 200
+* Sample Call:
+```bash
+curl -X POST http://localhost:8008/migrate/enable
+```
+
+As a reminder, the migrate services also allow themselves to be paused. This is different than when they disable themselves.
+The services must be both running and enabled to be active. Pausing uses the normal Spring lifecycle end-points.
+
+* Host: migrate-olap service, migrate-reporting service
+* URL: `pause`, `resume`
+* Method: `POST`
+* Success Response:
+  * Code: 200
+* Sample Call:
+```bash
+curl -X POST http://localhost:8008/pause
+curl -X POST http://localhost:8008/resume
+```
+
+The task for moving data to the individual reporting system used by teachers happens very frequently (typically every minute).
+It is unlikely there will ever be a need to trigger an immediate migrate. However the task for moving data to the aggregate
+reporting system is less frequent (typically once a day). As such it may be useful to trigger this migration when initially
+setting up or testing the system. NOTE: the migrate-olap service must be running and be enabled for this to work.
+
+* Host: migrate-olap service
+* URL: `/migrate`
+* Method: `POST`
+* Success Response:
+  * Code: 200
+* Sample Call:
+```bash
+curl -X POST http://localhost:8008/migrate
+```
+
+As a convenience the /migrate end-point will return the current migrate status. This can be useful when troubleshooting.
+
+* Host: migrate-olap service, migrate-reporting service
+* URL: `/migrate`
+* Method: `GET`
+* Success Response:
+  * Code: 200
+  * Content:
+  ```
+  Migrate: running, enabled. Last migrate: COMPLETED to 2018-07-04T17:17:38.212782
+  ```
+* Sample Call:
+```bash
+curl http://localhost:8008/migrate
+```
+
 ### Status Endpoints
 End-points for querying the status of the system. These are intended primarily for operations but can be useful when initially connecting to the system. These end-points are exposed on a separate port (8008) which is typically kept behind a firewall in a private network. No authentication is required.
 

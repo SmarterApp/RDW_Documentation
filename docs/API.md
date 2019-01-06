@@ -547,7 +547,7 @@ Accepts payloads in the Smarter Balanced [Accessibility Configuration Specificat
 * Body (raw body): XML payload, snippet:
 ```xml
 <?xml version="1.0" encoding="utf‐8"?>
-<Accessibility>
+<Accessibility schoolYear="2018">
   <MasterResourceFamily>
     <SingleSelectResource>
       <Code>AmericanSignLanguage</Code>

@@ -8,7 +8,8 @@ There are a few documents associated with the user guide:
 ### Change Log
 
 #### 1.3
-TBD
+
+* Updated for v1.3.0 features.
 
 #### 1.2
 Current version.

@@ -660,9 +660,6 @@
     </ReportGrade>
   </ReportGrades>
   <Claims>
-    <Claim code="SOCK_LS" name="Listening" organizational="false" displayOrder="3">
-      <Icon>fa-lightbulb-o</Icon>
-    </Claim>
     <Claim code="SOCK_R" name="Reading" organizational="false" displayOrder="1">
       <Icon>fa-book</Icon>
     </Claim>
@@ -1576,6 +1573,9 @@
         </Target>
       </Targets>
     </Claim>
+    <Claim code="SOCK_LS" name="Listening" organizational="false" displayOrder="3">
+      <Icon>fa-lightbulb-o</Icon>
+    </Claim>
     <Claim code="3-L" name="Listening" scorable="false">
       <Description>Speak and Listen purposefully - Students can employ effective speaking and listening skills for a range of purposes and audiences.</Description>
       <Targets>
@@ -2026,11 +2026,17 @@
     </Claim>
   </Claims>
   <Standards>
+    <Standard code="11-12.L.1">
+      <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking.]]></Description>
+    </Standard>
     <Standard code="11-12.L.1a">
       <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. A) Apply the understanding that usage is a matter of convention, can change over time, and is sometimes contested.]]></Description>
     </Standard>
     <Standard code="11-12.L.1b">
       <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. B) Resolve issues of complex or contested usage, consulting references (e.g., Merriam-Webster’s Dictionary of English Usage, Garner’s Modern American Usage) as needed.]]></Description>
+    </Standard>
+    <Standard code="11-12.L.2">
+      <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing.]]></Description>
     </Standard>
     <Standard code="11-12.L.2a">
       <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. A) Observe hyphenation conventions.]]></Description>
@@ -2040,6 +2046,9 @@
     </Standard>
     <Standard code="11-12.L.3a">
       <Description><![CDATA[Apply knowledge of language to understand how language functions in different contexts, to make effective choices for meaning or style, and to comprehend more fully when reading or listening. A) Vary syntax for effect, consulting references (e.g., Tufte’s Artful Sentences) for guidance as needed; apply an understanding of syntax to the study of complex texts when reading.]]></Description>
+    </Standard>
+    <Standard code="11-12.L.4">
+      <Description><![CDATA[Determine or clarify the meaning of unknown and multiple-meaning words and phrases based on grades 11–12 reading and content, choosing flexibly from a range of strategies.]]></Description>
     </Standard>
     <Standard code="11-12.L.4a">
       <Description><![CDATA[Determine or clarify the meaning of unknown and multiple-meaning words and phrases based on grades 11–12 reading and content, choosing flexibly from a range of strategies. A) Use context (e.g., the overall meaning of a sentence, paragraph, or text; a word’s position or function in a sentence) as a clue to the meaning of a word or phrase.]]></Description>
@@ -2052,6 +2061,9 @@
     </Standard>
     <Standard code="11-12.L.4d">
       <Description><![CDATA[Determine or clarify the meaning of unknown and multiple-meaning words and phrases based on grades 11–12 reading and content, choosing flexibly from a range of strategies. D) Verify the preliminary determination of the meaning of a word or phrase (e.g., by checking the inferred meaning in context or in a dictionary).]]></Description>
+    </Standard>
+    <Standard code="11-12.L.5">
+      <Description><![CDATA[Demonstrate understanding of figurative language, word relationships, and nuances in word meanings.]]></Description>
     </Standard>
     <Standard code="11-12.L.5a">
       <Description><![CDATA[Demonstrate understanding of figurative language, word relationships, and nuances in word meanings. A) Interpret figures of speech (e.g., hyperbole, paradox) in context and analyze their role in the text.]]></Description>
@@ -2179,6 +2191,9 @@
     <Standard code="11-12.RST.9">
       <Description><![CDATA[Synthesize information from a range of sources (e.g., texts, experiments, simulations) into a coherent understanding of a process, phenomenon, or concept, resolving conflicting information when possible.]]></Description>
     </Standard>
+    <Standard code="11-12.SL.1">
+      <Description><![CDATA[Initiate and participate effectively in a range of collaborative discussions (one on- one, in groups, and teacher-led) with diverse partners on grades 11–12 topics, texts, and issues, building on others’ ideas and expressing their own clearly and persuasively.]]></Description>
+    </Standard>
     <Standard code="11-12.SL.1a">
       <Description><![CDATA[Initiate and participate effectively in a range of collaborative discussions (one on- one, in groups, and teacher-led) with diverse partners on grades 11–12 topics, texts, and issues, building on others’ ideas and expressing their own clearly and persuasively. A) Come to discussions prepared, having read and researched material under study; explicitly draw on that preparation by referring to evidence from texts and other research on the topic or issue to stimulate a thoughtful, wellreasoned exchange of ideas.]]></Description>
     </Standard>
@@ -2209,6 +2224,9 @@
     <Standard code="11-12.W.10">
       <Description><![CDATA[Write routinely over extended time frames (time for research, reflection, and revision) and shorter time frames (a single sitting or a day or two) for a range of tasks, purposes, and audiences.]]></Description>
     </Standard>
+    <Standard code="11-12.W.1">
+      <Description><![CDATA[Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence.]]></Description>
+    </Standard>
     <Standard code="11-12.W.1a">
       <Description><![CDATA[Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. A) Introduce precise, knowledgeable claim(s), establish the significance of the claim(s), distinguish the claim(s) from alternate or opposing claims, and create an organization that logically sequences claim(s), counterclaims, reasons, and evidence.]]></Description>
     </Standard>
@@ -2223,6 +2241,9 @@
     </Standard>
     <Standard code="11-12.W.1e">
       <Description><![CDATA[Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. E) Provide a concluding statement or section that follows from and supports the argument presented.]]></Description>
+    </Standard>
+    <Standard code="11-12.W.2">
+      <Description><![CDATA[Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content.]]></Description>
     </Standard>
     <Standard code="11-12.W.2a">
       <Description><![CDATA[Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. A) Introduce a topic; organize complex ideas, concepts, and information so that each new element builds on that which precedes it to create a unified whole; include formatting (e.g., headings), graphics (e.g., figures, tables), and multimedia when useful to aiding comprehension.]]></Description>
@@ -2241,6 +2262,9 @@
     </Standard>
     <Standard code="11-12.W.2f">
       <Description><![CDATA[Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. F) Provide a concluding statement or section that follows from and supports the information or explanation presented (e.g., articulating implications or the significance of the topic).]]></Description>
+    </Standard>
+    <Standard code="11-12.W.3">
+      <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences.]]></Description>
     </Standard>
     <Standard code="11-12.W.3a">
       <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. A) Engage and orient the reader by setting out a problem, situation, or observation and its significance, establishing one or multiple point(s) of view, and introducing a narrator and/or characters; create a smooth progression of experiences or events.]]></Description>
@@ -2272,6 +2296,9 @@
     <Standard code="11-12.W.8">
       <Description><![CDATA[Gather relevant information from multiple authoritative print and digital sources, using advanced searches effectively; assess the strengths and limitations of each source in terms of the task, purpose, and audience; integrate information into the text selectively to maintain the flow of ideas, avoiding plagiarism and overreliance on any one source and following a standard format for citation.]]></Description>
     </Standard>
+    <Standard code="11-12.W.9">
+      <Description><![CDATA[Draw evidence form literary or informational texts to support analysis, reflection, and research.]]></Description>
+    </Standard>
     <Standard code="11-12.W.9a">
       <Description><![CDATA[Draw evidence form literary or informational texts to support analysis, reflection, and research. A) Apply grades 11–12 Reading standards to literature (e.g., “Demonstrate knowledge of eighteenth-, nineteenth- and early-twentieth-century foundational works of American literature, including how two or more texts from the same period treat similar themes or topics”).]]></Description>
     </Standard>
@@ -2280,6 +2307,9 @@
     </Standard>
     <Standard code="11-12.WHST.10">
       <Description><![CDATA[Write routinely over extended time frames (time for reflection and revision) and shorter time frames (a single sitting or a day or two) for a range of discipline-specific tasks, purposes, and audiences.]]></Description>
+    </Standard>
+    <Standard code="11-12.WHST.1">
+      <Description><![CDATA[Write arguments focused on discipline-specific content.]]></Description>
     </Standard>
     <Standard code="11-12.WHST.1a">
       <Description><![CDATA[Write arguments focused on discipline-specific content. A) Introduce precise, knowledgeable claim(s), establish the significance of the claim(s), distinguish the claim(s) from alternate or opposing claims, and create an organization that logically sequences the claim(s), counterclaims, reasons, and evidence.]]></Description>
@@ -2295,6 +2325,9 @@
     </Standard>
     <Standard code="11-12.WHST.1e">
       <Description><![CDATA[Write arguments focused on discipline-specific content. E) Provide a concluding statement or section that follows from or supports the argument presented.]]></Description>
+    </Standard>
+    <Standard code="11-12.WHST.2">
+      <Description><![CDATA[Write informative/explanatory texts, including the narration of historical events, scientific procedures/ experiments, or technical processes.]]></Description>
     </Standard>
     <Standard code="11-12.WHST.2a">
       <Description><![CDATA[Write informative/explanatory texts, including the narration of historical events, scientific procedures/ experiments, or technical processes. A) Introduce a topic and organize complex ideas, concepts, and information so that each new element builds on that which precedes it to create a unified whole; include formatting (e.g., headings), graphics (e.g., figures, tables), and multimedia when useful to aiding comprehension.]]></Description>
@@ -2329,6 +2362,9 @@
     <Standard code="11-12.WHST.9">
       <Description><![CDATA[Draw evidence from informational texts to support analysis, reflection, and research.]]></Description>
     </Standard>
+    <Standard code="3.L.1">
+      <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking.]]></Description>
+    </Standard>
     <Standard code="3.L.1a">
       <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. A) Explain the function of nouns, pronouns, verbs, adjectives, and adverbs in general and their functions in particular sentences.]]></Description>
     </Standard>
@@ -2356,6 +2392,9 @@
     <Standard code="3.L.1i">
       <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. I) Produce simple, compound, and complex sentences.]]></Description>
     </Standard>
+    <Standard code="3.L.2">
+      <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing.]]></Description>
+    </Standard>
     <Standard code="3.L.2a">
       <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. A) Capitalize appropriate words in titles.]]></Description>
     </Standard>
@@ -2376,6 +2415,9 @@
     </Standard>
     <Standard code="3.L.2g">
       <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. G) Consult reference materials, including beginning dictionaries, as needed to check and correct spellings.]]></Description>
+    </Standard>
+    <Standard code="3.L.3">
+      <Description><![CDATA[Use knowledge of language and its conventions when writing, speaking, reading, or listening.]]></Description>
     </Standard>
     <Standard code="3.L.3a">
       <Description><![CDATA[Use knowledge of language and its conventions when writing, speaking, reading, or listening. A) Choose words and phrases for effect.]]></Description>
@@ -2413,6 +2455,9 @@
     <Standard code="3.L.6">
       <Description><![CDATA[Acquire and use accurately grade-appropriate conversational, general academic, and domainspecific words and phrases, including those that signal spatial and temporal relationships (e.g., After dinner that night we went looking for them).]]></Description>
     </Standard>
+    <Standard code="3.RF.3">
+      <Description><![CDATA[Know and apply grade-level phonics and word analysis skills in decoding words.]]></Description>
+    </Standard>
     <Standard code="3.RF.3a">
       <Description><![CDATA[Know and apply grade-level phonics and word analysis skills in decoding words. A) Identify and know the meaning of the most common prefixes and derivational suffixes.]]></Description>
     </Standard>
@@ -2424,6 +2469,9 @@
     </Standard>
     <Standard code="3.RF.3d">
       <Description><![CDATA[Know and apply grade-level phonics and word analysis skills in decoding words. D) Read grade-appropriate irregularly spelled words.]]></Description>
+    </Standard>
+    <Standard code="3.RF.4">
+      <Description><![CDATA[Read with sufficient accuracy and fluency to support comprehension.]]></Description>
     </Standard>
     <Standard code="3.RF.4a">
       <Description><![CDATA[Read with sufficient accuracy and fluency to support comprehension. A) Read on-level text with purpose and understanding.]]></Description>
@@ -2491,6 +2539,9 @@
     <Standard code="3.RL.9">
       <Description><![CDATA[Compare and contrast the themes, settings, and plots of stories written by the same author about the same or similar characters (e.g., in books from a series).]]></Description>
     </Standard>
+    <Standard code="3.SL.1">
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly.]]></Description>
+    </Standard>
     <Standard code="3.SL.1a">
       <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or studied required material; explicitly draw on that preparation and other information known about the topic to explore ideas under discussion.]]></Description>
     </Standard>
@@ -2521,6 +2572,9 @@
     <Standard code="3.W.10">
       <Description><![CDATA[Write routinely over extended time frames (time for research, reflection, and revision) and shorter time frames (a single sitting or a day or two) for a range of discipline-specific tasks, purposes, and audiences.]]></Description>
     </Standard>
+    <Standard code="3.W.1">
+      <Description><![CDATA[Write opinion pieces on topics or texts, supporting a point of view with reasons.]]></Description>
+    </Standard>
     <Standard code="3.W.1a">
       <Description><![CDATA[Write opinion pieces on topics or texts, supporting a point of view with reasons. A) Introduce the topic or text they are writing about, state an opinion, and create an organizational structure that lists reasons.]]></Description>
     </Standard>
@@ -2533,6 +2587,9 @@
     <Standard code="3.W.1d">
       <Description><![CDATA[Write opinion pieces on topics or texts, supporting a point of view with reasons. D) Provide a concluding statement or section.]]></Description>
     </Standard>
+    <Standard code="3.W.2">
+      <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas and information clearly.]]></Description>
+    </Standard>
     <Standard code="3.W.2a">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas and information clearly. A) Introduce a topic and group related information together; include illustrations when useful to aiding comprehension.]]></Description>
     </Standard>
@@ -2544,6 +2601,9 @@
     </Standard>
     <Standard code="3.W.2d">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas and information clearly. D) Provide a concluding statement or section.]]></Description>
+    </Standard>
+    <Standard code="3.W.3">
+      <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, descriptive details, and clear event sequences.]]></Description>
     </Standard>
     <Standard code="3.W.3a">
       <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, descriptive details, and clear event sequences. A) Establish a situation and introduce a narrator and/or characters; organize an event sequence that unfolds naturally.]]></Description>
@@ -2572,6 +2632,9 @@
     <Standard code="3.W.8">
       <Description><![CDATA[Recall information from experiences or gather information from print and digital sources; take brief notes on sources and sort evidence into provided categories.]]></Description>
     </Standard>
+    <Standard code="4.L.1">
+      <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking.]]></Description>
+    </Standard>
     <Standard code="4.L.1a">
       <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. A) Use relative pronouns (who, whose, whom, which, that) and relative adverbs (where, when, why).]]></Description>
     </Standard>
@@ -2593,6 +2656,9 @@
     <Standard code="4.L.1g">
       <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. G) Correctly use frequently confused words (e.g., to, too, two; there, their).*]]></Description>
     </Standard>
+    <Standard code="4.L.2">
+      <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing.]]></Description>
+    </Standard>
     <Standard code="4.L.2a">
       <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. A) Use correct capitalization.]]></Description>
     </Standard>
@@ -2604,6 +2670,9 @@
     </Standard>
     <Standard code="4.L.2d">
       <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. D) Spell grade-appropriate words correctly, consulting references as needed.]]></Description>
+    </Standard>
+    <Standard code="4.L.3">
+      <Description><![CDATA[Use knowledge of language and its conventions when writing, speaking, reading, or listening.]]></Description>
     </Standard>
     <Standard code="4.L.3a">
       <Description><![CDATA[Use knowledge of language and its conventions when writing, speaking, reading, or listening. A) Choose words and phrases to convey ideas precisely.]]></Description>
@@ -2641,8 +2710,14 @@
     <Standard code="4.L.6">
       <Description><![CDATA[Acquire and use accurately grade-appropriate general academic and domain-specific words and phrases, including those that signal precise actions, emotions, or states of being (e.g., quizzed, whined, stammered) and that are basic to a particular topic (e.g., wildlife, conservation, and endangered when discussing animal preservation).]]></Description>
     </Standard>
+    <Standard code="4.RF.3">
+      <Description><![CDATA[Know and apply grade-level phonics and word analysis skills in decoding words.]]></Description>
+    </Standard>
     <Standard code="4.RF.3a">
       <Description><![CDATA[Know and apply grade-level phonics and word analysis skills in decoding words. A) Use combined knowledge of all letter-sound correspondences, syllabication patterns, and morphology (e.g., roots and affixes) to read accurately unfamiliar multisyllabic words in context and out of context.]]></Description>
+    </Standard>
+    <Standard code="4.RF.4">
+      <Description><![CDATA[Read with sufficient accuracy and fluency to support comprehension.]]></Description>
     </Standard>
     <Standard code="4.RF.4a">
       <Description><![CDATA[Read with sufficient accuracy and fluency to support comprehension. A) Read on-level text with purpose and understanding.]]></Description>
@@ -2710,6 +2785,9 @@
     <Standard code="4.RL.9">
       <Description><![CDATA[Compare and contrast the treatment of similar themes and topics (e.g., opposition of good and evil) and patterns of events (e.g., the quest) in stories, myths, and traditional literature from different cultures.]]></Description>
     </Standard>
+    <Standard code="4.SL.1">
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly.]]></Description>
+    </Standard>
     <Standard code="4.SL.1a">
       <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or studied required material; explicitly draw on that preparation and other information known about the topic to explore ideas under discussion.]]></Description>
     </Standard>
@@ -2740,6 +2818,9 @@
     <Standard code="4.W.10">
       <Description><![CDATA[Write routinely over extended time frames (time for research, reflection, and revision) and shorter time frames (a single sitting or a day or two) for a range of discipline-specific tasks, purposes, and audiences.]]></Description>
     </Standard>
+    <Standard code="4.W.1">
+      <Description><![CDATA[Write opinion pieces on topics or texts, supporting a point of view with reasons and information.]]></Description>
+    </Standard>
     <Standard code="4.W.1a">
       <Description><![CDATA[Write opinion pieces on topics or texts, supporting a point of view with reasons and information. A) Introduce a topic or text clearly, state an opinion, and create an organizational structure in which related ideas are grouped to support the writer’s purpose.]]></Description>
     </Standard>
@@ -2751,6 +2832,9 @@
     </Standard>
     <Standard code="4.W.1d">
       <Description><![CDATA[Write opinion pieces on topics or texts, supporting a point of view with reasons and information. D) Provide a concluding statement or section related to the opinion presented.]]></Description>
+    </Standard>
+    <Standard code="4.W.2">
+      <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas and information clearly.]]></Description>
     </Standard>
     <Standard code="4.W.2a">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas and information clearly. A) Introduce a topic clearly and group related information in paragraphs and sections; include formatting (e.g., headings), illustrations, and multimedia when useful to aiding comprehension.]]></Description>
@@ -2766,6 +2850,9 @@
     </Standard>
     <Standard code="4.W.2e">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas and information clearly. E) Provide a concluding statement or section related to the information or explanation presented.]]></Description>
+    </Standard>
+    <Standard code="4.W.3">
+      <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, descriptive details, and clear event sequences.]]></Description>
     </Standard>
     <Standard code="4.W.3a">
       <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, descriptive details, and clear event sequences. A) Orient the reader by establishing a situationand introducing a narrator and/or characters; organize an event sequence that unfolds naturally.]]></Description>
@@ -2806,6 +2893,9 @@
     <Standard code="4.W.9b">
       <Description><![CDATA[Draw evidence from literary or informational texts to support analysis, reflection, and research. B) Apply grade 4 Reading standards to informational texts (e.g., “Explain how an author uses reasons and evidence to support particular points in a text”).]]></Description>
     </Standard>
+    <Standard code="5.L.1">
+      <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking.]]></Description>
+    </Standard>
     <Standard code="5.L.1a">
       <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. A) Explain the function of conjunctions, prepositions, and interjections in general and their function in particular sentences.]]></Description>
     </Standard>
@@ -2821,6 +2911,9 @@
     <Standard code="5.L.1e">
       <Description><![CDATA[Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. E) Use correlative conjunctions (e.g., either/or, neither/nor).]]></Description>
     </Standard>
+    <Standard code="5.L.2">
+      <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing.]]></Description>
+    </Standard>
     <Standard code="5.L.2a">
       <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. A) Use punctuation to separate items in a series.*]]></Description>
     </Standard>
@@ -2835,6 +2928,9 @@
     </Standard>
     <Standard code="5.L.2e">
       <Description><![CDATA[Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. E) Spell grade-appropriate words correctly, consulting references as needed.]]></Description>
+    </Standard>
+    <Standard code="5.L.3">
+      <Description><![CDATA[Use knowledge of language and its conventions when writing, speaking, reading, or listening.]]></Description>
     </Standard>
     <Standard code="5.L.3a">
       <Description><![CDATA[Use knowledge of language and its conventions when writing, speaking, reading, or listening. A) Expand, combine, and reduce sentences for meaning, reader/listener interest, and style.]]></Description>
@@ -2869,8 +2965,14 @@
     <Standard code="5.L.6">
       <Description><![CDATA[Acquire and use accurately grade-appropriate general academic and domain-specific words and phrases, including those that signal contrast, addition, and other logical relationships (e.g., however, although, nevertheless, similarly, moreover, in addition).]]></Description>
     </Standard>
+    <Standard code="5.RF.1">
+      <Description><![CDATA[Know and apply grade-level phonics and word analysis skills in decoding words.]]></Description>
+    </Standard>
     <Standard code="5.RF.1a">
       <Description><![CDATA[Know and apply grade-level phonics and word analysis skills in decoding words. A) Use combined knowledge of all letter-sound correspondences, syllabication patterns, and morphology (e.g., roots and affixes) to read accurately unfamiliar multisyllabic words in context and out of context.]]></Description>
+    </Standard>
+    <Standard code="5.RF.2">
+      <Description><![CDATA[Read with sufficient accuracy and fluency to support comprehension.]]></Description>
     </Standard>
     <Standard code="5.RF.2a">
       <Description><![CDATA[Read with sufficient accuracy and fluency to support comprehension. A) Read grade-level text with purpose and understanding.]]></Description>
@@ -2968,6 +3070,9 @@
     <Standard code="5.W.10">
       <Description><![CDATA[Write routinely over extended time frames (time for research, reflection, and revision) and shorter time frames (a single sitting or a day or two) for a range of discipline-specific tasks, purposes, and audiences.]]></Description>
     </Standard>
+    <Standard code="5.W.1">
+      <Description><![CDATA[Write opinion pieces on topics or texts, supporting a point of view with reasons and information.]]></Description>
+    </Standard>
     <Standard code="5.W.1a">
       <Description><![CDATA[Write opinion pieces on topics or texts, supporting a point of view with reasons and information. A) Introduce a topic or text clearly, state an opinion, and create an organizational structure in which ideas are logically grouped to support the writer’s purpose.]]></Description>
     </Standard>
@@ -2979,6 +3084,9 @@
     </Standard>
     <Standard code="5.W.1d">
       <Description><![CDATA[Write opinion pieces on topics or texts, supporting a point of view with reasons and information. D) Provide a concluding statement or section related to the opinion presented.]]></Description>
+    </Standard>
+    <Standard code="5.W.2">
+      <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas and information clearly.]]></Description>
     </Standard>
     <Standard code="5.W.2a">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas and information clearly. A) Introduce a topic clearly, provide a general observation and focus, and group related information logically; include formatting (e.g., headings), illustrations, and multimedia when useful to aiding comprehension.]]></Description>
@@ -2994,6 +3102,9 @@
     </Standard>
     <Standard code="5.W.2e">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas and information clearly. E) Provide a concluding statement or section related to the information or explanation presented.]]></Description>
+    </Standard>
+    <Standard code="5.W.3">
+      <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, descriptive details, and clear event sequences.]]></Description>
     </Standard>
     <Standard code="5.W.3a">
       <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, descriptive details, and clear event sequences. A) Orient the reader by establishing a situation and introducing a narrator and/or characters; organize an event sequence that unfolds naturally.]]></Description>
@@ -3289,6 +3400,9 @@
     <Standard code="6.SL.6">
       <Description><![CDATA[Adapt speech to a variety of contexts and tasks, demonstrating command of formal English when indicated or appropriate. (See grade 6 Language standards 1 and 3 on page 52 for specific expectations.)]]></Description>
     </Standard>
+    <Standard code="6.W.1">
+      <Description><![CDATA[Write arguments to support claims with clear reasons and relevant evidence.]]></Description>
+    </Standard>
     <Standard code="6.W.1a">
       <Description><![CDATA[Write arguments to support claims with clear reasons and relevant evidence. A) Introduce claim(s) and organize the reasons and evidence clearly.]]></Description>
     </Standard>
@@ -3303,6 +3417,9 @@
     </Standard>
     <Standard code="6.W.1e">
       <Description><![CDATA[Write arguments to support claims with clear reasons and relevant evidence. E) Provide a concluding statement or section that follows from the argument presented.]]></Description>
+    </Standard>
+    <Standard code="6.W.2">
+      <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas, concepts, and information through the selection, organization, and analysis of relevant content.]]></Description>
     </Standard>
     <Standard code="6.W.2a">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas, concepts, and information through the selection, organization, and analysis of relevant content. A) Introduce a topic; organize ideas, concepts, and information, using strategies such as definition, classification, comparison/contrast, and cause/effect; include formatting (e.g., headings), graphics (e.g., charts, tables), and multimedia when useful to aiding comprehension.]]></Description>
@@ -3321,6 +3438,9 @@
     </Standard>
     <Standard code="6.W.2f">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas, concepts, and information through the selection, organization, and analysis of relevant content. F) Provide a concluding statement or section that follows from the information or explanation presented.]]></Description>
+    </Standard>
+    <Standard code="6.W.3">
+      <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, relevant descriptive details, and well-structured event sequences.]]></Description>
     </Standard>
     <Standard code="6.W.3a">
       <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, relevant descriptive details, and well-structured event sequences. A) Engage and orient the reader by establishing a context and introducing a narrator and/or characters; organize an event sequence that unfolds naturally and logically.]]></Description>
@@ -3493,6 +3613,9 @@
     <Standard code="7.W.10">
       <Description><![CDATA[Write routinely over extended time frames (time for research, reflection, and revision) and shorter time frames (a single sitting or a day or two) for a range of discipline-specific tasks, purposes, and audiences.]]></Description>
     </Standard>
+    <Standard code="7.W.1">
+      <Description><![CDATA[Write arguments to support claims with clear reasons and relevant evidence.]]></Description>
+    </Standard>
     <Standard code="7.W.1a">
       <Description><![CDATA[Write arguments to support claims with clear reasons and relevant evidence. A) Introduce claim(s), acknowledge alternate or opposing claims, and organize the reasons and evidence logically.]]></Description>
     </Standard>
@@ -3507,6 +3630,9 @@
     </Standard>
     <Standard code="7.W.1e">
       <Description><![CDATA[Write arguments to support claims with clear reasons and relevant evidence. E) Provide a concluding statement or section that follows from and supports the argument presented.]]></Description>
+    </Standard>
+    <Standard code="7.W.2">
+      <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas, concepts, and information through the selection, organization, and analysis of relevant content.]]></Description>
     </Standard>
     <Standard code="7.W.2a">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas, concepts, and information through the selection, organization, and analysis of relevant content. A) Introduce a topic clearly, previewing what is to follow; organize ideas, concepts, and information, using strategies such as definition, classification, comparison/contrast, and cause/ effect; include formatting (e.g., headings), graphics (e.g., charts, tables), and multimedia when useful to aiding comprehension.]]></Description>
@@ -3525,6 +3651,9 @@
     </Standard>
     <Standard code="7.W.2f">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas, concepts, and information through the selection, organization, and analysis of relevant content. F) Provide a concluding statement or section that follows from and supports the information or explanation presented.]]></Description>
+    </Standard>
+    <Standard code="7.W.3">
+      <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, relevant descriptive details, and well-structured event sequences.]]></Description>
     </Standard>
     <Standard code="7.W.3a">
       <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, relevant descriptive details, and well-structured event sequences. A) Engage and orient the reader by establishing a context and point of view and introducing a narrator and/or characters; organize an event sequence that unfolds naturally and logically.]]></Description>
@@ -3555,6 +3684,9 @@
     </Standard>
     <Standard code="7.W.8">
       <Description><![CDATA[Gather relevant information from multiple print and digital sources, using search terms effectively; assess the credibility and accuracy of each source; and quote or paraphrase the data and conclusions of others while avoiding plagiarism and following a standard format for citation.]]></Description>
+    </Standard>
+    <Standard code="7.W.9">
+      <Description><![CDATA[Draw evidence from literary or informational texts to support analysis, reflection, and research.]]></Description>
     </Standard>
     <Standard code="7.W.9a">
       <Description><![CDATA[Draw evidence from literary or informational texts to support analysis, reflection, and research. A) Apply grade 7 Reading standards to literature (e.g., “Compare and contrast a fictional portrayal of a time, place, or character and a historical account of the same period as a means of understanding how authors of fiction use or alter history”).]]></Description>
@@ -3700,6 +3832,9 @@
     <Standard code="8.W.10">
       <Description><![CDATA[Write routinely over extended time frames (time for research, reflection, and revision) and shorter time frames (a single sitting or a day or two) for a range of discipline-specific tasks, purposes, and audiences.]]></Description>
     </Standard>
+    <Standard code="8.W.1">
+      <Description><![CDATA[Write arguments to support claims with clear reasons and relevant evidence.]]></Description>
+    </Standard>
     <Standard code="8.W.1a">
       <Description><![CDATA[Write arguments to support claims with clear reasons and relevant evidence. A) Introduce claim(s), acknowledge and distinguish the claim(s) from alternate or opposing claims, and organize the reasons and evidence logically.]]></Description>
     </Standard>
@@ -3714,6 +3849,9 @@
     </Standard>
     <Standard code="8.W.1e">
       <Description><![CDATA[Write arguments to support claims with clear reasons and relevant evidence. E) Provide a concluding statement or section that follows from and supports the argument presented.]]></Description>
+    </Standard>
+    <Standard code="8.W.2">
+      <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas, concepts, and information through the selection, organization, and analysis of relevant content.]]></Description>
     </Standard>
     <Standard code="8.W.2a">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas, concepts, and information through the selection, organization, and analysis of relevant content. A) Introduce a topic clearly, previewing what is to follow; organize ideas, concepts, and information into broader categories; include formatting (e.g., headings), graphics (e.g., charts, tables), and multimedia when useful to aiding comprehension.]]></Description>
@@ -3732,6 +3870,9 @@
     </Standard>
     <Standard code="8.W.2f">
       <Description><![CDATA[Write informative/explanatory texts to examine a topic and convey ideas, concepts, and information through the selection, organization, and analysis of relevant content. F) Provide a concluding statement or section that follows from and supports the information or explanation presented.]]></Description>
+    </Standard>
+    <Standard code="8.W.3">
+      <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, relevant descriptive details, and well-structured event sequences.]]></Description>
     </Standard>
     <Standard code="8.W.3a">
       <Description><![CDATA[Write narratives to develop real or imagined experiences or events using effective technique, relevant descriptive details, and well-structured event sequences. A) Engage and orient the reader by establishing a context and point of view and introducing a narrator and/or characters; organize an event sequence that unfolds naturally and logically.]]></Description>

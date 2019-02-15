@@ -46,7 +46,7 @@ As defined in [Manual Data Modifications](Runbook.ManualDataModifications.md), t
 mysql> use warehouse;
 mysql> SELECT value FROM setting WHERE name = 'AUDIT_TRIGGER_ENABLE';
 
-# to turn audditing off
+# to turn auditing off
 mysql> UPDATE setting SET value = 'FALSE' WHERE name = 'AUDIT_TRIGGER_ENABLE';
 ```
 4. Find and copy one of the queries that matches your rules for the delete.
@@ -86,7 +86,7 @@ Continue with the steps in the SQL file.
 10. Re-start Exam Processors.
 
 ## Purging exams in the warehouse
-> **NOTE** Directly modifying the database carries high risk. This is not a standard operation and should be pursued only in extraordinary cicrumstances.
+> **NOTE** Directly modifying the database carries high risk. This is not a standard operation and should be pursued only in extraordinary circumstances.
 
 Purging exams includes:
 * purging exams from the data mart(s).
@@ -184,3 +184,40 @@ DELETE e FROM exam e WHERE e.deleted = 1;
 ```sql 
 SELECT count(*) FROM exam;
 ```
+
+## Delete School Year
+There was a situation where test data was loaded into a system for a previous school year (2018) and there was a need
+to purge that school year from the system. The instructions above were used to delete and purge the exams, but there
+are other data in the system that reference the school year, specifically assessments, accommodations, and student groups.
+
+1. Delete assessments:
+```sql
+DELETE iot FROM item_other_target iot JOIN item ON iot.item_id = item.id JOIN asmt ON item.asmt_id = asmt.id WHERE asmt.school_year = 2018;
+ DELETE iccs FROM item_common_core_standard iccs JOIN item ON iccs.item_id = item.id JOIN asmt ON item.asmt_id = asmt.id WHERE asmt.school_year = 2018; 
+DELETE item FROM item JOIN asmt ON item.asmt_id = asmt.id WHERE asmt.school_year = 2018; 
+DELETE assc FROM asmt_score assc JOIN asmt ON assc.asmt_id = asmt.id WHERE asmt.school_year = 2018;
+ DELETE ate FROM asmt_target_exclusion ate JOIN asmt ON ate.asmt_id = asmt.id WHERE asmt.school_year = 2018; 
+DELETE FROM asmt WHERE asmt.school_year = 2018;
+```
+2. Delete accommodation translations:
+```sql
+DELETE FROM accommodation_translation WHERE school_year = 2018;
+```
+3. Delete student groups:
+```sql
+DELETE usg FROM user_student_group usg JOIN student_group sg ON usg.student_group_id = sg.id WHERE sg.school_year = 2018;
+DELETE sgm FROM student_group_membership sgm JOIN student_group sg ON sgm.student_group_id = sg.id WHERE sg.school_year = 2018;
+DELETE FROM student_group WHERE school_year = 2018;
+```
+4. Delete the school year:
+```sql
+DELETE FROM school_year WHERE year = 2018;
+```
+5. Trigger migrations:
+```sql
+INSERT INTO import(status, content, contentType, digest) VALUES
+  (1, 5, 'remove 2018 groups', 'remove 2018 groups'),
+  (1, 2, 'remove 2018 assessments', 'remove 2018 assessments'),
+  (1, 3, 'remove school year 2018', 'remove school year 2018');
+```
+6. Because a school year was removed, certain reporting services may need to be bounced: reporting-webapp, reporting-service.

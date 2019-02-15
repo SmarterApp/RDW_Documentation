@@ -1,0 +1,46 @@
+title Import Auth (websequencediagrams)
+
+participant client
+participant import
+participant task
+participant perm
+participant ART
+participant SSO
+participant processor
+
+opt daily sync
+task->+SSO: request access-token (client, ART user)
+SSO->-task: access-token
+task->+ART: GET organizations (access-token, state)
+ART->-task: organizations
+task->+SSO: request access-token (client, user)
+SSO->-task: access-token
+task-->import: organizations
+note right of import:
+The task service POSTs the organizations
+like any other import client and the import
+service goes through the same process shown
+below. To simplify just know that import now
+has access to the organizations.
+end note
+end
+
+client->+SSO: request access-token (client, user)
+SSO->-client: access-token
+
+client->+import: POST data (access-token)
+opt cached using token expires-in
+import->+SSO: GET token-info (access-token)
+SSO->-import: token-info
+end
+opt cached on startup
+import->+perm: GET permissions-by-role
+perm->-import: permissions-by-role
+end
+import->import: convert tenancy-chain to \nroles and permissions \nfiltered by known orgs
+alt not authorized
+import->client: authz error
+else authorized (ASMTDATALOAD, GROUP_WRITE for client/state)
+import-->processor: submit import
+import->-client: import resource
+end

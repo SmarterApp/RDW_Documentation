@@ -392,9 +392,7 @@ All cluster deployment and configuration is stored in version control, so nothin
     kubectl delete -f reporting-service.yml
     ```
 * [ ] Upgrade cluster. If the version of the cluster is old (< 1.7 at the time of this writing), consider upgrading it.
-    ```bash
-    kops upgrade cluster --name awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
-    ```
+See [Deployment Checklist](./Deployment.AWS.md#upgrading_the_cluster) for details.
 * [ ] Increase cluster size. If the cluster is just barely big enough now, you'll need to add a node.
     * Not needed for production; might want to revisit auto-scaler configuration
 * [ ] Apply schema changes. If the warehouse and reporting databases are separate it will be more efficient to run the

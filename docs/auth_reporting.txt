@@ -1,0 +1,45 @@
+title Reporting Auth (websequencediagrams)\n(SP-initiated SSO, POST/Artifact)
+
+participant browser
+participant webapp
+participant task
+participant perm
+participant ART
+participant SSO
+
+opt daily sync
+task->+SSO: request access-token (client, ART user)
+SSO->-task: access-token
+task->+ART: GET organizations (access-token, state)
+ART->-task: organizations
+task->+SSO: request access-token (client, user)
+SSO->-task: access-token
+task-->webapp: organizations
+note right of webapp:
+The task service POSTs the organizations
+like any other import client and the import
+service goes through the same process shown
+elsewhere. To simplify just know that webapp
+now has access to the organizations.
+end note
+end
+
+browser->+webapp: landing page
+opt jsessionid missing or invalid
+webapp->browser: redirect to SSO
+browser->+SSO: login
+SSO->-browser: redirect to app (SAML)
+browser->webapp: saml/SSO (SAML)
+webapp->webapp: create session
+end
+opt cached on startup
+webapp->+perm: GET permissions-by-role
+perm->-webapp: permissions-by-role
+end
+webapp->webapp: convert tenancy-chain to \nroles and permissions \n for known organizations
+webapp->-browser: home page
+
+browser->+webapp: logout
+webapp->+SSO: logout
+SSO->-webapp:
+webapp->-browser: landing page

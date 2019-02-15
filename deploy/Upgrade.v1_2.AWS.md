@@ -249,36 +249,8 @@ All cluster deployment and configuration is stored in version control, so nothin
 
 * [ ] Gentle reminder to start `screen` on the ops machine so steps may be run in parallel.
 * [ ] Upgrade cluster. If the version of the cluster is old (< 1.8 at the time of this writing), consider upgrading it.
-    * Verify version:
-    ```bash
-    $ kops version
-    Version 1.9.0 (git-6741158)
-    $ kops export kubecfg awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store
-    $ kubectl version
-    Client Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.2", GitCommit:"81753b10df112992bf51bbc2c2f85208aad78335", GitTreeState:"clean", BuildDate:"2018-05-12T04:12:12Z", GoVersion:"go1.9.6", Compiler:"gc", Platform:"darwin/amd64"}
-    Server Version: version.Info{Major:"1", Minor:"6", GitVersion:"v1.6.13", GitCommit:"14ea65f53cdae4a5657cf38cfc8d7349b75b5512", GitTreeState:"clean", BuildDate:"2017-11-22T20:19:06Z", GoVersion:"go1.7.6", Compiler:"gc", Platform:"linux/amd64"}
-    ```
-    Client utils are up-to-date. If they aren't upgrade them, good place to start: https://github.com/kubernetes/kops.
-    Server is (very) old (1.6.13), let's upgrade the cluster.
-    * Capture cluster configuration for posterity (and possible error recovery).
-    ```bash
-    $ kops get cluster -o yaml > cluster.v1_1.yml
-    ```
-    * Upgrade cluster. Note distinction between `upgrade` and `update` in these commands. You can (and probably should) submit the commands without `--yes` first to see what each will do.
-    ```bash
-    $ kops upgrade cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
-    ITEM                             PROPERTY           OLD                                                     NEW
-    Cluster                          KubernetesVersion  1.6.13                                                  1.9.6
-    InstanceGroup/master-us-west-2a  Image              kope.io/k8s-1.6-debian-jessie-amd64-hvm-ebs-2018-01-14  kope.io/k8s-1.9-debian-jessie-amd64-hvm-ebs-2018-03-11
-    InstanceGroup/nodes              Image              kope.io/k8s-1.6-debian-jessie-amd64-hvm-ebs-2018-01-14  kope.io/k8s-1.9-debian-jessie-amd64-hvm-ebs-2018-03-11
-
-    $ kops update cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
-    (lots of output)
-
-    $ kops rolling-update cluster awsopus.sbac.org --state s3://kops-awsopus-sbac-org-state-store --yes
-    (lots of output about nodes/pods being cordoned, evicted, drained)
-    ```
-    The last step (rolling update) can take a long time (perhaps an hour or more). This is a good opportunity to jump down a couple steps and start the schema migration.
+See [Deployment Checklist](./Deployment.AWS.md#upgrading_the_cluster) for details. Upgrading can take a long time
+(perhaps an hour or more). This is a good opportunity to jump down a couple steps and start the schema migration.
 * [ ] Upgrade cluster system services
     * Get latest heapster, tweak and apply
     ```bash

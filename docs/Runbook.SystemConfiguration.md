@@ -14,6 +14,7 @@
     * [Student Groups](#student-groups)
     * [Target Exclusions](#target-exclusions)
     * [Transfer Enabled](#transfer-enabled)
+    * [Language Codes](#language-codes)
     * [English Learners](#english-learners)
     * [Ethnicity](#ethnicity)
 * [System Configuration Changes for a New School Year](#new-school-year)
@@ -43,6 +44,7 @@ mysql> INSERT INTO import(status, content, contentType, digest) VALUES (1, 3, 'a
 The embargo feature requires the current school year be set. In the common configuration file (usually `application.yml`) set `reporting.school_year` to the appropriate value and restart the migration and reporting applications.
 
 #### Subjects
+
 The subject XML defines a subject's attributes for the RDW system. It is the tenant's responsibility to define a subject XML based on the schema, [RDW_Subject.xsd](https://github.com/SmarterApp/RDW_Common/blob/master/model/src/main/resources/RDW_Subject.xsd). SmarterBalanced's [Math](../deploy/Math_subject.xml) and [ELA](../deploy/ELA_subject.xml) subjects XML may be found in the `deploy` folder of this project. Subjects must be loaded into the system before assessment packages. The system allows for subject updates but only for the data attributes that have not been used by the system at the time of the update.
 We have also proved two additional sample subject definition XMLs as samples/templates for additional subjects: [Sample Subject](../deploy/new_subject_config.xml) and [Mini Subject.](../deploy/mini_subject_config.xml)
 Loading the packages is an IT/DevOps function and requires data load permissions:
@@ -133,6 +135,19 @@ reporting:
 ```
 Any time a configuration option is changed, the affected services must be restarted. For the transfer enabled flag, restart the `report-processor` instances.
 
+#### Language Codes
+
+The system is configured with the known language codes. These are used to validate the student primary language if specified in the TRT test results. And to allow filtering and aggregation in reports.
+To change the list of valid language codes, modify the `warehouse.language` table and trigger a `CODES` migration, for example:
+```sql
+USE warehouse;
+-- change valid languages for tenant
+INSERT INTO language (id, code, altcode, display_order, name) VALUES (319, 'non', NULL, 99, 'Norse');
+DELETE FROM language WHERE code = 'mkh';
+-- trigger CODES migration:
+INSERT INTO import (status, content, contentType, digest) VALUES (1, 3, 'update language', REPLACE(UUID(), '-', ''));
+```
+
 #### English Learners
 
 There are different systems for categorizing english learners. The system supports two of them, Limited English Proficiency (LEP) and English Language Acquisition Status (ELAS). Only one should be used, the default is ELAS; this should correspond to the other systems in the testing ecosystem, especially the test delivery system. To switch to use LEP, IT/DevOps may change the following property in the `application.yml` configuration file:
@@ -150,8 +165,10 @@ Although there are federal standards for student ethnicity, some states have dif
 Modifying the database is a [manual data modification](./Runbook.ManualDataModifications.md). Add or delete entries in the ethnicity table and then trigger a migration:
 ```sql
 USE warehouse;
+-- change ethnicity table
 DELETE FROM ethnicity WHERE code = 'Filipino';
-INSERT INTO import (status, content, contentType, digest) VALUES (1, 3, 'update ethnicity', 'update ethnicity');
+-- trigger CODES migration:
+INSERT INTO import (status, content, contentType, digest) VALUES (1, 3, 'update ethnicity', REPLACE(UUID(), '-', ''));
 ```
 
 Updating the language file is detailed in [language support](./Runbook.LanguageSupport.md). The section that needs to be updated (for this example, remove the `"Filipino"` line):
@@ -188,7 +205,10 @@ Add the new year and set the current school year as [described above](#school-ye
 3. Load new assessment packages.
 Assessment packages are updated every year so the new ones must be loaded as [described above](#assessment-packages).
 
-4. Student groups.
+4. Load new accessibility file.
+Accommodation codes and translations are extracted from the accessibility file. A new one must be loaded every year as [described above](#accommodations).
+
+5. Student groups.
 This depends on policy, but it may be desirable to disable/remove student groups from the previous school year.
 
 Student groups are associated with a school and a school year. They have an `active` flag and the system supports soft deletes. These features can be used to manipulate the groups (please refer to [Manual Data Modifications](Runbook.ManualDataModifications.md) for general data modification instructions). For example, to delete student groups from a particular district for the last school year, do something like:

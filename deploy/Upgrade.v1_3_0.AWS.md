@@ -72,6 +72,9 @@ The goal of this step is to make changes to everything that doesn't directly aff
         git commit -am "Changes for v1.3.0"
         git push 
         ```
+* [ ] There were no configuration changes for v1.3.0.
+    * However, there was one potential configuration hotfix that modified the SQL for generating district exports.
+    If this was applied (`sql.export.exams` in `rdw-reporting-report-processor.yml`) it should be reverted now.
 * [ ] (Optional) Run data validation scripts. These scripts compare data between the warehouse and the data marts.
     * You'll need the version of RDW_Schema that was used to install the *current* installation; in this case it is
     probably the tagged 1.2.1 commit:

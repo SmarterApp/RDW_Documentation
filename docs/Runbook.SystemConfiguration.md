@@ -14,9 +14,11 @@
     * [Student Groups](#student-groups)
     * [Target Exclusions](#target-exclusions)
     * [Transfer Enabled](#transfer-enabled)
+    * [Student Fields](#student-fields)
     * [Language Codes](#language-codes)
     * [English Learners](#english-learners)
     * [Ethnicity](#ethnicity)
+    * [Military Connected](#military-connected)
 * [System Configuration Changes for a New School Year](#new-school-year)
 
 <a name="system-configuration"></a>
@@ -135,6 +137,29 @@ reporting:
 ```
 Any time a configuration option is changed, the affected services must be restarted. For the transfer enabled flag, restart the `report-processor` instances.
 
+
+#### Student Fields
+
+The system controls visibility into student demographic data for teachers. By default all student fields are available to all users. To change that behavior, modify properties in `rdw-reporting-service.yml`. Fields can be completely disabled, enabled for administrators but not teachers or enabled for all users including teachers.
+
+This example configuration is similar to California's policy: they use ELAS instead of LEP, nobody is allowed to see the students' economic disadvantage, and their teachers are restricted to just four fields (ELAS, migrant status, language, race/ethnicity):
+```yml
+reporting:
+  student-fields:
+    EconomicDisadvantage: disabled
+    LimitedEnglighProficiences: disabled
+    EnglishLanguageAcquisitionStatus: enabled
+    MigrantStatus: enabled
+    PrimaryLanguage: enabled
+    Ethnicity: enabled
+    Gender: admin
+    IndividualEducationPlan: admin
+    MilitaryStudentIdentifier: admin
+    Section504: admin
+```
+Any time a configuration option is modified, the affected services must be restarted. For this setting, restart the `reporting-webapp` instances.
+
+
 #### Language Codes
 
 The system is configured with the known language codes. These are used to validate the student primary language if specified in the TRT test results. And to allow filtering and aggregation in reports.
@@ -188,6 +213,27 @@ Updating the language file is detailed in [language support](./Runbook.LanguageS
       "White": "White"
     },
 ```
+
+<a name="military-conntected"></a>
+#### Military Student Connected Identifier
+
+There are ESSA guidelines for the military student connected identifier. However some states, California in particular, have different requirements. To change the list of these codes in the system, the allowed values in the database must be set. It is expected the allowed values will be either the ESSA set, a simplified yes/no set, or the superset of both (if a tenant has changed adherence policy over the years). NOTE: the id/code values must not be changed if they are already in use. In that situation, new values may be added but existing used values should remain unchanged.
+
+Modifying the database is a [manual data modification](./Runbook.ManualDataModifications.md). Add or delete entries in the military_connected table and then trigger a migration:
+```sql
+USE warehouse;
+-- query for use of the field
+SELECT military_connected_id, count(*) FROM exam GROUP BY military_connected_id;
+
+-- ESSA values
+INSERT INTO military_connected (id, code) VALUES (1, 'NotMilitaryConnected'), (2, 'ActiveDuty'), (3, 'NationalGuardOrReserve');
+-- CA simplified values
+INSERT INTO military_connected (id, code) VALUES (4, 'No'), (5, 'Yes');
+
+-- trigger CODES migration:
+INSERT INTO import (status, content, contentType, digest) VALUES (1, 3, 'update military connected codes', REPLACE(UUID(), '-', ''));
+```
+
 
 <a name="new-school-year"></a>
 ### System Configuration Changes for a New School Year

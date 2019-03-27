@@ -147,7 +147,7 @@ This example configuration is similar to California's policy: they use ELAS inst
 reporting:
   student-fields:
     EconomicDisadvantage: disabled
-    LimitedEnglishProficiences: disabled
+    LimitedEnglishProficiency: disabled
     EnglishLanguageAcquisitionStatus: enabled
     MigrantStatus: enabled
     PrimaryLanguage: enabled

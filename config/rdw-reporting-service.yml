@@ -51,7 +51,7 @@ cloud:
 #    Ethnicity: enabled
 #    Gender: enabled
 #    IndividualEducationPlan: enabled
-#    LimitedEnglishProficiencies: enabled
+#    LimitedEnglishProficiency: enabled
 #    MigrantStatus: enabled
 #    MilitaryStudentIdentifier: enabled
 #    PrimaryLanguage: enabled

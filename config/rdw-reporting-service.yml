@@ -35,14 +35,27 @@ cloud:
 
 # Common settings. Normally set in application.yml.
 #reporting:
-  # english-learners should be lep or elas
-#  english-learners:
-#    - elas
-
 #  school-year: 2018
 #  state:
 #    code: CA
 #    name: California
+
+  # By default the system enables all the student fields for all users.
+  # Setting these properties controls which fields will be available.
+  # enabled - all users can see the field, default
+  # admin - only admins (non-teachers) can see the field; appropriate for sensitive data fields
+  # disabled - no users can see the field; intended for fields where source data is not expected
+#  student-fields:
+#    EconomicDisadvantage: enabled
+#    EnglishLanguageAcquisitionStatus: enabled
+#    Ethnicity: enabled
+#    Gender: enabled
+#    IndividualEducationPlan: enabled
+#    LimitedEnglishProficiencies: enabled
+#    MigrantStatus: enabled
+#    MilitaryStudentIdentifier: enabled
+#    PrimaryLanguage: enabled
+#    Section504: enabled
 
   # By default the system does not allow users to see test results from institutions outside their
   # permissions. Setting this property true allows users to see all test results for students

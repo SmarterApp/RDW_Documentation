@@ -69,6 +69,11 @@ reporting:
   # Setting this to 0 means it will always be shown (even with a single student).
 #    min-number-of-students: 0
 
+  # The percentile feature displays percentiles derived from normative data so teachers can better
+  # evaluate the performance of their students. Because this requires additional configuration data
+  # that may not be available to a tenant, this feature is disabled by default.
+#    percentile-display-enabled: false
+
   # By default the system does not allow users to see test results from institutions outside their
   # permissions. Setting this property true allows users to see all test results for students
   # regardless of where the test was administered, if they have PII for the student.

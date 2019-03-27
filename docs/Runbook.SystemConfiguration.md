@@ -14,6 +14,7 @@
     * [Student Groups](#student-groups)
     * [Target Exclusions](#target-exclusions)
     * [Transfer Enabled](#transfer-enabled)
+    * [Student Fields](#student-fields)
     * [Language Codes](#language-codes)
     * [English Learners](#english-learners)
     * [Ethnicity](#ethnicity)

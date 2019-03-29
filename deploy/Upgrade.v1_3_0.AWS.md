@@ -255,3 +255,12 @@ log for the migrate-reporting and migrate-olap service), you may re-run the vali
 
 ### Smoke Test
 Smoke 'em if ya got 'em.         
+
+
+### Hotfixes
+
+#### Upgrade v1.3.1
+
+This upgrade contains a hotfix for EBSR answer keys. The upgrade process is simple:
+* [ ] Edit reporting-service.yml and change image to `smarterbalanced/rdw-reporting-service:1.3.1-RELEASE`
+* [ ] Perform a rolling update of that service `kubectl apply -f reporting-service.yml`

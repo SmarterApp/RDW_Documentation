@@ -261,6 +261,17 @@ Smoke 'em if ya got 'em.
 
 #### Upgrade v1.3.1
 
-This upgrade contains a hotfix for EBSR answer keys. The upgrade process is simple:
-* [ ] Edit reporting-service.yml and change image to `smarterbalanced/rdw-reporting-service:1.3.1-RELEASE`
+This upgrade (reporting) contains a hotfix for EBSR answer keys. The upgrade process is simple and requires no downtime:
+* [ ] Edit `reporting-service.yml` and change image to `smarterbalanced/rdw-reporting-service:1.3.1-RELEASE`
 * [ ] Perform a rolling update of that service `kubectl apply -f reporting-service.yml`
+
+This upgrade (ingest) contains a bug fix for group migration after a large group file upload. The upgrade process is simple and requires no downtime:
+* [ ] Edit `migrate-olap-service.yml` and `migrate-reporting-service.yml` and change image versions to `1.3.1-RELEASE`
+* [ ] Perform a rolling update of those services. It is slightly more cautious to disable migration first:
+```
+# (Optional) Disable migrate reporting
+kubectl exec -it migrate-reporting-deployment-[randomization] -- curl -X POST http://localhost:8008/migrate/pause
+# Rolling update of services
+kubectl apply -f migrate-olap-service.yml
+kubectl apply -f migrate-reporting-service.yml
+```

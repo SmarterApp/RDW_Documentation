@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Subject code="ELA"
-         name="ELA">
+<Subject code="ELA" name="ELA">
   <Messages>
-    <Message key="standard-description"><![CDATA[This column reflects the Common Core State Standard(s) associated with a test item. Test items may be associated with more than one standard.  For example, a question that asks students to evaluate research sources may assess both reading and research skills.  For more information, see the <a href=\"https://portal.smarterbalanced.org/library/en/english-language-artsliteracy-content-specifications.pdf\" target=\"_blank\">English Language Arts Content Specifications</a>.]]></Message>
+    <Message key="standard-description"><![CDATA[This column reflects the Common Core State Standard(s) associated with a test item. Test items may be associated with more than one standard.  For example, a question that asks students to evaluate research sources may assess both reading and research skills.  For more information, see the <a href="https://portal.smarterbalanced.org/library/en/english-language-artsliteracy-content-specifications.pdf" target="_blank">English Language Arts Content Specifications</a>.]]></Message>
     <Message key="iab.performance-info"><![CDATA[Student scores on each Interim Assessment Block are assigned to one of three reporting categories (Below Standard, Near Standard, Above Standard). The standard is based on the minimum scale score for the 'Met Standard' achievement level on the Interim Comprehensive and summative assessments (the score that separates Levels 2 and 3). See the Interpretive Guide for more information on how placement into the reporting categories is determined.]]></Message>
     <Message key="ica.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of four achievement levels (Standard Not Met, Standard Nearly Met, Standard Met, and Standard Exceeded) based on the scale score.]]></Message>
     <Message key="sum.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of four achievement levels (Standard Not Met, Standard Nearly Met, Standard Met, and Standard Exceeded) based on the scale score.]]></Message>
   </Messages>
   <AssessmentTypes>
     <AssessmentType code="ica" name="ICA" longName="Interim Comprehensive Assessment">
-      <PerformanceLevels standardCutoff="3">
-        <PerformanceLevel level="1" name="Did Not Meet Standard" shortName="Did Not Meet" suffix="Standard" color="maroon"/>
-        <PerformanceLevel level="2" name="Nearly Met Standard" shortName="Nearly Met" suffix="Standard" color="gray-darkest"/>
-        <PerformanceLevel level="3" name="Met Standard" shortName="Met" suffix="Standard" color="green-dark"/>
-        <PerformanceLevel level="4" name="Exceeded Standard" shortName="Exceeded" suffix="Standard" color="blue-dark"/>
-      </PerformanceLevels>
-      <ClaimScoring>
+      <OverallScoring name="Overall" minScore="1000" maxScore="3500">
+        <PerformanceLevels standardCutoff="3">
+          <PerformanceLevel level="1" name="Did Not Meet Standard" shortName="Did Not Meet" suffix="Standard" color="maroon"/>
+          <PerformanceLevel level="2" name="Nearly Met Standard" shortName="Nearly Met" suffix="Standard" color="gray-darkest"/>
+          <PerformanceLevel level="3" name="Met Standard" shortName="Met" suffix="Standard" color="green-dark"/>
+          <PerformanceLevel level="4" name="Exceeded Standard" shortName="Exceeded" suffix="Standard" color="blue-dark"/>
+        </PerformanceLevels>
+      </OverallScoring>
+      <ClaimScoring name="Claim">
         <PerformanceLevels>
           <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
           <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>
@@ -24,20 +25,24 @@
       </ClaimScoring>
     </AssessmentType>
     <AssessmentType code="iab" name="IAB" longName="Interim Assessment Blocks">
-      <PerformanceLevels>
-        <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
-        <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>
-        <PerformanceLevel level="3" name="Above Standard" shortName="Above" suffix="Standard" color="sb-iab-green"/>
-      </PerformanceLevels>
+      <OverallScoring name="Overall" minScore="1000" maxScore="3500">
+        <PerformanceLevels>
+          <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
+          <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>
+          <PerformanceLevel level="3" name="Above Standard" shortName="Above" suffix="Standard" color="sb-iab-green"/>
+        </PerformanceLevels>
+      </OverallScoring>
     </AssessmentType>
     <AssessmentType code="sum" name="Summative" longName="Summative Assessment">
-      <PerformanceLevels standardCutoff="3">
-        <PerformanceLevel level="1" name="Did Not Meet Standard" shortName="Did Not Meet" suffix="Standard" color="maroon"/>
-        <PerformanceLevel level="2" name="Nearly Met Standard" shortName="Nearly Met" suffix="Standard" color="gray-darkest"/>
-        <PerformanceLevel level="3" name="Met Standard" shortName="Met" suffix="Standard" color="green-dark"/>
-        <PerformanceLevel level="4" name="Exceeded Standard" shortName="Exceeded" suffix="Standard" color="blue-dark"/>
-      </PerformanceLevels>
-      <ClaimScoring>
+      <OverallScoring name="Overall" minScore="1000" maxScore="3500">
+        <PerformanceLevels standardCutoff="3">
+          <PerformanceLevel level="1" name="Did Not Meet Standard" shortName="Did Not Meet" suffix="Standard" color="maroon"/>
+          <PerformanceLevel level="2" name="Nearly Met Standard" shortName="Nearly Met" suffix="Standard" color="gray-darkest"/>
+          <PerformanceLevel level="3" name="Met Standard" shortName="Met" suffix="Standard" color="green-dark"/>
+          <PerformanceLevel level="4" name="Exceeded Standard" shortName="Exceeded" suffix="Standard" color="blue-dark"/>
+        </PerformanceLevels>
+      </OverallScoring>
+      <ClaimScoring name="Claim">
         <PerformanceLevels>
           <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
           <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>

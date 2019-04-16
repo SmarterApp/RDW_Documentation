@@ -35,7 +35,7 @@ cloud:
 
 # Common settings. Normally set in application.yml.
 #reporting:
-#  school-year: 2018
+#  school-year: 2019
 #  state:
 #    code: CA
 #    name: California

@@ -9,8 +9,8 @@ reporting:
   client: SBAC
 
   # The embargo feature applies its rules for only the current school year, so it must be configured.
-  # Although there is a default value for this setting (2018), it should be explicitly configured.
-  school-year: 2018
+  # Although there is a default value for this setting (2019), it should be explicitly configured.
+  school-year: 2019
 
   # Used throughout the applications, the state code/name.
   state:

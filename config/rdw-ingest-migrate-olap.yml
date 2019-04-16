@@ -53,7 +53,7 @@ migrate:
 #    run-cron: "0 0 1 * * *"
 
 # The embargo feature applies its rules for only the current school year, so it must be configured.
-# Although there is a default value for this setting (2018), it should be explicitly configured.
+# Although there is a default value for this setting (2019), it should be explicitly configured.
 # Normally this will be a shared setting in application.yml.
 reporting:
   school-year:

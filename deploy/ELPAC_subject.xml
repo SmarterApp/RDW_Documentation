@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Subject code="ELPAC" name="ELPAC">
   <Messages>
-    <Message key="sum.performance-info"><![CDATA[Student scores on the Summative ELPAC are assigned to one of four achievement levels (Minimally, Somewhat, Moderately, and Well Developed) based on the scale score.]]></Message>
+    <Message key="sum.performance-info"><![CDATA[Student scores on the Summative ELPAC are assigned to one of four achievement levels based on the scale score.]]></Message>
   </Messages>
   <AssessmentTypes>
     <AssessmentType code="sum" name="Summative" longName="Summative ELPAC" targetReport="false" printedReport="false">

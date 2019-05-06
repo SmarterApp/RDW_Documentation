@@ -17,6 +17,16 @@ The `?include-ui=true` parameter includes translation messages that only apply t
 The downloaded JSON may then be translated into any language and saved to the configuration repository as a xx.json file. (Example: `/i18n/es.json`).
 See below for how to configure the reporting system to use your translated JSON file to provide translation options to the user.
 
+NOTE: Although passing `include-ui=false` will remove the UI-specific translations, the resulting file will still have a lot of text that isn't used in printed reports. Assuming ISR's haven't changed since this was written you may remove JSON nodes:
+* `report.aggregate`
+* `report.generic`
+* `report.grade`
+* `report.target`
+* `report.{subject}.claim.*.description`
+* `report.{subject}.claim.*.target`
+* `report.{subject}.dock`
+* `report.{subject}.standard`
+
 NOTE: A translation JSON file is not required to be "complete." For example, to override just the footer text in English from the default value, you may install an `en.json` file that contains only the new footer message:
 
 **en.json**
@@ -29,7 +39,7 @@ NOTE: A translation JSON file is not required to be "complete." For example, to 
 ```
 
 > So how do you know what values to override? In the example above, how could you possibly know `"common-ngx"`? The main webapp text can be found in https://github.com/SmarterApp/RDW_Reporting/blob/master/webapp/src/main/webapp/src/assets/i18n/en.json. Search that file for the text you see and then you can get the key for it.
-> If you don't find the text in there (assuming you are looking at the correct version of the file), then the verbiage is part of the [subject configuration](./Runbook.md#subjects).
+> If you don't find the text in there (assuming you are looking at the correct version of the file), then the verbiage is part of the [subject configuration](./Runbook.SystemConfiguration.md#subjects).
 
 #### Reporting Language File Installation
 The language files will be served by the configuration server so the file(s) must be added to the configuration repository.

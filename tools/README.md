@@ -3,7 +3,7 @@
 ### Subject Info Workbook
 
 The subject info workbook, `SubjectInfo.xlsm` facilitates the collection of subject metadata needed to generate the subject XML file.
-The subject XML file is loaded into RDW, see [Subject Configuration](../docs/Runbook.SystemConfiguration#subjects).
+The subject XML file is loaded into RDW, see [Subject Configuration](../docs/Runbook.SystemConfiguration.md#subjects).
 
 To define a new subject, make a copy of the workbook; the convention is to name the file using the subject code.
 For example, if the new subject is Physics, make a copy called `SubjectInfo.Physics.xlsm`.

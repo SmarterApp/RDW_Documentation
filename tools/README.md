@@ -22,3 +22,18 @@ Once complete, press the XML button to copy the generated XML to the clipboard. 
 * Things to work on:
     * ( ) Improve instructions.
     * ( ) Collect and emit ReportGrades data. This has not been done because no subjects other than the predefined Smarter Balanced ELA and Math support the printed reports (ISRs).
+
+
+### Assessment Package Files
+
+To load specific assessment packages into RDW, they must be put into a CSV in Tabulator output format.
+There are two general field sets for the tabulator output:
+* Full. This is the full field set which specifies all the details for all the items in all the packages. This is the required data for Smarter Balanced assessments that take advantage of all the features of RDW.
+* Itemless. Some subjects are summative-only and do not need to specify item details. For these subjects a much smaller set of data is needed.
+Some fields are optional based on the scoring requirements of a subject.
+
+If item details are specified, the assessment fields must be repeated in every item row.
+
+
+
+

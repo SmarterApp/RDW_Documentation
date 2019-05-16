@@ -549,7 +549,7 @@ and the data marts. This is a good time to verify that the required connectivity
     1. Set datasource urls, username, passwords in configuration files.
     1. Set S3 bucket, region, access key, secret key in configuration files.
     1. Set reconciliation S3 bucket in rdw-ingest-task-service.yml.
-    1. Set schedules for migrate (reporting/olap), task service tasks, stale-reports cleanup, cache flushing.
+    1. Set schedules for migrate (reporting/olap), task service tasks, cache flushing.
     1. Configure load balancer certificate for import service.
         * Create cert for import.sbac.org (or wherever you'll be putting this service)
         * Modify import-service.yml and set ssl-cert to ARN of newly created cert.

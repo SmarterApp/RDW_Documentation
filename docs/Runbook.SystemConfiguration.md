@@ -254,7 +254,20 @@ Assessment packages are updated every year so the new ones must be loaded as [de
 4. Load new accessibility file.
 Accommodation codes and translations are extracted from the accessibility file. A new one must be loaded every year as [described above](#accommodations).
 
-5. Student groups.
+5. User reports.
+Although users can manage their own reports, it may be desirable to do a bulk purge of user reports from the previous school year.
+NOTE: This will remove *all* user reports; selective deletion is tricky and beyond the scope of this document.
+
+First, delete the database records for the reports.
+```sql
+DELETE FROM reporting.user_report;
+```
+Next, remove the artifacts from the (S3) archive.
+```bash
+aws s3 rm s3://rdw-archive/REPORTS/USER --recursive
+```
+
+6. Student groups.
 This depends on policy, but it may be desirable to disable/remove student groups from the previous school year.
 
 Student groups are associated with a school and a school year. They have an `active` flag and the system supports soft deletes. These features can be used to manipulate the groups (please refer to [Manual Data Modifications](Runbook.ManualDataModifications.md) for general data modification instructions). For example, to delete student groups from a particular district for the last school year, do something like:

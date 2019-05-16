@@ -829,19 +829,6 @@ The update organization task retrieves all schools from ART and posts them to th
 curl -X POST http://localhost:8008/updateOrganizations
 ```
 
-#### Remove Stale Reports Task
-This task removes old user reports. This is typically scheduled to happen once a day in the wee hours, removing any reports that are more than 30 days old. To trigger an immediate execution:
-
-* Host: report processor
-* URL: `/removeStaleReports`
-* Method: `POST`
-* Success Response:
-  * Code: 200
-* Sample Call:
-```bash
-curl -X POST http://localhost:8008/removeStaleReports
-```
-
 #### Migrate Task
 The migrate tasks move data from the main data warehouse to the reporting data stores. If there are problems the migrate tasks will disable themselves by marking a record in the database. To re-enable migrate, DevOps needs to diagnose the problem and then update that record in a specific way. To help with this, there is an actuator end-point to update the record properly. NOTE: if the underlying problem is not addressed, the migrate service will disable itself again.
 

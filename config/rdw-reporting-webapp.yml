@@ -120,23 +120,25 @@ server:
 #    enabled: true
 #    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,text/csv
 
-# Spring application configuration
-spring:
-  # Datasource configuration.
-  # Use defaults for most of the settings, except server, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  datasource:
-#    url: "\
-#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:reporting}\
-#      ?useSSL=${spring.datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
-#      &useCompression=${spring.datasource.use-compression:true}\
-#      &connectTimeout=${spring.datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.datasource.socket-timeout:40000}\
-#      "
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:30})"
+# Datasource configuration.
+# Use defaults for most of the settings, except server, username and password.
+# The url-server should be set to the host and port, e.g. localhost:3306 or
+# my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+datasources:
+  reporting_ro:
+#    url-parts:
+#      protocol: "jdbc:mysql:"
+#      hosts: "${datasources.reporting_ro.url-server:localhost:3306}"
+#      database: "${datasources.reporting_ro.url-schema:reporting}"
+#      properties: "useSSL=${datasources.reporting_ro.use-ssl:false}\
+#                   &useLegacyDatetimeCode=${datasources.reporting_ro.use-legacy-datetime-code:false}\
+#                   &characterEncoding=${datasources.reporting_ro.character-encoding:utf8}\
+#                   &rewriteBatchedStatements=${datasources.reporting_ro.rewrite-batched-statements:true}\
+#                   &connectTimeout=${datasources.reporting_ro.connect-timeout:10000}\
+#                   &socketTimeout=${datasources.reporting_ro.socket-timeout:40000}\
+#                   "
+#    url: "${datasources.reporting_ro.url-parts.protocol}//${datasources.reporting_ro.url-parts.hosts}/${datasources.reporting_ro.url-parts.database}?${datasources.reporting_ro.url-parts.properties}"
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${datasources.reporting_ro.query-timeout:30})"
     url-server:
     username:
     password:
@@ -147,7 +149,14 @@ spring:
 #    initialize: false
 #    initialSize: 4
 #    maxActive: 10
+#    minIdle: ${datasources.reporting_ro.initialSize}
+#    maxIdle: ${datasources.reporting_ro.maxActive}
+#    removeAbandoned: false
+#    removeAbandonedTimeout: 60
+#    logAbandoned: false
 
+# Spring application configuration
+spring:
   # Session cache configuration.
   # The default is to not cache session data. To enable caching (using redis), set the
   # session.store-type to "redis" and set the redis values

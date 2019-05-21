@@ -18,23 +18,6 @@ server:
 
 # Application configuration
 app:
-  # Report archive configuration.
-  # Although the location may be a local file system the preferred solution is to write to AWS S3,
-  # which requires credentials. For S3, the root should be the protocol and the bucket, e.g. s3://my-archive-bucket.
-  # The AWS access key should be for a programmatic AWS user. The secretKey should be encrypted.
-  # The bucket should be in the same region as the deployment (to reduce costs).
-  # There are no default values for these properties and they must be provided.
-  archive:
-    root:
-    cloud:
-      aws:
-        credentials:
-          accessKey:
-          secretKey:
-        region:
-          auto: false
-          static: us-west-2
-
   # PDF Generator configuration.
   # URL should be the internal (private) route which is typically resolved by the orchestration
   # framework's DNS and should include port as necessary, e.g. http://wkhtmltopdf-service:8082.
@@ -43,6 +26,21 @@ app:
 #    options:
 #      page-size: Letter
 #      zoom: 0.75
+
+# Report archive configuration.
+# Although the location may be a local file system the preferred solution is to write to AWS S3,
+# which requires credentials. For S3, the root should be the protocol and the bucket, e.g. s3://my-archive-bucket.
+# The AWS access key should be for a programmatic AWS user. The secret key should be encrypted.
+# The bucket should be in the same region as the deployment (to reduce costs). The path prefix is
+# for tenant configuration and should not be set in the base application yaml file.
+# There are no default values for these properties and they must be provided.
+archive:
+  uri-root:
+  #path-prefix:
+  s3-access-key:
+  s3-secret-key:
+  s3-region-static: us-west-2
+  s3-sse:
 
 # Tenant configuration
 reporting:
@@ -61,24 +59,26 @@ reporting:
   # Details for this property are covered in the language runbook.
 #  translation-location:
 
-
-# Spring application configuration.
-spring:
-  # Datasource configuration.
-  # Use defaults for most of the settings, except server, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  datasource:
-#    url: "\
-#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:reporting}\
-#      ?useSSL=${spring.datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
-#      &rewriteBatchedStatements=${spring.datasource.rewrite-batched-statements:true}\
-#      &connectTimeout=${spring.datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.datasource.socket-timeout:130000}\
-#      "
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:120})"
+# Datasource configuration.
+# Use defaults for most of the settings, except server, username and password.
+# The url-server should be set to the host and port, e.g. localhost:3306 or
+# my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+datasources:
+  reporting_ro:
+#    url-parts:
+#      #This is the generic format of the connection URL protocol//[hosts][/database][?properties]
+#      protocol: "jdbc:mysql:"
+#      hosts: "${datasources.reporting_ro.url-server:localhost:3306}"
+#      database: "${datasources.reporting_ro.url-schema:reporting}"
+#      properties: "useSSL=${datasources.reporting_ro.use-ssl:false}\
+#                   &useLegacyDatetimeCode=${datasources.reporting_ro.use-legacy-datetime-code:false}\
+#                   &characterEncoding=${datasources.reporting_ro.character-encoding:utf8}\
+#                   &rewriteBatchedStatements=${datasources.reporting_ro.rewrite-batched-statements:true}\
+#                   &connectTimeout=${datasources.reporting_ro.connect-timeout:10000}\
+#                   &socketTimeout=${datasources.reporting_ro.socket-timeout:600000}\
+#                   "
+#    url: "${datasources.reporting_ro.url-parts.protocol}//${datasources.reporting_ro.url-parts.hosts}/${datasources.reporting_ro.url-parts.database}?${datasources.reporting_ro.url-parts.properties}"
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${datasources.reporting_ro.query-timeout:120})"
     url-server:
     username:
     password:
@@ -87,10 +87,17 @@ spring:
 #    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
-#    maxActive: 20
 #    initialSize: 4
+#    maxActive: 20
+#    minIdle: ${datasources.reporting_ro.initialSize}
+#    maxIdle: ${datasources.reporting_ro.maxActive}
 #    maxWait: 10000
+#    removeAbandoned: false
+#    removeAbandonedTimeout: 60
+#    logAbandoned: false
 
+# Spring application configuration.
+spring:
   # RabbitMQ configuration.
   # There are no default values. The host must be set based on the orchestration environment
   # e.g. rabbit-service, with appropriate username and password. The password should be encrypted.

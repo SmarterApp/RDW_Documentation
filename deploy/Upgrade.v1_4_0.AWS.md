@@ -154,6 +154,11 @@ The goal of this step is to make changes to everything that doesn't directly aff
         git commit -am "Changes for v1.4.0"
         git push
         ```
+* [ ] Add new roles and permissions for the Reporting component in the permissions application.
+    * Role: TENANT_ADMIN. Assignable at CLIENT level only.
+        * Permissions: TENANT_READ, TENANT_WRITE
+    * Role: PIPELINE_ADMIN. Assignable at STATE level only.
+        * Permissions: PIPELINE_READ, PIPELINE_WRITE
 * [ ] (Optional) Run data validation scripts. These scripts compare data between the warehouse and the data marts.
     * You'll need the version of RDW_Schema that was used to install the *current* installation; in this case it is
     probably the tagged 1.3.0 commit:

@@ -18,25 +18,27 @@ server:
 #    max-connections: 2
 #    max-threads: 2
 
-# Spring application configuration.
-spring:
-  # Datasource configuration.
-  # Use defaults for most of the settings except server, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  # The password should be encrypted.
-  datasource:
-#    url: "\
-#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:warehouse}\
-#      ?useSSL=${spring.datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
-#      &rewriteBatchedStatements=${spring.datasource.rewrite-batched-statements:true}\
-#      &noAccessToProcedureBodies=${spring.datasource.no-access-to-procedure-bodies:true}\
-#      &connectTimeout=${spring.datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.datasource.socket-timeout:40000}\
-#      "
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:30})"
+# Datasource configuration.
+# Use defaults for most of the settings except server, username and password.
+# The url-server should be set to the host and port, e.g. localhost:3306 or
+# my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+# The password should be encrypted.
+datasources:
+  warehouse_rw:
+#    url-parts:
+#      protocol: "jdbc:mysql:"
+#      hosts: "${datasources.warehouse_rw.url-server:localhost:3306}"
+#      database: "${datasources.warehouse_rw.url-schema:warehouse}"
+#      properties: "useSSL=${datasources.warehouse_rw.use-ssl:false}\
+#                   &useLegacyDatetimeCode=${datasources.warehouse_rw.use-legacy-datetime-code:false}\
+#                   &characterEncoding=${datasources.warehouse_rw.character-encoding:utf8}\
+#                   &rewriteBatchedStatements=${datasources.warehouse_rw.rewrite-batched-statements:true}\
+#                   &noAccessToProcedureBodies=${datasources.warehouse_rw.no-access-to-procedure-bodies:true}\
+#                   &connectTimeout=${datasources.warehouse_rw.connect-timeout:10000}\
+#                   &socketTimeout=${datasources.warehouse_rw.socket-timeout:40000}\
+#                   "
+#    url: "${datasources.warehouse_rw.url-parts.protocol}//${datasources.warehouse_rw.url-parts.hosts}/${datasources.warehouse_rw.url-parts.database}?${datasources.warehouse_rw.url-parts.properties}"
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${datasources.warehouse_rw.query-timeout:30})"
     url-server:
     username:
     password:
@@ -45,10 +47,17 @@ spring:
 #    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
-#    maxActive: 12
 #    initialSize: 6
+#    maxActive: 12
+#    minIdle: ${datasources.warehouse_rw.initialSize}
+#    maxIdle: ${datasources.warehouse_rw.maxActive}
 #    maxWait: 10000
+#    removeAbandoned: false
+#    removeAbandonedTimeout: 60
+#    logAbandoned: false
 
+# Spring application configuration.
+spring:
   # RabbitMQ configuration.
   # There are no default values. The host must be set based on the orchestration environment
   # e.g. rabbit-service, with appropriate username and password. The password should be encrypted.

@@ -110,6 +110,8 @@ The goal of this step is to make changes to everything that doesn't directly aff
             * `url-server`, `username`, `password`
         * TODO
     * `rdw-ingest-task-service.yml`
+        * The datasource properties moved from `spring.datasource` to `datasources.warehouse_rw`
+            * `url-server`, `username`, `password`
         * TODO
     * `rdw-reporting-admin-service.yml`
         * The reporting datasource properties moved from `spring.reporting_datasource` to `datasources.reporting_ro`

@@ -37,25 +37,27 @@ migrate:
 reporting:
   school-year:
 
-# Spring application configuration.
-spring:
-  # Datasource configuration. There are two datasources for migrate.
-  # NOTE: this section changed between 1.0 and 1.1.
-  # Use defaults for most of the settings except server, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  # The password should be encrypted.
-  reporting_datasource:
-#    url: "\
-#      jdbc:mysql://${spring.reporting_datasource.url-server:localhost:3306}/${spring.reporting_datasource.url-schema:reporting}\
-#      ?useSSL=${spring.reporting_datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.reporting_datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.reporting_datasource.character-encoding:utf8}\
-#      &rewriteBatchedStatements=${spring.reporting_datasource.rewrite-batched-statements:true}\
-#      &connectTimeout=${spring.reporting_datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.reporting_datasource.socket-timeout:130000}\
-#      "
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.reporting_datasource.query-timeout:120})"
+# Datasource configuration. There are two datasources for migrate.
+# NOTE: this section changed between 1.0 and 1.1.
+# Use defaults for most of the settings except server, username and password.
+# The url-server should be set to the host and port, e.g. localhost:3306 or
+# my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+# The password should be encrypted.
+datasources:
+  reporting_rw:
+#    url-parts:
+#      protocol: "jdbc:mysql:"
+#      hosts: "${datasources.reporting_rw.url-server:localhost:3306}"
+#      database: "${datasources.reporting_rw.url-schema:reporting}"
+#      properties: "useSSL=${datasources.reporting_rw.use-ssl:false}\
+#                   &useLegacyDatetimeCode=${datasources.reporting_rw.use-legacy-datetime-code:false}\
+#                   &characterEncoding=${datasources.reporting_rw.character-encoding:utf8}\
+#                   &rewriteBatchedStatements=${datasources.reporting_rw.rewrite-batched-statements:true}\
+#                   &connectTimeout=${datasources.reporting_rw.connect-timeout:10000}\
+#                   &socketTimeout=${datasources.reporting_rw.socket-timeout:130000}\
+#                   "
+#    url: "${datasources.warehouse_rw.url-parts.protocol}//${datasources.warehouse_rw.url-parts.hosts}/${datasources.warehouse_rw.url-parts.database}?${datasources.warehouse_rw.url-parts.properties}"
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${datasources.reporting_rw.query-timeout:120})"
     url-server:
     username:
     password:
@@ -64,19 +66,27 @@ spring:
 #    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
-#    maxActive: 10
 #    initialSize: 4
+#    maxActive: 10
+#    minIdle: ${datasources.reporting_rw.initialSize}
+#    maxIdle: ${datasources.reporting_rw.maxActive}
+#    removeAbandoned: false
+#    removeAbandonedTimeout: 60
+#    logAbandoned: false
 
-  warehouse_datasource:
-#    url: "\
-#      jdbc:mysql://${spring.warehouse_datasource.url-server:localhost:3306}/${spring.warehouse_datasource.url-schema:warehouse}\
-#      ?useSSL=${spring.warehouse_datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.warehouse_datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.warehouse_datasource.character-encoding:utf8}\
-#      &connectTimeout=${spring.warehouse_datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.warehouse_datasource.socket-timeout:130000}\
-#      "
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.warehouse_datasource.query-timeout:120})"
+  warehouse_rw:
+#    url-parts:
+#      protocol: "jdbc:mysql:"
+#      hosts: "${datasources.warehouse_rw.url-server:localhost:3306}"
+#      database: "${datasources.warehouse_rw.url-schema:warehouse}"
+#      properties: "useSSL=${datasources.warehouse_rw.use-ssl:false}\
+#                   &useLegacyDatetimeCode=${datasources.warehouse_rw.use-legacy-datetime-code:false}\
+#                   &characterEncoding=${datasources.warehouse_rw.character-encoding:utf8}\
+#                   &connectTimeout=${datasources.warehouse_rw.connect-timeout:10000}\
+#                   &socketTimeout=${datasources.warehouse_rw.socket-timeout:130000}\
+#                   "
+#    url: "${datasources.warehouse_rw.url-parts.protocol}//${datasources.warehouse_rw.url-parts.hosts}/${datasources.warehouse_rw.url-parts.database}?${datasources.warehouse_rw.url-parts.properties}"
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${datasources.warehouse_rw.query-timeout:120})"
     url-server:
     username:
     password:
@@ -85,5 +95,11 @@ spring:
 #    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
-#    maxActive: 10
 #    initialSize: 4
+#    maxActive: 10
+#    minIdle: ${datasources.warehouse_rw.initialSize}
+#    maxIdle: ${datasources.warehouse_rw.maxActive}
+#    maxWait: 10000
+#    removeAbandoned: false
+#    removeAbandonedTimeout: 60
+#    logAbandoned: false

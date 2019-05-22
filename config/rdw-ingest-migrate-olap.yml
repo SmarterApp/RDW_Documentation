@@ -58,22 +58,24 @@ migrate:
 reporting:
   school-year:
 
-# Spring application configuration.
-spring:
-  # Datasource configuration. There are two datasources for migrate.
-  # Use defaults for most of the settings except server, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  # The password should be encrypted.
-  migrate_datasource:
-#    url: "\
-#      jdbc:mysql://${spring.migrate_datasource.url-server:localhost:3306}/${spring.migrate_datasource.url-schema:migrate_olap}\
-#      ?useSSL=${spring.migrate_datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.migrate_datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.migrate_datasource.character-encoding:utf8}\
-#      &connectTimeout=${spring.migrate_datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.migrate_datasource.socket-timeout:0}\
-#      "
+# Datasource configuration. There are two datasources for migrate.
+# Use defaults for most of the settings except server, username and password.
+# The url-server should be set to the host and port, e.g. localhost:3306 or
+# my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+# The password should be encrypted.
+datasources:
+  migrate_rw:
+#    url-parts:
+#      protocol: "jdbc:mysql:"
+#      hosts: "${datasources.migrate_rw.url-server:localhost:3306}"
+#      database: "${datasources.migrate_rw.url-schema:migrate_olap}"
+#      properties: "useSSL=${datasources.migrate_rw.use-ssl:false}\
+#                   &useLegacyDatetimeCode=${datasources.migrate_rw.use-legacy-datetime-code:false}\
+#                   &characterEncoding=${datasources.migrate_rw.character-encoding:utf8}\
+#                   &connectTimeout=${datasources.migrate_rw.connect-timeout:10000}\
+#                   &socketTimeout=${datasources.migrate_rw.socket-timeout:0}\
+#                   "
+#    url: "${datasources.migrate_rw.url-parts.protocol}//${datasources.migrate_rw.url-parts.hosts}/${datasources.migrate_rw.url-parts.database}?${datasources.migrate_rw.url-parts.properties}"
     url-server:
     username:
     password:
@@ -82,16 +84,24 @@ spring:
 #    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
-#    maxActive: 10
 #    initialSize: 4
+#    maxActive: 10
+#    minIdle: ${datasources.migrate_rw.initialSize}
+#    maxIdle: ${datasources.migrate_rw.maxActive}
+#    removeAbandoned: false
+#    removeAbandonedTimeout: 60
+#    logAbandoned: false
 
-  olap_datasource:
-#    url: "\
-#      jdbc:redshift://${spring.olap_datasource.url-server:localhost:5432}/${spring.olap_datasource.url-db:dev}\
-#      ?ApplicationName=rdw-ingest-migrate-olap\
-#      &loginTimeout=${spring.olap_datasource.connect-timeout:10}\
-#      &socketTimeout=${spring.olap_datasource.socket-timeout:0}\
-#      "
+  olap_rw:
+#    url-parts:
+#      protocol: "jdbc:redshift:"
+#      hosts: "${datasources.olap_rw.url-server:localhost:5432}"
+#      database: "${datasources.olap_rw.url-db:dev}"
+#      properties: "ApplicationName=rdw-ingest-migrate-olap\
+#                   &loginTimeout=${datasources.olap_rw.connect-timeout:10}\
+#                   &socketTimeout=${datasources.olap_rw.socket-timeout:0}\
+#                   "
+#    url: "${datasources.olap_rw.url-parts.protocol}//${datasources.olap_rw.url-parts.hosts}/${datasources.olap_rw.url-parts.database}?${datasources.olap_rw.url-parts.properties}"
     url-server:
 #    url-db: dev
     username:
@@ -101,15 +111,18 @@ spring:
 #    validationQueryTimeout: 30000
 #    driverClassName: com.amazon.redshift.jdbc42.Driver
 
-  warehouse_datasource:
-#    url: "\
-#      jdbc:mysql://${spring.warehouse_datasource.url-server:localhost:3306}/${spring.warehouse_datasource.url-schema:warehouse}\
-#      ?useSSL=${spring.warehouse_datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.warehouse_datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.warehouse_datasource.character-encoding:utf8}\
-#      &connectTimeout=${spring.warehouse_datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.warehouse_datasource.socket-timeout:0}\
-#      "
+  warehouse_rw:
+#    url-parts:
+#      protocol: "jdbc:mysql:"
+#      hosts: "${datasources.warehouse_rw.url-server:localhost:3306}"
+#      database: "${datasources.warehouse_rw.url-schema:warehouse}"
+#      properties: "useSSL=${datasources.warehouse_rw.use-ssl:false}\
+#                   &useLegacyDatetimeCode=${datasources.warehouse_rw.use-legacy-datetime-code:false}\
+#                   &characterEncoding=${datasources.warehouse_rw.character-encoding:utf8}\
+#                   &connectTimeout=${datasources.warehouse_rw.connect-timeout:10000}\
+#                   &socketTimeout=${datasources.warehouse_rw.socket-timeout:0}\
+#                   "
+#    url: "${datasources.warehouse_rw.url-parts.protocol}//${datasources.warehouse_rw.url-parts.hosts}/${datasources.warehouse_rw.url-parts.database}?${datasources.warehouse_rw.url-parts.properties}"
     url-server:
     username:
     password:
@@ -118,5 +131,11 @@ spring:
 #    validationQueryTimeout: 10000
 #    driverClassName: com.mysql.jdbc.Driver
 #    initialize: false
-#    maxActive: 10
 #    initialSize: 4
+#    maxActive: 10
+#    minIdle: ${datasources.warehouse_rw.initialSize}
+#    maxIdle: ${datasources.warehouse_rw.maxActive}
+#    maxWait: 10000
+#    removeAbandoned: false
+#    removeAbandonedTimeout: 60
+#    logAbandoned: false

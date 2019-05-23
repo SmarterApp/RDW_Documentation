@@ -11,19 +11,17 @@
 # native ability to directly load content from the archive. Although archiving may be done in a
 # local file system the preferred solution is to use AWS S3, which requires credentials.
 # For S3, the root should be the protocol and the bucket, e.g. s3://my-archive-bucket.
-# The AWS access key should be for a programmatic AWS user. The secretKey should be encrypted.
-# The bucket should be in the same region as the deployment (to reduce costs).
+# The AWS access key should be for a programmatic AWS user. The secret key should be encrypted.
+# The bucket should be in the same region as the deployment (to reduce costs). The path prefix is
+# for tenant configuration and should not be set in the base application yaml file.
 # There are no default values for these properties and they must be provided.
 archive:
-  root:
-  cloud:
-    aws:
-      credentials:
-        accessKey:
-        secretKey:
-      region:
-        auto: false
-        static: us-west-2
+  uri-root:
+  #path-prefix:
+  s3-access-key:
+  s3-secret-key:
+  s3-region-static: us-west-2
+  s3-sse:
 
 # The actuator end-point is on a different port with no security because it is expected to be
 # exposed only in a private subnet. Use the default settings unless you really know what you

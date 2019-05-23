@@ -20,17 +20,15 @@ server:
 
 # Migrate uses S3 to stage data. Although the data is written to by Aurora and read by Redshift
 # the service must have a configured archive service to manage the files. All values must be
-# provided.
+# provided. The path prefix is for tenant configuration and should not be set in the base
+# application yaml file.
 archive:
-  root:
-  cloud:
-    aws:
-      credentials:
-        accessKey:
-        secretKey:
-      region:
-        auto: false
-        static: us-west-2
+  uri-root:
+  #path-prefix:
+  s3-access-key:
+  s3-secret-key:
+  s3-region-static: us-west-2
+  s3-sse:
 
 # Migrate configuration.
 migrate:

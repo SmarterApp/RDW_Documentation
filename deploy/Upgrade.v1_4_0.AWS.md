@@ -86,10 +86,20 @@ The goal of this step is to make changes to everything that doesn't directly aff
     * `rdw-igest-group-processor.yml`
         * The datasource properties moved from `spring.datasource` to `datasources.warehouse_rw`
             * `url-server`, `username`, `password`
+        * The archive properties were changed
+            * `archive.root` -> `archive.uri-root`
+            * `archive.cloud.aws.credentials.accessKey` -> `archive.s3-access-key`
+            * `archive.cloud.aws.credentials.secretKey` -> `archive.s3-secret-key`
+            * `archive.cloud.aws.region.static` -> `archive.s3-region-static`
         * TODO
     * `rdw-ingest-import-service.yml`
         * The datasource properties moved from `spring.datasource` to `datasources.warehouse_rw`
             * `url-server`, `username`, `password`
+        * The archive properties were changed
+            * `archive.root` -> `archive.uri-root`
+            * `archive.cloud.aws.credentials.accessKey` -> `archive.s3-access-key`
+            * `archive.cloud.aws.credentials.secretKey` -> `archive.s3-secret-key`
+            * `archive.cloud.aws.region.static` -> `archive.s3-region-static`
         * TODO
     * `rdw-ingest-migrate-olap.yml`
         * The warehouse datasource properties moved from `spring.warehouse_datasource` to `datasources.warehouse_rw`
@@ -98,6 +108,11 @@ The goal of this step is to make changes to everything that doesn't directly aff
             * `url-server`, `username`, `password`
         * The olap datasource properties moved from `spring.olap_datasource` to `datasources.olap_rw`
             * `url-server`, `url-db`, `username`, `password`
+        * The archive properties were changed
+            * `archive.root` -> `archive.uri-root`
+            * `archive.cloud.aws.credentials.accessKey` -> `archive.s3-access-key`
+            * `archive.cloud.aws.credentials.secretKey` -> `archive.s3-secret-key`
+            * `archive.cloud.aws.region.static` -> `archive.s3-region-static`
         * TODO
     * `rdw-ingest-migrate-reporting.yml`
         * The warehouse datasource properties moved from `spring.warehouse_datasource` to `datasources.warehouse_rw`
@@ -108,6 +123,11 @@ The goal of this step is to make changes to everything that doesn't directly aff
     * `rdw-ingest-package-processor.yml`
         * The datasource properties moved from `spring.datasource` to `datasources.warehouse_rw`
             * `url-server`, `username`, `password`
+        * The archive properties were changed
+            * `archive.root` -> `archive.uri-root`
+            * `archive.cloud.aws.credentials.accessKey` -> `archive.s3-access-key`
+            * `archive.cloud.aws.credentials.secretKey` -> `archive.s3-secret-key`
+            * `archive.cloud.aws.region.static` -> `archive.s3-region-static`
         * TODO
     * `rdw-ingest-task-service.yml`
         * The datasource properties moved from `spring.datasource` to `datasources.warehouse_rw`

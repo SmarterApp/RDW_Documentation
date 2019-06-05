@@ -567,9 +567,6 @@
     </ReportGrade>
   </ReportGrades>
   <Claims>
-    <Claim code="SOCK_2" name="Problem Solving and Modeling &amp; Data Analysis" organizational="false" displayOrder="2">
-      <Icon>fa-edit</Icon>
-    </Claim>
     <Claim code="1" name="Concepts and Procedures" displayOrder="1">
       <Icon>fa-book</Icon>
       <Description>Concepts and Procedures - Students can explain and apply mathematical concepts and interpret and carry out mathematical procedures with precision and fluency.</Description>
@@ -1016,6 +1013,9 @@
           <Description>Geometry: Apply trigonometry to general triangles.</Description>
         </Target>
       </Targets>
+    </Claim>
+    <Claim code="SOCK_2" name="Problem Solving and Modeling &amp; Data Analysis" organizational="false" displayOrder="2">
+      <Icon>fa-edit</Icon>
     </Claim>
     <Claim code="2" name="Problem Solving" scorable="false">
       <Description>Problem Solving - Students can solve a range of complex well-posed problems in pure and applied mathematics, making productive use of knowledge and problem solving strategies.</Description>

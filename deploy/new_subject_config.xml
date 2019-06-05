@@ -8,16 +8,18 @@
     <Message key="sum.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of six achievement levels (Very Bad, Bad, Okay, Average, Good, and Great) based on the scale score.]]></Message>
   </Messages>
   <AssessmentTypes>
-    <AssessmentType code="ica" name="ICA" longName="Interim Comprehensive Assessment">
-      <PerformanceLevels standardCutoff="4">
-        <PerformanceLevel level="1" name="Very Bad" color="maroon"/>
-        <PerformanceLevel level="2" name="Bad" color="red"/>
-        <PerformanceLevel level="3" name="Okay" color="orange"/>
-        <PerformanceLevel level="4" name="Average" color="blue"/>
-        <PerformanceLevel level="5" name="Good" color="green-dark"/>
-        <PerformanceLevel level="6" name="Great" color="green"/>
-      </PerformanceLevels>
-      <ClaimScoring>
+    <AssessmentType code="ica" name="ICA" longName="Interim Comprehensive Assessment" targetReport="false" printedReport="false">
+      <OverallScoring name="Overall" minScore="1000" maxScore="3500">
+        <PerformanceLevels standardCutoff="4">
+          <PerformanceLevel level="1" name="Very Bad" color="maroon"/>
+          <PerformanceLevel level="2" name="Bad" color="red"/>
+          <PerformanceLevel level="3" name="Okay" color="orange"/>
+          <PerformanceLevel level="4" name="Average" color="blue"/>
+          <PerformanceLevel level="5" name="Good" color="green-dark"/>
+          <PerformanceLevel level="6" name="Great" color="green"/>
+        </PerformanceLevels>
+      </OverallScoring>
+      <ClaimScoring name="Claim">
         <PerformanceLevels>
           <PerformanceLevel level="1" name="Very Bad" color="maroon"/>
           <PerformanceLevel level="2" name="Bad" color="red"/>
@@ -28,23 +30,27 @@
         </PerformanceLevels>
       </ClaimScoring>
     </AssessmentType>
-    <AssessmentType code="iab" name="IAB" longName="Interim Assessment Blocks">
-      <PerformanceLevels>
-        <PerformanceLevel level="1" name="Bottom" color="red-dark"/>
-        <PerformanceLevel level="2" name="Middle" color="gray-dark"/>
-        <PerformanceLevel level="3" name="Top" color="teal"/>
-      </PerformanceLevels>
+    <AssessmentType code="iab" name="IAB" longName="Interim Assessment Blocks" targetReport="false" printedReport="false">
+      <OverallScoring name="Overall" minScore="1000" maxScore="3500">
+        <PerformanceLevels>
+          <PerformanceLevel level="1" name="Bottom" color="red-dark"/>
+          <PerformanceLevel level="2" name="Middle" color="gray-dark"/>
+          <PerformanceLevel level="3" name="Top" color="teal"/>
+        </PerformanceLevels>
+      </OverallScoring>
     </AssessmentType>
-    <AssessmentType code="sum" name="Summative" longName="Summative Assessment">
-      <PerformanceLevels standardCutoff="4">
-        <PerformanceLevel level="1" name="Very Bad" color="maroon"/>
-        <PerformanceLevel level="2" name="Bad" color="red"/>
-        <PerformanceLevel level="3" name="Okay" color="orange"/>
-        <PerformanceLevel level="4" name="Average" color="blue"/>
-        <PerformanceLevel level="5" name="Good" color="green-dark"/>
-        <PerformanceLevel level="6" name="Great" color="green"/>
-      </PerformanceLevels>
-      <ClaimScoring>
+    <AssessmentType code="sum" name="Summative" longName="Summative Assessment" targetReport="false" printedReport="false">
+      <OverallScoring name="Overall" minScore="1000" maxScore="3500">
+        <PerformanceLevels standardCutoff="4">
+          <PerformanceLevel level="1" name="Very Bad" color="maroon"/>
+          <PerformanceLevel level="2" name="Bad" color="red"/>
+          <PerformanceLevel level="3" name="Okay" color="orange"/>
+          <PerformanceLevel level="4" name="Average" color="blue"/>
+          <PerformanceLevel level="5" name="Good" color="green-dark"/>
+          <PerformanceLevel level="6" name="Great" color="green"/>
+        </PerformanceLevels>
+      </OverallScoring>
+      <ClaimScoring name="Claim">
         <PerformanceLevels>
           <PerformanceLevel level="1" name="Very Bad" color="maroon"/>
           <PerformanceLevel level="2" name="Bad" color="red"/>

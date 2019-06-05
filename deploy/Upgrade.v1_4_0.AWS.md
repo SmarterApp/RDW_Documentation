@@ -52,7 +52,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
 * [ ] Add a copy of this checklist to deployment and switch to that copy.
 * [ ] Changes to deployment files in `RDW_Deploy_Opus`. There are sample deployment files in the `deploy` folder in the `RDW` repository; use those to copy and help guide edits.
     * Common services.
-        * `configuration-service.yml` - change the image version to ???
+        * `configuration-service.yml` - change the image version to `3.1.2-RELEASE`
         * `rabbit-service.yml` - no change required
         * `wkhtmltopdf-service.yml` - no change required
     * Ingest services, change image version to `1.4.0-RELEASE` in the following files:
@@ -77,97 +77,146 @@ The goal of this step is to make changes to everything that doesn't directly aff
         git push 
         ```
 * [ ] There are extensive configuration changes required. Generally this will affect database, archive, ... properties. No new information is needed, it will just be moved around.
-    * `application.yml`
+    * `application.yml` - this now contains a lot more configuration since we've made more properties common amongst the services.
+        * The datasource server/db settings are common and should be put here. Copy from existing files.
+            * `datasources.migrate_rw` from `spring.migrate_datasource` (look in `rdw-ingest-migrate-olap.yml`)
+            * `datasources.olap_ro` from `spring.olap_datasource` (look in `rdw-reporting-aggregate-service.yml`)
+            * `datasources.olap_rw` from `spring.olap_datasource` (look in `rdw-ingest-migrate-olap.yml`)
+            * `datasources.reporting_ro` from `spring.reporting_datasource` (look in `rdw-reporting-admin-service.yml`)
+            * `datasources.reporting_rw` from `spring.reporting_datasource` (look in `rdw-ingest-migrate-reporting.yml`)
+            * `datasources.warehouse_rw` from `spring.warehouse_datasource` (look in `rdw-ingest-migrate-olap.yml`)
+        ```
+        datasources:
+          migrate_rw:
+            url-server: rdw-aurora-opus-reporting.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306
+          olap_ro:
+            url-server: rdw.cibkulpjrgtr.us-west-2.redshift.amazonaws.com:5439
+            url-db: opus
+          olap_rw:
+            url-server: rdw.cibkulpjrgtr.us-west-2.redshift.amazonaws.com:5439
+            url-db: opus
+          reporting_ro:
+            url-server: rdw-aurora-opus-reporting.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306
+          reporting_rw:
+            url-server: rdw-aurora-opus-reporting.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306
+          warehouse_rw:
+            url-server: rdw-aurora-opus-warehouse.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306
+        ```
+        * The archive settings are common and should be put here.
+        ```
+        archive:
+          uri-root: s3://rdw-opus-archive
+          s3-access-key: A...
+          s3-secret-key: '{cipher}82...'
+          s3-region-static: us-west-2
+        ```
         * TODO
+    * Tenant-specific `application.yml`. Create a tenant folder using the tenant state code, e.g. `tenant-OT`. Create a new `application.yml` file in that folder. This will be the location of the common configuration overrides for this tenant.
+        * Add the tenant declaration properties:
+        ```
+        tenantProperties:
+          tenants:
+            OT:
+              id: OT
+              key: OT
+              name: Other State
+        ```
+        * Add the common reporting overrides:
+        ```
+        reporting:
+          tenants:
+            OT:
+              state:
+                code: OT
+                name: Other State
+        ```
+        * Add the datasource overrides. The database, username and password for every datasource should go here; copy from existing config files. For a single tenant system the values can be copied from the existing configuration, there is no need to rename databases with tenant discriminating prefixes.
+            * `datasources.migrate_rw` from `spring.migrate_datasource` (look in `rdw-ingest-migrate-olap.yml`)
+            * `datasources.olap_ro` from `spring.olap_datasource` (look in `rdw-reporting-aggregate-service.yml`)
+            * `datasources.olap_rw` from `spring.olap_datasource` (look in `rdw-ingest-migrate-olap.yml`)
+            * `datasources.reporting_ro` from `spring.reporting_datasource` (look in `rdw-reporting-admin-service.yml`)
+            * `datasources.reporting_rw` from `spring.reporting_datasource` (look in `rdw-ingest-migrate-reporting.yml`)
+            * `datasources.warehouse_rw` from `spring.warehouse_datasource` (look in `rdw-ingest-migrate-olap.yml`)
+        ```
+        datasources:
+          migrate_rw:
+            tenants:
+              OT:
+                urlParts:
+                  database: migrate_olap
+                username: ...
+                password: '{cipher}53...'
+          olap_ro:
+            tenants:
+              OT:
+                username: ...
+                password: '{cipher}53...'
+          olap_rw:
+            tenants:
+              OT:
+                username: ...
+                password: '{cipher}53...'
+          reporting_ro:
+            tenants:
+              OT:
+                urlParts:
+                  database: reporting
+                username: ...
+                password: '{cipher}53...'
+          reporting_rw:
+            tenants:
+              OT:
+                urlParts:
+                  database: reporting
+                username: ...
+                password: '{cipher}53...'
+          warehouse_rw:
+            tenants:
+              OT:
+                urlParts:
+                  database: warehouse
+                username: ...
+                password: '{cipher}53...'
+        ```
+        * For a single tenant system, there is no need to provide an archive path prefix.
     * `rdw-ingest-exam-processor.yml`
-        * The datasource properties moved from `spring.datasource` to `datasources.warehouse_rw`
-            * `url-server`, `username`, `password`
-        * TODO
+        * Remove datasource and archive properties. File may be empty.
     * `rdw-igest-group-processor.yml`
-        * The datasource properties moved from `spring.datasource` to `datasources.warehouse_rw`
-            * `url-server`, `username`, `password`
-        * The archive properties were changed
-            * `archive.root` -> `archive.uri-root`
-            * `archive.cloud.aws.credentials.accessKey` -> `archive.s3-access-key`
-            * `archive.cloud.aws.credentials.secretKey` -> `archive.s3-secret-key`
-            * `archive.cloud.aws.region.static` -> `archive.s3-region-static`
-        * TODO
+        * Remove datasource and archive properties. File may be empty.
     * `rdw-ingest-import-service.yml`
-        * The datasource properties moved from `spring.datasource` to `datasources.warehouse_rw`
-            * `url-server`, `username`, `password`
-        * The archive properties were changed
-            * `archive.root` -> `archive.uri-root`
-            * `archive.cloud.aws.credentials.accessKey` -> `archive.s3-access-key`
-            * `archive.cloud.aws.credentials.secretKey` -> `archive.s3-secret-key`
-            * `archive.cloud.aws.region.static` -> `archive.s3-region-static`
-        * TODO
+        * Remove datasource and archive properties.
     * `rdw-ingest-migrate-olap.yml`
-        * The warehouse datasource properties moved from `spring.warehouse_datasource` to `datasources.warehouse_rw`
-            * `url-server`, `username`, `password`
-        * The migrate datasource properties moved from `spring.migrate_datasource` to `datasources.migrate_rw`
-            * `url-server`, `username`, `password`
-        * The olap datasource properties moved from `spring.olap_datasource` to `datasources.olap_rw`
-            * `url-server`, `url-db`, `username`, `password`
-        * The archive properties were changed
-            * `archive.root` -> `archive.uri-root`
-            * `archive.cloud.aws.credentials.accessKey` -> `archive.s3-access-key`
-            * `archive.cloud.aws.credentials.secretKey` -> `archive.s3-secret-key`
-            * `archive.cloud.aws.region.static` -> `archive.s3-region-static`
-        * TODO
+        * Remove datasource and archive properties.
     * `rdw-ingest-migrate-reporting.yml`
-        * The warehouse datasource properties moved from `spring.warehouse_datasource` to `datasources.warehouse_rw`
-            * `url-server`, `username`, `password`
-        * The reporting datasource properties moved from `spring.reporting_datasource` to `datasources.reporting_rw`
-            * `url-server`, `username`, `password`
-        * TODO
+        * Remove datasource and archive properties. File may be empty.
     * `rdw-ingest-package-processor.yml`
-        * The datasource properties moved from `spring.datasource` to `datasources.warehouse_rw`
-            * `url-server`, `username`, `password`
-        * The archive properties were changed
-            * `archive.root` -> `archive.uri-root`
-            * `archive.cloud.aws.credentials.accessKey` -> `archive.s3-access-key`
-            * `archive.cloud.aws.credentials.secretKey` -> `archive.s3-secret-key`
-            * `archive.cloud.aws.region.static` -> `archive.s3-region-static`
-        * TODO
+        * Remove datasource and archive properties. File may be empty.
     * `rdw-ingest-task-service.yml`
-        * The datasource properties moved from `spring.datasource` to `datasources.warehouse_rw`
-            * `url-server`, `username`, `password`
+        * Remove datasource and archive properties.
         * TODO
     * `rdw-reporting-admin-service.yml`
-        * The reporting datasource properties moved from `spring.reporting_datasource` to `datasources.reporting_ro`
-            * `url-server`, `username`, `password`
-        * The warehouse datasource properties moved from `spring.warehouse_datasource` to `datasources.warehouse_rw`
-            * `url-server`, `username`, `password`
+        * Remove datasource and archive properties.
+        * Add the tenant configuration persistence properties. The credentials must allow updates (i.e. not read-only)
+        ```
+        tenant-configuration-persistence:
+          local-repository-path: /tmp/rdw_config
+          remote-repository-uri: https://gitlab.com/rdw_config_opus.git
+          git-username: ...
+          git-password: '{cipher}96...'
+          author: "Zaphod Beeblebrox"
+          author-email: "zaphodb@example.com"
+        ```
         * TODO
     * `rdw-reporting-aggregate-service.yml`
-        * The datasource properties moved from `spring.olap_datasource` to `datasources.olap_ro`
-            * `url-server`, `url-db`, `username`, `password`
-        * The archive properties moved from `app.archive` to `archive` and were reorganized
-            * `app.archive.root` -> `archive.uri-root`
-            * `app.archive.cloud.aws.credentials.accessKey` -> `archive.s3-access-key`
-            * `app.archive.cloud.aws.credentials.secretKey` -> `archive.s3-secret-key`
-            * `app.archive.cloud.aws.region.static` -> `archive.s3-region-static`
+        * Remove datasource and archive properties. File may be empty.
         * The following properties moved from `app.aggregate-reports` to `aggregate-reporting`
             * `assessment-types`, `statewide-user-assessment-types`, `state-aggregate-assessment-types`
-        * TODO
     * `rdw-reporting-report-processor.yml`
-        * The reporting datasource properties moved from `spring.datasource` to `datasources.reporting_ro`
-            * `url-server`, `username`, `password`
-        * The archive properties moved from `app.archive` to `archive` and were reorganized
-            * `app.archive.root` -> `archive.uri-root`
-            * `app.archive.cloud.aws.credentials.accessKey` -> `archive.s3-access-key`
-            * `app.archive.cloud.aws.credentials.secretKey` -> `archive.s3-secret-key`
-            * `app.archive.cloud.aws.region.static` -> `archive.s3-region-static`
-        * TODO
+        * Remove datasource and archive properties.
     * `rdw-reporting-service.yml`
-        * The datasource properties moved from `spring.datasource` to `datasources.reporting_ro`
-            * `url-server`, `username`, `password`
-        * The writable datasource properties moved from `spring.writable_datasource` to `datasources.reporting_rw`
-            * `url-server`, `username`, `password`
-        * TODO
+        * Remove datasource and archive properties.
     * `rdw-reporting-webapp.yml`
-        * The datasource properties moved from `spring.datasource` to `datasources.reporting_ro`
-            * `url-server`, `username`, `password`
+        * Remove datasource and archive properties.
         * TODO
     * Commit changes
         ```bash
@@ -322,6 +371,8 @@ All cluster deployment and configuration is stored in version control, so nothin
     kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus
     ```
 * [ ] Redeploy ingest services.
+TODO - import updated subject files; Math subject file needs to be tweaked to fix claim order
+
     ```bash
     cd ~/git/RDW_Deploy_Opus
     # ingest services

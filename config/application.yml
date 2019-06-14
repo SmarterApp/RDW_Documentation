@@ -2,8 +2,9 @@
 #
 # This file should be named application.yml when served by the configuration server.
 #
-# Arguably this is an implementation detail so some of the properties that appear in this file are
-# also annotated in the files for the individual services that use them.
+# To make maintenance of the system easier, it is recommended that the common properties
+# for datasources, archive, reporting, logging be put here. Those properties are annotated
+# in the files for the individual services that use them. And a couple are here for example.
 
 reporting:
   client: SBAC

@@ -35,5 +35,18 @@ Some fields are optional based on the scoring requirements of a subject.
 If item details are specified, the assessment fields must be repeated in every item row.
 
 
+### Validator
 
+The validator is a command-line utility for validating subject and assessment package files.
+To use:
+```
+$ java -jar rdw-ingest-validator-1.4.0-743.jar 
+Specify at least one subject (-s) or test package (-t) file
+usage: Validator
+Validator for RDW subject and test package files
+ -s,--subject <arg>        subject file
+ -t,--test-package <arg>   test package (tabulator) file
+You may repeat options multiple times
+```
 
+TODO - Currently the JAR artifact is manually copied into this folder, it should be published in a more automated way. 

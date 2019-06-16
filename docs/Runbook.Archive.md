@@ -1,4 +1,4 @@
-## Archive Tenant
+## Archive RDW Instance Database
 
 **Intended Audience**: This document provides instructions for creating and restoring an archive of the [Reporting Data Warehouse](../README.md) (RDW). Access to the production databases is required. Operations will find this useful if archiving older content (and deleting it from the current database) is required.
 

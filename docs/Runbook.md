@@ -27,8 +27,9 @@
     * [Bulk Delete Exams](Runbook.BulkDeleteExams.md)
     * [Language Support](Runbook.LanguageSupport.md)
     * [Data Specifications](Runbook.DataSpecifications.md)
-    * [Archive Tenant](Runbook.ArchiveTenant.md)
+    * [Archive Instance Database](Runbook.Archive.md)
     * [PII Audit Data](Runbook.Audit.md)
+    * [MultiTenancy](Runbook.MultiTenancy.md)
 
 <a name="common"></a>
 ## Common Service Conventions

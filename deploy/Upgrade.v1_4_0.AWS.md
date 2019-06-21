@@ -52,10 +52,17 @@ The goal of this step is to make changes to everything that doesn't directly aff
 * [ ] Add a copy of this checklist to deployment and switch to that copy.
 * [ ] Changes to deployment files in `RDW_Deploy_Opus`. There are sample deployment files in the `deploy` folder in the `RDW` repository; use those to copy and help guide edits.
     * Common services.
-        * `configuration-service.yml` - change the image version to `3.1.2-RELEASE`
+        * `configuration-service.yml`
+            * Change the image version to `3.1.2-RELEASE`
+            * Set the search path in the environment variables:
+            ```
+            env:
+            - name: CONFIG_SERVICE_SEARCH_PATH
+              value: "tenant*"
+            ```
         * `rabbit-service.yml` - no change required
         * `wkhtmltopdf-service.yml` - no change required
-    * Ingest services, change image version to `1.4.0-RELEASE` in the following files:
+    * Ingest services, change image version to `1.4.0-RC5` in the following files:
         * `import-service.yml`
         * `package-processor-service.yml`
         * `group-processor-service.yml`
@@ -63,12 +70,31 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * `migrate-olap-service.yml`
         * `migrate-reporting-service.yml`
         * `task-service.yml`
-    * Reporting services, change image version to `1.4.0-RELEASE` in the following files:
+    * Increase the memory for `migrate-olap-service.yml` from 500M/600M to 800M/800M
+    * Reporting services, change image version to `1.4.0-RC5` in the following files:
         * `admin-service.yml`
         * `aggregate-service.yml`
         * `report-processor-service.yml`
         * `reporting-service.yml`
         * `reporting-webapp.yml`
+    * The services need to have their actuator port exposed. In `admin-service.yml`, `aggregate-service.yml`, `report-processor-service.yml` and `reporting-service.yml` change something like this:
+    ```
+    spec:
+      ports:
+      - port: 80
+        targetPort: 8080
+    ``` 
+    to:
+    ```
+    spec:
+      ports:
+      - port: 80
+        targetPort: 8080
+        name: api
+      - port: 8008
+        targetPort: 8008
+        name: config
+    ```
     * Commit changes
         ```bash
         cd ~/git/RDW_Deploy_Opus
@@ -110,7 +136,14 @@ The goal of this step is to make changes to everything that doesn't directly aff
           s3-secret-key: '{cipher}82...'
           s3-region-static: us-west-2
         ```
-        * TODO
+        * Add/move RabbitMQ configuration into the base `application.yml` file
+        ```
+        spring:
+          rabbitmq:
+            host: rabbit-service
+            username: guest
+            password: '{cipher}8195fa959bd85f65b64a3f1cb910186ae626edd7a5bb3e0f6f3259265d89f599'
+        ```
     * Tenant-specific `application.yml`. Create a tenant folder using the tenant state code, e.g. `tenant-OT`. Create a new `application.yml` file in that folder. This will be the location of the common configuration overrides for this tenant.
         * Add the tenant declaration properties:
         ```
@@ -130,7 +163,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
                 code: OT
                 name: Other State
         ```
-        * Add the datasource overrides. The database, username and password for every datasource should go here; copy from existing config files. For a single tenant system the values can be copied from the existing configuration, there is no need to rename databases with tenant discriminating prefixes.
+        * Add the datasource overrides. The database, username and password for every datasource should go here; copy from existing config files. For a single tenant system the values can be copied from the existing configuration, there is no need to rename databases with tenant discriminating prefixes/suffixes.
             * `datasources.migrate_rw` from `spring.migrate_datasource` (look in `rdw-ingest-migrate-olap.yml`)
             * `datasources.olap_ro` from `spring.olap_datasource` (look in `rdw-reporting-aggregate-service.yml`)
             * `datasources.olap_rw` from `spring.olap_datasource` (look in `rdw-ingest-migrate-olap.yml`)
@@ -179,24 +212,77 @@ The goal of this step is to make changes to everything that doesn't directly aff
                 password: '{cipher}53...'
         ```
         * For a single tenant system, there is no need to provide an archive path prefix.
+        * This is a good time to configure the student fields if necessary. For example:
+        ```
+        reporting:
+          tenants:
+            OT:
+              student-fields:
+                EconomicDisadvantage: disabled
+                LimitedEnglishProficiency: disabled
+                MigrantStatus: enabled
+                EnglishLanguageAcquisitionStatus: enabled
+                PrimaryLanguage: enabled
+                Ethnicity: enabled
+                Gender: disabled
+                IndividualEducationPlan: disabled
+                MilitaryStudentIdentifier: disabled
+                Section504: disabled
+        ```
     * `rdw-ingest-exam-processor.yml`
-        * Remove datasource and archive properties. File may be empty.
+        * Remove datasource; copied to application.yml as warehouse_rw.
+        * Remove rabbitmq config if present.
+        * The exam XSLT has been replaced with the ingest pipeline script.
+            * Remove the `transformations.exam` property
+        * File may be empty.
     * `rdw-igest-group-processor.yml`
-        * Remove datasource and archive properties. File may be empty.
+        * Remove datasource; copied to application.yml as warehouse_rw.
+        * Remove archive properties; copied to application.yml.
+        * Remove rabbitmq config if present.
+        * File may be empty.
     * `rdw-ingest-import-service.yml`
-        * Remove datasource and archive properties.
+        * Remove datasource; copied to application.yml as warehouse_rw.
+        * Remove archive properties; copied to application.yml.
+        * Remove rabbitmq config if present.
     * `rdw-ingest-migrate-olap.yml`
-        * Remove datasource and archive properties.
+        * Remove migrate_datasource; copied to application.yml as migrate_rw.
+        * Remove olap_datasource; copied to application.yml as olap_rw.
+        * Remove warehouse_datasource; copied to application.yml as warehouse_rw.
+        * Remove archive properties; copied to application.yml.
     * `rdw-ingest-migrate-reporting.yml`
-        * Remove datasource and archive properties. File may be empty.
+        * Remove reporting_datasource; copied to application.yml as reporting_rw.
+        * Remove warehouse_datasource; copied to application.yml as warehouse_rw.
+        * File may be empty.
     * `rdw-ingest-package-processor.yml`
-        * Remove datasource and archive properties. File may be empty.
+        * Remove datasource; copied to application.yml as warehouse_rw.
+        * Remove archive properties; copied to application.yml.
+        * Remove rabbitmq config if present.
+        * File may be empty.
     * `rdw-ingest-task-service.yml`
-        * Remove datasource and archive properties.
+        * Remove datasource; copied to application.yml as warehouse_rw.
+        * The task service is not multi-tenant aware as of 1.4.0-RC5 so comment out all task configurations.
         * TODO
     * `rdw-reporting-admin-service.yml`
-        * Remove datasource and archive properties.
+        * Remove reporting_datasource; copied to application.yml as reporting_ro.
+        * Remove warehouse_datasource; copied to application.yml as warehouse_rw.
+        * Remove archive properties; copied to application.yml.
+        * Remove rabbitmq config if present.
+        * Add the tenant configuration service urls.
+        ```
+        tenant-configuration-lookup:
+          services:
+            # talking to itself
+            admin-service:
+              url: http://localhost:8008
+            aggregate-service:
+              url: http://aggregate-service:8008
+            report-processor:
+              url: http://report-processor-service:8008
+            reporting-service:
+              url: http://reporting-service:8008
+        ```
         * Add the tenant configuration persistence properties. The credentials must allow updates (i.e. not read-only)
+        The config repo name can probably be found in the `configuration-service.yml` (in RDW_Deploy_Opus).
         ```
         tenant-configuration-persistence:
           local-repository-path: /tmp/rdw_config
@@ -206,18 +292,26 @@ The goal of this step is to make changes to everything that doesn't directly aff
           author: "Zaphod Beeblebrox"
           author-email: "zaphodb@example.com"
         ```
-        * TODO
     * `rdw-reporting-aggregate-service.yml`
-        * Remove datasource and archive properties. File may be empty.
-        * The following properties moved from `app.aggregate-reports` to `aggregate-reporting`
+        * Remove olap_datasource; copied to application.yml as olap_ro.
+        * Remove archive properties; copied to application.yml.
+        * Remove rabbitmq config if present.
+        * Remove the following properties from `app.aggregate-reports` (summative assessments are now enabled)
             * `assessment-types`, `statewide-user-assessment-types`, `state-aggregate-assessment-types`
     * `rdw-reporting-report-processor.yml`
-        * Remove datasource and archive properties.
+        * Remove datasource; copied to application.yml as reporting_ro.
+        * Remove archive properties; copied to application.yml.
+        * Remove rabbitmq config if present.
+        * Remove `task.remove-stale-reports`.
     * `rdw-reporting-service.yml`
-        * Remove datasource and archive properties.
+        * Remove datasource; copied to application.yml as reporting_ro.
+        * Remove writable_datasource; copied to application.yml as reporting_rw.
+        * Remove archive properties; copied to application.yml.
     * `rdw-reporting-webapp.yml`
-        * Remove datasource and archive properties.
-        * TODO
+        * Remove datasource; copied to application.yml as reporting_ro.
+        * Remove `cloud.aws` properties if present.
+    * Remove the xslt folder (and exam.xsl) if present
+    * There may be new or modified localization overrides, this is a good time to create or modify the `i18n/en.json` file.
     * Commit changes
         ```bash
         cd ~/git/RDW_Config_Opus
@@ -225,6 +319,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
         git commit -am "Changes for v1.4.0"
         git push
         ```
+* [ ] TODO - Update IRiS files        
 * [ ] Add new roles and permissions for the Reporting component in the permissions application.
     * Role: TENANT_ADMIN. Assignable at CLIENT level only.
         * Permissions: TENANT_READ, TENANT_WRITE
@@ -343,24 +438,27 @@ All cluster deployment and configuration is stored in version control, so nothin
           -Predshift_url=jdbc:redshift://rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus -Predshift_user=root -Predshift_password=password \
           cleanMigrate_olap migrateMigrate_olap cleanReporting_olap migrateReporting_olap
         ```
-    * After wiping the reporting olap database you'll need to re-grant table permissions.
+    * After wiping the reporting olap database you'll need to re-grant permissions because there are some new tables.
     ```sql
 	\connect opus
-	GRANT ALL ON SCHEMA reporting to rdwopusingest;
     GRANT ALL ON ALL TABLES IN SCHEMA reporting TO rdwopusingest;
-	GRANT ALL ON SCHEMA reporting to rdwopusreporting;
     GRANT ALL ON ALL TABLES IN SCHEMA reporting TO rdwopusreporting;
-	ALTER USER rdwopusingest SET SEARCH_PATH TO reporting;
-	ALTER USER rdwopusreporting SET SEARCH_PATH TO reporting;
     ```
 * [ ] Merge deployment branch. This can be done via command line or via the repository UI (if you use the repository UI, make sure to checkout and pull the latest `master`). Here are the command line actions:
     ```bash
     cd ~/git/RDW_Deploy_Opus
-    git checkout v1_3_0; git pull
+    git checkout v1_4_0; git pull
     git checkout master
-    git merge v1_3_0
+    git merge v1_4_0
     git push origin master
-    git push origin --delete v1_3_0; git branch -d v1_3_0
+    git push origin --delete v1_4_0; git branch -d v1_4_0
+    
+    cd ../RDW_Config_Opus
+    git checkout v1_4_0; git pull
+    git checkout master
+    git merge v1_4_0
+    git push origin master
+    git push origin --delete v1_4_0; git branch -d v1_4_0
     ```
 * (Optional) Although there should be no problem, now is an okay time to verify db connectivity/routing/permissions.
     ```bash
@@ -370,29 +468,40 @@ All cluster deployment and configuration is stored in version control, so nothin
     kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus
     kubectl run -it --rm --image=jbergknoff/postgresql-client psql postgresql://username:password@rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus
     ```
-* [ ] Redeploy ingest services.
-TODO - import updated subject files; Math subject file needs to be tweaked to fix claim order
-
+* [ ] Redeploy the configuration service, and wait for it to fully come up
     ```bash
-    cd ~/git/RDW_Deploy_Opus
-    # ingest services
+    cd ~/RDW_Deploy_Staging
+    kubectl apply -f configuration-service.yml
+    # wait for configuration-deployment to come up (`watch -n3 kubectl get po`)
+    ```    
+* [ ] Redeploy ingest services but not the migrate services just yet.
+    ```bash
     kubectl apply -f package-processor-service.yml
     kubectl apply -f exam-processor-service.yml
     kubectl apply -f group-processor-service.yml
+    kubectl apply -f import-service.yml
+    ```
+* [ ] Reload the subject files. This is necessary because they have additional metadata that needs to be ingested and migrated. The updated subject files can be found in this deploy folder.
+    ```bash
+    export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
+    curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@Math_subject.xml https://import.sbac.org/subjects/imports
+    curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@ELA_subject.xml https://import.sbac.org/subjects/imports
+    ```    
+* [ ] Redeploy the remaining ingest services.
+    ```bash
     kubectl apply -f migrate-reporting-service.yml
     kubectl apply -f migrate-olap-service.yml
-    kubectl apply -f import-service.yml
     kubectl apply -f task-service.yml
     ```
-    The migrate-olap service will take some time (up to an hour) to migrate the data.
+    The migrate services will take a little time to migrate the subject updates.
 * [ ] Redeploy reporting services.
     ```bash
-    cd ~/git/RDW_Deploy_Opus
+    cd ~/RDW_Deploy_Opus
     # reporting services
-    kubectl apply -f admin-service.yml
     kubectl apply -f aggregate-service.yml
     kubectl apply -f reporting-service.yml
     kubectl apply -f report-processor-service.yml
+    kubectl apply -f admin-service.yml
     kubectl apply -f reporting-webapp.yml
    ```
 Check the logs of the services.
@@ -416,23 +525,4 @@ Smoke 'em if ya got 'em.
 
 ### Hotfixes
 
-#### Upgrade v1.3.1
-
-This upgrade (reporting) contains a hotfix for EBSR answer keys; and an increase to the district export timeout. The upgrade process is simple and requires no downtime:
-* [ ] Edit `reporting-service.yml` and `report-processor-service.yml` and change image versions to `1.3.1-RELEASE`
-* [ ] Perform a rolling update of those services:
-```
-kubectl apply -f reporting-service.yml
-kubectl apply -f report-processor-service.yml
-```
-
-This upgrade (ingest) contains a bug fix for group migration after a large group file upload. The upgrade process is simple and requires no downtime:
-* [ ] Edit `migrate-olap-service.yml` and `migrate-reporting-service.yml` and change image versions to `1.3.1-RELEASE`
-* [ ] Perform a rolling update of those services. It is slightly more cautious to disable migration first:
-```
-# (Optional) Disable migrate reporting
-kubectl exec -it migrate-reporting-deployment-[randomization] -- curl -X POST http://localhost:8008/migrate/pause
-# Rolling update of services
-kubectl apply -f migrate-olap-service.yml
-kubectl apply -f migrate-reporting-service.yml
-```
+#### Upgrade v1.4.x

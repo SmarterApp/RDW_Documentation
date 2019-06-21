@@ -5,6 +5,9 @@
 ### Table of Contents
 
 * [Creating Sandbox Data Sets](#creating-sandbox-data-sets)
+* [Manual Tenant Creation](#manual-tenant-creation)
+* [Manual Sandbox Creation](#manual-sandbox-creation)
+* [Manual Configuration Change](#manual-configuration-change)
 
 
 ### Creating Sandbox Data Sets
@@ -105,3 +108,31 @@ find . -size 0 -delete
 find *.txt > manifest.txt
 ```
 * Upload the files to S3, e.g. `s3://rdw-qa-archive/sandbox-datasets/sbac-dataset/warehouse`
+
+### Manual Tenant Creation
+
+The admin UI allows a user to create a tenant. It handles all the magic under the covers.
+However, there may be situations where manually creating a tenant is necessary.
+
+TODO - steps
+
+### Manual Sandbox Creation
+
+The admin UI allows a user to create a sandbox. It handles all the magic under the covers.
+However, there may be situations where manually creating a sandbox is necessary.
+The steps are very similar to creating a tenant with some important differences:
+* The sandbox id should follow the convention of the parent tenant id concatenated with "_Snnn" where nnn goes from 001 to 999. For example, a new sandbox for the OT tenant might have id OT_S012.
+* A sandbox configuration must indicate that it is a sandbox and include the dataset name.
+* The dataset must be loaded.
+
+TODO - steps
+
+
+### Manual Configuration Change
+
+As part of the multi-tenant support, all the RDW services now respond dynamically to configuration changes. If a manual change is made to configuration, trigger the system to see the change:
+```bash
+kubectl exec -it configuration-deployment-<k8s-id> -- curl -d 'path=*' http://localhost:8888/monitor
+```
+It takes 20-30 seconds for the change to be loaded and propagated to the services.
+

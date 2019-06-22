@@ -30,12 +30,12 @@ The goal of this step is to make changes to everything that doesn't directly aff
 
 * These instructions expect you to have access to the files in the RDW project, so clone that locally if needed.
     ```bash
-    cd ~/git
+    cd ~
     git clone https://github.com/SmarterApp/RDW.git
     ```
 * [ ] Branch the deployment and configuration repositories. All changes to these files will be made in the branch which can be quickly merged during the upgrade.
     ```bash
-    cd ~/git
+    cd ~
     git clone https://github.com/SmarterApp/RDW_Deploy_Opus.git
     git clone https://github.com/SmarterApp/RDW_Config_Opus.git
 
@@ -50,6 +50,12 @@ The goal of this step is to make changes to everything that doesn't directly aff
     git push -u origin v1_4_0
     ```
 * [ ] Add a copy of this checklist to deployment and switch to that copy.
+    ```bash
+    cd ../RDW_Deploy_Opus
+    cp ../RDW/Upgrade.v1_4_0.AWS.md .
+    git add Upgrade.v1_4_0.AWS.md
+    ```
+* [ ] (Optional) It is a good idea to go through the rest of this document, updating the configuration, credentials, etc. to match the environment. If you don't you'll just have to do it as you go along and there will be an extra commit to do when merging the deploy branch.    
 * [ ] Changes to deployment files in `RDW_Deploy_Opus`. There are sample deployment files in the `deploy` folder in the `RDW` repository; use those to copy and help guide edits.
     * Common services.
         * `configuration-service.yml`
@@ -62,7 +68,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
             ```
         * `rabbit-service.yml` - no change required
         * `wkhtmltopdf-service.yml` - no change required
-    * Ingest services, change image version to `1.4.0-RC5` in the following files:
+    * Ingest services, change image version to `1.4.0-RC7` in the following files:
         * `import-service.yml`
         * `package-processor-service.yml`
         * `group-processor-service.yml`
@@ -71,7 +77,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * `migrate-reporting-service.yml`
         * `task-service.yml`
     * Increase the memory for `migrate-olap-service.yml` from 500M/600M to 800M/800M
-    * Reporting services, change image version to `1.4.0-RC5` in the following files:
+    * Reporting services, change image version to `1.4.0-RC7` in the following files:
         * `admin-service.yml`
         * `aggregate-service.yml`
         * `report-processor-service.yml`
@@ -97,7 +103,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
     ```
     * Commit changes
         ```bash
-        cd ~/git/RDW_Deploy_Opus
+        cd ../RDW_Deploy_Opus
         git add *
         git commit -am "Changes for v1.4.0"
         git push 
@@ -128,7 +134,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
           warehouse_rw:
             url-server: rdw-aurora-opus-warehouse.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306
         ```
-        * The archive settings are common and should be put here.
+        * The archive settings are common and should be put here (look in `rdw-reporting-aggregate-service.yml`)
         ```
         archive:
           uri-root: s3://rdw-opus-archive
@@ -136,7 +142,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
           s3-secret-key: '{cipher}82...'
           s3-region-static: us-west-2
         ```
-        * Add/move RabbitMQ configuration into the base `application.yml` file
+        * Add/move RabbitMQ configuration into the base `application.yml` file (look in `rdw-reporting-aggregate-service.yml`)
         ```
         spring:
           rabbitmq:
@@ -145,6 +151,12 @@ The goal of this step is to make changes to everything that doesn't directly aff
             password: '{cipher}8195fa959bd85f65b64a3f1cb910186ae626edd7a5bb3e0f6f3259265d89f599'
         ```
     * Tenant-specific `application.yml`. Create a tenant folder using the tenant state code, e.g. `tenant-OT`. Create a new `application.yml` file in that folder. This will be the location of the common configuration overrides for this tenant.
+    ```bash
+    cd ../RDW_Config_Opus
+    mkdir tenant-OT
+    touch tenant-OT/application.yml
+    git add tenant-OT/application.yml
+    ```
         * Add the tenant declaration properties:
         ```
         tenantProperties:
@@ -235,7 +247,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * The exam XSLT has been replaced with the ingest pipeline script.
             * Remove the `transformations.exam` property
         * File may be empty.
-    * `rdw-igest-group-processor.yml`
+    * `rdw-ingest-group-processor.yml`
         * Remove datasource; copied to application.yml as warehouse_rw.
         * Remove archive properties; copied to application.yml.
         * Remove rabbitmq config if present.
@@ -260,7 +272,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * File may be empty.
     * `rdw-ingest-task-service.yml`
         * Remove datasource; copied to application.yml as warehouse_rw.
-        * The task service is not multi-tenant aware as of 1.4.0-RC5 so comment out all task configurations.
+        * The task service is not multi-tenant aware as of 1.4.0-RC7 so comment out all task configurations.
         * TODO
     * `rdw-reporting-admin-service.yml`
         * Remove reporting_datasource; copied to application.yml as reporting_ro.
@@ -314,7 +326,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
     * There may be new or modified localization overrides, this is a good time to create or modify the `i18n/en.json` file.
     * Commit changes
         ```bash
-        cd ~/git/RDW_Config_Opus
+        cd ../RDW_Config_Opus
         git add *
         git commit -am "Changes for v1.4.0"
         git push
@@ -330,7 +342,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
     probably the tagged 1.3.0 commit:
     ```bash
     # get v1.3.0 version of the schema
-    cd ~/git/RDW_Schema
+    cd ../RDW_Schema
     git fetch --all --tags --prune
     git checkout 1.3.0
     cd validation
@@ -412,7 +424,7 @@ All cluster deployment and configuration is stored in version control, so nothin
     * Get the latest version of the schema and check the state of the databases.
     ```bash
     # get latest version of the schema
-    cd ~/git/RDW_Schema
+    cd ../RDW_Schema
     git checkout master; git pull
 
     # test credentials and state of databases
@@ -432,21 +444,22 @@ All cluster deployment and configuration is stored in version control, so nothin
         ```bash
         ./gradlew -Pdatabase_url="jdbc:mysql://rdw-opus-reporting.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password migrateReporting
         ```
-        * Reporting OLAP. We will be wiping out the olap data and remigrating everything.
+        * Reporting OLAP.
         ```bash
         ./gradlew -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password \
           -Predshift_url=jdbc:redshift://rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus -Predshift_user=root -Predshift_password=password \
-          cleanMigrate_olap migrateMigrate_olap cleanReporting_olap migrateReporting_olap
+          migrateMigrate_olap migrateReporting_olap
         ```
-    * After wiping the reporting olap database you'll need to re-grant permissions because there are some new tables.
+    * After migrating the reporting olap database you'll need to re-grant permissions because there are some new tables.
     ```sql
-	\connect opus
+    \connect opus
     GRANT ALL ON ALL TABLES IN SCHEMA reporting TO rdwopusingest;
     GRANT ALL ON ALL TABLES IN SCHEMA reporting TO rdwopusreporting;
     ```
 * [ ] Merge deployment branch. This can be done via command line or via the repository UI (if you use the repository UI, make sure to checkout and pull the latest `master`). Here are the command line actions:
     ```bash
-    cd ~/git/RDW_Deploy_Opus
+    cd ../RDW_Deploy_Opus
+    # (if this document has been updated during the process you'll want to commit it (on the branch) before these steps)
     git checkout v1_4_0; git pull
     git checkout master
     git merge v1_4_0
@@ -508,7 +521,7 @@ Check the logs of the services.
 * [ ] (Optional) Run data validation scripts. Once the data migration is complete (you can see this by monitoring the
 log for the migrate-reporting and migrate-olap service), you may re-run the validation scripts.
     ```bash
-    cd ~/git/RDW_Schema
+    cd ../RDW_Schema
     git checkout master; git pull
     cd validation
     ./validate-migration.sh secrets/opus.sh reporting

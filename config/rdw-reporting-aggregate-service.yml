@@ -20,6 +20,7 @@ management:
 #  state-aggregate-assessment-types: sum
 
 # Application configuration
+# TODO - this has changed
 app:
 #  aggregate-reports:
 #    api-enabled: false

@@ -18,18 +18,18 @@
       </OverallScoring>
       <ClaimScoring name="Claim">
         <PerformanceLevels>
-          <PerformanceLevel level="1" name="Level 1" shortName="Level 1" suffix="" color="sb-iab-red"/>
-          <PerformanceLevel level="2" name="Level 2" shortName="Level 2" suffix="" color="sb-iab-yellow"/>
-          <PerformanceLevel level="3" name="Level 3" shortName="Level 3" suffix="" color="sb-iab-green"/>
+          <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
+          <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>
+          <PerformanceLevel level="3" name="Above Standard" shortName="Above" suffix="Standard" color="sb-iab-green"/>
         </PerformanceLevels>
       </ClaimScoring>
     </AssessmentType>
     <AssessmentType code="iab" name="IAB" longName="Interim Assessment Blocks">
       <OverallScoring name="Overall" minScore="1000" maxScore="3500">
         <PerformanceLevels>
-          <PerformanceLevel level="1" name="Level 1" shortName="Level 1" suffix="" color="sb-iab-red"/>
-          <PerformanceLevel level="2" name="Level 2" shortName="Level 2" suffix="" color="sb-iab-yellow"/>
-          <PerformanceLevel level="3" name="Level 3" shortName="Level 3" suffix="" color="sb-iab-green"/>
+          <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
+          <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>
+          <PerformanceLevel level="3" name="Above Standard" shortName="Above" suffix="Standard" color="sb-iab-green"/>
         </PerformanceLevels>
       </OverallScoring>
     </AssessmentType>
@@ -44,9 +44,9 @@
       </OverallScoring>
       <ClaimScoring name="Claim">
         <PerformanceLevels>
-          <PerformanceLevel level="1" name="Level 1" shortName="Level 1" suffix="" color="sb-iab-red"/>
-          <PerformanceLevel level="2" name="Level 2" shortName="Level 2" suffix="" color="sb-iab-yellow"/>
-          <PerformanceLevel level="3" name="Level 3" shortName="Level 3" suffix="" color="sb-iab-green"/>
+          <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
+          <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>
+          <PerformanceLevel level="3" name="Above Standard" shortName="Above" suffix="Standard" color="sb-iab-green"/>
         </PerformanceLevels>
       </ClaimScoring>
     </AssessmentType>

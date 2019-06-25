@@ -830,16 +830,18 @@ curl -X POST http://localhost:8008/updateOrganizations
 ```
 
 #### Migrate Task
-The migrate tasks move data from the main data warehouse to the reporting data stores. If there are problems the migrate tasks will disable themselves by marking a record in the database. To re-enable migrate, DevOps needs to diagnose the problem and then update that record in a specific way. To help with this, there is an actuator end-point to update the record properly. NOTE: if the underlying problem is not addressed, the migrate service will disable itself again.
+The migrate tasks move data from the main data warehouse to the reporting data stores. If there are problems the migrate tasks will disable themselves by marking a record in the database. This is tenant-specific. To re-enable migrate, DevOps needs to diagnose the problem and then update that record in a specific way. To help with this, there is an actuator end-point to update the record properly. NOTE: if the underlying problem is not addressed, the migrate service will disable itself again.
 
 * Host: migrate-olap service, migrate-reporting service
 * URL: `/migrate/enable`
 * Method: `POST`
+* URL Params: the tenant id must be specified:
+  * `tenantId=<tenant-id>`
 * Success Response:
   * Code: 200
 * Sample Call:
 ```bash
-curl -X POST http://localhost:8008/migrate/enable
+curl -X POST http://localhost:8008/migrate/enable?tenantId=CA
 ```
 
 As a reminder, the migrate services also allow themselves to be paused. This is different than when they disable themselves. The services must be both running and enabled to be active. Pausing uses the normal Spring lifecycle end-points.
@@ -860,14 +862,18 @@ The task for moving data to the individual reporting system used by teachers hap
 * Host: migrate-olap service
 * URL: `/migrate`
 * Method: `POST`
+* URL Params: there is an optional tenantId parameter; if specified just that tenant is migrated, otherwise migrate will be triggered for all tenants:
+  * `tenantId=<tenant-id>`
 * Success Response:
   * Code: 200
 * Sample Call:
 ```bash
 curl -X POST http://localhost:8008/migrate
+curl -X POST http://localhost:8008/migrate?tenantId=CA
 ```
 
-As a convenience the /migrate end-point will return the current migrate status. This can be useful when troubleshooting.
+As a convenience the /migrate end-point will return the current migrate status. This can be useful when troubleshooting. 
+NOTE: the `COMPLETED to <timestamp>` is the timestamp of the last *record* migrated, not when the last migrate occurred.
 
 * Host: migrate-olap service, migrate-reporting service
 * URL: `/migrate`
@@ -876,7 +882,9 @@ As a convenience the /migrate end-point will return the current migrate status. 
   * Code: 200
   * Content:
   ```
-  Migrate: running, enabled. Last migrate: COMPLETED to 2018-07-04T17:17:38.212782
+  Migrate: running
+  CA: enabled; last migrate: COMPLETED to 2019-05-28T15:26:55.73839
+  TS: enabled; last migrate: COMPLETED to 2019-05-28T15:17:17.488472  
   ```
 * Sample Call:
 ```bash

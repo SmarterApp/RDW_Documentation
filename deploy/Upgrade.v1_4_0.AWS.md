@@ -272,8 +272,26 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * File may be empty.
     * `rdw-ingest-task-service.yml`
         * Remove datasource; copied to application.yml as warehouse_rw.
-        * The task service is not multi-tenant aware as of 1.4.0-RC7 so comment out all task configurations.
-        * TODO
+        * Modify any send-reconciliation-report archive senders. For example:
+        ```
+        - type: archive
+          root: s3://rdw-opus-archive
+          cloud:
+            aws:
+              # rdw-opus
+               accessKey: AK...
+                secretKey: '{cipher}ca36...'
+              region:
+                static: us-west-2
+        ```
+        becomes:
+        ```
+        - type: archive
+          uri-root: s3://rdw-opus-archive
+          s3-access-key: AK...
+          s3-secret-key: '{cipher}ca36...'
+          s3-region-static: us-west-2
+        ```
     * `rdw-reporting-admin-service.yml`
         * Remove reporting_datasource; copied to application.yml as reporting_ro.
         * Remove warehouse_datasource; copied to application.yml as warehouse_rw.

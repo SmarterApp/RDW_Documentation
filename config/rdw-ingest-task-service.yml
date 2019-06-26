@@ -80,21 +80,17 @@ task:
     senders:
       - type: log
       - type: archive
-        root: file:///tmp/
+        uri-root: file:///tmp/
         # The S3 archive sender has the same configuration options as an archive service. The
-        # root should be the protocol and bucket, e.g. s3://my-archive-bucket. The AWS access key
-        # should be for a programmatic AWS user. The secretKey should be encrypted. The sse
+        # uri-root should be the protocol and bucket, e.g. s3://my-archive-bucket. The AWS access
+        # key should be for a programmatic AWS user. The secret key should be encrypted. The sse
         # setting is optional and should correspond to the S3 bucket settings.
       - type: archive
-        root:
-        cloud:
-          aws:
-            credentials:
-              access-key:
-              secret-key:
-            region:
-              static: us-west-2
-            sse: AES256
+        uri-root:
+        s3-access-key:
+        s3-secret-key:
+        s3-region-static: us-west-2
+        s3-sse: AES256
       - type: ftp
         server:
         username:
@@ -119,20 +115,6 @@ task:
         password:
     import-service-client:
       organizations-imports-url: http://import-service/organizations/imports
-      status-url: http://import-status-service/status
-      # The credentials should be for a user that has ASMTDATALOAD privileges for the import REST API
-      oauth2:
-        access-token-uri: https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac
-        client-id:
-        client-secret:
-        username:
-        password:
-
-  # Resubmit Unprocessed Exams configuration
-  resubmit-unprocessed-imports:
-    cron: 0 0 10 * * *
-    import-service-client:
-      exams-imports-url: http://import-service/exams/imports/resubmit
       status-url: http://import-status-service/status
       # The credentials should be for a user that has ASMTDATALOAD privileges for the import REST API
       oauth2:

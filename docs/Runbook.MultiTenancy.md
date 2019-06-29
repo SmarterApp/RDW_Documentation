@@ -114,18 +114,111 @@ find *.txt > manifest.txt
 The admin UI allows a user to create a tenant. It handles all the magic under the covers.
 However, there may be situations where manually creating a tenant is necessary.
 
-TODO - steps
+1. Know the tenant id/key. For this example we'll use `TS` (Test State).
+1. Provision database resources. You'll need to do this in Aurora and Redshift. If there are multiple data servers these steps will be slightly different.
+```sql
+-- Aurora (mysql client)
+CREATE DATABASE ts_warehouse DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
+CREATE DATABASE ts_reporting DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
+CREATE DATABASE ts_migrate_olap DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
+CREATE USER 'rdw_ts_ingest'@'%' IDENTIFIED BY 'password';
+CREATE USER 'rdw_ts_reporting'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON ts_warehouse.* TO 'rdw_ts_ingest'@'%';
+GRANT ALL PRIVILEGES ON ts_migrate_olap.* TO 'rdw_ts_ingest'@'%';
+GRANT ALL PRIVILEGES ON ts_reporting.* to 'rdw_ts_ingest'@'%';
+GRANT ALL PRIVILEGES ON ts_reporting.* to 'rdw_ts_reporting'@'%';
+GRANT SELECT ON mysql.proc TO 'rdw_ts_ingest'@'%';
+
+-- Redshift (postgresql client)
+\connect opus
+CREATE SCHEMA ts_reporting;
+CREATE USER rdw_ts_ingest PASSWORD 'password';
+CREATE USER rdw_ts_reporting PASSWORD 'password';
+GRANT ALL ON SCHEMA ts_reporting to rdw_ts_ingest;
+GRANT ALL ON SCHEMA ts_reporting to rdw_ts_reporting;
+ALTER USER rdw_ts_ingest SET SEARCH_PATH TO ts_reporting;
+ALTER USER rdw_ts_reporting SET SEARCH_PATH TO ts_reporting;
+```
+1. Create the RDW schemas. The RDW_Schema project may be used for this.
+```bash
+git clone https://github.com/SmarterApp/RDW_Schema.git
+cd RDW_Schema
+git checkout master; git pull
+
+# note the schema prefix; it can be anything but matching tenant id makes sense
+gradle \
+  -Pschema_prefix=ts_ \
+  -Pdatabase_url="jdbc:mysql://rdw-aurora-opus.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306/" \
+  -Pdatabase_user=rdw_ts_ingest -Pdatabase_password=password \
+  -Predshift_url=jdbc:redshift://rdw-opus.cibkulpjrgtr.us-west-2.redshift.amazonaws.com:5439/ts \
+  -Predshift_user=rdw_ts_ingest -Predshift_password=password \
+
+```
+1. Finish up database resource permissions.
+```sql
+-- Aurora (mysql client)
+GRANT LOAD FROM S3 ON *.* TO 'rdw_ts_ingest'@'%';
+GRANT SELECT INTO S3 ON *.* TO 'rdw_ts_ingest'@'%';
+GRANT SELECT INTO S3 ON *.* to 'rdw_ts_reporting'@'%';
+
+-- Redshift (postgresql client)
+\connect opus
+GRANT ALL ON ALL TABLES IN SCHEMA ts_reporting to rdw_ts_ingest;
+GRANT ALL ON ALL TABLES IN SCHEMA ts_reporting to rdw_ts_reporting;
+```
+1. Create configuration profile.
+```bash
+git clone https://gitlab.com/fairwaytech/rdw_config_opus.git
+cd rdw_config_opus
+git checkout master
+
+mkdir tenant-TS
+touch tenant-TS/application.yml
+# edit application.yml; best bet is to copy an existing tenant's file and modify
+git commit -am "Add TS tenant"
+git push
+```
+1. Poke configuration service
+```bash
+# wait 10-15 seconds before and 20-30 seconds after this command
+kubectl exec -it configuration-deployment-... -- curl -d 'path=tenant-TS' http://localhost:8888/monitor
+```
+1. Poke migrate services. It may (currently) be necessary to bounce these instead of just poking.
+```bash
+kubectl exec -it migrate-olap-... -- curl -X POST http://localhost:8008/migrate?tenantId=TS
+kubectl exec -it migrate-reporting-... -- curl -X POST http://localhost:8008/migrate?tenantId=TS
+```
+1. Bounce caching services. This shouldn't be necessary long-term but services may need bouncing: `aggregate-service`, `reporting-service`, `import-service`, maybe more.
+
 
 ### Manual Sandbox Creation
 
 The admin UI allows a user to create a sandbox. It handles all the magic under the covers.
 However, there may be situations where manually creating a sandbox is necessary.
 The steps are very similar to creating a tenant with some important differences:
-* The sandbox id should follow the convention of the parent tenant id concatenated with "_Snnn" where nnn goes from 001 to 999. For example, a new sandbox for the OT tenant might have id OT_S012.
+* The sandbox id should follow the convention of the parent tenant id concatenated with "_Snnn" where nnn goes from 001 to 999. For example, a new sandbox for the TS tenant might have id TS_S012.
 * A sandbox configuration must indicate that it is a sandbox and include the dataset name.
-* The dataset must be loaded.
+```
+tenantProperties:
+  tenants:
+    TS_S001:
+      id: TS_S001
+      key: TS_S001
+      name: Test Sandbox 001
+      sandboxDataset: "test-dataset"
+      sandbox: true      
+```
+* The dataset must be loaded. The dataset should be in S3. Do this after the database setup steps and before creating the sandbox configuration profile.
+```sql
+-- Aurora (mysql client)
+USE ts_warehouse;
+SET FOREIGN_KEY_CHECKS=0;
 
-TODO - steps
+-- A dataset has a manifest.txt file; for each entry in that file do something like:
+LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/accommodation.txt' INTO TABLE ts_warehouse.accommodation;
+
+SET FOREIGN_KEY_CHECKS=1;
+```
 
 
 ### Manual Configuration Change

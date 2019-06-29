@@ -215,6 +215,7 @@ USE ts_warehouse;
 SET FOREIGN_KEY_CHECKS=0;
 
 -- A dataset has a manifest.txt file; for each entry in that file do something like:
+TRUNCATE table ts_warehouse.accommodation;
 LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/accommodation.txt' INTO TABLE ts_warehouse.accommodation;
 
 SET FOREIGN_KEY_CHECKS=1;

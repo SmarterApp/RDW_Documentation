@@ -58,7 +58,7 @@ curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@Math_su
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@AccessibilityConfig.2019.xml http://localhost:8080/accommodations/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@2017v3.csv http://localhost:8080/packages/imports
 ... repeat for all assessment packages
-curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@demo.json http://localhost:8080/organizations/imports
+curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@organizations.json http://localhost:8080/organizations/imports
 # use submit_helper to submit TRTs (tweak ACCESS_TOKEN in script)
 find ./out/*/*/* -type d | xargs -I FOLDER -P 3 ./scripts/submit_helper.sh FOLDER
 ```    
@@ -81,7 +81,7 @@ IGNORE SELECT e.school_id, e.grade_id, a.subject_id, LEFT(e.session_id, 3) AS se
  HAVING cnt > 20 and cnt < 50;
 
 INSERT INTO student_group (id, name, school_id, school_year, subject_id, active, creator, import_id, update_import_id)
-SELECT tmpid, CONCAT(sc.name, ' (', su.code, ',', g.code, ')') as name, school_id, 2019 as school_year, subject_id, 1 as active, 'dwtest@example.com' as creator, @importid as import_id, @importid as update_import_id
+SELECT tmpid, CONCAT_WS(' ', sc.name, 'Grade', TRIM(LEADING '0' FROM g.code), su.code) as name, school_id, 2019 as school_year, subject_id, 1 as active, 'dwtest@example.com' as creator, @importid as import_id, @importid as update_import_id
 FROM school_grade_session sgs
 JOIN school sc ON sgs.school_id = sc.id
 JOIN grade g ON sgs.grade_id = g.id
@@ -97,8 +97,10 @@ UPDATE import SET status=1 WHERE id=@importid;
 
 DROP TABLE school_grade_session;
 ```
+* TODO - might want to have instructions for turning off embargo for current year
 * Dump data, cleanup and create manifest
 ```
+mkdir -p /tmp/sbac-dataset
 mysqldump -u root --tab=/tmp/sbac-dataset ts_warehouse
 cd /tmp/sbac-dataset
 rm schema_version.*
@@ -197,6 +199,8 @@ The admin UI allows a user to create a sandbox. It handles all the magic under t
 However, there may be situations where manually creating a sandbox is necessary.
 The steps are very similar to creating a tenant with some important differences:
 * The sandbox id should follow the convention of the parent tenant id concatenated with "_Snnn" where nnn goes from 001 to 999. For example, a new sandbox for the TS tenant might have id TS_S012.
+* For database resources, use the convention of a suffix qualifier, for example the warehouse database would be like `warehouse_ts_s001`
+* For database users, prefer the naming convention of the lowercased, collapsed sandbox ID, for example `tss001`
 * A sandbox configuration must indicate that it is a sandbox and include the dataset name.
 ```
 tenantProperties:
@@ -219,6 +223,10 @@ TRUNCATE table ts_warehouse.accommodation;
 LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/accommodation.txt' INTO TABLE ts_warehouse.accommodation;
 
 SET FOREIGN_KEY_CHECKS=1;
+```
+A hint for generating all the `LOAD DATA` commands (not quite right since the table name has `.txt` appended):
+```bash
+cat manifest.txt | xargs -n 1 -I FILE echo "LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/FILE' INTO TABLE warehouse.FILE"
 ```
 
 

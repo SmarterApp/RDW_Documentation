@@ -154,7 +154,7 @@ gradle \
   -Pdatabase_user=rdw_ts_ingest -Pdatabase_password=password \
   -Predshift_url=jdbc:redshift://rdw-opus.cibkulpjrgtr.us-west-2.redshift.amazonaws.com:5439/ts \
   -Predshift_user=rdw_ts_ingest -Predshift_password=password \
-
+  migrateWarehouse migrateReporting migrateMigrate_olap migrateReporting_olap
 ```
 1. Finish up database resource permissions.
 ```sql

@@ -334,17 +334,18 @@ The system accepts and stores import payloads regardless of processing status. F
 * Host: import service
 * URL: `/exams/imports/resubmit`
 * Method: `POST`
-* URL Params: query params can be used to restrict which exams to include; typically the status
-  * `status=<status>` where status may be `UNKNOWN_SCHOOL`, `UNKNOWN_ASMT`, `ACCEPTED`
+* URL Params: query params can be used to restrict which exam imports to include; typically the status
+  * `status=<status>` where status may be the import status name, e.g. `BAD_DATA`, or numeric id, e.g. `-3` (query the `import_status` table for allowed values). 
   * `after=<interval>` where interval is like `-PT1H` 
+  * `before=<interval>` where interval is like `-PT1H` 
   * `creator=<creator>`
   * `batch=<batchtag>`
+  * `limit=<N>` where N is a count. If there are a lot of imports to resubmit, use a limit to run them in manageable chunks, e.g. `limit=100`.
 * Headers:
   * `Authorization: Bearer {access_token}`
 * Success Response:
   * Code: 200
-  * Content: number of exams found and resubmitted. Note that a single call is limited to 100. If the return value is
-  100, it is likely there are more exams matching the query and additional resubmit calls should be made. 
+  * Content: number of exams found and resubmitted. If the return value is the same as the `limit` param, it is likely there are more exams matching the query and additional resubmit calls should be made. 
     ```text
     7
     ```

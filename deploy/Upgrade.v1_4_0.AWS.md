@@ -355,6 +355,13 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * Permissions: TENANT_READ, TENANT_WRITE
     * Role: PIPELINE_ADMIN. Assignable at STATE level only.
         * Permissions: PIPELINE_READ, PIPELINE_WRITE
+    * Role: SandboxTeacher (PII_GROUP)
+        * Permissions: GROUP_PII_READ, GROUP_READ
+    * Role: SandboxSchoolAdmin (PII, CUSTOM_AGGREGATE_REPORTER)
+        * Permissions: INDIVIDUAL_PII_READ, GROUP_PII_READ, GROUP_READ, CUSTOM_AGGREGATE_READ, 
+    * Role: SandboxDistrictAdmin (PII, CUSTOM_AGGREGATE_REPORTER, GROUP_ADMIN, EMBARGO_ADMIN, INSTRUCTIONAL_RESOURCE_ADMIN)
+        * Permissions: INDIVIDUAL_PII_READ, GROUP_PII_READ, CUSTOM_AGGREGATE_READ, GROUP_READ, GROUP_WRITE, EMBARGO_READ, EMBARGO_WRITE, INSTRUCTIONAL_RESOURCE_WRITE
+        
 * [ ] (Optional) Run data validation scripts. These scripts compare data between the warehouse and the data marts.
     * You'll need the version of RDW_Schema that was used to install the *current* installation; in this case it is
     probably the tagged 1.3.0 commit:

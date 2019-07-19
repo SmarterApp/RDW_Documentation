@@ -22,6 +22,7 @@
 * [Embargo](#embargo)
 * Advanced Resources
     * [System Configuration](Runbook.SystemConfiguration.md)
+    * [Pipeline](Runbook.Pipeline.md)
     * [Import and Migrate](Runbook.ImportMigrate.md)
     * [Manual Data Modification](Runbook.ManualDataModifications.md)
     * [Bulk Delete Exams](Runbook.BulkDeleteExams.md)

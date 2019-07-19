@@ -307,7 +307,8 @@ to find an reprocess once the problem with the Pipeline is corrected.
 <a name="ets-script"></a>
 ### ETS/CDE Exam Script
 
-Starting in school year 2017-18 there were inconsistencies in TRT data provided by ETS for CDE. Making the changes in ETS was not feasible so an XSLT solution was added to RDW. The pipeline functionality replaces this XSLT solution, and this script is a drop-in replacement:
+Starting in school year 2017-18 there were inconsistencies in TRT data provided by ETS for CDE. Making the changes in ETS was not feasible so an XSLT solution was added to RDW. The pipeline functionality replaces this XSLT solution, and this script is a drop-in replacement. 
+NOTE: although this script was tested in development, it is critical that proper tests are used to validate the functionality.
 ```groovy
 // Enable XML extensions to simplify processing the XML document
 enable 'xml'
@@ -382,4 +383,4 @@ transform '//Response' by { response ->
 
 outputXml
 ```
-NOTE: although this script was tested in development, it is critical that proper tests are used to validate the functionality.
+

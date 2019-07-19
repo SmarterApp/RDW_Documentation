@@ -304,7 +304,7 @@ When a document is processed by any ingest process, an entry is created in the `
 failure during the ingest, this record will have a status of -7 (PIPELINE_FAILURE), so these records will be easy
 to find an reprocess once the problem with the Pipeline is corrected.
 
-<a name="ets-script"/>
+<a name="ets-script"></a>
 ### ETS/CDE Exam Script
 
 Starting in school year 2017-18 there were inconsistencies in TRT data provided by ETS for CDE. Making the changes in ETS was not feasible so an XSLT solution was added to RDW. The pipeline functionality replaces this XSLT solution, and this script is a drop-in replacement:

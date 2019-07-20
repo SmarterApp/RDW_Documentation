@@ -20,8 +20,11 @@ Once complete, press the XML button to copy the generated XML to the clipboard. 
     * `Format rows` - so the macro can show/hide rows
 * Changes to the template workbook may need to be repeated in copies.
 * Things to work on:
-    * ( ) Improve instructions.
-    * ( ) Collect and emit ReportGrades data. This has not been done because no subjects other than the predefined Smarter Balanced ELA and Math support the printed reports (ISRs).
+    * Improve instructions.
+    * ReportGrades. Only Summative overall text is collected because no subjects other than the predefined Smarter Balanced ELA and Math support the printed reports (ISRs).
+        * Improve usability.
+        * Extend to include claim text.
+        * Extend to include ICA and IAB. 
 
 
 ### Assessment Package Files

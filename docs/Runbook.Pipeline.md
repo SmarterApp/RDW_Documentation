@@ -279,7 +279,7 @@ The best practice for correcting this problem would then be:
 1. Add a test in the Pipeline development user interface that duplicates this problem
 2. Fix the Pipeline script so that the test passes
 3. Publish and activate the new pipeline
-4. Reprocess the failed document
+4. Reprocess the failed document(s) (see [Resubmit Failures](#resubmit-failures))
 
 
 Other problem types will appear in a similar way in the logs, but should be rare or non-existent. For example a compilation
@@ -303,6 +303,32 @@ If the currently active script cannot be loaded from the archive, this would app
 When a document is processed by any ingest process, an entry is created in the `import` table. If there is a Pipeline
 failure during the ingest, this record will have a status of -7 (PIPELINE_FAILURE), so these records will be easy
 to find an reprocess once the problem with the Pipeline is corrected.
+
+#### Resubmit Failures
+If errors occur as a result of a bad pipeline, they can be automatically rerun via the REST API once the Pipeline
+is fixed and redeployed. Sending POST Request, with an empty body ...
+
+```
+https://<application url>/exams/imports/resubmit?status=PIPELINE_FAILURE
+```
+or
+```
+https://<application url>/packages/imports/resubmit?status=PIPELINE_FAILURE
+```
+
+... will reprocess the failed documents for the Exam Processor and the Assessment Packages respectively. 
+
+A limit of 100 records will be processed at a time, so for large reprocessing jobs, a script should run these commands
+in a loop, with a reasonable delay between each iteration to avoid bogging down the performance of the overall system.
+This limit can also be configured in the request. For example: 
+
+```
+https://<application url>/exams/imports/resubmit?status=PIPELINE_FAILURE&limit=200
+```
+
+However, setting this limit too high can cause system performance problems and, in extreme cases, cause the command
+itself to fail.
+
 
 <a name="ets-script"></a>
 ### ETS/CDE Exam Script

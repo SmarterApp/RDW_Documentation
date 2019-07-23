@@ -72,6 +72,8 @@
     <ItemDifficulty gradeCode="06" moderateLowEnd="-0.74333" difficultLowEnd="0.74333"/>
     <ItemDifficulty gradeCode="07" moderateLowEnd="-0.61866" difficultLowEnd="0.91307"/>
     <ItemDifficulty gradeCode="08" moderateLowEnd="-0.50969" difficultLowEnd="1.19076"/>
+    <ItemDifficulty gradeCode="09" moderateLowEnd="-0.34891" difficultLowEnd="1.60976"/>
+    <ItemDifficulty gradeCode="10" moderateLowEnd="-0.34891" difficultLowEnd="1.60976"/>
     <ItemDifficulty gradeCode="11" moderateLowEnd="-0.34891" difficultLowEnd="1.60976"/>
   </ItemDifficulties>
   <ReportGrades>
@@ -468,6 +470,146 @@
             <ReportPerformanceLevel level="2"><![CDATA[{0} nearly met the grade eight standard for mathematics needed for likely success in future coursework. Please discuss with {0}''s teacher(s) ways to help {0} improve.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="3"><![CDATA[{0} has made progress and met the grade eight standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="4"><![CDATA[{0} has made progress and exceeded the grade eight standard for mathematics. {0} appears ready for future coursework.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="3">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
+    <ReportGrade code="09">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="ica">
+          <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade nine California academic standards for mathematics and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the three claims (i.e., areas) that together make up mathematics: Concepts and Procedures, Problem Solving and Modeling/Data Analysis, and Communicating Reasoning. These three claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade nine. If {0} received a score of "No Score Available" for any claims/, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0} did not meet the grade nine standard for mathematics and did not demonstrate readiness for future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0} nearly met the grade nine standard for mathematics needed for likely success in future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0} met the grade nine standard for mathematics and appears ready for future coursework.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0} exceeded the grade nine standard for mathematics and is ready for future coursework.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="3">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade nine California academic standards for mathematics and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the three claims (i.e., areas) that together make up mathematics: Concepts and Procedures, Problem Solving and Modeling/Data Analysis, and Communicating Reasoning. These three claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade nine. If {0} received a score of "No Score Available" for any claims/, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0} did not meet the grade nine standard for mathematics and did not demonstrate readiness for future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0} nearly met the grade nine standard for mathematics needed for likely success in future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0} met the grade nine standard for mathematics and appears ready for future coursework.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0} exceeded the grade nine standard for mathematics and is ready for future coursework.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="3">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
+    <ReportGrade code="10">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="ica">
+          <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade ten California academic standards for mathematics and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the three claims (i.e., areas) that together make up mathematics: Concepts and Procedures, Problem Solving and Modeling/Data Analysis, and Communicating Reasoning. These three claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade ten. If {0} received a score of "No Score Available" for any claims/, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0} did not meet the grade ten standard for mathematics and did not demonstrate readiness for future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0} nearly met the grade ten standard for mathematics needed for likely success in future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0} met the grade ten standard for mathematics and appears ready for future coursework.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0} exceeded the grade ten standard for mathematics and is ready for future coursework.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="SOCK_2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to solve a variety of mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} does not yet demonstrate the ability to analyze real-world problems, or build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to solve well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates some ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently solve a variety of well-posed mathematics problems by applying his or her knowledge of problem-solving skills and strategies. {0} also demonstrates a strong ability to analyze real-world problems, and can build and use mathematical models to interpret and solve problems.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to explain and apply mathematical concepts, or the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to consistently explain and apply mathematical concepts, and the ability to interpret and carry out mathematical procedures with ease and accuracy.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="3">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to put together valid arguments to support his or her own mathematical thinking or to critique the reasoning of others.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to clearly and precisely put together valid arguments to support his or her own mathematical thinking and to critique the reasoning of others.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade ten California academic standards for mathematics and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the three claims (i.e., areas) that together make up mathematics: Concepts and Procedures, Problem Solving and Modeling/Data Analysis, and Communicating Reasoning. These three claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade ten. If {0} received a score of "No Score Available" for any claims/, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0} did not meet the grade ten standard for mathematics and did not demonstrate readiness for future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0} nearly met the grade ten standard for mathematics needed for likely success in future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0} met the grade ten standard for mathematics and appears ready for future coursework.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0} exceeded the grade ten standard for mathematics and is ready for future coursework.]]></ReportPerformanceLevel>
           </ReportPerformanceLevels>
           <ReportClaims>
             <ReportClaim code="SOCK_2">
@@ -1011,6 +1153,259 @@
         </Target>
         <Target code="G-SRT|XXXX" name="XXXX">
           <Description>Geometry: Apply trigonometry to general triangles.</Description>
+        </Target>
+        <!-- Targets based on bpref -->
+        <Target code="P|TS01|A-4" name="A">
+          <Description>Understand ration concepts and use ratio reasoning to solve problems.</Description>
+        </Target>
+        <Target code="P|TS02|A-6" name="A">
+          <Description>Understand ration concepts and use ratio reasoning to solve problems.</Description>
+        </Target>
+        <Target code="P|TS01|A-7" name="A">
+          <Description>Analyze proportional relationships and use them to solve real-world and mathematical problems.</Description>
+        </Target>
+        <Target code="P|TS03|A-3" name="A">
+          <Description>Understand ration concepts and use ratio reasoning to solve problems.</Description>
+        </Target>
+        <Target code="S|TS09|A" name="A">
+          <Description>Use the four operations with whole numbers to solve problems.</Description>
+        </Target>
+        <Target code="S|TS05|A-5" name="A">
+          <Description>Analyze proportional relationships and use them to solve real-world and mathematical problems.</Description>
+        </Target>
+        <Target code="S|TS04|A-8" name="A">
+          <Description>Understand ration concepts and use ratio reasoning to solve problems.</Description>
+        </Target>
+        <Target code="P|TS01|B-3" name="B">
+          <Description>Develop understanding of statistical variability.</Description>
+        </Target>
+        <Target code="P|TS03|B-6" name="B">
+          <Description>Understand properties of multiplication and the relationship between multiplication and division.</Description>
+        </Target>
+        <Target code="P|TS02|B-7" name="B">
+          <Description>Understand ration concepts and use ratio reasoning to solve problems.</Description>
+        </Target>
+        <Target code="P|TS02|B-8" name="B">
+          <Description>Work with radicals and integer exponents.</Description>
+        </Target>
+        <Target code="S|TS05|B-5" name="B">
+          <Description>Summarize and describe distributions.</Description>
+        </Target>
+        <Target code="S|TS06|B-4" name="B">
+          <Description>Investigate patterns of association in bivariate data.</Description>
+        </Target>
+        <Target code="S|TS09|B" name="B">
+          <Description>Understand properties of multiplication and the relationship between multiplication and division.</Description>
+        </Target>
+        <Target code="P|TS01|C-3" name="C">
+          <Description>Summarize and describe distributions.</Description>
+        </Target>
+        <Target code="P|TS01|C-8" name="C">
+          <Description>Reason about and solve one-variable equations and inequalities.</Description>
+        </Target>
+        <Target code="P|TS02|C-7" name="C">
+          <Description>Use properties of operations to generate equivalent expressions.</Description>
+        </Target>
+        <Target code="P|TS03|C-5" name="C">
+          <Description>Use equivalent fractions as a strategy to add and subtract fractions.</Description>
+        </Target>
+        <Target code="S|TS01|C-3" name="C">
+          <Description>Investigate patterns of association in bivariate data.</Description>
+        </Target>
+        <Target code="S|TS05|C-6" name="C">
+          <Description>Summarize and describe distributions.</Description>
+        </Target>
+        <Target code="S|TS06|C-4" name="C">
+          <Description>Generate and analyze patterns.</Description>
+        </Target>
+        <Target code="S|TS09|C" name="C">
+          <Description>Use the four operations with whole numbers to solve problems.</Description>
+        </Target>
+        <Target code="S|TS10|C" name="C">
+          <Description>Represent and solve problems involving multiplication and division.</Description>
+        </Target>
+        <Target code="P|TS01|D" name="D">
+          <Description>Algebra: Interpret the structure of expressions.</Description>
+        </Target>
+        <Target code="P|TS02|D-3" name="D">
+          <Description>Solve problems involving the four operations, and identify and explain patterns in arithmetic.</Description>
+        </Target>
+        <Target code="P|TS03|D-4" name="D">
+          <Description>Apply and extend previous understandings of multiplication and division to multiply and divide fractions.</Description>
+        </Target>
+        <Target code="P|TS03|D-5" name="D">
+          <Description>Apply and extend previous understandings of multiplication and division to multiply and divide fractions.</Description>
+        </Target>
+        <Target code="P|TS04|D-6" name="D">
+          <Description>Solve problems involving the four operations, and identify and explain patterns in arithmetic.</Description>
+        </Target>
+        <Target code="P|TS01|D-7" name="D">
+          <Description>Solve real-life and mathematical problems using numerical and algebraic expressions and equations.</Description>
+        </Target>
+        <Target code="P|TS01|D-8" name="D">
+          <Description>Analyze and solve linear equations and pairs of simultaneous linear equations.</Description>
+        </Target>
+        <Target code="P|TS01|E" name="E">
+          <Description>Algebra: Write expressions in equivalent forms to solve problems.</Description>
+        </Target>
+        <Target code="S|TS04|E-3" name="E">
+          <Description>Extend understanding of fractions equivalence and ordering.</Description>
+        </Target>
+        <Target code="P|TS01|E-4" name="E">
+          <Description>Apply and extend previous understandings of multiplication and division to multiply and divide fractions.</Description>
+        </Target>
+        <Target code="P|TS01|E-5" name="E">
+          <Description>Compute fluently with muti-digit numbers and find common factors and multiples.</Description>
+        </Target>
+        <Target code="P|TS01|E-6" name="E">
+          <Description>Apply and extend previous understandings of arithmetic to algebraic expressions.</Description>
+        </Target>
+        <Target code="S|TS03|E-7" name="E">
+          <Description>Graph points on the coordinate plane to solve real-world and mathematical problems.</Description>
+        </Target>
+        <Target code="P|TS02|E-8" name="E">
+          <Description>Define, evaluate, and compare functions.</Description>
+        </Target>
+        <Target code="P|TS02|F" name="F">
+          <Description>Develop understanding of fractions as numbers.</Description>
+        </Target>
+        <Target code="P|TS02|F-3" name="F">
+          <Description>Build fractions from unit fractions by applying and extending previous understandings of operations on whole numbers.</Description>
+        </Target>
+        <Target code="P|TS01|F-4" name="F">
+          <Description>Know that there are numbers that are not rational, and approximate them by rational numbers.</Description>
+        </Target>
+        <Target code="P|TS02|F-5" name="F">
+          <Description>Apply and extend previous understandings of numbers to the system of rational numbers.</Description>
+        </Target>
+        <Target code="P|TS01|F-6" name="F">
+          <Description>Reason about and solve one-variable equations and inequalities.</Description>
+        </Target>
+        <Target code="S|TS03|F-7" name="F">
+          <Description>Classify two-dimensional figures into categories based on their properties.</Description>
+        </Target>
+        <Target code="P|TS03|F-8" name="F">
+          <Description>Use functions to model relationships between quantities.</Description>
+        </Target>
+        <Target code="P|TS03|G" name="G">
+          <Description>Algebra: Create equations that describe numbers or relationships</Description>
+        </Target>
+        <Target code="P|TS01|G-3" name="G">
+          <Description>Geometric measurement: understand concepts of angle and measure angles.</Description>
+        </Target>
+        <Target code="P|TS02|G-4" name="G">
+          <Description>Apply and extend previous understandings of numbers to the system of rational numbers.</Description>
+        </Target>
+        <Target code="S|TS05|G-5" name="G">
+          <Description>Understand the place value system.</Description>
+        </Target>
+        <Target code="P|TS03|G-6" name="G">
+          <Description>Represent and analyze quantitative relationships between dependent and independent variables.</Description>
+        </Target>
+        <Target code="S|TS04|G-7" name="G">
+          <Description>Use random sampling to draw inferences about a population.</Description>
+        </Target>
+        <Target code="P|TS02|G-8" name="G">
+          <Description>Draw and identify lines and angles, and classify shapes by properties of their lines and angles.</Description>
+        </Target>
+        <Target code="P|TS03|H" name="H">
+          <Description>Algebra: Understand solving equations as a process of reasoning and explain the reasoning.</Description>
+        </Target>
+        <Target code="P|TS01|H-3" name="H">
+          <Description>Draw informal comparative inferences about two populations</Description>
+        </Target>
+        <Target code="P|TS04|H-4" name="H">
+          <Description>Represent and solve problems involving multiplication and division.</Description>
+        </Target>
+        <Target code="S|TS05|H-5" name="H">
+          <Description>Generalize place value understanding for multi-digit whole numbers.</Description>
+        </Target>
+        <Target code="S|TS05|H-6" name="H">
+          <Description>Solve problems involving measurement and estimation of intervals of time, liquid volumes, and masses of objects.</Description>
+        </Target>
+        <Target code="S|TS04|H-7" name="H">
+          <Description>Understand and apply the Pythagorean Theorem.</Description>
+        </Target>
+        <Target code="P|TS03|H-8" name="H">
+          <Description>Geometric measurement: understand concepts of area and relate area to multiplication and to addition.</Description>
+        </Target>
+        <Target code="S|TS05|H-3" name="H">
+          <Description>Understand the place value system.</Description>
+        </Target>
+        <Target code="P|TS03|I" name="I">
+          <Description>Algebra: Solve equations and inequalities in one variable.</Description>
+        </Target>
+        <Target code="P|TS01|I-3" name="I">
+          <Description>Perform operations with multi-digit whole numbers and with decimals to hundredths.</Description>
+        </Target>
+        <Target code="P|TS01|I-5" name="I">
+          <Description>Perform operations with multi-digit whole numbers and with decimals to hundredths.</Description>
+        </Target>
+        <Target code="S|TS05|I-4" name="I">
+          <Description>Perform operations with multi-digit whole numbers and with decimals to hundredths.</Description>
+        </Target>
+        <Target code="S|TS05|I-6" name="I">
+          <Description>Develop understanding of statistical variability.</Description>
+        </Target>
+        <Target code="S|TS04|I-7" name="I">
+          <Description>Investigate chance processes and develop, use, and evaluate probability models.</Description>
+        </Target>
+        <Target code="S|TS04|I-8" name="I">
+          <Description>Geometric measurement: understand concepts of area and relate area to multiplication and to addition.</Description>
+        </Target>
+        <Target code="P|TS04|J" name="J">
+          <Description>Algebra: Represent and solve equations and inequalities graphically.</Description>
+        </Target>
+        <Target code="S|TS04|J-3" name="J">
+          <Description>Use place value understanding and properties of operations to perform multi-digit arithmetic.</Description>
+        </Target>
+        <Target code="S|TS05|J-6" name="J">
+          <Description>Summarize and describe distributions.</Description>
+        </Target>
+        <Target code="S|TS06|J-4" name="J">
+          <Description>Use place value understanding and properties of operations to perform multi-digit arithmetic.</Description>
+        </Target>
+        <Target code="S|TS04|J-8" name="J">
+          <Description>Investigate patterns of association in bivariate data.</Description>
+        </Target>
+        <Target code="S|TS04|J-5" name="J">
+          <Description>Solve problems involving measurement and conversion of measurement from a larger unit to a smaller unit.</Description>
+        </Target>
+        <Target code="P|TS05|K" name="K">
+          <Description>Solve real-life and mathematical problems involving angle measure, area, surface area, and volume.</Description>
+        </Target>
+        <Target code="S|TS04|K-3" name="K">
+          <Description>Geometric measurement: understand concepts of volume and relate volume to multiplication and to addition.</Description>
+        </Target>
+        <Target code="S|TS05|K-4" name="K">
+          <Description>Use equivalent fractions as a strategy to add and subtract fractions.</Description>
+        </Target>
+        <Target code="S|TS04|K-5" name="K">
+          <Description>Geometric measurement: recognize perimeter as an attribute of plane figures and distinguish between linear and area measures.</Description>
+        </Target>
+        <Target code="P|TS06|L" name="L">
+          <Description>Understand congruence and similarity using physical models, transparencies, or geometry software.</Description>
+        </Target>
+        <Target code="S|TS04|L-4" name="L">
+          <Description>Geometric measurement: understand concepts of volume and relate volume to multiplication and to addition.</Description>
+        </Target>
+        <Target code="S|TS07|L-4" name="L">
+          <Description>Geometric measurement: recognize perimeter as an attribute of plane figures and distinguish between linear and area measures.</Description>
+        </Target>
+        <Target code="P|TS06|M" name="M">
+          <Description>Solve real-world and mathematical problems involving volume of cylinders, cones, and spheres.</Description>
+        </Target>
+        <Target code="S|TS04|M" name="M">
+          <Description>Understand and apply the Pythagorean Theorem.</Description>
+        </Target>
+        <Target code="P|TS06|N" name="N">
+          <Description>Draw, construct, and describe geometrical figures and describe the relationship between them.</Description>
+        </Target>
+        <Target code="S|TS07|O" name="O">
+          <Description>Geometric measurement: recognize perimeter as an attribute of plane figures and distinguish between linear and area measures.</Description>
+        </Target>
+        <Target code="S|TS08|P" name="P">
+          <Description>Statistics and Probability: Summarize, represent, and interpret data on a single count or measurement variable.</Description>
         </Target>
       </Targets>
     </Claim>

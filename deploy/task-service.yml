@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: task-server
-        image: smarterbalanced/rdw-ingest-task-service:1.3.0-RELEASE
+        image: smarterbalanced/rdw-ingest-task-service:1.4.0-RC17
         readinessProbe:
           httpGet:
             path: /health

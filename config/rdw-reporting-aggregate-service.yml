@@ -1,17 +1,4 @@
 # Annotated configuration for RDW Aggregate Service.
-#
-# The spring application name is rdw-reporting-aggregate-service so this file should
-# be named rdw-reporting-aggregate-service when served by the configuration server.
-#
-# Properties that have a reasonable default value are commented out.
-# Other properties are not commented out and must be provided.
-
-# The actuator end-point is on a different port with no security because it is
-# expected to be exposed only in a private subnet.
-management:
-#  port: 8008
-#  security:
-#    enabled: false
 
 # Aggregate report configuration.
 #aggregate-reporting:
@@ -20,8 +7,7 @@ management:
 #  state-aggregate-assessment-types: sum
 
 # Application configuration
-# TODO - this has changed
-app:
+#app:
 #  aggregate-reports:
 #    api-enabled: false
 #    custom-aggregate-report-repository:
@@ -34,71 +20,3 @@ app:
 #  cache:
 #    repository:
 #      refresh-cron: "0 0 2 * * *"
-
-# Report archive configuration.
-# Although the location may be a local file system the preferred solution is to write to AWS S3,
-# which requires credentials. For S3, the uri-root should be the protocol and the bucket, e.g.
-# s3://my-archive-bucket. The AWS access key should be for a programmatic AWS user. The secret key
-# should be encrypted. The bucket should be in the same region as the deployment (to reduce costs).
-# The path prefix is for tenant configuration and should not be set in the base application yaml file.
-# There are no default values for these properties and they must be provided.
-archive:
-  uri-root:
-  #path-prefix:
-  s3-access-key:
-  s3-secret-key:
-  s3-region-static: us-west-2
-  s3-sse:
-
-# Common settings. Normally set in application.yml.
-#reporting:
-#  school-year: 2019
-#  state:
-#    code: CA
-#    name: California
-
-# Server configuration.
-# Use the defaults unless you really know what you're doing.
-server:
-#  tomcat:
-#    max-connections: 0
-#    max-threads: 4
-#    accept-count: 10
-#  compression:
-#    enabled: true
-#    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,text/csv
-
-# Datasource configuration.
-datasources:
-  # Use defaults for most of the settings except server, perhaps db, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  # The password should be encrypted.
-  olap_ro:
-#    url-parts:
-#      protocol: "jdbc:redshift:"
-#      hosts: "${datasources.olap_ro.url-server:localhost:5432}"
-#      database: "${datasources.olap_ro.url-db:dev}"
-#      properties: "ApplicationName=rdw-reporting-aggregate-service\
-#                   &loginTimeout=${datasources.olap_ro.connect-timeout:10}\
-#                   &socketTimeout=${datasources.olap_ro.socket-timeout:0}\
-#                   "
-#    url: "${datasources.olap_ro.url-parts.protocol}//${datasources.olap_ro.url-parts.hosts}/${datasources.olap_ro.url-parts.database}?${datasources.olap_ro.url-parts.properties}"
-    url-server:
-#    url-db: dev
-    username:
-    password:
-#    testWhileIdle: true
-#    validationQuery: SELECT 1
-#    validationQueryTimeout: 30000
-#    driverClassName: com.amazon.redshift.jdbc42.Driver
-
-# Spring application configuration.
-spring:
-  # RabbitMQ configuration.
-  # There are no default values. The host must be set based on the orchestration environment
-  # e.g. rabbit-service, with appropriate username and password. The password should be encrypted.
-  rabbitmq:
-    host:
-    username:
-    password:

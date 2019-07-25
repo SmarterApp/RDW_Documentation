@@ -1,28 +1,11 @@
 # Annotated configuration for RDW Reporting Web App.
-#
-# The spring application name is rdw-reporting-webapp so this file should be named
-# rdw-reporting-webapp.yml when served by the configuration server.
-#
-# Properties that have a reasonable default value are commented out.
-# Other properties are not commented out and must be provided.
-
-# The actuator end-point is on a different port with no security because it is
-# expected to be exposed only in a private subnet.
-management:
-#  port: 8008
-#  security:
-#    enabled: false
-#  health:
-#    redis:
-#      enabled: false
 
 # Permission service configuration
 # endpoint is probably the public URL, e.g. https://perm.smarterbalanced.org/rest
 permissionservice:
-#  component: Reporting
   endpoint:
 
-# Tenant configuration. Some of these may be in application.yml common settings.
+# Application behavior
 reporting:
   analytics-tracking-id:
 
@@ -53,38 +36,10 @@ reporting:
 #  report-languages:
 #  ui-languages:
 
-#  state:
-#    code: CA
-#    name: California
-
-  # Target Report configuration
-#  target-report:
-
-  # The target reports display "Insufficient Data" when the standard error of the calculation is greater than 0.2.
-  # This is the default value provided by Smarter Balanced in the scoring calculation documentations and should
-  # only be changed if you really know why you are changing it.
-#    insufficient-data-cutoff: 0.2
-
-  # Target reports are only shown when there are a minimum number of students included in the report.
-  # Setting this to 0 means it will always be shown (even with a single student).
-#    min-number-of-students: 0
-
   # The percentile feature displays percentiles derived from normative data so teachers can better
   # evaluate the performance of their students. Because this requires additional configuration data
   # that may not be available to a tenant, this feature is disabled by default.
-#    percentile-display-enabled: false
-
-  # By default the system does not allow users to see test results from institutions outside their
-  # permissions. Setting this property true allows users to see all test results for students
-  # regardless of where the test was administered, if they have PII for the student.
-#  transfer-access-enabled: false
-
-  # Location of translation files (optional).
-  # There is no default value. To use the central configuration server the value will be like
-  # "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
-  # Details for this property are covered in the language runbook.
-#  translation-location:
-
+#  percentile-display-enabled: false
 
 # SAML/SSO configuration
 # The setting of these properties is covered in more detail in the deployment guide.
@@ -108,53 +63,6 @@ saml:
 #    port: 8080
 #    include-server-port: false
 
-# Server configuration.
-# Use the defaults unless you really know what you're doing.
-server:
-#  port: 8080
-#  tomcat:
-#    max-connections: 0
-#    max-threads: 4
-#    accept-count: 10
-#  compression:
-#    enabled: true
-#    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,text/csv
-
-# Datasource configuration.
-# Use defaults for most of the settings, except server, username and password.
-# The url-server should be set to the host and port, e.g. localhost:3306 or
-# my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-datasources:
-  reporting_ro:
-#    url-parts:
-#      protocol: "jdbc:mysql:"
-#      hosts: "${datasources.reporting_ro.url-server:localhost:3306}"
-#      database: "${datasources.reporting_ro.url-schema:reporting}"
-#      properties: "useSSL=${datasources.reporting_ro.use-ssl:false}\
-#                   &useLegacyDatetimeCode=${datasources.reporting_ro.use-legacy-datetime-code:false}\
-#                   &characterEncoding=${datasources.reporting_ro.character-encoding:utf8}\
-#                   &rewriteBatchedStatements=${datasources.reporting_ro.rewrite-batched-statements:true}\
-#                   &connectTimeout=${datasources.reporting_ro.connect-timeout:10000}\
-#                   &socketTimeout=${datasources.reporting_ro.socket-timeout:40000}\
-#                   "
-#    url: "${datasources.reporting_ro.url-parts.protocol}//${datasources.reporting_ro.url-parts.hosts}/${datasources.reporting_ro.url-parts.database}?${datasources.reporting_ro.url-parts.properties}"
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${datasources.reporting_ro.query-timeout:30})"
-    url-server:
-    username:
-    password:
-#    testWhileIdle: true
-#    validationQuery: SELECT 1
-#    validationQueryTimeout: 10000
-#    driverClassName: com.mysql.jdbc.Driver
-#    initialize: false
-#    initialSize: 4
-#    maxActive: 10
-#    minIdle: ${datasources.reporting_ro.initialSize}
-#    maxIdle: ${datasources.reporting_ro.maxActive}
-#    removeAbandoned: false
-#    removeAbandonedTimeout: 60
-#    logAbandoned: false
-
 # Spring application configuration
 spring:
   # Session cache configuration.
@@ -165,12 +73,6 @@ spring:
   redis:
     host:
     port:
-
-  # HTTP configuration. The default values for this should be good.
-#  http:
-#    multipart:
-#      max-file-size: 500MB
-#      max-request-size: 500MB
 
 # Netflix zuul configuration.
 # The URLs must be set to match the environment, e.g. http://admin-service, the other defaults should be fine.

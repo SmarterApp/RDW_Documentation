@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: configuration
-        image: smarterbalanced/configuration-service:3.1.0.RELEASE
+        image: smarterbalanced/configuration-service:3.1.2-RELEASE
         readinessProbe:
           httpGet:
             path: /health.json
@@ -48,6 +48,8 @@ spec:
           value: dns
         - name: CONFIG_SERVICE_REPO
           value: "https://github.com/RDW_Config_Opus.git"
+        - name: CONFIG_SERVICE_SEARCH_PATH
+          value: "tenant*"
         - name: GIT_USER
           value: "rdw-opus"
         - name: GIT_PASSWORD

@@ -3,8 +3,7 @@
 # This file should be named application.yml when served by the configuration server.
 #
 # To make maintenance of the system easier, it is recommended that the common properties
-# for datasources, archive, reporting, logging be put here. Those properties are annotated
-# in the files for the individual services that use them. And a couple are here for example.
+# for datasources, archive, reporting, logging be put here.
 
 reporting:
   client: SBAC
@@ -21,9 +20,238 @@ reporting:
   # By default the system does not allow users to see test results from institutions outside their
   # permissions. Setting this property true allows users to see all test results for students
   # regardless of where the test was administered, if they have PII for the student.
+  # Typically this is set at the tenant level.
 #  transfer-access-enabled: false
+
+  # Location of translation files (optional).
+  # There is no default value. To use the central configuration server the value will be like
+  # "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
+  # Details for this property are covered in the language runbook.
+  # Typically this is set at the tenant level.
+#  translation-location:
+
+  # By default the system enables all the student fields (except ELAS) for all users.
+  # Setting these properties controls which fields will be available.
+  # Used by aggregate service and reporting webapp.
+  # enabled - all users can see the field, default
+  # admin - only admins (non-teachers) can see the field; appropriate for sensitive data fields
+  # disabled - no users can see the field; intended for fields where source data is not expected
+#  student-fields:
+#    EconomicDisadvantage: Enabled
+#    EnglishLanguageAcquisitionStatus: Disabled
+#    Ethnicity: Enabled
+#    Gender: Enabled
+#    IndividualEducationPlan: Enabled
+#    LimitedEnglishProficiency: Enabled
+#    MigrantStatus: Enabled
+#    MilitaryStudentIdentifier: Enabled
+#    PrimaryLanguage: Enabled
+#    Section504: Enabled
+
+  # Target Report configuration
+  # Used by aggregate service and reporting webapp.
+#  target-report:
+    # The target reports display "Insufficient Data" when the standard error of the calculation is greater than 0.2.
+    # This is the default value provided by Smarter Balanced in the scoring calculation documentations and should
+    # only be changed if you really know why you are changing it.
+#    insufficient-data-cutoff: 0.2
+    # Target reports are only shown when there are a minimum number of students included in the report.
+    # Setting this to 0 means it will always be shown (even with a single student).
+#    min-number-of-students: 0
+
+server:
+  # the JWT can get pretty big ...
+  max-http-header-size: 131072
 
 logging:
   level:
     # this outputs a couple INFO messages every 5 minutes, annoying
     org.springframework.cloud.config.client.ConfigServicePropertySourceLocator: warn
+
+# Archive configuration
+# For S3, the root should be the protocol and the bucket, e.g. s3://my-archive-bucket.
+# The AWS access key should be for a programmatic AWS user. The secret key should be encrypted.
+# The bucket should be in the same region as the deployment (to reduce costs). The path prefix
+# is for tenant configuration and should not be set in the base application yaml file.
+# There are no default values for these properties and they must be provided.
+archive:
+  uri-root:
+#  path-prefix:
+  s3-access-key:
+  s3-secret-key:
+  s3-region-static: us-west-2
+#  s3-sse:
+
+# Datasource configuration (yes, there are six different datasources)
+# Use defaults for most of the settings, except server, username and password.
+# Typically the base application.yml will specify the url-server and url-db while
+# the tenant-specific application.yml will have the database, username and password.
+# The url-server should be set to the host and port, e.g. localhost:3306 or
+# my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
+datasources:
+  migrate_rw:
+#    url-parts:
+#      protocol: "jdbc:mysql:"
+#      hosts: "${datasources.migrate_rw.url-server:localhost:3306}"
+#      database: "${datasources.migrate_rw.url-schema:migrate_olap}"
+#      properties: "useSSL=${datasources.migrate_rw.use-ssl:false}\
+#                   &useLegacyDatetimeCode=${datasources.migrate_rw.use-legacy-datetime-code:false}\
+#                   &characterEncoding=${datasources.migrate_rw.character-encoding:utf8}\
+#                   &connectTimeout=${datasources.migrate_rw.connect-timeout:10000}\
+#                   &socketTimeout=${datasources.migrate_rw.socket-timeout:0}\
+#                   "
+#    url: "${datasources.migrate_rw.url-parts.protocol}//${datasources.migrate_rw.url-parts.hosts}/${datasources.migrate_rw.url-parts.database}?${datasources.migrate_rw.url-parts.properties}"
+    url-server:
+#    username:
+#    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    validationQueryTimeout: 10000
+#    driverClassName: com.mysql.jdbc.Driver
+#    initialize: false
+#    initialSize: 4
+#    maxActive: 10
+#    minIdle: ${datasources.migrate_rw.initialSize}
+#    maxIdle: ${datasources.migrate_rw.maxActive}
+#    removeAbandoned: false
+#    removeAbandonedTimeout: 60
+#    logAbandoned: false
+
+  olap_ro:
+#    url-parts:
+#      protocol: "jdbc:redshift:"
+#      hosts: "${datasources.olap_ro.url-server:localhost:5432}"
+#      database: "${datasources.olap_ro.url-db:dev}"
+#      properties: "ApplicationName=rdw-reporting-aggregate-service\
+#                   &loginTimeout=${datasources.olap_ro.connect-timeout:10}\
+#                   &socketTimeout=${datasources.olap_ro.socket-timeout:0}\
+#                   "
+#    url: "${datasources.olap_ro.url-parts.protocol}//${datasources.olap_ro.url-parts.hosts}/${datasources.olap_ro.url-parts.database}?${datasources.olap_ro.url-parts.properties}"
+    url-server:
+    url-db:
+#    username:
+#    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    validationQueryTimeout: 30000
+#    driverClassName: com.amazon.redshift.jdbc42.Driver
+
+  olap_rw:
+#    url-parts:
+#      protocol: "jdbc:redshift:"
+#      hosts: "${datasources.olap_rw.url-server:localhost:5432}"
+#      database: "${datasources.olap_rw.url-db:dev}"
+#      properties: "ApplicationName=rdw-ingest-migrate-olap\
+#                   &loginTimeout=${datasources.olap_rw.connect-timeout:10}\
+#                   &socketTimeout=${datasources.olap_rw.socket-timeout:0}\
+#                   "
+#    url: "${datasources.olap_rw.url-parts.protocol}//${datasources.olap_rw.url-parts.hosts}/${datasources.olap_rw.url-parts.database}?${datasources.olap_rw.url-parts.properties}"
+    url-server:
+    url-db:
+#    username:
+#    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    validationQueryTimeout: 30000
+#    driverClassName: com.amazon.redshift.jdbc42.Driver
+
+  reporting_ro:
+#    url-parts:
+#      protocol: "jdbc:mysql:"
+#      hosts: "${datasources.reporting_ro.url-server:localhost:3306}"
+#      database: "${datasources.reporting_ro.url-schema:reporting}"
+#      properties: "useSSL=${datasources.reporting_ro.use-ssl:false}\
+#                   &useLegacyDatetimeCode=${datasources.reporting_ro.use-legacy-datetime-code:false}\
+#                   &characterEncoding=${datasources.reporting_ro.character-encoding:utf8}\
+#                   &rewriteBatchedStatements=${datasources.reporting_ro.rewrite-batched-statements:true}\
+#                   &connectTimeout=${datasources.reporting_ro.connect-timeout:10000}\
+#                   &socketTimeout=${datasources.reporting_ro.socket-timeout:40000}\
+#                   "
+#    url: "${datasources.reporting_ro.url-parts.protocol}//${datasources.reporting_ro.url-parts.hosts}/${datasources.reporting_ro.url-parts.database}?${datasources.reporting_ro.url-parts.properties}"
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${datasources.reporting_ro.query-timeout:30})"
+    url-server:
+#    username:
+#    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    validationQueryTimeout: 10000
+#    driverClassName: com.mysql.jdbc.Driver
+#    initialize: false
+#    initialSize: 4
+#    maxActive: 10
+#    minIdle: ${datasources.reporting_ro.initialSize}
+#    maxIdle: ${datasources.reporting_ro.maxActive}
+#    removeAbandoned: false
+#    removeAbandonedTimeout: 60
+#    logAbandoned: false
+
+  reporting_rw:
+    #    url-parts:
+    #      protocol: "jdbc:mysql:"
+    #      hosts: "${datasources.reporting_rw.url-server:localhost:3306}"
+    #      database: "${datasources.reporting_rw.url-schema:reporting}"
+    #      properties: "useSSL=${datasources.reporting_rw.use-ssl:false}\
+    #                   &useLegacyDatetimeCode=${datasources.reporting_rw.use-legacy-datetime-code:false}\
+    #                   &characterEncoding=${datasources.reporting_rw.character-encoding:utf8}\
+    #                   &rewriteBatchedStatements=${datasources.reporting_rw.rewrite-batched-statements:true}\
+    #                   &useCompression=${datasources.reporting_rw.use-compression:true}\
+    #                   &connectTimeout=${datasources.reporting_rw.connect-timeout:10000}\
+    #                   &socketTimeout=${datasources.reporting_rw.socket-timeout:40000}\
+    #                   "
+    #    url: "${datasources.reporting_rw.url-parts.protocol}//${datasources.reporting_rw.url-parts.hosts}/${datasources.reporting_rw.url-parts.database}?${datasources.reporting_rw.url-parts.properties}"
+    #    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${datasources.reporting_rw.query-timeout:30})"
+    url-server:
+#    username:
+#    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    validationQueryTimeout: 10000
+#    driverClassName: com.mysql.jdbc.Driver
+#    initialize: false
+#    initialSize: 4
+#    maxActive: 10
+#    minIdle: ${datasources.reporting_rw.initialSize}
+#    maxIdle: ${datasources.reporting_rw.maxActive}
+#    removeAbandoned: false
+#    removeAbandonedTimeout: 60
+#    logAbandoned: false
+
+  warehouse_rw:
+#    url-parts:
+#      protocol: "jdbc:mysql:"
+#      hosts: "${datasources.warehouse_rw.url-server:localhost:3306}"
+#      database: "${datasources.warehouse_rw.url-schema:warehouse}"
+#      properties: "useSSL=${datasources.warehouse_rw.use-ssl:false}\
+#                   &useLegacyDatetimeCode=${datasources.warehouse_rw.use-legacy-datetime-code:false}\
+#                   &characterEncoding=${datasources.warehouse_rw.character-encoding:utf8}\
+#                   &connectTimeout=${datasources.warehouse_rw.connect-timeout:10000}\
+#                   &socketTimeout=${datasources.warehouse_rw.socket-timeout:40000}\
+#                   "
+#    url: "${datasources.warehouse_rw.url-parts.protocol}//${datasources.warehouse_rw.url-parts.hosts}/${datasources.warehouse_rw.url-parts.database}?${datasources.warehouse_rw.url-parts.properties}"
+#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${datasources.warehouse_rw.query-timeout:30})"
+    url-server:
+#    username:
+#    password:
+#    testWhileIdle: true
+#    validationQuery: SELECT 1
+#    validationQueryTimeout: 10000
+#    driverClassName: com.mysql.jdbc.Driver
+#    initialize: false
+#    initialSize: 4
+#    maxActive: 20
+#    minIdle: ${datasources.warehouse_rw.initialSize}
+#    maxIdle: ${datasources.warehouse_rw.maxActive}
+#    maxWait: 10000
+#    removeAbandoned: false
+#    removeAbandonedTimeout: 60
+#    logAbandoned: false
+
+# Spring application configuration.
+spring:
+  # RabbitMQ configuration.
+  # There are no default values. The host must be set based on the orchestration environment
+  # e.g. rabbit-service, with appropriate username and password. The password should be encrypted.
+  rabbitmq:
+    host:
+    username:
+    password:

@@ -2,9 +2,11 @@
 
 **Intended Audience**: this document provides a detailed checklist for deploying the Reporting Data Warehouse (RDW) applications in an AWS environment. Operations and system administrators will find it useful.
 
-> Although these are generic instructions, having an example makes it easier to document and understand. Throughout this document we'll use `opus` as the sample environment name; this might correspond to `staging` or `production` in the real world. We'll use `sbac.org` as the domain/organization. Any other ids, usernames or other system-generated values are products of the author's imagination. The reader is strongly encouraged to use their own consistent naming conventions. **Avoid putting real environment-specific details _especially secrets and sensitive information_ in this document.**
+> Although these are generic instructions, having an example makes it easier to document and understand. Throughout this document we'll use `opus` as the sample environment name; this might correspond to `staging` or `production` in the real world. We'll use `sbac.org` as the domain/organization. For our tenant id/state we'll use `OT`. Any other ids, usernames or other system-generated values are products of the author's imagination. The reader is strongly encouraged to use their own consistent naming conventions. 
 
-> **NOTE:** these instructions were originally written for a v1.0 installation. The v1.0 -> v1.1 upgrade instructions were then merged, but the consolidated instructions haven't been thoroughly tested for a clean v1.1 installation. 
+**Avoid putting real environment-specific details _especially secrets and sensitive information_ in this document, unless it has been moved to a private repository.**
+
+> **NOTE:** these instructions were originally written for a v1.0 installation. The upgrade instructions through v1.4 were then merged, but the consolidated instructions haven't been thoroughly tested for a clean v1.4 installation. 
 
 ### Table Of Contents
 * [Reference](#reference)
@@ -96,6 +98,7 @@ This section records all details that will facilitate configuration and maintena
     * Copy the files from the config folder to the repo and commit them.
     * Create a user that has read access to the repository.
     * *Record the repository URL and username/password in the reference.*
+* [ ] (Optional) It is a good idea to go through the rest of this document, updating the configuration, credentials, etc. to match the environment. If you don't you'll just have to do it as you go along and there will be an extra commit to do when merging the deploy branch.    
 * [ ] Prepare AWS
     * [ ] Create an AWS account. All the RDW services will run in this account. 
         * *Record the account and signin link in the reference.*
@@ -146,7 +149,7 @@ This section records all details that will facilitate configuration and maintena
         ```bash
         # from https://kubernetes.io/docs/getting-started-guides/kops/
         sudo yum install -y wget
-        wget https://github.com/kubernetes/kops/releases/download/1.10.0/kops-linux-amd64
+        wget https://github.com/kubernetes/kops/releases/download/1.12.0/kops-linux-amd64
         chmod +x kops-linux-amd64
         sudo mv kops-linux-amd64 /usr/local/bin/kops
         kops version
@@ -208,30 +211,43 @@ This section records all details that will facilitate configuration and maintena
     * [ ] ART. 
         * [ ] Create ingest user for the task service user. This is used by the task service to fetch organization information from ART and submit it to the import service. As such it should have `Administrator`, `State Coordinator` and `ASMTDATALOAD` roles at the state level for `CA`.
         * *Record ART host and username/password in the reference.*
-    * [ ] Permission Service. Note that roles are tenant-specific. Examples here are what were created in production
-    but roles (and their associated permissions) should be based more on the real-world user roles. 
+    * [ ] Permission Service. 
         * *Record perm service host in the reference.*
         * Add/verify component 
             * `Reporting`
-        * Add/verify roles: 
+        * Add/verify roles and the assignable level(s): 
+            * `ASMTDATALOAD` - State
             * `GROUP_ADMIN` - District, GroupOfInstitutions, Institutions
             * `PII` - all but GroupOfStates
             * `PII_GROUP` - all but GroupOfStates 
             * `Instructional Resource Admin` - State, District, GroupOfInstitutions, Institution
             * `Embargo Admin` - State, District
             * `Custom Aggregate Reporter` - State, District, GroupOfInstitutions, Institution
+            * `PIPELINE_ADMIN` - State
+            * `TENANT_ADMIN` - Client
+            * `SandboxTeacher` - Institution
+            * `SandboxSchoolAdmin` - Institution
+            * `SandboxDistricAdmin` - District
         * Add/verify component permissions for `Reporting`
+            * `DATA_WRITE`
             * `GROUP_PII_READ`, `GROUP_READ`, `GROUP_WRITE`, `INDIVIDUAL_PII_READ`
             * `CUSTOM_AGGREGATE_READ`, `EMBARGO_READ`, `EMBARGO_WRITE`, `INSTRUCTIONAL_RESOURCE_WRITE`
-        * Add/verify mappings of Reporting component permissions (rows) to roles (columns) 
-            * `GROUP_PII_READ` - `PII`, `PII_GROUP`
-            * `GROUP_READ` - `GROUP_ADMIN`, `PII`, `PII_GROUP`
-            * `GROUP_WRITE` - `GROUP_ADMIN`
-            * `INDIVIDUAL_PII_READ` - `PII`
-            * `CUSTOM_AGGREGATE_READ` - `PII`, `Custom Aggregate Reporter`
-            * `EMBARGO_READ` - `Embargo Admin`
-            * `EMBARGO_WRITE` - `Embargo Admin`
-            * `INSTRUCTIONAL_RESOURCE_WRITE` - `Instructional Resource Admin`
+            * `PIPELINE_READ`, `PIPELINE_WRITE`
+            * `TENANT_READ`, `TENANT_WRITE`
+        * Add/verify mappings of Reporting component permissions (rows) to roles (columns)
+            * `DATA_WRITE` - `ASMTDATALOAD` 
+            * `GROUP_PII_READ` - `PII`, `PII_GROUP`, `SandboxTeacher`, `SandboxSchoolAdmin`, `SandboxDistrictAdmin`
+            * `GROUP_READ` - `GROUP_ADMIN`, `PII`, `PII_GROUP`, `SandboxTeacher`, `SandboxSchoolAdmin`, `SandboxDistrictAdmin`
+            * `GROUP_WRITE` - `GROUP_ADMIN`, `SandboxDistrictAdmin`
+            * `INDIVIDUAL_PII_READ` - `PII`, `SandboxSchoolAdmin`, `SandboxDistrictAdmin`
+            * `CUSTOM_AGGREGATE_READ` - `PII`, `Custom Aggregate Reporter`, `SandboxSchoolAdmin`, `SandboxDistrictAdmin`
+            * `EMBARGO_READ` - `Embargo Admin`, `SandboxDistrictAdmin`
+            * `EMBARGO_WRITE` - `Embargo Admin`, `SandboxDistrictAdmin`
+            * `INSTRUCTIONAL_RESOURCE_WRITE` - `Instructional Resource Admin`, `SandboxDistrictAdmin`
+            * `PIPELINE_READ` - `PIPELINE_ADMIN`
+            * `PIPELINE_WRITE` - `PIPELINE_ADMIN`
+            * `TENANT_READ` - `TENANT_ADMIN`
+            * `TENANT_WRITE` - `TENANT_ADMIN`
     * [ ] IRiS. 
         * Follow directions for setting up [IRiS](IRIS.AWS.md).
         * *Record IRiS hosts, IRiS ELB and IRiS EFS in the reference.*
@@ -322,29 +338,28 @@ This section records all details that will facilitate configuration and maintena
         ```bash
         git clone https://github.com/SmarterApp/RDW_Schema.git
         cd RDW_Schema
-        ./gradlew -Pflyway.url="jdbc:mysql://rdw-opus-warehouse-cluster.[aws-randomization]:3306/" \
-           -Pflyway.user=root -Pflyway.password=password migrateWarehouse migrateMigrate_olap
-        ./gradlew -Pflyway.url="jdbc:mysql://rdw-opus-reporting-cluster.[aws-randomization]:3306/" \
-           -Pflyway.user=root -Pflyway.password=password migrateReporting
+        git checkout master; git pull
+        ./gradlew -Pschema_suffix=_ot -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse-cluster.[aws-randomization]:3306/" -Pdatabase_user=root -Pdatabase_password=password migrateWarehouse migrateMigrate_olap
+        ./gradlew -Pschema_suffix=_ot -Pdatabase_url="jdbc:mysql://rdw-opus-reporting-cluster.[aws-randomization]:3306/" -Pdatabase_user=root -Pdatabase_password=password migrateReporting
         ```   
-    1. Create Aurora/MySQL users: rdwingest for warehouse and migrate_olap, rdwingest and rdwreporting for reporting.
+    1. Create Aurora/MySQL users: rdwingest for warehouse and migrate_olap, rdwingest and rdwreporting for reporting. The naming convention for the users is just a suggestion: it should include the environment (`opus`), the tenant (`ot`), and the functional distinction (`ingest` vs `reporting`); additional qualification may be desired, for example prefixing with `rdw`.
         1. Create warehouse/migrate_olap user. Using mysql, `mysql -h rdw-opus-warehouse-cluster.[aws-randomization] -u root -p`:
         ```sql
-        create user 'rdwingest'@'%' identified by 'password';
-        grant all privileges on warehouse.* to 'rdwingest'@'%';
-        grant all privileges on migrate_olap.* to 'rdwingest'@'%';
-        grant select on mysql.proc to 'rdwingest'@'%';
-        grant LOAD FROM S3 ON *.* to 'rdwingest'@'%';
-        grant SELECT INTO S3 ON *.* to 'rdwingest'@'%';
+        create user 'opus_ot_ingest'@'%' identified by 'password';
+        grant all privileges on warehouse_ot.* to 'opus_ot_ingest'@'%';
+        grant all privileges on migrate_olap_ot.* to 'opus_ot_ingest'@'%';
+        grant select on mysql.proc to 'opus_ot_ingest'@'%';
+        grant LOAD FROM S3 ON *.* to 'opus_ot_ingest'@'%';
+        grant SELECT INTO S3 ON *.* to 'opus_ot_ingest'@'%';
         ```
         1. Create reporting users. Using mysql, `mysql -h rdw-opus-reporting-cluster.[aws-randomization] -u root -p`:
         ```sql
-        create user 'rdwingest'@'%' identified by 'password';
-        create user 'rdwreporting'@'%' identified by 'password';
-        grant all privileges on reporting.* to 'rdwingest'@'%';
-        grant SELECT INTO S3 ON *.* to 'rdwingest'@'%';
-        grant all privileges on reporting.* to 'rdwreporting'@'%';
-        grant SELECT INTO S3 ON *.* to 'rdwreporting'@'%';
+        create user 'opus_ot_ingest'@'%' identified by 'password';
+        create user 'opus_ot_reporting'@'%' identified by 'password';
+        grant all privileges on reporting_ot.* to 'opus_ot_ingest'@'%';
+        grant SELECT INTO S3 ON *.* to 'opus_ot_ingest'@'%';
+        grant all privileges on reporting_ot.* to 'opus_ot_reporting'@'%';
+        grant SELECT INTO S3 ON *.* to 'opus_ot_reporting'@'%';
         ```
         * *Record the username/passwords in the reference.*
 * [ ] Create Redshift cluster. Redshift is expensive. Decide on cluster size and whether to share a single cluster between all environments.
@@ -380,39 +395,38 @@ NOTE: the security and routing for Redshift can be tricky, especially if the clu
              * Add to `.bashrc` (and source it)
                 ```bash
                 export PGSERVICE=rdw
-    1. Create database and users. The users shown here have both role (ingest/reporting) and environment in their name because this is an example for when the Redshift instance is used by all environments. Obviously, if this is for a single environment these could be rdwingest/rdwreporting. Using psql, `psql --host=rdw.[aws-randomization] --port=5439 --username=root --password --dbname=dev`:
+    1. Create database and users. The naming convention for the users is just a suggestion: it should include the environment (`opus`), the tenant (`ot`), and the functional distinction (`ingest` vs `reporting`); additional qualification may be desired, for example prefixing with `rdw`. Using psql, `psql --host=rdw.[aws-randomization] --port=5439 --username=root --password --dbname=dev`:
         ```sql
-        CREATE USER rdwopusingest PASSWORD 'password';
-        CREATE USER rdwopusreporting PASSWORD 'password';
+        CREATE USER opus_ot_ingest PASSWORD 'password';
+        CREATE USER opus_ot_reporting PASSWORD 'password';
         CREATE DATABASE opus;
-        ALTER DATABASE opus OWNER TO rdwopusingest;
+        ALTER DATABASE opus OWNER TO opus_ot_ingest;
         \connect opus
-        CREATE SCHEMA reporting;
-        GRANT ALL ON SCHEMA reporting to rdwopusingest;
-        GRANT ALL ON ALL TABLES IN SCHEMA reporting to rdwopusingest;
-        GRANT ALL ON SCHEMA reporting to rdwopusreporting;
-        GRANT ALL ON ALL TABLES IN SCHEMA reporting to rdwopusreporting;
-        ALTER USER rdwopusingest SET SEARCH_PATH TO reporting;
-        ALTER USER rdwopusreporting SET SEARCH_PATH TO reporting;
+        CREATE SCHEMA reporting_ot;
+        GRANT ALL ON SCHEMA reporting_ot to opus_ot_ingest;
+        GRANT ALL ON ALL TABLES IN SCHEMA reporting_ot to opus_ot_ingest;
+        GRANT ALL ON SCHEMA reporting_ot to opus_ot_reporting;
+        GRANT ALL ON ALL TABLES IN SCHEMA reporting_ot to opus_ot_reporting;
+        ALTER USER opus_ot_ingest SET SEARCH_PATH TO reporting_ot;
+        ALTER USER opus_ot_reporting SET SEARCH_PATH TO reporting_ot;
         ```
         * *Record the user/passwords in the reference.*
     1. Run initialization scripts
         ```bash
         git clone https://github.com/SmarterApp/RDW_Schema.git
         cd RDW_Schema
-        ./gradlew -Predshift_url=jdbc:redshift://rdw-opus.[aws-randomization]:5439/opus \
-           -Predshift_user=root -Predshift_password=password migrateReporting_olap
+        ./gradlew -Pschema_suffix=_ot -Predshift_url=jdbc:redshift://rdw-opus.[aws-randomization]:5439/opus -Predshift_user=root -Predshift_password=password migrateReporting_olap
         ``` 
     1. Verify Redshift user search path by using their credentials to connect and list tables (or something similar).
     For rdwopusingest also verify they can vacuum the fact table. For example,
         ```bash
-        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=rdwopusingest --password --dbname=opus
+        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=opus_ot_ingest --password --dbname=opus
         opus=> \dt
                               List of relations
-          schema   |               name               | type  | owner 
-        -----------+----------------------------------+-------+-------
-         reporting | administration_condition         | table | root
-         reporting | asmt                             | table | root
+          schema      |               name               | type  | owner 
+        --------------+----------------------------------+-------+-------
+         reporting_ot | administration_condition         | table | root
+         reporting_ot | asmt                             | table | root
         ...
         opus=> VACUUM REINDEX exam;
         VACUUM
@@ -462,14 +476,14 @@ NOTE: the security and routing for Redshift can be tricky, especially if the clu
 and the data marts. This is a good time to verify that the required connectivity and permissions are in place for that.
     * Export test file from Aurora. Connect to the warehouse using the ingest user and export a table to a test file.
         ```bash
-        mysql -h rdw-opus-warehouse-cluster.[aws-randomization] --user=rdwingest --password=password warehouse
-        mysql> SELECT id, code FROM completeness INTO OUTFILE S3 's3://rdw-opus-archive/completeness' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n';
+        mysql -h rdw-opus-warehouse-cluster.[aws-randomization] --user=opus_ot_ingest --password=password warehouse_ot
+        mysql> SELECT id, code FROM completeness INTO OUTFILE S3 's3://rdw-opus-archive/ot/completeness' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n';
         Query OK, 2 rows affected (0.13 sec)
         ```
     * Import test file to Redshift. Connect to redshift using the ingest user and import the test file into the table.
         ```bash
-        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=rdwopusingest --password --dbname=opus
-        opus=> COPY reporting.staging_completeness (id, code) FROM 's3://rdw-opus-archive/completeness.part_00000' CREDENTIALS 'aws_iam_role=arn:aws:iam::[aws-randomization]' FORMAT AS CSV DELIMITER ',' COMPUPDATE OFF;
+        psql --host=rdw-opus.[aws-randomization] --port=5439 --username=opus_ot_ingest --password --dbname=opus
+        opus=> COPY reporting.staging_completeness (id, code) FROM 's3://rdw-opus-archive/ot/completeness.part_00000' CREDENTIALS 'aws_iam_role=arn:aws:iam::[aws-randomization]' FORMAT AS CSV DELIMITER ',' COMPUPDATE OFF;
         INFO:  Load into table 'staging_completeness' completed, 2 record(s) loaded successfully.
         opus=> select * from staging_completeness;
          id |   code   
@@ -498,7 +512,7 @@ and the data marts. This is a good time to verify that the required connectivity
         * Number of replicas: 2
         * Subnet group: create new in same VPC/subnets as cluster, call it rdw-opus-redis
         * Security Group: rdw-opus-redis
-* [ ] Test access to the reconciliation report bucket. This is the landing place for reconciliation reports and is owned by the vendor submitting test results. They should have provided the bucket name and access/secret keys. This step is optional but is worthwhile since it will eliminate certain possibilities when troubleshooting. *Obviously, if another mechanism is being used to deliver reconciliation reports or if the report is not being used modify this step appropriately.*
+* [ ] (Optional) Test access to the reconciliation report bucket. This is the landing place for reconciliation reports and is owned by the vendor submitting test results. They should have provided the bucket name and access/secret keys. This step is optional but is worthwhile since it will eliminate certain possibilities when troubleshooting. *Obviously, if another mechanism is being used to deliver reconciliation reports or if the report is not being used modify this step appropriately.*
     1. Create an AWS CLI credential profile on the jump server by adding the following to `~/.aws/credentials`:
         ```properties
         [reconciliation]
@@ -541,7 +555,7 @@ and the data marts. This is a good time to verify that the required connectivity
     kubectl create -f configuration-service.yml
     kubectl create -f iris-efs-volume.yml
     ```
-* [ ] Install and configure backend RDW services. This step glosses over a **lot** of configuration details, highlighting just a few high-level steps. Read the architecture and runbook documents, and the annotated configuration files to fully understand all the configuration options.
+* [ ] Configure RDW services. This step glosses over a **lot** of configuration details, highlighting just a few high-level steps. Read the architecture and runbook documents, and the annotated configuration files to fully understand all the configuration options.
     1. Generate encrypted passwords/secrets and set in configuration files. Need configuration service port-forward or exec into pod and install curl.
         ```bash
         kubectl exec -it configuration-deployment-xxx -- curl -X POST --data-urlencode "my+secret" http://localhost:8888/encrypt
@@ -553,27 +567,65 @@ and the data marts. This is a good time to verify that the required connectivity
     1. Configure load balancer certificate for import service.
         * Create cert for import.sbac.org (or wherever you'll be putting this service)
         * Modify import-service.yml and set ssl-cert to ARN of newly created cert.
-    1. Create services.
+* [ ] Install RDW ingest services. These services accept data, process it and store it in the warehouse. We start them up first so that the initial data can be loaded and migrated before the reporting services are started.        
+    1. Create processing services.
         ```bash
         # ingest services
         kubectl apply -f exam-processor-service.yml
         kubectl apply -f group-processor-service.yml
-        kubectl apply -f import-service.yml
         kubectl apply -f package-processor-service.yml
+        kubectl apply -f import-service.yml
         kubectl apply -f migrate-olap-service.yml
         kubectl apply -f migrate-reporting-service.yml
         kubectl apply -f task-service.yml
-        # reporting services
-        kubectl apply -f admin-service.yml
-        kubectl apply -f aggregate-service.yml
-        kubectl apply -f reporting-service.yml
-        kubectl apply -f report-processor-service.yml
         ```
     1. Add route for import service.
         * Get ELB id by describing service `kubectl describe service import-service`.
         * Verify ELB listeners and security group inbound rules are set to allow HTTP and HTTPS access.  
         * Add Route53 CNAME record for `import.sbac.org` to the ELB for the service.
         * *Record import service ELB info in the reference.*
+* [ ] Load data.
+    1. Get access token. You need both the OAuth2 client id/secret and credentials for an ART user with ASMTDATALOAD.
+    `jq` is a handy utility for parsing json payloads.
+        ```bash
+        sudo yum install -y jq
+        export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
+        ```
+    1. Load accommodations. Need an appropriate accommodations.xml file. There is a copy included here but the source of truth is: https://github.com/SmarterApp/AccessibilityAccommodationConfigurations/blob/master/AccessibilityConfig.xml.
+        ```bash
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@accommodations.xml https://import.sbac.org/accommodations/imports
+        ```
+    1. Load subjects.  The subject definitions register the assessment subjects available in the system.  Each subject definition contains the associated performance levels, difficulty cutpoints, targets, claims, etc that define an assessment subject.  By default the system is pre-registered with Math and ELA as available subjects.  However, the associated definition files must still be imported to define display text.
+        ```bash
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@Math_subject.xml https://import.sbac.org/subjects/imports
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@ELA_subject.xml https://import.sbac.org/subjects/imports
+        ```
+    1. Load assessment packages. These are created by the tabulator; they are not provided here because they are proprietary in nature. For each file:
+        ```bash
+        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018.csv https://import.sbac.org/packages/imports
+        ```
+    1. Load organizations. Wait for the daily sync to occur or, to trigger the update-organization task to run immediately, use port-forwarding or shell into the task-service pod to POST to the task end-point:
+        ```bash
+        kubectl exec -it task-service-[k8s-randomization] -- curl -X POST http://localhost:8008/updateOrganizations?tenantId=OT
+        ```
+    1. There are other data that may need to be applied directly to the database. These require site-specific scripts so are not included here. Examples include:
+        * Adjust assessment labels. 
+        * Load instructional resources.
+    1. Trigger data migration. This shouldn't be necessary for migrate-reporting which runs every minute, but migrate-olap is normally a daily task and we want it to run now:
+        ```bash
+        kubectl exec -it migrate-olap-[k8s-randomization] -- curl -X POST http://localhost:8008/migrate?tenantId=OT
+        # tail the log to verify migration completes properly
+        kubectl logs -f migrate-olap-[k8s-randomization]
+        ```        
+* [ ] Install RDW reporting services. These are the supporting backend services for the reporting webapp. 
+    1. Create services.
+        ```bash
+        # reporting services
+        kubectl apply -f admin-service.yml
+        kubectl apply -f aggregate-service.yml
+        kubectl apply -f reporting-service.yml
+        kubectl apply -f report-processor-service.yml
+        ```
 * [ ] Install RDW webapp service.
     1. Create reporting keystore. 
         * `keytool -genkeypair -alias rdw-reporting-sp -keypass password -keystore rdw-reporting.jks`
@@ -608,36 +660,6 @@ and the data marts. This is a good time to verify that the required connectivity
             * Navigate to Federation, Entity Providers
             * Import Entity, upload the sp.xml file
             * Add newly created entity to circle-of-trust
-* [ ] Load data.
-    1. Get access token. You need both the OAuth2 client id/secret and credentials for an ART user with ASMTDATALOAD.
-    `jq` is a handy utility for parsing json payloads.
-        ```bash
-        sudo yum install -y jq
-        export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
-        ```
-    1. Load accommodations. Need an appropriate accommodations.xml file. There is a copy included here but the source of truth is: https://github.com/SmarterApp/AccessibilityAccommodationConfigurations/blob/master/AccessibilityConfig.xml.
-        ```bash
-        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@accommodations.xml https://import.sbac.org/accommodations/imports
-        ```
-    1. Load subjects.  The subject definitions register the assessment subjects available in the system.  Each subject definition contains the associated performance levels, difficulty cutpoints, targets, claims, etc that define an assessment subject.  By default the system is pre-registered with Math and ELA as available subjects.  However, the associated definition files must still be imported to define display text.
-        ```bash
-        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@Math_subject.xml https://import.sbac.org/subjects/imports
-        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@ELA_subject.xml https://import.sbac.org/subjects/imports
-        ```
-    1. Load assessment packages. These are created by the tabulator; they are not provided here because they are proprietary in nature. For each file:
-        ```bash
-        curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@2017-2018.csv https://import.sbac.org/packages/imports
-        ```
-    1. Load organizations. Wait for the daily sync to occur or, to trigger the update-organization task to run immediately, use port-forwarding or shell into the task-service pod to POST to the task end-point:
-        ```bash
-        kubectl exec task-service-[k8s-randomization] -it /bin/sh
-        apk update
-        apk add curl
-        curl -X POST http://localhost:8008/updateOrganizations
-        ```
-    1. There are other data that may need to be applied directly to the database. These require site-specific scripts so are not included here. Examples include:
-        * Adjust assessment labels. 
-        * Load instructional resources.
 * [ ] Miscellaneous tasks.
     * [ ] Set up scheduled task to do Redshift `ANALYZE`. Please refer to [Analyze & Vacuum](../docs/Performance.md#redshift-analyze-and-vacuum).
     * [ ] Set up centralized log collection. Please refer to [Log Collection](../docs/Monitoring.md#log-collection).
@@ -693,6 +715,8 @@ These instructions are intentionally vague, please refer to documentation for sp
 * [Upgrade v1.2](Upgrade.v1_2.AWS.md)
 * [Upgrade v1.2.1](Upgrade.v1_2_1.AWS.md)
 * [Upgrade v1.2.2](Upgrade.v1_2_2.AWS.md)
+* [Upgrade v1.3](Upgrade.v1_3_0.AWS.md)
+* [Upgrade v1.4](Upgrade.v1_4_0.AWS.md)
 
 <a name="upgrading_the_cluster"></a>
 ##### Upgrading the Cluster

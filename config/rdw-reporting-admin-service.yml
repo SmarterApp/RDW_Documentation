@@ -1,5 +1,18 @@
 # Annotated configuration for RDW Admin Service.
 
+# application configuration
+#app:
+#  multitenant:
+#    # tenant status settings; defaults are good
+#    statusSync:
+#      # how frequently should it refresh tenant status
+#      initialDelay: 30000
+#      fixedDelay: 30000
+#      # how long to wait for tenant to fully come up (default = 5 minutes)
+#      createDelayMinutes: 5
+#      # how long to wait for tenant changes to propagate (default = 1 minute)
+#      updateDelayMinutes: 1
+
 spring:
   # admin datasources must be configured with users with elevated privileges
   admin_warehouse_datasource:

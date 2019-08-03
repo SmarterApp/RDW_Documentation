@@ -563,4 +563,15 @@ Smoke 'em if ya got 'em.
 
 ### Hotfixes
 
-#### Upgrade v1.4.x
+#### Upgrade v1.4.0 (Sandbox Edition)
+The Tenant/Sandbox admin functionality caused a delay of the initial 1.4.0 release.
+If you are upgrading from 1.4.0-RC# to 1.4.0-RELEASE the following changes must be made:
+* [ ] Verify the TENANT_ADMIN role and related permissions are configured
+(these weren't required before the Sandbox functionality was added).
+* [ ] Fix student-fields values. If the configuration files include `reporting.student-fields`
+those values must be properly cased. Specifically 
+    * `admin` -> `Admin`
+    * `disabled` -> `Disabled`
+    * `enabled` -> `Enabled`
+* [ ] Remove `tenant-configuration-lookup` values if in any configuration files.
+

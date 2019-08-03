@@ -34,11 +34,12 @@ code of TS.
         * institution hierarchy
     * use data generator to create TRTs
     * spot check the TRTs
-* Configure RDW services
+* Configure RDW services. This assumes you are pointing to a configuration with tenant-TS defined.
     * Reset the schema using RDW_Schema. Adjust school_year for generated data.
     ```
     RDW_Schema$ gradle -Pschema_prefix=ts_ cleanAll migrateAll
     RDW_Schema$ echo "DELETE FROM ts_warehouse.school_year WHERE year IN (2015, 2016)" | mysql -u root ts_warehouse
+    RDW_Schema$ echo "INSERT INTO state_embargo (school_year, individual, aggregate, updated_by) VALUES (2019, 0, 0, 'dwtest@example.com')" | mysql -u root ts_warehouse
     ```
     * Run ingest services: modify RDW_Ingest docker-compose file, commenting out migrate-reporting and task-service:
     ```
@@ -97,7 +98,6 @@ UPDATE import SET status=1 WHERE id=@importid;
 
 DROP TABLE school_grade_session;
 ```
-* TODO - might want to have instructions for turning off embargo for current year
 * Dump data, cleanup and create manifest
 ```
 mkdir -p /tmp/sbac-dataset
@@ -109,7 +109,16 @@ rm audit_*.txt
 find . -size 0 -delete
 find *.txt > manifest.txt
 ```
+* (Optional) Create a file describing the dataset, e.g. README
 * Upload the files to S3, e.g. `s3://rdw-qa-archive/sandbox-datasets/sbac-dataset/warehouse`
+* Annotate the dataset in the admin service configuration file, e.g.
+```
+# in rdw-reporting-admin-service.yml
+sandbox-properties:
+  sandboxDatasets:
+    - label: SBAC Dataset
+      id: sbac-dataset
+```
 
 ### Manual Tenant Creation
 

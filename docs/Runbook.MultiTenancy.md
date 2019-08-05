@@ -4,11 +4,22 @@
 
 ### Table of Contents
 
+* [Overview](#overview)
 * [Creating Sandbox Data Sets](#creating-sandbox-data-sets)
 * [Manual Tenant Creation](#manual-tenant-creation)
 * [Manual Sandbox Creation](#manual-sandbox-creation)
 * [Manual Configuration Change](#manual-configuration-change)
 
+### Overview
+
+A single instance of RDW can host multiple tenants, each with partitioned data.
+
+#### Resources
+
+Each additional tenant impacts the resources of RDW. If there are many 
+tenants in a single instance, CPU and memory allocations for the services 
+will have to be increased. The exact changes depend on the amount of 
+data for each tenant, the number of concurrent users, etc.
 
 ### Creating Sandbox Data Sets
 

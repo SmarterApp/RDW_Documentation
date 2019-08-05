@@ -189,7 +189,7 @@ The migrate service is controlled by two conditions: the user-controlled run sta
 The [Annotated Configuration](../config/rdw-ingest-migrate-olap.yml) describes the properties and their effects.
  
 #### Deployment Spec
-The default max heap size is -Xmx384m which should be fine for any environment (unlike migrate-reporting, the migrate-olap service offloads more of the work to the database). The off-heap is about 170MB so the container should have a memory limit of about 600M.
+The default max heap size is -Xmx512m which should be fine for any environment (unlike migrate-reporting, the migrate-olap service offloads more of the work to the database). The off-heap is about 170MB so the container should have a memory limit of about 800M.
 The [Sample Kubernetes Spec](../deploy/migrate-olap-service.yml) runs a single replica.
 
 

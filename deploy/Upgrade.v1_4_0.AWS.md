@@ -574,4 +574,5 @@ those values must be properly cased. Specifically
     * `disabled` -> `Disabled`
     * `enabled` -> `Enabled`
 * [ ] Remove `tenant-configuration-lookup` values if in any configuration files.
+* [ ] If any Kubernetes deployments have the 8008 port exposed, remove that.
 

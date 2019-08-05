@@ -102,13 +102,13 @@ spring:
 #    removeAbandonedTimeout: 60
 #    logAbandoned: false
 
-# this is the list of available datasets for sandboxes
-sandbox-properties:
-  sandboxDatasets:
-    - label: Demo Dataset
-      id: demo-dataset
-    - label: SBAC Dataset
-      id: sbac-dataset
+# this is the list of available datasets for sandboxes; set as available
+#sandbox-properties:
+#  sandboxDatasets:
+#    - label: Demo Dataset
+#      id: demo-dataset
+#    - label: SBAC Dataset
+#      id: sbac-dataset
 
 # Tenant configuration is saved in the git configuration repository.
 # The remote repository URI must match the repository setting for the

@@ -68,7 +68,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
             ```
         * `rabbit-service.yml` - no change required
         * `wkhtmltopdf-service.yml` - no change required
-    * Ingest services, change image version to `1.4.0-RC7` in the following files:
+    * Ingest services, change image version to `1.4.0-RELEASE` in the following files:
         * `import-service.yml`
         * `package-processor-service.yml`
         * `group-processor-service.yml`
@@ -77,30 +77,12 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * `migrate-reporting-service.yml`
         * `task-service.yml`
     * Increase the memory for `migrate-olap-service.yml` from 500M/600M to 800M/800M
-    * Reporting services, change image version to `1.4.0-RC7` in the following files:
+    * Reporting services, change image version to `1.4.0-RELEASE` in the following files:
         * `admin-service.yml`
         * `aggregate-service.yml`
         * `report-processor-service.yml`
         * `reporting-service.yml`
         * `reporting-webapp.yml`
-    * The services need to have their actuator port exposed. In `admin-service.yml`, `aggregate-service.yml`, `report-processor-service.yml` and `reporting-service.yml` change something like this:
-    ```
-    spec:
-      ports:
-      - port: 80
-        targetPort: 8080
-    ``` 
-    to:
-    ```
-    spec:
-      ports:
-      - port: 80
-        targetPort: 8080
-        name: api
-      - port: 8008
-        targetPort: 8008
-        name: config
-    ```
     * Commit changes
         ```bash
         cd ../RDW_Deploy_Opus
@@ -293,24 +275,30 @@ The goal of this step is to make changes to everything that doesn't directly aff
           s3-region-static: us-west-2
         ```
     * `rdw-reporting-admin-service.yml`
+        * Add the admin datasources, the details can be copied from the existing datasources
+        ```
+        spring:
+          admin_warehouse_datasource:
+            url-parts:
+              hosts: rdw-aurora-opus-warehouse.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306
+            username: 
+            password: '{cipher}...'
+          admin_reporting_datasource:
+            url-parts:
+              hosts: rdw-aurora-opus-reporting.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306
+            username: 
+            password: '{cipher}...'
+          admin_olap_datasource:
+            url-parts:
+              hosts: rdw.cibkulpjrgtr.us-west-2.redshift.amazonaws.com:5439
+              database: opus
+            username: 
+            password: '{cipher}...'
+        ```
         * Remove reporting_datasource; copied to application.yml as reporting_ro.
         * Remove warehouse_datasource; copied to application.yml as warehouse_rw.
         * Remove archive properties; copied to application.yml.
         * Remove rabbitmq config if present.
-        * Add the tenant configuration service urls.
-        ```
-        tenant-configuration-lookup:
-          services:
-            # talking to itself
-            admin-service:
-              url: http://localhost:8008
-            aggregate-service:
-              url: http://aggregate-service:8008
-            report-processor:
-              url: http://report-processor-service:8008
-            reporting-service:
-              url: http://reporting-service:8008
-        ```
         * Add the tenant configuration persistence properties. The credentials must allow updates (i.e. not read-only)
         The config repo name can probably be found in the `configuration-service.yml` (in RDW_Deploy_Opus).
         ```
@@ -321,6 +309,13 @@ The goal of this step is to make changes to everything that doesn't directly aff
           git-password: '{cipher}96...'
           author: "Zaphod Beeblebrox"
           author-email: "zaphodb@example.com"
+        ```
+        * (Optional) If sandbox datasets are available, add them. The label may be anything, the id should correspond to the folder in S3, e.g. `s3://rdw-opus-archive/sandbox-datasets/sbac-dataset`.
+        ```
+        sandbox-properties:
+          sandboxDatasets:
+            - label: SBAC Dataset
+              id: sbac-dataset
         ```
     * `rdw-reporting-aggregate-service.yml`
         * Remove olap_datasource; copied to application.yml as olap_ro.
@@ -565,7 +560,7 @@ Smoke 'em if ya got 'em.
 
 #### Upgrade v1.4.0 (Sandbox Edition)
 The Tenant/Sandbox admin functionality caused a delay of the initial 1.4.0 release.
-If you are upgrading from 1.4.0-RC# to 1.4.0-RELEASE the following changes must be made:
+If you are upgrading from 1.4.0-RC# to 1.4.0-RELEASE the following changes may have to be made:
 * [ ] Verify the TENANT_ADMIN role and related permissions are configured
 (these weren't required before the Sandbox functionality was added).
 * [ ] Fix student-fields values. If the configuration files include `reporting.student-fields`
@@ -574,5 +569,4 @@ those values must be properly cased. Specifically
     * `disabled` -> `Disabled`
     * `enabled` -> `Enabled`
 * [ ] Remove `tenant-configuration-lookup` values if in any configuration files.
-* [ ] If any Kubernetes deployments have the 8008 port exposed, remove that.
-
+* [ ] If any Kubernetes deployments have the actuator port (8008) exposed, remove that. Check `admin-service.yml`, `aggregate-service.yml`, `report-processor-service.yml` and `reporting-service.yml`.

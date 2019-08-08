@@ -12,6 +12,8 @@
 
 ### Overview
 
+[Architecture](Architecture.md#multi-tenancy)
+
 A single instance of RDW can host multiple tenants, each with partitioned data.
 
 #### Resources
@@ -20,6 +22,23 @@ Each additional tenant impacts the resources of RDW. If there are many
 tenants in a single instance, CPU and memory allocations for the services 
 will have to be increased. The exact changes depend on the amount of 
 data for each tenant, the number of concurrent users, etc.
+
+Monitor the service logs for memory errors and the orchestration environment 
+for container OOM restarts.
+
+#### Sandbox Permissions
+
+When users enter a sandbox they are granted a role based on the sandbox role they select:
+* Teacher - `SandboxTeacher`
+* School Admin - `SandboxSchoolAdmin`
+* District Admin - `SandboxDistrictAdmin`
+
+The permissions for these roles may be configured as desired in the permissions service however the recommendation is:
+* SandboxTeacher - GROUP_PII_READ, GROUP_READ
+* SandboxSchoolAdmin - INDIVIDUAL_PII_READ, GROUP_PII_READ, GROUP_READ, CUSTOM_AGGREGATE_READ
+* SandboxDistrictAdmin - INDIVIDUAL_PII_READ, GROUP_PII_READ, CUSTOM_AGGREGATE_READ, GROUP_READ, GROUP_WRITE, EMBARGO_READ, EMBARGO_WRITE, INSTRUCTIONAL_RESOURCE_WRITE
+
+NOTE: the names of the roles are not configurable.
 
 ### Creating Sandbox Data Sets
 
@@ -140,26 +159,26 @@ However, there may be situations where manually creating a tenant is necessary.
 1. Provision database resources. You'll need to do this in Aurora and Redshift. If there are multiple data servers these steps will be slightly different.
 ```sql
 -- Aurora (mysql client)
-CREATE DATABASE ts_warehouse DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
-CREATE DATABASE ts_reporting DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
-CREATE DATABASE ts_migrate_olap DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
+CREATE DATABASE warehouse_ts DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
+CREATE DATABASE reporting_ts DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
+CREATE DATABASE migrate_olap_ts DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
 CREATE USER 'rdw_ts_ingest'@'%' IDENTIFIED BY 'password';
 CREATE USER 'rdw_ts_reporting'@'%' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON ts_warehouse.* TO 'rdw_ts_ingest'@'%';
-GRANT ALL PRIVILEGES ON ts_migrate_olap.* TO 'rdw_ts_ingest'@'%';
-GRANT ALL PRIVILEGES ON ts_reporting.* to 'rdw_ts_ingest'@'%';
-GRANT ALL PRIVILEGES ON ts_reporting.* to 'rdw_ts_reporting'@'%';
+GRANT ALL PRIVILEGES ON warehouse_ts.* TO 'rdw_ts_ingest'@'%';
+GRANT ALL PRIVILEGES ON migrate_olap_ts.* TO 'rdw_ts_ingest'@'%';
+GRANT ALL PRIVILEGES ON reporting_ts.* to 'rdw_ts_ingest'@'%';
+GRANT ALL PRIVILEGES ON reporting_ts.* to 'rdw_ts_reporting'@'%';
 GRANT SELECT ON mysql.proc TO 'rdw_ts_ingest'@'%';
 
 -- Redshift (postgresql client)
 \connect opus
-CREATE SCHEMA ts_reporting;
+CREATE SCHEMA reporting_ts;
 CREATE USER rdw_ts_ingest PASSWORD 'password';
 CREATE USER rdw_ts_reporting PASSWORD 'password';
-GRANT ALL ON SCHEMA ts_reporting to rdw_ts_ingest;
-GRANT ALL ON SCHEMA ts_reporting to rdw_ts_reporting;
-ALTER USER rdw_ts_ingest SET SEARCH_PATH TO ts_reporting;
-ALTER USER rdw_ts_reporting SET SEARCH_PATH TO ts_reporting;
+GRANT ALL ON SCHEMA reporting_ts to rdw_ts_ingest;
+GRANT ALL ON SCHEMA reporting_ts to rdw_ts_reporting;
+ALTER USER rdw_ts_ingest SET SEARCH_PATH TO reporting_ts;
+ALTER USER rdw_ts_reporting SET SEARCH_PATH TO reporting_ts;
 ```
 1. Create the RDW schemas. The RDW_Schema project may be used for this.
 ```bash
@@ -169,10 +188,10 @@ git checkout master; git pull
 
 # note the schema prefix; it can be anything but matching tenant id makes sense
 gradle \
-  -Pschema_prefix=ts_ \
+  -Pschema_suffix=_ts \
   -Pdatabase_url="jdbc:mysql://rdw-aurora-opus.cugsexobhx8t.us-west-2.rds.amazonaws.com:3306/" \
   -Pdatabase_user=rdw_ts_ingest -Pdatabase_password=password \
-  -Predshift_url=jdbc:redshift://rdw-opus.cibkulpjrgtr.us-west-2.redshift.amazonaws.com:5439/ts \
+  -Predshift_url=jdbc:redshift://rdw-opus.cibkulpjrgtr.us-west-2.redshift.amazonaws.com:5439/opus \
   -Predshift_user=rdw_ts_ingest -Predshift_password=password \
   migrateWarehouse migrateReporting migrateMigrate_olap migrateReporting_olap
 ```
@@ -185,8 +204,8 @@ GRANT SELECT INTO S3 ON *.* to 'rdw_ts_reporting'@'%';
 
 -- Redshift (postgresql client)
 \connect opus
-GRANT ALL ON ALL TABLES IN SCHEMA ts_reporting to rdw_ts_ingest;
-GRANT ALL ON ALL TABLES IN SCHEMA ts_reporting to rdw_ts_reporting;
+GRANT ALL ON ALL TABLES IN SCHEMA reporting_ts to rdw_ts_ingest;
+GRANT ALL ON ALL TABLES IN SCHEMA reporting_ts to rdw_ts_reporting;
 ```
 1. Create configuration profile.
 ```bash
@@ -205,13 +224,22 @@ git push
 # wait 10-15 seconds before and 20-30 seconds after this command
 kubectl exec -it configuration-deployment-... -- curl -d 'path=tenant-TS' http://localhost:8888/monitor
 ```
-1. Poke migrate services. It may (currently) be necessary to bounce these instead of just poking.
+1. Poke migrate services to migrate for the new tenant. The `migrate-reporting` service should do this right away but `migrate-olap` will have to be triggered. 
+First verify the service has recognized the new tenant:
+```bash
+kubectl exec -it migrate-olap-... -- curl -X GET http://localhost:8008/migrate |sort
+Migrate: running
+OT: enabled; last migrate: COMPLETED to 2019-07-25T18:25:03.935443
+TS: enabled
+```
+If that looks good, trigger the migrate for `TS`:
 ```bash
 kubectl exec -it migrate-olap-... -- curl -X POST http://localhost:8008/migrate?tenantId=TS
-kubectl exec -it migrate-reporting-... -- curl -X POST http://localhost:8008/migrate?tenantId=TS
 ```
-1. Bounce caching services. This shouldn't be necessary long-term but services may need bouncing: `aggregate-service`, `reporting-service`, `import-service`, maybe more.
-
+1. After migrate has completed, trigger another configuration refresh (the alternative is to bounce all the services that aggressively cache information):
+```
+kubectl exec -it configuration-deployment-... -- curl -d 'path=*' http://localhost:8888/monitor
+```
 
 ### Manual Sandbox Creation
 
@@ -235,18 +263,18 @@ tenantProperties:
 * The dataset must be loaded. The dataset should be in S3. Do this after the database setup steps and before creating the sandbox configuration profile.
 ```sql
 -- Aurora (mysql client)
-USE ts_warehouse;
+USE warehouse_ts_s001;
 SET FOREIGN_KEY_CHECKS=0;
 
 -- A dataset has a manifest.txt file; for each entry in that file do something like:
-TRUNCATE table ts_warehouse.accommodation;
-LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/accommodation.txt' INTO TABLE ts_warehouse.accommodation;
+TRUNCATE table warehouse_ts_s001.accommodation;
+LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/accommodation.txt' INTO TABLE warehouse_ts_s001.accommodation;
 
 SET FOREIGN_KEY_CHECKS=1;
 ```
 A hint for generating all the `LOAD DATA` commands (not quite right since the table name has `.txt` appended):
 ```bash
-cat manifest.txt | xargs -n 1 -I FILE echo "LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/FILE' INTO TABLE warehouse.FILE"
+cat manifest.txt | xargs -n 1 -I FILE echo "LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/FILE' INTO TABLE warehouse_ts_s001.FILE"
 ```
 
 

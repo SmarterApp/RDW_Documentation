@@ -817,12 +817,29 @@ To check the status of the import use Get Import Request. Imports with "PROCESSE
 ### Task Endpoints
 There are a few tasks that are configured to run periodically (typically once a day). These end-points allow those tasks to be manually triggered on demand. These end-points are part of the actuator framework so they are exposed on a separate port (8008) which is typically kept behind a firewall in a private network. No authentication is required. 
 
+#### Reconciliation Report Task
+The reconciliation report task generates a report of all exam imports in the given time range, writing it to the specified location (usually an S3 bucket). This is typically scheduled to happen every day but may be less often in smaller installations (or not at all). To trigger an immediate execution: 
+
+* Host: task service
+* URL: `/reconciliationReport`
+* Method: `POST`
+* URL Params: a tenant id may be specified to restrict the task to just that tenant
+  * `tenantId=<tenant-id>`
+* Success Response:
+  * Code: 200
+* Sample Call:
+```bash
+curl -X POST http://localhost:8008/reconciliationReport
+```
+
 #### Update Organizations Task
 The update organization task retrieves all schools from ART and posts them to the import service. This is typically scheduled to happen every day in the wee hours. To trigger an immediate execution: 
 
 * Host: task service
 * URL: `/updateOrganizations`
 * Method: `POST`
+* URL Params: a tenant id may be specified to restrict the task to just that tenant
+  * `tenantId=<tenant-id>`
 * Success Response:
   * Code: 200
 * Sample Call:

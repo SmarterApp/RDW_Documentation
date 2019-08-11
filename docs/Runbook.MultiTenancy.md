@@ -277,6 +277,28 @@ A hint for generating all the `LOAD DATA` commands (not quite right since the ta
 cat manifest.txt | xargs -n 1 -I FILE echo "LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/FILE' INTO TABLE warehouse_ts_s001.FILE"
 ```
 
+### Manual Tenant Deletion
+
+Using tenant TS as an example ...
+
+* Remove the tenant-specific folder from the configuration repository
+* Trigger system configuration change:
+```bash
+kubectl exec -it configuration-deployment-<k8s-id> -- curl -d 'path=*' http://localhost:8888/monitor
+```
+* Drop the Aurora schemas and user
+```sql
+DROP SCHEMA migrate_olap_ts;
+DROP SCHEMA reporting_ts;
+DROP SCHEMA warehouse_ts;
+DROP USER rdw_ts;
+```
+* Drop the Redshift schema and user
+```sql
+DROP SCHEMA reporting_ts CASCADE;
+DROP USER rdw_ts;
+```
+* 
 
 ### Manual Configuration Change
 

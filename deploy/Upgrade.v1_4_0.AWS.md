@@ -569,6 +569,7 @@ those values must be properly cased. Specifically
     * `disabled` -> `Disabled`
     * `enabled` -> `Enabled`
 * [ ] Remove `tenant-configuration-lookup` values if in any configuration files.
+* [ ] Remove `state.code` and `state.name` from root `application.yml` (make sure they are set for all tenants and sandboxes)
 * [ ] If any Kubernetes deployments have the actuator port (8008) exposed, remove that. Check `admin-service.yml`, `aggregate-service.yml`, `report-processor-service.yml` and `reporting-service.yml`.
 * [ ] Add `import-status-service` to `import-service.yml`
 ```
@@ -603,13 +604,12 @@ spec:
         * remove username/password from `task-update-organizations-import-service-client.oauth2` (used in previous step)
 * [ ] Reorganize task-service reconciliation report configuration properties (might help to refer to the canonical rdw-ingest-task-service.yml)
     * In the tenant-specific application.yml
-        * copy query and archive settings from root application.yml and put it under taskSendReconciliationReport.
+        * copy archive settings from root application.yml and put it under taskSendReconciliationReport.
         It no longer uses `senders`: the log sender becomes `log: true`, the archive sender properties go under `archives`, and the ftp sender is no longer supported: 
         ```
         taskSendReconciliationReport:
           tenants:
             TS:
-              query: status=PROCESSED&after=-PT24H
               log: true
               archives:
                 - uri-root: s3://rdw-opus-archive
@@ -619,9 +619,9 @@ spec:
                   s3-sse: AES256
         ``` 
     * In the root application.yml
-        * remove `task.send-reconciliation-report.query`
         * remove `task.send-reconciliation-report.senders`
-        * only left should be `task.send-reconciliation-report.cron`     
+        * leave `task.send-reconciliation-report.cron`
+        * leave `task.send-reconciliation-report.query`     
 * [ ] Add ART client config to admin service. Use client-level credentials that work for all states.
 ```
 art-client:

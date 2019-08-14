@@ -12,9 +12,16 @@
 
 ### Overview
 
-[Architecture](Architecture.md#multi-tenancy)
+A single instance of RDW can host multiple tenants, each with partitioned data; please refer to [Architecture](Architecture.md#multi-tenancy) for more of an overview.
 
-A single instance of RDW can host multiple tenants, each with partitioned data.
+#### Configuration
+
+The configuration of RDW is controlled by yaml files stored in the configuration repository.
+Common configuration in `application.yml`.
+Service-specific configuration, e.g. `rdw-reporting-admin-service.yml`
+A tenant's configuration is layered on in their own `application.yml`
+
+
 
 #### Resources
 

@@ -570,6 +570,7 @@ those values must be properly cased. Specifically
     * `enabled` -> `Enabled`
 * [ ] Remove `tenant-configuration-lookup` values if in any configuration files.
 * [ ] Remove `state.code` and `state.name` from root `application.yml` (make sure they are set for all tenants and sandboxes)
+* [ ] Remove `reporting.school-year` (make sure it is set for all tenants and sandboxes)
 * [ ] If any Kubernetes deployments have the actuator port (8008) exposed, remove that. Check `admin-service.yml`, `aggregate-service.yml`, `report-processor-service.yml` and `reporting-service.yml`.
 * [ ] Add `import-status-service` to `import-service.yml`
 ```

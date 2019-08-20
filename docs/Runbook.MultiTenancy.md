@@ -7,6 +7,8 @@
 * [Overview](#overview)
 * [Creating Sandbox Data Sets](#creating-sandbox-data-sets)
 * [Manual Tenant Creation](#manual-tenant-creation)
+* [Undelete Tenant](#undelete-tenant)
+* [Manual Tenant Deletion](#manual-tenant-deletion)
 * [Manual Sandbox Creation](#manual-sandbox-creation)
 * [Manual Configuration Change](#manual-configuration-change)
 
@@ -259,6 +261,59 @@ kubectl exec -it migrate-olap-... -- curl -X POST http://localhost:8008/migrate?
 kubectl exec -it configuration-deployment-... -- curl -d 'path=*' http://localhost:8888/monitor
 ```
 
+### Undelete Tenant
+
+When a tenant is deleted in the tenant admin UI, the tenant configuration
+is renamed so it isn't recognized by the system. No other resources are
+removed or modified. Undeleting a tenant in this state is simple: rename
+the configuration in the repository, and trigger a configuration refresh.
+```bash
+git clone https://gitlab.com/fairwaytech/rdw_config_opus.git
+cd rdw_config_opus
+git checkout master; git pull
+
+mv archive-TS tenant-TS
+# perhaps review the settings in the application.yml and any localization files
+git commit -a -m "undelete tenant TS"
+git push
+
+# wait 20-30s and then trigger configuration refresh
+kubectl exec -it configuration-deployment-... -- curl -d 'path=*' http://localhost:8888/monitor
+```
+
+
+### Manual Tenant Deletion
+
+There may be circumstances where a tenant must be manually removed from the
+system. Also, when a tenant is deleted in the tenant admin UI, no resources 
+are removed or modified so, to completely purge a tenant, there are a number 
+of manual steps that must happen. 
+
+Using tenant TS as an example ...
+
+* Either use the UI to delete the tenant or do it manually:
+    * Remove the tenant-specific folder from the configuration repository
+    * Trigger system configuration change:
+    ```bash
+    kubectl exec -it configuration-deployment-<k8s-id> -- curl -d 'path=*' http://localhost:8888/monitor
+    ```
+* Drop the Aurora schemas and user
+```sql
+DROP SCHEMA migrate_olap_ts;
+DROP SCHEMA reporting_ts;
+DROP SCHEMA warehouse_ts;
+DROP USER rdw_ts;
+```
+* Drop the Redshift schema and user
+```sql
+DROP SCHEMA reporting_ts CASCADE;
+DROP USER rdw_ts;
+```
+* Remove S3 resources
+```bash
+# TBD
+``` 
+
 ### Manual Sandbox Creation
 
 The admin UI allows a user to create a sandbox. It handles all the magic under the covers.
@@ -294,29 +349,6 @@ A hint for generating all the `LOAD DATA` commands (not quite right since the ta
 ```bash
 cat manifest.txt | xargs -n 1 -I FILE echo "LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/FILE' INTO TABLE warehouse_ts_s001.FILE"
 ```
-
-### Manual Tenant Deletion
-
-Using tenant TS as an example ...
-
-* Remove the tenant-specific folder from the configuration repository
-* Trigger system configuration change:
-```bash
-kubectl exec -it configuration-deployment-<k8s-id> -- curl -d 'path=*' http://localhost:8888/monitor
-```
-* Drop the Aurora schemas and user
-```sql
-DROP SCHEMA migrate_olap_ts;
-DROP SCHEMA reporting_ts;
-DROP SCHEMA warehouse_ts;
-DROP USER rdw_ts;
-```
-* Drop the Redshift schema and user
-```sql
-DROP SCHEMA reporting_ts CASCADE;
-DROP USER rdw_ts;
-```
-* 
 
 ### Manual Configuration Change
 

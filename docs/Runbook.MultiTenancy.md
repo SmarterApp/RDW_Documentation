@@ -25,8 +25,50 @@ A tenant's configuration is layered on in their own `application.yml`
 
 #### Data Sources and Archives
 
-TBD - picture or text layout of data server, database, schemas
-TBD - picture or text layout of S3 archive
+Tenants typically use the same data server, each with their own schema.
+Using an example of two tenants, TS and OT, in Aurora this looks like this:
+```
+rdw-aurora-opus:
+  schemas:
+    reporting_ot
+    warehouse_ot
+    migrate_olap_ot
+    reporting_ts
+    warehouse_ts
+    migrate_olap_ts
+  users:
+    rdw_ot_ingest       
+    rdw_ot_reporting  
+    rdw_ts_ingest       
+    rdw_ts_reporting
+```
+Redshift is slightly more complicated:
+```
+rdw-redshift-opus:
+  databases:
+    prod
+      schemas:
+        reporting_ot
+        reporting_ts
+  users:
+    rdw_ot_ingest          
+    rdw_ot_reporting          
+    rdw_ts_ingest             
+    rdw_ts_reporting          
+```
+
+Tenants typically share an S3 bucket for archiving data, with a path prefix, for example.
+```
+s3://rdw-opus-archive/
+  ot/EXAM
+  ot/MigrateOlap
+  ot/sandbox-datasets
+  ... 
+  ts/EXAM
+  ts/MigrateOlap
+  ts/sandbox-datasets
+  ...
+```
 
 #### Resources
 

@@ -15,6 +15,7 @@
 
 spring:
   # admin datasources must be configured with users with elevated privileges
+  # allowing creation and deletion of schemas and users
   admin_warehouse_datasource:
 #    url-parts:
 #      #This is the generic format of the connection URL protocol//[hosts][/database][?properties]

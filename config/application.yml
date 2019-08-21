@@ -6,36 +6,29 @@
 # for datasources, archive, reporting, logging be put here.
 
 reporting:
+  # The client must match the configured client id in ART.
   client: SBAC
 
-  # The embargo feature applies its rules for only the current school year, so it must be configured.
-  # Although there is a default value for this setting (2019), it should be explicitly configured.
-  school-year: 2019
-
-  # Used throughout the applications, the state code/name.
-  state:
-    code: CA
-    name: California
+  # The school-year and state code/name must be configured per tenant so are not included here.
 
   # By default the system does not allow users to see test results from institutions outside their
   # permissions. Setting this property true allows users to see all test results for students
   # regardless of where the test was administered, if they have PII for the student.
-  # Typically this is set at the tenant level.
 #  transfer-access-enabled: false
 
   # Location of translation files (optional).
   # There is no default value. To use the central configuration server the value will be like
   # "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
   # Details for this property are covered in the language runbook.
-  # Typically this is set at the tenant level.
 #  translation-location:
 
-  # By default the system enables all the student fields (except ELAS) for all users.
+  # By default the system enables all the student fields except ELAS for all users.
   # Setting these properties controls which fields will be available.
   # Used by aggregate service and reporting webapp.
-  # enabled - all users can see the field, default
-  # admin - only admins (non-teachers) can see the field; appropriate for sensitive data fields
-  # disabled - no users can see the field; intended for fields where source data is not expected
+  # Enabled - all users can see the field, default
+  # Admin - only admins (non-teachers) can see the field; appropriate for sensitive data fields
+  # Disabled - no users can see the field; intended for fields where source data is not expected
+  # (the values are case-sensitive, for example "Enabled" not "enabled")
 #  student-fields:
 #    EconomicDisadvantage: Enabled
 #    EnglishLanguageAcquisitionStatus: Disabled

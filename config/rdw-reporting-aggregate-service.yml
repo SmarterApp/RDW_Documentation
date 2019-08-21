@@ -2,8 +2,20 @@
 
 # Aggregate report configuration.
 #aggregate-reporting:
+  # By default the system allows aggregate reporting for all assessment types.
+  # If there will never be test results for certain assessment types this setting
+  # can be used to include only the expected types. For example, if the system
+  # will never receive IAB results, set this to "ica,sum".
 #  assessment-types: ica,sum,iab
+
+  # This is the same as the previous property, assessment-types, but is used to
+  # control the feature for users that have statewide access. By default state-
+  # wide users may only do aggregate reporting for summative assessments.
 #  statewide-user-assessment-types: sum
+
+  # For aggregate reports, the option to include state results is only available
+  # for the assessment types specified by this setting. By default only summative
+  # assessment types may include state results.
 #  state-aggregate-assessment-types: sum
 
 # Application configuration

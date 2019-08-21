@@ -19,9 +19,39 @@ A single instance of RDW can host multiple tenants, each with partitioned data; 
 #### Configuration
 
 The configuration of RDW is controlled by yaml files stored in the configuration repository.
-Common configuration in `application.yml`.
-Service-specific configuration, e.g. `rdw-reporting-admin-service.yml`
-A tenant's configuration is layered on in their own `application.yml`
+
+The instance-level or root configuration is set in the yaml files in the root folder.
+That includes a general configuration file, `application.yml` and service-specific configuration files.
+Instance-level localization is specified in files stored (by convention) in the `i18n` folder.  
+
+A tenant's configuration is layered on top of the instance-level configuration and is set in an `application.yml` file in the tenant folder. 
+The tenant folder must be named `tenant-XX` where XX is the tenant key.
+Tenant-specific localization is set in `xx.json` files in the tenant folder. Note there is no `i18n` folder for tenants.
+
+Here is an example layout with two tenants, OT and TS, and one sandbox.
+Tenant OT is simple and has just the normal overrides. 
+Tenant TS and the sandbox include english localization overrides. 
+
+```
+git/RDW_Config_Opus/
+    application.yml
+    rdw-ingest-import-service.yml
+    rdw-ingest-task-service.yml
+    rdw-reporting-admin-service.yml
+    rdw-reporting-service.yml
+    rdw-reporting-webapp.yml
+    i18n/
+        en.json
+        es.json
+    tenant-OT/
+        application.yml
+    tenant-TS/
+        application.yml
+        en.json
+    tenant-TS_S001/
+        application.yml
+        en.json
+```
 
 #### Data Sources and Archives
 
@@ -29,45 +59,45 @@ Tenants typically use the same data server, each with their own schema.
 Using an example of two tenants, TS and OT, in Aurora this looks like this:
 ```
 rdw-aurora-opus:
-  schemas:
-    reporting_ot
-    warehouse_ot
-    migrate_olap_ot
-    reporting_ts
-    warehouse_ts
-    migrate_olap_ts
-  users:
-    rdw_ot_ingest       
-    rdw_ot_reporting  
-    rdw_ts_ingest       
-    rdw_ts_reporting
+    schemas:
+        reporting_ot
+        warehouse_ot
+        migrate_olap_ot
+        reporting_ts
+        warehouse_ts
+        migrate_olap_ts
+    users:
+        rdw_ot_ingest       
+        rdw_ot_reporting  
+        rdw_ts_ingest       
+        rdw_ts_reporting
 ```
 Redshift is slightly more complicated:
 ```
 rdw-redshift-opus:
-  databases:
-    prod
-      schemas:
-        reporting_ot
-        reporting_ts
-  users:
-    rdw_ot_ingest          
-    rdw_ot_reporting          
-    rdw_ts_ingest             
-    rdw_ts_reporting          
+    databases:
+        prod
+            schemas:
+                reporting_ot
+                reporting_ts
+    users:
+        rdw_ot_ingest          
+        rdw_ot_reporting          
+        rdw_ts_ingest             
+        rdw_ts_reporting          
 ```
 
 Tenants typically share an S3 bucket for archiving data, with a path prefix, for example.
 ```
 s3://rdw-opus-archive/
-  ot/EXAM
-  ot/MigrateOlap
-  ot/sandbox-datasets
-  ... 
-  ts/EXAM
-  ts/MigrateOlap
-  ts/sandbox-datasets
-  ...
+      ot/EXAM
+      ot/MigrateOlap
+      ot/sandbox-datasets
+      ... 
+      ts/EXAM
+      ts/MigrateOlap
+      ts/sandbox-datasets
+      ...
 ```
 
 #### Resources
@@ -114,7 +144,8 @@ code of TS.
 
 * Data generation
     * collect inputs for data generation
-        * assessment package definitions
+        * subject definition files
+        * assessment package definition files
         * institution hierarchy
     * use data generator to create TRTs
     * spot check the TRTs
@@ -133,6 +164,7 @@ code of TS.
 * Load data (the usual data load process using curl or Postman and data generator submit scripts). 
 Be sure to use credentials for the `TS` tenant.
     * subject definitions
+    * accommodations
     * assessment packages
     * institutions
     * TRTs
@@ -353,7 +385,8 @@ DROP USER rdw_ts;
 ```
 * Remove S3 resources
 ```bash
-# TBD
+# Use the S3 console to remove the tenant-specific folder (and all sub folders) in the bucket
+# Look for, and remove, something like s3://rdw-opus-archive/ts/
 ``` 
 
 ### Manual Sandbox Creation

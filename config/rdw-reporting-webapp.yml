@@ -7,8 +7,10 @@ permissionservice:
 
 # Application behavior
 reporting:
+  # Used for google analytics.
   analytics-tracking-id:
 
+  # The guide URLs are used to provide links on the landing and home pages.
 #  interpretive-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-interpretive-guide.pdf
 #  user-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-user-guide.pdf
 
@@ -18,11 +20,12 @@ reporting:
 
   # When a user is logged into SSO but does not have proper permissions to access the reporting application
   # an Access Denied page is displayed.  The default is a basic page presented within the application.
-  # To provide an external page/site use the "redirect:url" format.  For example, redirect:http://external-site.com/access-denied
+  # To provide an external page/site use the "redirect:url" format.
+  # For example, redirect:http://external-site.com/access-denied
 #  access-denied-url: forward:/assets/public/access-denied.html
 
-  # When a user is not logged in and accesses the root of the web application, they are presented with a landing page. The
-  # default page provides a screen with a link to login by linking to "/home".  To provide an external page/site
+  # When a user is not logged in and accesses the root of the web application, they are presented with a landing page.
+  # The default page provides a screen with a link to login by linking to "/home".  To provide an external page/site
   # use the "redirect:url" format.  For example, redirect:http://reporting-site.com
 #  landing-page-url: forward:/landing.html
 

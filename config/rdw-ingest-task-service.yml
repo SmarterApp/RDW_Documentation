@@ -29,6 +29,7 @@ task:
   # Update Organizations configuration
   # To enable, set the cron property here,
   # then configure taskUpdateOrganizationsArtClient and taskUpdateOrganizationsImportServiceClient
+  # then configure tenant-specific username/password under taskUpdateOrganizationsImportServiceClient
 #  update-organizations:
 #    cron: 0 0 8 * * *
 

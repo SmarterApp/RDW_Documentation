@@ -21,10 +21,10 @@
 task:
   # Reconciliation Report configuration.
   # To enable, set the cron property here,
+  # then configure the query under taskSendReconciliationReport
   # then configure tenant-specific behavior under taskSendReconciliationReport
 #  send-reconciliation-report:
 #    cron: 0 0 12 * * *
-#    query: status=PROCESSED&after=-PT24H
 
   # Update Organizations configuration
   # To enable, set the cron property here,
@@ -34,12 +34,13 @@ task:
 #    cron: 0 0 8 * * *
 
 # Configuration for reconciliation report.
-# There is no root (non-tenant) configuration for this task. All settings should be by tenant.
-# So this base file will have no active configuration properties, it is here for documentation only.
+# Only the query may be configured at the instance-level. All other settings should be by tenant.
+# An example is given here but the overrides would be in the tenant application.yml.
 #taskSendReconciliationReport:
+#  query: status=PROCESSED&after=-PT24H
 #  tenants:
 #    CA:
-#      query: status=PROCESSED&after=-PT24H
+#      query: status=PROCESSED&after=-PT25H
 #      # set log true to log the reconciliation report details
 #      log: false
 #      # archives may be local file or S3, and may be repeated as needed.

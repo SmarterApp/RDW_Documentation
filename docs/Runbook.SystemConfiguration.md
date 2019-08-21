@@ -140,22 +140,22 @@ Any time a configuration option is changed, the affected services must be restar
 
 #### Student Fields
 
-The system controls visibility into student demographic data for teachers. By default all student fields are available to all users. To change that behavior, modify properties in `rdw-reporting-service.yml`. Fields can be completely disabled, enabled for administrators but not teachers or enabled for all users including teachers.
+The system controls visibility into student demographic data for teachers. By default all student fields are available to all users. To change that behavior, modify properties in the appropriate configuration file. Fields can be completely disabled, enabled for administrators but not teachers or enabled for all users including teachers.
 
 This example configuration is similar to California's policy: they use ELAS instead of LEP, nobody is allowed to see the students' economic disadvantage, and their teachers are restricted to just four fields (ELAS, migrant status, language, race/ethnicity):
 ```yml
 reporting:
   student-fields:
-    EconomicDisadvantage: disabled
-    LimitedEnglishProficiency: disabled
-    EnglishLanguageAcquisitionStatus: enabled
-    MigrantStatus: enabled
-    PrimaryLanguage: enabled
-    Ethnicity: enabled
-    Gender: admin
-    IndividualEducationPlan: admin
-    MilitaryStudentIdentifier: admin
-    Section504: admin
+    EconomicDisadvantage: Disabled
+    LimitedEnglishProficiency: Disabled
+    EnglishLanguageAcquisitionStatus: Enabled
+    MigrantStatus: Enabled
+    PrimaryLanguage: Enabled
+    Ethnicity: Enabled
+    Gender: Admin
+    IndividualEducationPlan: Admin
+    MilitaryStudentIdentifier: Admin
+    Section504: Admin
 ```
 Any time a configuration option is modified, the affected services must be restarted. For this setting, restart the `reporting-webapp` instances.
 
@@ -214,7 +214,7 @@ Updating the language file is detailed in [language support](./Runbook.LanguageS
     },
 ```
 
-<a name="military-conntected"></a>
+<a name="military-connected"></a>
 #### Military Student Connected Identifier
 
 There are ESSA guidelines for the military student connected identifier. However some states, California in particular, have different requirements. To change the list of these codes in the system, the allowed values in the database must be set. It is expected the allowed values will be either the ESSA set, a simplified yes/no set, or the superset of both (if a tenant has changed adherence policy over the years). NOTE: the id/code values must not be changed if they are already in use. In that situation, new values may be added but existing used values should remain unchanged.

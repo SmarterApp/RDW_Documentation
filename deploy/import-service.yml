@@ -51,7 +51,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: smarterbalanced/rdw-ingest-import-service:1.4.0-RC17
+        image: smarterbalanced/rdw-ingest-import-service:1.4.0-RELEASE
         readinessProbe:
           httpGet:
             path: /health

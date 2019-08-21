@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: package-processor
-        image: smarterbalanced/rdw-ingest-package-processor:1.4.0-RC17
+        image: smarterbalanced/rdw-ingest-package-processor:1.4.0-RELEASE
         readinessProbe:
           httpGet:
             path: /health

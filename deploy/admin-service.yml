@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: admin-service
-        image: smarterbalanced/rdw-reporting-admin-service:1.4.0-RC17
+        image: smarterbalanced/rdw-reporting-admin-service:1.4.0-RELEASE
         imagePullPolicy: Always
         readinessProbe:
           httpGet:

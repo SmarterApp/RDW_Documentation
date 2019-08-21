@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: report-processor
-        image: smarterbalanced/rdw-reporting-report-processor:1.4.0-RC17
+        image: smarterbalanced/rdw-reporting-report-processor:1.4.0-RELEASE
         readinessProbe:
           httpGet:
             path: /health

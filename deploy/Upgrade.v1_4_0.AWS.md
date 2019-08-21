@@ -560,7 +560,7 @@ Smoke 'em if ya got 'em.
 
 #### Upgrade v1.4.0 (Sandbox Edition)
 The Tenant/Sandbox admin functionality caused a delay of the initial 1.4.0 release.
-If you are upgrading from 1.4.0-RC# to 1.4.0-RELEASE the following changes may have to be made:
+If you are upgrading from 1.4.0-RC19 or earlier the following changes may have to be made:
 * [ ] Verify the TENANT_ADMIN role and related permissions are configured
 (these weren't required before the Sandbox functionality was added).
 * [ ] Fix student-fields values. If the configuration files include `reporting.student-fields`
@@ -599,7 +599,7 @@ spec:
                 username: tenant-user@example.com
                 password: '{cipher}...'
         ``` 
-    * In the root application.yml
+    * In the root `rdw-ingest-task-service.yml`
         * move `task.update-organizations.art-client` -> `task-update-organizations-art-client`
         * move `task.update-organizations.import-service-client` -> `task-update-organizations-import-service-client`
         * remove username/password from `task-update-organizations-import-service-client.oauth2` (used in previous step)
@@ -619,11 +619,11 @@ spec:
                   s3-region-static: us-west-2
                   s3-sse: AES256
         ``` 
-    * In the root application.yml
+    * In the root `rdw-ingest-task-service.yml`
         * remove `task.send-reconciliation-report.senders`
         * leave `task.send-reconciliation-report.cron`
         * leave `task.send-reconciliation-report.query`     
-* [ ] Add ART client config to admin service. Use client-level credentials that work for all states.
+* [ ] Add ART client config to admin service, `rdw-reporting-admin-service.yml`. Use client-level credentials that work for all states.
 ```
 art-client:
   url: https://art-deployment.opus.org/rest/
@@ -632,5 +632,35 @@ art-client:
     client-id: sbacdw
     client-secret: '{cipher}...'
     username: super-user@example.com
+    password: '{cipher}...'
+```
+* [ ] Reminder to add data set declarations in `rdw-reporting-admin-service.yml` if there are any available. For example,
+```
+sandbox-properties:
+  sandboxDatasets:
+    - label: CA Dataset
+      id: ca-dataset
+    - label: SB Dataset (ELA, Math, Latin)
+      id: sb-dataset
+```
+* [ ] Add admin datasources to `rdw-reporting-admin-service.yml`
+You'll need to create users that have full schema creation permissions.
+``` 
+spring:
+  admin_warehouse_datasource:
+    url-parts:
+      hosts: rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306
+    username: root
+    password: '{cipher}...'
+  admin_reporting_datasource:
+    url-parts:
+      hosts: rdw-opus-reporting.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306
+    username: root
+    password: '{cipher}...'
+  admin_olap_datasource:
+    url-parts:
+      hosts: rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439
+      database: opus
+    username: root
     password: '{cipher}...'
 ```

@@ -24,6 +24,7 @@ task:
   # then configure tenant-specific behavior under taskSendReconciliationReport
 #  send-reconciliation-report:
 #    cron: 0 0 12 * * *
+#    query: status=PROCESSED&after=-PT24H
 
   # Update Organizations configuration
   # To enable, set the cron property here,

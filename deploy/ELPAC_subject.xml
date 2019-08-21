@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Subject code="ELPAC" name="ELPAC">
+  <Messages>
+    <Message key="sum.performance-info"><![CDATA[Student scores on the Summative ELPAC are assigned to one of four achievement levels based on the scale score.]]></Message>
+  </Messages>
+  <AssessmentTypes>
+    <AssessmentType code="sum" name="Summative" longName="Summative ELPAC" targetReport="false" printedReport="false">
+      <OverallScoring name="Overall" minScore="1150" maxScore="1950">
+        <PerformanceLevels>
+          <PerformanceLevel level="1" name="Level 1" shortName="Level 1" color="maroon"/>
+          <PerformanceLevel level="2" name="Level 2" shortName="Level 2" color="orange"/>
+          <PerformanceLevel level="3" name="Level 3" shortName="Level 3" color="blue"/>
+          <PerformanceLevel level="4" name="Level 4" shortName="Level 4" color="green"/>
+        </PerformanceLevels>
+      </OverallScoring>
+      <AltScoring name="Composite" minScore="1150" maxScore="1950">
+        <PerformanceLevels>
+          <PerformanceLevel level="1" name="Level 1" shortName="Level 1" color="maroon"/>
+          <PerformanceLevel level="2" name="Level 2" shortName="Level 2" color="orange"/>
+          <PerformanceLevel level="3" name="Level 3" shortName="Level 3" color="blue"/>
+          <PerformanceLevel level="4" name="Level 4" shortName="Level 4" color="green"/>
+        </PerformanceLevels>
+      </AltScoring>
+      <ClaimScoring name="Domain">
+        <PerformanceLevels>
+          <PerformanceLevel level="1" name="Beginning" shortName="Beginning" color="sb-iab-red"/>
+          <PerformanceLevel level="2" name="Somewhat/Moderately Developed" shortName="Moderately" suffix="Developed" color="sb-iab-yellow"/>
+          <PerformanceLevel level="3" name="Well Developed" shortName="Well" suffix="Developed" color="green"/>
+        </PerformanceLevels>
+      </ClaimScoring>
+    </AssessmentType>
+  </AssessmentTypes>
+  <AltScores>
+    <AltScore code="1" name="Oral Language" displayOrder=" 1">
+      <Icon>fa-comment</Icon>
+    </AltScore>
+    <AltScore code="2" name="Written Language" displayOrder=" 2">
+      <Icon>fa-edit</Icon>
+    </AltScore>
+  </AltScores>
+  <Claims>
+    <Claim code="1-L" name="Listening" displayOrder=" 1" scorable="true" organizational="false">
+      <Icon>fa-headphones</Icon>
+    </Claim>
+    <Claim code="1-S" name="Speaking" displayOrder=" 2" scorable="true" organizational="false">
+      <Icon>fa-comment</Icon>
+    </Claim>
+    <Claim code="2-R" name="Reading" displayOrder=" 3" scorable="true" organizational="false">
+      <Icon>fa-book</Icon>
+    </Claim>
+    <Claim code="2-W" name="Writing" displayOrder=" 4" scorable="true" organizational="false">
+      <Icon>fa-edit</Icon>
+    </Claim>
+  </Claims>
+</Subject>

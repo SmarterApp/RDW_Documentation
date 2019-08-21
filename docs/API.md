@@ -334,17 +334,18 @@ The system accepts and stores import payloads regardless of processing status. F
 * Host: import service
 * URL: `/exams/imports/resubmit`
 * Method: `POST`
-* URL Params: query params can be used to restrict which exams to include; typically the status
-  * `status=<status>` where status may be `UNKNOWN_SCHOOL`, `UNKNOWN_ASMT`, `ACCEPTED`
+* URL Params: query params can be used to restrict which exam imports to include; typically the status
+  * `status=<status>` where status may be the import status name, e.g. `BAD_DATA`, or numeric id, e.g. `-3` (query the `import_status` table for allowed values). 
   * `after=<interval>` where interval is like `-PT1H` 
+  * `before=<interval>` where interval is like `-PT1H` 
   * `creator=<creator>`
   * `batch=<batchtag>`
+  * `limit=<N>` where N is a count. If there are a lot of imports to resubmit, use a limit to run them in manageable chunks, e.g. `limit=100`.
 * Headers:
   * `Authorization: Bearer {access_token}`
 * Success Response:
   * Code: 200
-  * Content: number of exams found and resubmitted. Note that a single call is limited to 100. If the return value is
-  100, it is likely there are more exams matching the query and additional resubmit calls should be made. 
+  * Content: number of exams found and resubmitted. If the return value is the same as the `limit` param, it is likely there are more exams matching the query and additional resubmit calls should be made. 
     ```text
     7
     ```
@@ -816,12 +817,29 @@ To check the status of the import use Get Import Request. Imports with "PROCESSE
 ### Task Endpoints
 There are a few tasks that are configured to run periodically (typically once a day). These end-points allow those tasks to be manually triggered on demand. These end-points are part of the actuator framework so they are exposed on a separate port (8008) which is typically kept behind a firewall in a private network. No authentication is required. 
 
+#### Reconciliation Report Task
+The reconciliation report task generates a report of all exam imports in the given time range, writing it to the specified location (usually an S3 bucket). This is typically scheduled to happen every day but may be less often in smaller installations (or not at all). To trigger an immediate execution: 
+
+* Host: task service
+* URL: `/reconciliationReport`
+* Method: `POST`
+* URL Params: a tenant id may be specified to restrict the task to just that tenant
+  * `tenantId=<tenant-id>`
+* Success Response:
+  * Code: 200
+* Sample Call:
+```bash
+curl -X POST http://localhost:8008/reconciliationReport
+```
+
 #### Update Organizations Task
 The update organization task retrieves all schools from ART and posts them to the import service. This is typically scheduled to happen every day in the wee hours. To trigger an immediate execution: 
 
 * Host: task service
 * URL: `/updateOrganizations`
 * Method: `POST`
+* URL Params: a tenant id may be specified to restrict the task to just that tenant
+  * `tenantId=<tenant-id>`
 * Success Response:
   * Code: 200
 * Sample Call:
@@ -829,30 +847,19 @@ The update organization task retrieves all schools from ART and posts them to th
 curl -X POST http://localhost:8008/updateOrganizations
 ```
 
-#### Remove Stale Reports Task
-This task removes old user reports. This is typically scheduled to happen once a day in the wee hours, removing any reports that are more than 30 days old. To trigger an immediate execution:
-
-* Host: report processor
-* URL: `/removeStaleReports`
-* Method: `POST`
-* Success Response:
-  * Code: 200
-* Sample Call:
-```bash
-curl -X POST http://localhost:8008/removeStaleReports
-```
-
 #### Migrate Task
-The migrate tasks move data from the main data warehouse to the reporting data stores. If there are problems the migrate tasks will disable themselves by marking a record in the database. To re-enable migrate, DevOps needs to diagnose the problem and then update that record in a specific way. To help with this, there is an actuator end-point to update the record properly. NOTE: if the underlying problem is not addressed, the migrate service will disable itself again.
+The migrate tasks move data from the main data warehouse to the reporting data stores. If there are problems the migrate tasks will disable themselves by marking a record in the database. This is tenant-specific. To re-enable migrate, DevOps needs to diagnose the problem and then update that record in a specific way. To help with this, there is an actuator end-point to update the record properly. NOTE: if the underlying problem is not addressed, the migrate service will disable itself again.
 
 * Host: migrate-olap service, migrate-reporting service
 * URL: `/migrate/enable`
 * Method: `POST`
+* URL Params: the tenant id must be specified:
+  * `tenantId=<tenant-id>`
 * Success Response:
   * Code: 200
 * Sample Call:
 ```bash
-curl -X POST http://localhost:8008/migrate/enable
+curl -X POST http://localhost:8008/migrate/enable?tenantId=CA
 ```
 
 As a reminder, the migrate services also allow themselves to be paused. This is different than when they disable themselves. The services must be both running and enabled to be active. Pausing uses the normal Spring lifecycle end-points.
@@ -873,14 +880,18 @@ The task for moving data to the individual reporting system used by teachers hap
 * Host: migrate-olap service
 * URL: `/migrate`
 * Method: `POST`
+* URL Params: there is an optional tenantId parameter; if specified just that tenant is migrated, otherwise migrate will be triggered for all tenants:
+  * `tenantId=<tenant-id>`
 * Success Response:
   * Code: 200
 * Sample Call:
 ```bash
 curl -X POST http://localhost:8008/migrate
+curl -X POST http://localhost:8008/migrate?tenantId=CA
 ```
 
-As a convenience the /migrate end-point will return the current migrate status. This can be useful when troubleshooting.
+As a convenience the /migrate end-point will return the current migrate status. This can be useful when troubleshooting. 
+NOTE: the `COMPLETED to <timestamp>` is the timestamp of the last *record* migrated, not when the last migrate occurred.
 
 * Host: migrate-olap service, migrate-reporting service
 * URL: `/migrate`
@@ -889,7 +900,9 @@ As a convenience the /migrate end-point will return the current migrate status. 
   * Code: 200
   * Content:
   ```
-  Migrate: running, enabled. Last migrate: COMPLETED to 2018-07-04T17:17:38.212782
+  Migrate: running
+  CA: enabled; last migrate: COMPLETED to 2019-05-28T15:26:55.73839
+  TS: enabled; last migrate: COMPLETED to 2019-05-28T15:17:17.488472  
   ```
 * Sample Call:
 ```bash

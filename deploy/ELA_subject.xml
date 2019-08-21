@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Subject code="ELA"
-         name="ELA">
+<Subject code="ELA" name="ELA">
   <Messages>
-    <Message key="standard-description"><![CDATA[This column reflects the Common Core State Standard(s) associated with a test item. Test items may be associated with more than one standard.  For example, a question that asks students to evaluate research sources may assess both reading and research skills.  For more information, see the <a href=\"https://portal.smarterbalanced.org/library/en/english-language-artsliteracy-content-specifications.pdf\" target=\"_blank\">English Language Arts Content Specifications</a>.]]></Message>
-    <Message key="iab.performance-info"><![CDATA[Student scores on each Interim Assessment Block are assigned to one of three reporting categories (Below Standard, Near Standard, Above Standard). The standard is based on the minimum scale score for the 'Met Standard' achievement level on the Interim Comprehensive and summative assessments (the score that separates Levels 2 and 3). See the Interpretive Guide for more information on how placement into the reporting categories is determined.]]></Message>
-    <Message key="ica.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of four achievement levels (Standard Not Met, Standard Nearly Met, Standard Met, and Standard Exceeded) based on the scale score.]]></Message>
-    <Message key="sum.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of four achievement levels (Standard Not Met, Standard Nearly Met, Standard Met, and Standard Exceeded) based on the scale score.]]></Message>
+    <Message key="standard-description"><![CDATA[This column reflects the Common Core State Standard(s) associated with a test item. Test items may be associated with more than one standard.  For example, a question that asks students to evaluate research sources may assess both reading and research skills.  For more information, see the <a href="https://portal.smarterbalanced.org/library/en/english-language-artsliteracy-content-specifications.pdf" target="_blank">English Language Arts Content Specifications</a>.]]></Message>
+    <Message key="iab.performance-info"><![CDATA[Student scores on each Interim Assessment Block are assigned to one of three reporting categories. The standard is based on the minimum scale score for the 'Level 3' achievement level on the Interim Comprehensive and summative assessments (the score that separates Levels 2 and 3). See the Interpretive Guide for more information on how placement into the reporting categories is determined.]]></Message>
+    <Message key="ica.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of four achievement levels based on the scale score.]]></Message>
+    <Message key="sum.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of four achievement levels based on the scale score.]]></Message>
   </Messages>
   <AssessmentTypes>
     <AssessmentType code="ica" name="ICA" longName="Interim Comprehensive Assessment">
-      <PerformanceLevels standardCutoff="3">
-        <PerformanceLevel level="1" name="Did Not Meet Standard" shortName="Did Not Meet" suffix="Standard" color="maroon"/>
-        <PerformanceLevel level="2" name="Nearly Met Standard" shortName="Nearly Met" suffix="Standard" color="gray-darkest"/>
-        <PerformanceLevel level="3" name="Met Standard" shortName="Met" suffix="Standard" color="green-dark"/>
-        <PerformanceLevel level="4" name="Exceeded Standard" shortName="Exceeded" suffix="Standard" color="blue-dark"/>
-      </PerformanceLevels>
-      <ClaimScoring>
+      <OverallScoring name="Overall" minScore="1000" maxScore="3500">
+        <PerformanceLevels standardCutoff="3">
+          <PerformanceLevel level="1" name="Level 1" shortName="Level 1" suffix="" color="maroon"/>
+          <PerformanceLevel level="2" name="Level 2" shortName="Level 2" suffix="" color="gray-darkest"/>
+          <PerformanceLevel level="3" name="Level 3" shortName="Level 3" suffix="" color="green-dark"/>
+          <PerformanceLevel level="4" name="Level 4" shortName="Level 4" suffix="" color="blue-dark"/>
+        </PerformanceLevels>
+      </OverallScoring>
+      <ClaimScoring name="Claim">
         <PerformanceLevels>
           <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
           <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>
@@ -24,20 +25,24 @@
       </ClaimScoring>
     </AssessmentType>
     <AssessmentType code="iab" name="IAB" longName="Interim Assessment Blocks">
-      <PerformanceLevels>
-        <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
-        <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>
-        <PerformanceLevel level="3" name="Above Standard" shortName="Above" suffix="Standard" color="sb-iab-green"/>
-      </PerformanceLevels>
+      <OverallScoring name="Overall" minScore="1000" maxScore="3500">
+        <PerformanceLevels>
+          <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
+          <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>
+          <PerformanceLevel level="3" name="Above Standard" shortName="Above" suffix="Standard" color="sb-iab-green"/>
+        </PerformanceLevels>
+      </OverallScoring>
     </AssessmentType>
     <AssessmentType code="sum" name="Summative" longName="Summative Assessment">
-      <PerformanceLevels standardCutoff="3">
-        <PerformanceLevel level="1" name="Did Not Meet Standard" shortName="Did Not Meet" suffix="Standard" color="maroon"/>
-        <PerformanceLevel level="2" name="Nearly Met Standard" shortName="Nearly Met" suffix="Standard" color="gray-darkest"/>
-        <PerformanceLevel level="3" name="Met Standard" shortName="Met" suffix="Standard" color="green-dark"/>
-        <PerformanceLevel level="4" name="Exceeded Standard" shortName="Exceeded" suffix="Standard" color="blue-dark"/>
-      </PerformanceLevels>
-      <ClaimScoring>
+      <OverallScoring name="Overall" minScore="1000" maxScore="3500">
+        <PerformanceLevels standardCutoff="3">
+          <PerformanceLevel level="1" name="Level 1" shortName="Level 1" suffix="" color="maroon"/>
+          <PerformanceLevel level="2" name="Level 2" shortName="Level 2" suffix="" color="gray-darkest"/>
+          <PerformanceLevel level="3" name="Level 3" shortName="Level 3" suffix="" color="green-dark"/>
+          <PerformanceLevel level="4" name="Level 4" shortName="Level 4" suffix="" color="blue-dark"/>
+        </PerformanceLevels>
+      </OverallScoring>
+      <ClaimScoring name="Claim">
         <PerformanceLevels>
           <PerformanceLevel level="1" name="Below Standard" shortName="Below" suffix="Standard" color="sb-iab-red"/>
           <PerformanceLevel level="2" name="Near Standard" shortName="Near" suffix="Standard" color="sb-iab-yellow"/>
@@ -67,6 +72,8 @@
     <ItemDifficulty gradeCode="06" moderateLowEnd="-0.88783" difficultLowEnd="0.88783"/>
     <ItemDifficulty gradeCode="07" moderateLowEnd="-0.7215" difficultLowEnd="1.06739"/>
     <ItemDifficulty gradeCode="08" moderateLowEnd="-0.47018" difficultLowEnd="1.34599"/>
+    <ItemDifficulty gradeCode="09" moderateLowEnd="-0.38186" difficultLowEnd="1.5479"/>
+    <ItemDifficulty gradeCode="10" moderateLowEnd="-0.38186" difficultLowEnd="1.5479"/>
     <ItemDifficulty gradeCode="11" moderateLowEnd="-0.38186" difficultLowEnd="1.5479"/>
   </ItemDifficulties>
   <ReportGrades>
@@ -74,7 +81,7 @@
       <ReportAssessmentTypes>
         <ReportAssessmentType code="ica">
           <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade three California academic standards for English language arts/literacy and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
-          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the four claims (i.e., areas) that together make up English language arts/literacy: Reading, Writing, Listening, and Research/Inquiry. These four claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade three. If the student received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area. To view a description of the student''s achievement level claim (i.e., area), select either [Above Standard], [Near Standard], or [Below Standard] from the student-level selections available in the table below.]]></ClaimAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the four claims (i.e., areas) that together make up English language arts/literacy: Reading, Writing, Listening, and Research/Inquiry. These four claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade three. If the student received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area. To view a description of the student''s achievement level claim (i.e., area), select either [Level 3], [Level 2], or [Level 1] from the student-level selections available in the table below.]]></ClaimAchievementMessage>
           <ReportPerformanceLevels>
             <ReportPerformanceLevel level="1"><![CDATA[{0} did not meet the grade three standard for English language arts/literacy needed for likely success in future coursework. Please discuss with {0}''s teacher(s) ways to help {0} improve.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="2"><![CDATA[English language arts/literacy needed for likely success in future coursework. Please discuss with {0}''s teacher(s) ways to help {0} improve.]]></ReportPerformanceLevel>
@@ -114,7 +121,7 @@
         </ReportAssessmentType>
         <ReportAssessmentType code="sum">
           <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade three California academic standards for English language arts/literacy and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
-          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the four claims (i.e., areas) that together make up English language arts/literacy: Reading, Writing, Listening, and Research/Inquiry. These four claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade three. If the student received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area. To view a description of the student''s achievement level claim (i.e., area), select either [Above Standard], [Near Standard], or [Below Standard] from the student-level selections available in the table below.]]></ClaimAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the four claims (i.e., areas) that together make up English language arts/literacy: Reading, Writing, Listening, and Research/Inquiry. These four claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade three. If the student received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area. To view a description of the student''s achievement level claim (i.e., area), select either [Level 3], [Level 2], or [Level 1] from the student-level selections available in the table below.]]></ClaimAchievementMessage>
           <ReportPerformanceLevels>
             <ReportPerformanceLevel level="1"><![CDATA[{0} did not meet the grade three standard for English language arts/literacy needed for likely success in future coursework. Please discuss with {0}''s teacher(s) ways to help {0} improve.]]></ReportPerformanceLevel>
             <ReportPerformanceLevel level="2"><![CDATA[English language arts/literacy needed for likely success in future coursework. Please discuss with {0}''s teacher(s) ways to help {0} improve.]]></ReportPerformanceLevel>
@@ -574,6 +581,174 @@
         </ReportAssessmentType>
       </ReportAssessmentTypes>
     </ReportGrade>
+    <ReportGrade code="09">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="ica">
+          <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade nine California academic standards for English language arts/literacy and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the four claims (i.e., areas) that together make up English language arts/literacy: Reading, Writing, Listening, and Research/Inquiry. These four claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade nine. If {0} received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0} did not meet the grade nine standard for English language arts/literacy and did not demonstrate readiness for future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0} nearly met the grade nine standard for English language arts/literacy needed for likely success in future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0} met the grade nine standard for English language arts/literacy and appears ready for future coursework.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0} exceeded the grade nine standard for English language arts/literacy and is ready for future coursework.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="SOCK_LS">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to use effective listening skills.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to use effective listening skills for a range of purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to use effective listening skills for a range of purposes and audiences.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="SOCK_R">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate an ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama, nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of moderate complexity.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama; nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of moderate complexity.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama; nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of high complexity.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-W">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate an ability to produce organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to produce organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to produce well-organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="4-CR">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade nine California academic standards for English language arts/literacy and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the four claims (i.e., areas) that together make up English language arts/literacy: Reading, Writing, Listening, and Research/Inquiry. These four claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade nine. If {0} received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0} did not meet the grade nine standard for English language arts/literacy and did not demonstrate readiness for future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0} nearly met the grade nine standard for English language arts/literacy needed for likely success in future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0} met the grade nine standard for English language arts/literacy and appears ready for future coursework.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0} exceeded the grade nine standard for English language arts/literacy and is ready for future coursework.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="SOCK_LS">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to use effective listening skills.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to use effective listening skills for a range of purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to use effective listening skills for a range of purposes and audiences.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="SOCK_R">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate an ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama, nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of moderate complexity.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama; nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of moderate complexity.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama; nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of high complexity.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-W">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate an ability to produce organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to produce organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to produce well-organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="4-CR">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
+    <ReportGrade code="10">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="ica">
+          <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade ten California academic standards for English language arts/literacy and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the four claims (i.e., areas) that together make up English language arts/literacy: Reading, Writing, Listening, and Research/Inquiry. These four claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade ten. If {0} received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0} did not meet the grade ten standard for English language arts/literacy and did not demonstrate readiness for future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0} nearly met the grade ten standard for English language arts/literacy needed for likely success in future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0} met the grade ten standard for English language arts/literacy and appears ready for future coursework.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0} exceeded the grade ten standard for English language arts/literacy and is ready for future coursework.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="SOCK_LS">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to use effective listening skills.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to use effective listening skills for a range of purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to use effective listening skills for a range of purposes and audiences.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="SOCK_R">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate an ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama, nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of moderate complexity.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama; nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of moderate complexity.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama; nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of high complexity.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-W">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate an ability to produce organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to produce organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to produce well-organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="4-CR">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0} took a Smarter Balanced assessment based on the grade ten California academic standards for English language arts/literacy and received an overall score that ranges from about 2000 to 3000. This overall score falls into one of the four achievement levels shown here. Sample test items may be included that exemplify the kinds of passages and questions that students at different levels of achievement would likely answer correctly.]]></OverallAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}''s results are also reported out into the four claims (i.e., areas) that together make up English language arts/literacy: Reading, Writing, Listening, and Research/Inquiry. These four claims are based on California''s academic standards, which describe the knowledge and skills students are expected to learn in grade ten. If {0} received a score of "No Score Available" for any claim, this means he or she did not complete enough items to receive a score in that area.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0} did not meet the grade ten standard for English language arts/literacy and did not demonstrate readiness for future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0} nearly met the grade ten standard for English language arts/literacy needed for likely success in future coursework. Please discuss with {0}''s teacher(s) steps to help {0} improve.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0} met the grade ten standard for English language arts/literacy and appears ready for future coursework.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0} exceeded the grade ten standard for English language arts/literacy and is ready for future coursework.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportClaims>
+            <ReportClaim code="SOCK_LS">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to use effective listening skills.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to use effective listening skills for a range of purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to use effective listening skills for a range of purposes and audiences.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="SOCK_R">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate an ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama, nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of moderate complexity.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama; nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of moderate complexity.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to read closely and analytically to understand a range of informational texts (e.g., biographies; articles; and other writing covering disciplines like science, social studies, and technical topics) and literary texts (e.g., stories; plays; poems; drama; nonfiction; and eighteenth, nineteenth, and early twentieth century works of American literature) of high complexity.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-W">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate an ability to produce organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to produce organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to produce well-organized, developed, and supported writing (e.g., narrative, informational, explanatory, and argumentative) for different purposes and audiences.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="4-CR">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0} does not yet demonstrate the ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0} demonstrates some ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0} demonstrates a thorough ability to engage in research and inquiry to investigate topics, and to analyze, integrate, and present information.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
     <ReportGrade code="11">
       <ReportAssessmentTypes>
         <ReportAssessmentType code="ica">
@@ -694,7 +869,7 @@
           <Description>WORD MEANINGS: Determine intended or precise meanings of words, including domain-specific (tier 3) words and words with multiple meanings (academic/tier 2 words), based on context, word relationships (e.g., antonyms, homographs), word structure (e.g., common Greek or Latin roots, affixes), or use of resources (e.g., dictionary, glossary, digital tools)</Description>
         </Target>
         <Target code="10-7" name="10">
-          <Description>WORD MEANINGS: Determine intended or precise meanings of words, including domainspecific (tier 3) words and words with multiple meanings (academic/tier 2 words), based on context, word relationships (e.g., antonyms, homographs), word structure (e.g., common Greek or Latin roots, affixes), or use of resources (e.g., dictionary, glossary, inset text)</Description>
+          <Description>WORD MEANINGS: Determine intended or precise meanings of words, including domain-specific (tier 3) words and words with multiple meanings (academic/tier 2 words), based on context, word relationships (e.g., antonyms, homographs), word structure (e.g., common Greek or Latin roots, affixes), or use of resources (e.g., dictionary, glossary, inset text)</Description>
         </Target>
         <Target code="10-8" name="10">
           <Description>WORD MEANINGS: Determine intended or precise meanings of words, including domain-specific (tier 3) words and words with multiple meanings (academic/tier 2 words), based on context, word relationships, word structure (e.g., common Greek or Latin roots, affixes), or use of resources (e.g., dictionary, glossary)</Description>
@@ -814,7 +989,7 @@
           <Description>TEXT STRUCTURES &amp; FEATURES: Relate knowledge of text structures and genre-specific features to compare or analyze the impact of those choices on meaning or presentation</Description>
         </Target>
         <Target code="13-8" name="13">
-          <Description>TEXT STRUCTURES/ FEATURES: Relate knowledge of text structures, formats, or genre-specific features (visual/graphic elements) to analyze the impact (advantagesdisadvantages) on meaning or presentation</Description>
+          <Description>TEXT STRUCTURES/ FEATURES: Relate knowledge of text structures, formats, or genre-specific features (visual/graphic elements) to analyze the impact (advantages/disadvantages) on meaning or presentation</Description>
         </Target>
         <Target code="13-9" name="13">
           <Description>TEXT STRUCTURES/ FEATURES: Relate knowledge of text structures or formats, or genre features (e.g., graphic/visual information) to integrate information or analyze the impact on meaning or presentation</Description>
@@ -823,7 +998,7 @@
           <Description>TEXT STRUCTURES/ FEATURES: Relate knowledge of text structures or text features (e.g., graphics, bold text, headings) to obtain, interpret, or explain information</Description>
         </Target>
         <Target code="14-1" name="14">
-          <Description>LANGUAGE USE: Interpret use of language by distinguishing literal from nonliteral meanings of words and phrases used in context</Description>
+          <Description>LANGUAGE USE: Interpret use of language by distinguishing literal from non-literal meanings of words and phrases used in context</Description>
         </Target>
         <Target code="14-10" name="14">
           <Description>LANGUAGE USE: Analyze the figurative (e.g., euphemism, oxymoron, hyperbole, paradox) or connotative meanings of words and phrases used in context and the impact of these word choices on meaning and tone</Description>
@@ -835,10 +1010,10 @@
           <Description>LANGUAGE USE: Analyze the figurative (e.g., euphemism, oxymoron, hyperbole, paradox) or connotative meanings of words and phrases used in context and the impact of these word choices on meaning and tone</Description>
         </Target>
         <Target code="14-2" name="14">
-          <Description>LANGUAGE USE: Interpret use of language by distinguishing literal from nonliteral meanings of words and phrases used in context</Description>
+          <Description>LANGUAGE USE: Interpret use of language by distinguishing literal from non-literal meanings of words and phrases used in context</Description>
         </Target>
         <Target code="14-3" name="14">
-          <Description>LANGUAGE USE: Interpret use of language by distinguishing literal from nonliteral meanings of words and phrases used in context</Description>
+          <Description>LANGUAGE USE: Interpret use of language by distinguishing literal from non-literal meanings of words and phrases used in context</Description>
         </Target>
         <Target code="14-4" name="14">
           <Description>LANGUAGE USE: Determine or interpret figurative language/literary devices or connotative meanings of words and phrases used in context and the impact of those word choices on meaning and tone</Description>
@@ -859,7 +1034,7 @@
           <Description>LANGUAGE USE: Analyze the figurative (e.g., euphemism, oxymoron, hyperbole, paradox) or connotative meanings of words and phrases used in context and the impact of these word choices on meaning and tone</Description>
         </Target>
         <Target code="14-KG" name="14">
-          <Description>LANGUAGE USE: Interpret use of language by distinguishing literal from nonliteral meanings of words and phrases used in context</Description>
+          <Description>LANGUAGE USE: Interpret use of language by distinguishing literal from non-literal meanings of words and phrases used in context</Description>
         </Target>
         <Target code="8-1" name="8">
           <Description>KEY DETAILS: Use explicit details and implicit information from the text to support answers or inferences about information presented.</Description>
@@ -1131,7 +1306,7 @@
           <Description>TEXT STRUCTURES &amp; FEATURES: Relate knowledge of text structures or text features (e.g., layout; visual or auditory elements – lighting, camera effects, music; symbolic or graphic representations) to analyze impact on meaning, style, or presentation</Description>
         </Target>
         <Target code="6-7" name="6">
-          <Description>TEXT STRUCTURES &amp; FEATURES: Relate knowledge of text structures or genrespecific features (visual/graphic/auditory effects) to analyze the impact of those choices on meaning or presentation (e.g., layout; visual or auditory elements – lighting, camera effects, music; symbolic or graphic representations)</Description>
+          <Description>TEXT STRUCTURES &amp; FEATURES: Relate knowledge of text structures or genre features (visual/graphic/auditory effects) to analyze the impact of those choices on meaning or presentation (e.g., layout; visual or auditory elements – lighting, camera effects, music; symbolic or graphic representations)</Description>
         </Target>
         <Target code="6-8" name="6">
           <Description>TEXT STRUCTURES/FEATURES: Relate knowledge of text structures or genre features (visual/graphic/auditory effects) to analyze the impact of those choices on meaning or presentation</Description>
@@ -1164,7 +1339,7 @@
           <Description>LANGUAGE USE: Interpret figurative language use (e.g., personification, metaphor), literary devices, or connotative meanings of words and phrases used in context and their impact on reader interpretation</Description>
         </Target>
         <Target code="7-7" name="7">
-          <Description>LANGUAGE USE: Interpret impact or intent of figurative language use (e.g., alliteration, onomatopoeia, imagery), literary devices (e.g., flashback, forshadowing), or connotative meanings of words and phrases used in context and their impact on reader interpretation</Description>
+          <Description>LANGUAGE USE: Interpret impact or intent of figurative language use (e.g., alliteration, onomatopoeia, imagery), literary devices (e.g., flashback, foreshadowing), or connotative meanings of words and phrases used in context and their impact on reader interpretation</Description>
         </Target>
         <Target code="7-8" name="7">
           <Description>LANGUAGE USE: Determine or interpret impact or intent of figurative language/literary devices or connotative meanings of words and phrases used in context and the impact of those word choices on meaning and tone</Description>
@@ -1624,43 +1799,43 @@
       <Description>Speak and Listen purposefully - Students can employ effective speaking and listening skills for a range of purposes and audiences.</Description>
       <Targets>
         <Target code="1-1" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
         </Target>
         <Target code="1-10" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
         </Target>
         <Target code="1-11" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
         </Target>
         <Target code="1-12" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
         </Target>
         <Target code="1-2" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
         </Target>
         <Target code="1-3" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
         </Target>
         <Target code="1-4" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
         </Target>
         <Target code="1-5" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
         </Target>
         <Target code="1-6" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
         </Target>
         <Target code="1-7" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
         </Target>
         <Target code="1-8" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
         </Target>
         <Target code="1-9" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking</Description>
         </Target>
         <Target code="1-KG" name="1">
-          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
+          <Description>LANGUAGE &amp; VOCABULARY USE: Strategically use precise language (including academic and domain-specific vocabulary), syntax, and discourse appropriate to the purpose and audience when speaking</Description>
         </Target>
         <Target code="2-1" name="2">
           <Description>CLARIFY MESSAGE: Use grade-appropriate grammar and mechanics to clarify a message appropriate to the purpose and audience</Description>
@@ -2444,7 +2619,7 @@
       <Description><![CDATA[Demonstrate understanding of word relationships and nuances in word meanings.]]></Description>
     </Standard>
     <Standard code="3.L.5a">
-      <Description><![CDATA[Demonstrate understanding of word relationships and nuances in word meanings. A) Distinguish the literal and nonliteral meanings of words and phrases in context (e.g., take steps).]]></Description>
+      <Description><![CDATA[Demonstrate understanding of word relationships and nuances in word meanings. A) Distinguish the literal and non-literal meanings of words and phrases in context (e.g., take steps).]]></Description>
     </Standard>
     <Standard code="3.L.5b">
       <Description><![CDATA[Demonstrate understanding of word relationships and nuances in word meanings. B) Identify real-life connections between words and their use (e.g., describe people who are friendly or helpful).]]></Description>
@@ -2453,7 +2628,7 @@
       <Description><![CDATA[Demonstrate understanding of word relationships and nuances in word meanings. C) Distinguish shades of meaning among related words that describe states of mind or degrees of certainty (e.g., knew, believed, suspected, heard, wondered).]]></Description>
     </Standard>
     <Standard code="3.L.6">
-      <Description><![CDATA[Acquire and use accurately grade-appropriate conversational, general academic, and domainspecific words and phrases, including those that signal spatial and temporal relationships (e.g., After dinner that night we went looking for them).]]></Description>
+      <Description><![CDATA[Acquire and use accurately grade-appropriate conversational, general academic, and domain-specific words and phrases, including those that signal spatial and temporal relationships (e.g., After dinner that night we went looking for them).]]></Description>
     </Standard>
     <Standard code="3.RF.3">
       <Description><![CDATA[Know and apply grade-level phonics and word analysis skills in decoding words.]]></Description>
@@ -2492,7 +2667,7 @@
       <Description><![CDATA[Determine the main idea of a text; recount the key details and explain how they support the main idea.]]></Description>
     </Standard>
     <Standard code="3.RI.3">
-      <Description><![CDATA[Describe the relationship between a series of historical events, scientific ideas or concepts, or steps in technical procedures in a text, usinglanguage that pertains to time, sequence, and cause/effect.]]></Description>
+      <Description><![CDATA[Describe the relationship between a series of historical events, scientific ideas or concepts, or steps in technical procedures in a text, using language that pertains to time, sequence, and cause/effect.]]></Description>
     </Standard>
     <Standard code="3.RI.4">
       <Description><![CDATA[Determine the meaning of general academic and domain-specific words and phrases in a text relevant to a grade 3 topic or subject area.]]></Description>
@@ -2525,7 +2700,7 @@
       <Description><![CDATA[Describe characters in a story (e.g., their traits, motivations, or feelings) and explain how their actions contribute to the sequence of events.]]></Description>
     </Standard>
     <Standard code="3.RL.4">
-      <Description><![CDATA[Determine the meaning of words and phrases as they are used in a text, distinguishing literal from nonliteral language.]]></Description>
+      <Description><![CDATA[Determine the meaning of words and phrases as they are used in a text, distinguishing literal from non-literal language.]]></Description>
     </Standard>
     <Standard code="3.RL.5">
       <Description><![CDATA[Refer to parts of stories, dramas, and poems when writing or speaking about a text, using terms such as chapter, scene, and stanza; describe how each successive part builds on earlier sections.]]></Description>
@@ -2540,19 +2715,19 @@
       <Description><![CDATA[Compare and contrast the themes, settings, and plots of stories written by the same author about the same or similar characters (e.g., in books from a series).]]></Description>
     </Standard>
     <Standard code="3.SL.1">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher led) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly.]]></Description>
     </Standard>
     <Standard code="3.SL.1a">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or studied required material; explicitly draw on that preparation and other information known about the topic to explore ideas under discussion.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher led) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or studied required material; explicitly draw on that preparation and other information known about the topic to explore ideas under discussion.]]></Description>
     </Standard>
     <Standard code="3.SL.1b">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly. B) Follow agreed-upon rules for discussions (e.g., gaining the floor in respectful ways, listening to others with care, speaking one at a time about the topics and texts under discussion).]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly. B) Follow agreed-upon rules for discussions (e.g., gaining the floor in respectful ways, listening to others with care, speaking one at a time about the topics and texts under discussion).]]></Description>
     </Standard>
     <Standard code="3.SL.1c">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly. C) Ask questions to check understanding of information presented, stay on topic, and link their comments to the remarks of others.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly. C) Ask questions to check understanding of information presented, stay on topic, and link their comments to the remarks of others.]]></Description>
     </Standard>
     <Standard code="3.SL.1d">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly. D) Explain their own ideas and understanding in light of the discussion.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 3 topics and texts, building on others’ ideas and expressing their own clearly. D) Explain their own ideas and understanding in light of the discussion.]]></Description>
     </Standard>
     <Standard code="3.SL.2">
       <Description><![CDATA[Determine the main ideas and supporting details of a text read aloud or information presented in diverse media and formats, including visually, quantitatively, and orally.]]></Description>
@@ -2786,19 +2961,19 @@
       <Description><![CDATA[Compare and contrast the treatment of similar themes and topics (e.g., opposition of good and evil) and patterns of events (e.g., the quest) in stories, myths, and traditional literature from different cultures.]]></Description>
     </Standard>
     <Standard code="4.SL.1">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly.]]></Description>
     </Standard>
     <Standard code="4.SL.1a">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or studied required material; explicitly draw on that preparation and other information known about the topic to explore ideas under discussion.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or studied required material; explicitly draw on that preparation and other information known about the topic to explore ideas under discussion.]]></Description>
     </Standard>
     <Standard code="4.SL.1b">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly. B) Follow agreed-upon rules for discussions and carry out assigned roles.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly. B) Follow agreed-upon rules for discussions and carry out assigned roles.]]></Description>
     </Standard>
     <Standard code="4.SL.1c">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly. C) Pose and respond to specific questions to clarify or follow up on information, and make comments that contribute to the discussion and link to the remarks of others.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly. C) Pose and respond to specific questions to clarify or follow up on information, and make comments that contribute to the discussion and link to the remarks of others.]]></Description>
     </Standard>
     <Standard code="4.SL.1d">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly. D) Review the key ideas expressed and explain their own ideas and understanding in light of the discussion.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 4 topics and texts, building on others’ ideas and expressing their own clearly. D) Review the key ideas expressed and explain their own ideas and understanding in light of the discussion.]]></Description>
     </Standard>
     <Standard code="4.SL.2">
       <Description><![CDATA[Paraphrase portions of a text read aloud or information presented in diverse media and formats, including visually, quantitatively, and orally.]]></Description>
@@ -3041,16 +3216,16 @@
       <Description><![CDATA[Compare and contrast stories in the same genre (e.g., mysteries and adventure stories) on their approaches to similar themes and topics.]]></Description>
     </Standard>
     <Standard code="5.SL.1a">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 5 topics and texts, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or studied required material; explicitly draw on that preparation and other information known about the topic to explore ideas under discussion.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 5 topics and texts, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or studied required material; explicitly draw on that preparation and other information known about the topic to explore ideas under discussion.]]></Description>
     </Standard>
     <Standard code="5.SL.1b">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 5 topics and texts, building on others’ ideas and expressing their own clearly. B) Follow agreed-upon rules for discussions and carry out assigned roles.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 5 topics and texts, building on others’ ideas and expressing their own clearly. B) Follow agreed-upon rules for discussions and carry out assigned roles.]]></Description>
     </Standard>
     <Standard code="5.SL.1c">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 5 topics and texts, building on others’ ideas and expressing their own clearly. C) Pose and respond to specific questions by making comments that contribute to the discussion and elaborate on the remarks of others.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 5 topics and texts, building on others’ ideas and expressing their own clearly. C) Pose and respond to specific questions by making comments that contribute to the discussion and elaborate on the remarks of others.]]></Description>
     </Standard>
     <Standard code="5.SL.1d">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 5 topics and texts, building on others’ ideas and expressing their own clearly. D) Review the key ideas expressed and draw conclusions in light of information and knowledge gained from the discussions.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 5 topics and texts, building on others’ ideas and expressing their own clearly. D) Review the key ideas expressed and draw conclusions in light of information and knowledge gained from the discussions.]]></Description>
     </Standard>
     <Standard code="5.SL.2">
       <Description><![CDATA[Summarize a written text read aloud or information presented in diverse media and formats, including visually, quantitatively, and orally.]]></Description>
@@ -3374,16 +3549,16 @@
       <Description><![CDATA[Compare and contrast texts in different forms or genres (e.g., stories and poems; historical novels and fantasy stories) in terms of their approaches to similar themes and topics.]]></Description>
     </Standard>
     <Standard code="6.SL.1a">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 6 topics, texts, and issues, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or studied required material; explicitly draw on that preparation by referring to evidence on the topic, text, or issue to probe and reflect on ideas under discussion.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 6 topics, texts, and issues, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or studied required material; explicitly draw on that preparation by referring to evidence on the topic, text, or issue to probe and reflect on ideas under discussion.]]></Description>
     </Standard>
     <Standard code="6.SL.1b">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 6 topics, texts, and issues, building on others’ ideas and expressing their own clearly. B) Follow rules for collegial discussions, set specific goals and deadlines, and define individual roles as needed.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 6 topics, texts, and issues, building on others’ ideas and expressing their own clearly. B) Follow rules for collegial discussions, set specific goals and deadlines, and define individual roles as needed.]]></Description>
     </Standard>
     <Standard code="6.SL.1c">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 6 topics, texts, and issues, building on others’ ideas and expressing their own clearly. C) Pose and respond to specific questions with elaboration and detail by making comments that contribute to the topic, text, or issue under discussion.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 6 topics, texts, and issues, building on others’ ideas and expressing their own clearly. C) Pose and respond to specific questions with elaboration and detail by making comments that contribute to the topic, text, or issue under discussion.]]></Description>
     </Standard>
     <Standard code="6.SL.1d">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 6 topics, texts, and issues, building on others’ ideas and expressing their own clearly. D) Review the key ideas expressed and demonstrate understanding of multiple perspectives through reflection and paraphrasing.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 6 topics, texts, and issues, building on others’ ideas and expressing their own clearly. D) Review the key ideas expressed and demonstrate understanding of multiple perspectives through reflection and paraphrasing.]]></Description>
     </Standard>
     <Standard code="6.SL.2">
       <Description><![CDATA[Interpret information presented in diverse media and formats (e.g., visually, quantitatively, orally) and explain how it contributes to a topic, text, or issue under study.]]></Description>
@@ -3584,16 +3759,16 @@
       <Description><![CDATA[Compare and contrast a fictional portrayal of a time, place, or character and a historical account of the same period as a means of understanding how authors of fiction use or alter history.]]></Description>
     </Standard>
     <Standard code="7.SL.1a">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 7 topics, texts, and issues, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or researched material under study; explicitly draw on that preparation by referring to evidence on the topic, text, or issue to probe and reflect on ideas under discussion.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 7 topics, texts, and issues, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or researched material under study; explicitly draw on that preparation by referring to evidence on the topic, text, or issue to probe and reflect on ideas under discussion.]]></Description>
     </Standard>
     <Standard code="7.SL.1b">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 7 topics, texts, and issues, building on others’ ideas and expressing their own clearly. B) Follow rules for collegial discussions, track progress toward specific goals and deadlines, and define individual roles as needed.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 7 topics, texts, and issues, building on others’ ideas and expressing their own clearly. B) Follow rules for collegial discussions, track progress toward specific goals and deadlines, and define individual roles as needed.]]></Description>
     </Standard>
     <Standard code="7.SL.1c">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 7 topics, texts, and issues, building on others’ ideas and expressing their own clearly. C) Pose questions that elicit elaboration and respond to others’ questions and comments with relevant observations and ideas that bring the discussion back on topic as needed.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 7 topics, texts, and issues, building on others’ ideas and expressing their own clearly. C) Pose questions that elicit elaboration and respond to others’ questions and comments with relevant observations and ideas that bring the discussion back on topic as needed.]]></Description>
     </Standard>
     <Standard code="7.SL.1d">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 7 topics, texts, and issues, building on others’ ideas and expressing their own clearly. D) Acknowledge new information expressed by others and, when warranted, modify their own views.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 7 topics, texts, and issues, building on others’ ideas and expressing their own clearly. D) Acknowledge new information expressed by others and, when warranted, modify their own views.]]></Description>
     </Standard>
     <Standard code="7.SL.2">
       <Description><![CDATA[Analyze the main ideas and supporting details presented in diverse media and formats (e.g., visually, quantitatively, orally) and explain how the ideas clarify a topic, text, or issue under study.]]></Description>
@@ -3803,16 +3978,16 @@
       <Description><![CDATA[Analyze a case in which two or more texts provide conflicting information on the same topic and identify where the texts disagree on matters of fact or interpretation.]]></Description>
     </Standard>
     <Standard code="8.SL.1a">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 8 topics, texts, and issues, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or researched material under study; explicitly draw on that preparation by referring to evidence on the topic, text, or issue to probe and reflect on ideas under discussion.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 8 topics, texts, and issues, building on others’ ideas and expressing their own clearly. A) Come to discussions prepared, having read or researched material under study; explicitly draw on that preparation by referring to evidence on the topic, text, or issue to probe and reflect on ideas under discussion.]]></Description>
     </Standard>
     <Standard code="8.SL.1b">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 8 topics, texts, and issues, building on others’ ideas and expressing their own clearly. B) Follow rules for collegial discussions and decision-making, track progress toward specific goals and deadlines, and define individual roles as needed.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 8 topics, texts, and issues, building on others’ ideas and expressing their own clearly. B) Follow rules for collegial discussions and decision-making, track progress toward specific goals and deadlines, and define individual roles as needed.]]></Description>
     </Standard>
     <Standard code="8.SL.1c">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 8 topics, texts, and issues, building on others’ ideas and expressing their own clearly. C) Pose questions that connect the ideas of several speakers and respond to others’ questions and comments with relevant evidence, observations, and ideas.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 8 topics, texts, and issues, building on others’ ideas and expressing their own clearly. C) Pose questions that connect the ideas of several speakers and respond to others’ questions and comments with relevant evidence, observations, and ideas.]]></Description>
     </Standard>
     <Standard code="8.SL.1d">
-      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacherled) with diverse partners on grade 8 topics, texts, and issues, building on others’ ideas and expressing their own clearly. D) Acknowledge new information expressed by others, and, when warranted, qualify or justify their own views in light of the evidence presented.]]></Description>
+      <Description><![CDATA[Engage effectively in a range of collaborative discussions (one-on-one, in groups, and teacher-led) with diverse partners on grade 8 topics, texts, and issues, building on others’ ideas and expressing their own clearly. D) Acknowledge new information expressed by others, and, when warranted, qualify or justify their own views in light of the evidence presented.]]></Description>
     </Standard>
     <Standard code="8.SL.2">
       <Description><![CDATA[Analyze the purpose of information presented in diverse media and formats (e.g., visually, quantitatively, orally) and evaluate the motives (e.g., social, commercial, political) behind its presentation.]]></Description>

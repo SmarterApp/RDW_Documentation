@@ -1,53 +1,9 @@
 # Annotated configuration for RDW Task Service
-#
-# The spring application name is rdw-ingest-task-service so this file should be
-# named rdw-ingest-task-service.yml when served by the configuration server.
-#
-# Properties that have a reasonable default value are commented out.
-# Other properties are not commented out and must be provided.
-
-# The actuator end-point is on a different port with no security because it is expected to be
-# exposed only in a private subnet. Use the default settings unless you really know what you
-# are doing.
-management:
-#  security:
-#    enabled: false
-server:
-#  port: 8008
-#  tomcat:
-#    max-connections: 2
-#    max-threads: 2
-
-# Spring application configuration.
-spring:
-  # Datasource configuration.
-  # Use defaults for most of the settings except server, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  # The password should be encrypted.
-  datasource:
-#    url: "\
-#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:warehouse}\
-#      ?useSSL=${spring.datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
-#      &connectTimeout=${spring.datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.datasource.socket-timeout:40000}\
-#      "
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:30})"
-    url-server:
-    username:
-    password:
-#    testWhileIdle: true
-#    validationQuery: SELECT 1
-#    validationQueryTimeout: 10000
-#    driverClassName: com.mysql.jdbc.Driver
-#    initialize: false
-#    maxActive: 10
-#    initialSize: 4
 
 # Task configuration.
-# By default, all tasks are disabled.
+# By default, all tasks are disabled. The tasks are enabled and the root properties are set here
+# Tenants have additional configuration properties to set in the tenant-specific application.yml.
+#
 # The cron syntax is slightly different than standard linux cron syntax. The pattern is a list
 # of six single space-separated fields: representing second, minute, hour, day, month, weekday.
 # Month and weekday names can be given as the first three letters of the English names.
@@ -64,72 +20,80 @@ spring:
 
 task:
   # Reconciliation Report configuration.
-  send-reconciliation-report:
-    cron: 0 0 12 * * *
-    query: status=PROCESSED&after=-PT24H
-    # This sample has many senders for illustration purposes. In a real deployment it is likely
-    # there will be a single sender (and, perhaps the log sender for monitoring/diagnostics).
-    senders:
-      - type: log
-      - type: archive
-        root: file:///tmp/
-        # The S3 archive sender has the same configuration options as an archive service. The
-        # root should be the protocol and bucket, e.g. s3://my-archive-bucket. The AWS access key
-        # should be for a programmatic AWS user. The secretKey should be encrypted. The sse
-        # setting is optional and should correspond to the S3 bucket settings.
-      - type: archive
-        root:
-        cloud:
-          aws:
-            credentials:
-              access-key:
-              secret-key:
-            region:
-              static: us-west-2
-            sse: AES256
-      - type: ftp
-        server:
-        username:
-        password:
+  # To enable, set the cron property here,
+  # then configure the query under taskSendReconciliationReport
+  # then configure tenant-specific behavior under taskSendReconciliationReport
+#  send-reconciliation-report:
+#    cron: 0 0 12 * * *
 
   # Update Organizations configuration
-  update-organizations:
-    cron: 0 0 8 * * *
-    state: CA
-    art-client:
-      groups-of-districts-url: https://art.smarterbalanced.org/rest/groupofdistrict?stateAbbreviation={state}&pageSize=1000
-      districts-url: https://art.smarterbalanced.org/rest/district?stateAbbreviation={state}&pageSize=5000
-      groups-of-schools-url: https://art.smarterbalanced.org/rest/groupofinstitution?stateAbbreviation={state}&pageSize=1000
-      schools-url: https://art.smarterbalanced.org/rest/institution?stateAbbreviation={state}&pageSize=20000
-      status-url: https://art.smarterbalanced.org/rest/status
-      # The credentials should be for a user that has access to the ART REST API
-      oauth2:
-        access-token-uri: https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac
-        client-id:
-        client-secret:
-        username:
-        password:
-    import-service-client:
-      organizations-imports-url: http://import-service/organizations/imports
-      status-url: http://import-status-service/status
-      # The credentials should be for a user that has ASMTDATALOAD privileges for the import REST API
-      oauth2:
-        access-token-uri: https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac
-        client-id:
-        client-secret:
-        username:
-        password:
+  # To enable, set the cron property here,
+  # then configure taskUpdateOrganizationsArtClient and taskUpdateOrganizationsImportServiceClient
+  # then configure tenant-specific username/password under taskUpdateOrganizationsImportServiceClient
+#  update-organizations:
+#    cron: 0 0 8 * * *
 
-  # Resubmit Unprocessed Exams configuration
-  resubmit-unprocessed-imports:
-    cron: 0 0 10 * * *
-    import-service-client:
-      exams-imports-url: http://import-service/exams/imports/resubmit
-      status-url: http://import-status-service/status
-      # The credentials should be for a user that has ASMTDATALOAD privileges for the import REST API
-      oauth2:
-        access-token-uri: https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac
-        client-id:
-        client-secret:
-        username:
-        password:
+# Configuration for reconciliation report.
+# Only the query may be configured at the instance-level. All other settings should be by tenant.
+# An example is given here but the overrides would be in the tenant application.yml.
+#taskSendReconciliationReport:
+#  query: status=PROCESSED&after=-PT24H
+#  tenants:
+#    CA:
+#      query: status=PROCESSED&after=-PT25H
+#      # set log true to log the reconciliation report details
+#      log: false
+#      # archives may be local file or S3, and may be repeated as needed.
+#      # The S3 archive has the same configuration options as an archive service. The uri-root
+#      # should be the protocol and bucket, e.g. s3://my-archive-bucket. The AWS access key
+#      # should be for a programmatic AWS user. The secret key should be encrypted. The sse
+#      # setting is optional and should correspond to the S3 bucket settings.
+#      archives:
+#        - uri-root: file:///tmp/
+#        - uri-root: s3://bucket
+#          s3-access-key: AccessKey
+#          s3-secret-key: SecretKey
+#          s3-region-static: us-west-2
+#          s3-sse: AES256
+
+# Configuration for update organizations task.
+# The ART client is likely to be instance-specific, i.e. the same for all tenants,
+# so all configuration will be in this base file. The OAuth2 credentials may be
+# different per tenant, so an example is provided for that but that override would
+# be in the tenant application.yml, not here.
+#taskUpdateOrganizationsArtClient:
+#  groups-of-districts-url: https://art.smarterbalanced.org/rest/groupofdistrict?stateAbbreviation={state}&pageSize=1000
+#  districts-url: https://art.smarterbalanced.org/rest/district?stateAbbreviation={state}&pageSize=5000
+#  groups-of-schools-url: https://art.smarterbalanced.org/rest/groupofinstitution?stateAbbreviation={state}&pageSize=1000
+#  schools-url: https://art.smarterbalanced.org/rest/institution?stateAbbreviation={state}&pageSize=20000
+#  status-url: https://art.smarterbalanced.org/rest/status
+#  # The credentials should be for a user that has access to the ART REST API
+#  oauth2:
+#    access-token-uri: https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac
+#    client-id:
+#    client-secret:
+#    username:
+#    password:
+#  tenants:
+#    CA:
+#      oauth2:
+#        username:
+#        password:
+
+# Configuration for update organizations task.
+# The URLs and client credentials are instance-specific, but the user credentials will
+# be tenant-specific. An example is given here but the overrides would be in the tenant
+# application.yml.
+#taskUpdateOrganizationsImportServiceClient:
+#  organizations-imports-url: http://import-service/organizations/imports
+#  status-url: http://import-status-service/status
+#  # The credentials should be for a user that has ASMTDATALOAD privileges for the tenant state
+#  oauth2:
+#    access-token-uri: https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac
+#    client-id:
+#    client-secret:
+#  tenants:
+#    CA:
+#      oauth2:
+#        username:
+#        password:

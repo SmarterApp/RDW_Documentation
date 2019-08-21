@@ -1,22 +1,4 @@
 # Annotated configuration for RDW Migrate Reporting
-#
-# The spring application name is rdw-ingest-migrate-reporting so this file should be
-# named rdw-ingest-migrate-reporting.yml when served by the configuration server.
-#
-# Properties that have a reasonable default value are commented out.
-# Other properties are not commented out and must be provided.
-
-# The actuator end-point is on a different port with no security because it is expected to be
-# exposed only in a private subnet. Use the default settings unless you really know what you
-# are doing.
-management:
-#  security:
-#    enabled: false
-server:
-#  port: 8008
-#  tomcat:
-#    max-connections: 2
-#    max-threads: 2
 
 # Batch configuration.
 # The batch size is the number of import ids migrated in one chunk/iteration. The batch size can
@@ -30,60 +12,3 @@ migrate:
 #  batch:
 #    size: 2000
 #    delay: 60000
-
-# The embargo feature applies its rules for only the current school year, so it must be configured.
-# Although there is a default value for this setting (2018), it should be explicitly configured.
-# Normally this will be a shared setting in application.yml.
-reporting:
-  school-year:
-
-# Spring application configuration.
-spring:
-  # Datasource configuration. There are two datasources for migrate.
-  # NOTE: this section changed between 1.0 and 1.1.
-  # Use defaults for most of the settings except server, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  # The password should be encrypted.
-  reporting_datasource:
-#    url: "\
-#      jdbc:mysql://${spring.reporting_datasource.url-server:localhost:3306}/${spring.reporting_datasource.url-schema:reporting}\
-#      ?useSSL=${spring.reporting_datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.reporting_datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.reporting_datasource.character-encoding:utf8}\
-#      &rewriteBatchedStatements=${spring.reporting_datasource.rewrite-batched-statements:true}\
-#      &connectTimeout=${spring.reporting_datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.reporting_datasource.socket-timeout:130000}\
-#      "
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.reporting_datasource.query-timeout:120})"
-    url-server:
-    username:
-    password:
-#    testWhileIdle: true
-#    validationQuery: SELECT 1
-#    validationQueryTimeout: 10000
-#    driverClassName: com.mysql.jdbc.Driver
-#    initialize: false
-#    maxActive: 10
-#    initialSize: 4
-
-  warehouse_datasource:
-#    url: "\
-#      jdbc:mysql://${spring.warehouse_datasource.url-server:localhost:3306}/${spring.warehouse_datasource.url-schema:warehouse}\
-#      ?useSSL=${spring.warehouse_datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.warehouse_datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.warehouse_datasource.character-encoding:utf8}\
-#      &connectTimeout=${spring.warehouse_datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.warehouse_datasource.socket-timeout:130000}\
-#      "
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.warehouse_datasource.query-timeout:120})"
-    url-server:
-    username:
-    password:
-#    testWhileIdle: true
-#    validationQuery: SELECT 1
-#    validationQueryTimeout: 10000
-#    driverClassName: com.mysql.jdbc.Driver
-#    initialize: false
-#    maxActive: 10
-#    initialSize: 4

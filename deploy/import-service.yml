@@ -19,6 +19,19 @@ spec:
   selector:
     app: import-server
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: import-status-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8008
+      name: status
+  selector:
+    app: import-server
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -38,7 +51,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: smarterbalanced/rdw-ingest-import-service:1.3.0-RELEASE
+        image: smarterbalanced/rdw-ingest-import-service:1.4.0-RELEASE
         readinessProbe:
           httpGet:
             path: /health

@@ -1,0 +1,79 @@
+# Annotated configuration for a tenant.
+#
+# This file should be named application.yml and should live in a tenant folder.
+
+# this declares the new tenant
+tenantProperties:
+  tenants:
+    OT:
+      id: OT
+      key: OT
+      name: Other (sample tenant)
+
+# every tenant will need to override archive settings
+archive:
+  tenants:
+    OT:
+      path-prefix: "OT"
+
+# every tenant will need to override datasources: schema, username and password
+datasources:
+  migrate_rw:
+    tenants:
+      OT:
+        urlParts:
+          database: migrate_olap_ot
+        username:
+        password:
+  olap_ro:
+    tenants:
+      OT:
+        username:
+        password:
+  olap_rw:
+    tenants:
+      OT:
+        username:
+        password:
+  reporting_ro:
+    tenants:
+      OT:
+        urlParts:
+          database: reporting_ot
+        username:
+        password:
+  reporting_rw:
+    tenants:
+      OT:
+        urlParts:
+          database: reporting_ot
+        username:
+        password:
+  warehouse_rw:
+    tenants:
+      OT:
+        urlParts:
+          database: warehouse_ot
+        username:
+        password:
+
+# This is an example of how to override default settings.
+# The school-year, state code and name will always be set here.
+# The student fields setting is provided as an additional example.
+reporting:
+  tenants:
+    OT:
+      # The current school year is used in a few places in RDW, e.g. embargo. It must be configured.
+      school-year: 2019
+
+      # Used throughout the applications, the state code/name must be configured.
+      state:
+        code: OT
+        name: Other
+
+      # This is just an example of overriding an instance-level setting
+      studentFields:
+        Section504: Disabled
+
+      # It is common to override localizations in a tenant
+      translation-location: "binary-${spring.cloud.config.uri}/*/*/master/tenant-OT/"

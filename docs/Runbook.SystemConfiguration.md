@@ -14,9 +14,11 @@
     * [Student Groups](#student-groups)
     * [Target Exclusions](#target-exclusions)
     * [Transfer Enabled](#transfer-enabled)
+    * [Student Fields](#student-fields)
     * [Language Codes](#language-codes)
     * [English Learners](#english-learners)
     * [Ethnicity](#ethnicity)
+    * [Military Connected](#military-connected)
 * [System Configuration Changes for a New School Year](#new-school-year)
 
 <a name="system-configuration"></a>
@@ -135,6 +137,29 @@ reporting:
 ```
 Any time a configuration option is changed, the affected services must be restarted. For the transfer enabled flag, restart the `report-processor` instances.
 
+
+#### Student Fields
+
+The system controls visibility into student demographic data for teachers. By default all student fields are available to all users. To change that behavior, modify properties in the appropriate configuration file. Fields can be completely disabled, enabled for administrators but not teachers or enabled for all users including teachers.
+
+This example configuration is similar to California's policy: they use ELAS instead of LEP, nobody is allowed to see the students' economic disadvantage, and their teachers are restricted to just four fields (ELAS, migrant status, language, race/ethnicity):
+```yml
+reporting:
+  student-fields:
+    EconomicDisadvantage: Disabled
+    LimitedEnglishProficiency: Disabled
+    EnglishLanguageAcquisitionStatus: Enabled
+    MigrantStatus: Enabled
+    PrimaryLanguage: Enabled
+    Ethnicity: Enabled
+    Gender: Admin
+    IndividualEducationPlan: Admin
+    MilitaryStudentIdentifier: Admin
+    Section504: Admin
+```
+Any time a configuration option is modified, the affected services must be restarted. For this setting, restart the `reporting-webapp` instances.
+
+
 #### Language Codes
 
 The system is configured with the known language codes. These are used to validate the student primary language if specified in the TRT test results. And to allow filtering and aggregation in reports.
@@ -189,6 +214,27 @@ Updating the language file is detailed in [language support](./Runbook.LanguageS
     },
 ```
 
+<a name="military-connected"></a>
+#### Military Student Connected Identifier
+
+There are ESSA guidelines for the military student connected identifier. However some states, California in particular, have different requirements. To change the list of these codes in the system, the allowed values in the database must be set. It is expected the allowed values will be either the ESSA set, a simplified yes/no set, or the superset of both (if a tenant has changed adherence policy over the years). NOTE: the id/code values must not be changed if they are already in use. In that situation, new values may be added but existing used values should remain unchanged.
+
+Modifying the database is a [manual data modification](./Runbook.ManualDataModifications.md). Add or delete entries in the military_connected table and then trigger a migration:
+```sql
+USE warehouse;
+-- query for use of the field
+SELECT military_connected_id, count(*) FROM exam GROUP BY military_connected_id;
+
+-- ESSA values
+INSERT INTO military_connected (id, code) VALUES (1, 'NotMilitaryConnected'), (2, 'ActiveDuty'), (3, 'NationalGuardOrReserve');
+-- CA simplified values
+INSERT INTO military_connected (id, code) VALUES (4, 'No'), (5, 'Yes');
+
+-- trigger CODES migration:
+INSERT INTO import (status, content, contentType, digest) VALUES (1, 3, 'update military connected codes', REPLACE(UUID(), '-', ''));
+```
+
+
 <a name="new-school-year"></a>
 ### System Configuration Changes for a New School Year
 
@@ -208,7 +254,20 @@ Assessment packages are updated every year so the new ones must be loaded as [de
 4. Load new accessibility file.
 Accommodation codes and translations are extracted from the accessibility file. A new one must be loaded every year as [described above](#accommodations).
 
-5. Student groups.
+5. User reports.
+Although users can manage their own reports, it may be desirable to do a bulk purge of user reports from the previous school year.
+NOTE: This will remove *all* user reports; selective deletion is tricky and beyond the scope of this document.
+
+First, delete the database records for the reports.
+```sql
+DELETE FROM reporting.user_report;
+```
+Next, remove the artifacts from the (S3) archive.
+```bash
+aws s3 rm s3://rdw-archive/REPORTS/USER --recursive
+```
+
+6. Student groups.
 This depends on policy, but it may be desirable to disable/remove student groups from the previous school year.
 
 Student groups are associated with a school and a school year. They have an `active` flag and the system supports soft deletes. These features can be used to manipulate the groups (please refer to [Manual Data Modifications](Runbook.ManualDataModifications.md) for general data modification instructions). For example, to delete student groups from a particular district for the last school year, do something like:

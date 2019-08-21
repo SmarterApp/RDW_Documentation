@@ -1,46 +1,6 @@
 # Annotated configuration for RDW Import Service.
-#
-# The spring application name is rdw-ingest-import-service so this file should be named
-# rdw-ingest-import-service.yml when served by the configuration server.
-#
-# Properties that have a reasonable default value are commented out.
-# Other properties are not commented out and must be provided.
-
-# Archive configuration
-# The import service archives a copy of all accepted payloads. Although the location may be a
-# local file system the preferred solution is to write to AWS S3, which requires credentials.
-# For S3, the root should be the protocol and the bucket, e.g. s3://my-archive-bucket.
-# The AWS access key should be for a programmatic AWS user. The secretKey should be encrypted.
-# The bucket should be in the same region as the deployment (to reduce costs).
-# There are no default values for these properties and they must be provided.
-archive:
-  root:
-  cloud:
-    aws:
-      credentials:
-        accessKey:
-        secretKey:
-      region:
-        auto: false
-        static: us-west-2
-
-# The actuator end-point is on a different port with no security because it is
-# expected to be exposed only in a private subnet.
-management:
-#  port: 8008
-#  security:
-#    enabled: false
-
-# Common settings (these should be set in application.yml and shared)
-#reporting:
-#  # The client and state code is used when validating roles/permissions granted in ART.
-#  client: SBAC
-#  state:
-#    code: CA
 
 # OAuth2 configuration.
-# The user of the REST API must have data load permissions granted at the client or state level,
-# so the client and state values must be set to match the permissions granted in ART.
 # The OAuth2 URL is used to fetch info for the token, so it must have a placeholder for the token.
 # For example, https://host/auth/oauth2/tokeninfo?access_token={access_token}. There is no default
 # value for the URL, it must be provided. The permission-service end-point should correspond to the
@@ -49,56 +9,4 @@ security:
   oauth2:
     token-info-url:
   permission-service:
-#    component: Reporting
     endpoint:
-
-# Server configuration.
-# Use the defaults unless you really know what you're doing.
-server:
-#  port: 8080
-#  tomcat:
-#    max-connections: 0
-#    max-threads: 10
-#    accept-count: 20
-
-# Spring application configuration.
-spring:
-  # Datasource configuration.
-  # Use defaults for most of the settings, except server, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  datasource:
-#    url: "\
-#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:warehouse}\
-#      ?useSSL=${spring.datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
-#      &connectTimeout=${spring.datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.datasource.socket-timeout:40000}\
-#      "
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:30})"
-    url-server:
-    username:
-    password:
-#    testWhileIdle: true
-#    validationQuery: SELECT 1
-#    validationQueryTimeout: 10000
-#    driverClassName: com.mysql.jdbc.Driver
-#    initialize: false
-#    maxActive: 20
-#    initialSize: 4
-#    maxWait: 10000
-
-  # HTTP configuration. The default values for this should be good.
-#  http:
-#    multipart:
-#      max-file-size: 500MB
-#      max-request-size: 500MB
-
-  # RabbitMQ configuration.
-  # There are no default values. The host must be set based on the orchestration environment
-  # e.g. rabbit-service, with appropriate username and password. The password should be encrypted.
-  rabbitmq:
-    host:
-    username:
-    password:

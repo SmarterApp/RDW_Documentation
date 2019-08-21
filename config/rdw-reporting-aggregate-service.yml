@@ -1,46 +1,30 @@
 # Annotated configuration for RDW Aggregate Service.
-#
-# The spring application name is rdw-reporting-aggregate-service so this file should
-# be named rdw-reporting-aggregate-service when served by the configuration server.
-#
-# Properties that have a reasonable default value are commented out.
-# Other properties are not commented out and must be provided.
 
-# The actuator end-point is on a different port with no security because it is
-# expected to be exposed only in a private subnet.
-management:
-#  port: 8008
-#  security:
-#    enabled: false
+# Aggregate report configuration.
+#aggregate-reporting:
+  # By default the system allows aggregate reporting for all assessment types.
+  # If there will never be test results for certain assessment types this setting
+  # can be used to include only the expected types. For example, if the system
+  # will never receive IAB results, set this to "ica,sum".
+#  assessment-types: ica,sum,iab
+
+  # This is the same as the previous property, assessment-types, but is used to
+  # control the feature for users that have statewide access. By default state-
+  # wide users may only do aggregate reporting for summative assessments.
+#  statewide-user-assessment-types: sum
+
+  # For aggregate reports, the option to include state results is only available
+  # for the assessment types specified by this setting. By default only summative
+  # assessment types may include state results.
+#  state-aggregate-assessment-types: sum
 
 # Application configuration
-app:
-  # Aggregate report configuration.
+#app:
 #  aggregate-reports:
 #    api-enabled: false
-#    assessment-types: ica,sum,iab
-#    statewide-user-assessment-types: sum
-#    state-aggregate-assessment-types: sum
 #    custom-aggregate-report-repository:
 #      organization-partition-size: 10
 #    query-pool-size: 6
-
-  # Report archive configuration.
-  # Although the location may be a local file system the preferred solution is to write to AWS S3,
-  # which requires credentials. For S3, the root should be the protocol and the bucket, e.g. s3://my-archive-bucket.
-  # The AWS access key should be for a programmatic AWS user. The secretKey should be encrypted.
-  # The bucket should be in the same region as the deployment (to reduce costs).
-  # There are no default values for these properties and they must be provided.
-  archive:
-    root:
-    cloud:
-      aws:
-        credentials:
-          accessKey:
-          secretKey:
-        region:
-          auto: false
-          static: us-west-2
 
   # The repository cache should be cleared whenever new data is migrated. Typically this is daily so the default
   # is to clear the cache every day at 2:00 am (GMT). This setting should be coordinated to happen after the migration
@@ -48,64 +32,3 @@ app:
 #  cache:
 #    repository:
 #      refresh-cron: "0 0 2 * * *"
-
-# Common settings. Normally set in application.yml.
-#reporting:
-#  school-year: 2018
-#  state:
-#    code: CA
-#    name: California
-
-  # Target Report configuration
-#  target-report:
-
-  # The target reports display "Insufficient Data" when the standard error of the calculation is greater than 0.2.
-  # This is the default value provided by Smarter Balanced in the scoring calculation documentations and should
-  # only be changed if you really know why you are changing it.
-#    insufficient-data-cutoff: 0.2
-
-  # Target reports are only shown when there are a minimum number of students included in the report.
-  # Setting this to 0 means it will always be shown (even with a single student).
-#    min-number-of-students: 0
-
-# Server configuration.
-# Use the defaults unless you really know what you're doing.
-server:
-#  tomcat:
-#    max-connections: 0
-#    max-threads: 4
-#    accept-count: 10
-#  compression:
-#    enabled: true
-#    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,text/csv
-
-# Spring application configuration.
-spring:
-  # Datasource configuration.
-  # Use defaults for most of the settings except server, perhaps db, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  # The password should be encrypted.
-  olap_datasource:
-#    url: "\
-#       jdbc:redshift://${spring.olap_datasource.url-server:localhost:5432}/${spring.olap_datasource.url-db:dev}\
-#       ?ApplicationName=rdw-reporting-aggregate-service\
-#      &loginTimeout=${spring.olap_datasource.connect-timeout:10}\
-#      &socketTimeout=${spring.olap_datasource.socket-timeout:0}\
-#       "
-    url-server:
-#    url-db: dev
-    username:
-    password:
-#    testWhileIdle: true
-#    validationQuery: SELECT 1
-#    validationQueryTimeout: 30000
-#    driverClassName: com.amazon.redshift.jdbc42.Driver
-
-  # RabbitMQ configuration.
-  # There are no default values. The host must be set based on the orchestration environment
-  # e.g. rabbit-service, with appropriate username and password. The password should be encrypted.
-  rabbitmq:
-    host:
-    username:
-    password:

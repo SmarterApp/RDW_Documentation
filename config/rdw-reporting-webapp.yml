@@ -1,31 +1,16 @@
 # Annotated configuration for RDW Reporting Web App.
-#
-# The spring application name is rdw-reporting-webapp so this file should be named
-# rdw-reporting-webapp.yml when served by the configuration server.
-#
-# Properties that have a reasonable default value are commented out.
-# Other properties are not commented out and must be provided.
-
-# The actuator end-point is on a different port with no security because it is
-# expected to be exposed only in a private subnet.
-management:
-#  port: 8008
-#  security:
-#    enabled: false
-#  health:
-#    redis:
-#      enabled: false
 
 # Permission service configuration
 # endpoint is probably the public URL, e.g. https://perm.smarterbalanced.org/rest
 permissionservice:
-#  component: Reporting
   endpoint:
 
-# Tenant configuration. Some of these may be in application.yml common settings.
+# Application behavior
 reporting:
+  # Used for google analytics.
   analytics-tracking-id:
 
+  # The guide URLs are used to provide links on the landing and home pages.
 #  interpretive-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-interpretive-guide.pdf
 #  user-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-user-guide.pdf
 
@@ -35,11 +20,12 @@ reporting:
 
   # When a user is logged into SSO but does not have proper permissions to access the reporting application
   # an Access Denied page is displayed.  The default is a basic page presented within the application.
-  # To provide an external page/site use the "redirect:url" format.  For example, redirect:http://external-site.com/access-denied
+  # To provide an external page/site use the "redirect:url" format.
+  # For example, redirect:http://external-site.com/access-denied
 #  access-denied-url: forward:/assets/public/access-denied.html
 
-  # When a user is not logged in and accesses the root of the web application, they are presented with a landing page. The
-  # default page provides a screen with a link to login by linking to "/home".  To provide an external page/site
+  # When a user is not logged in and accesses the root of the web application, they are presented with a landing page.
+  # The default page provides a screen with a link to login by linking to "/home".  To provide an external page/site
   # use the "redirect:url" format.  For example, redirect:http://reporting-site.com
 #  landing-page-url: forward:/landing.html
 
@@ -53,33 +39,10 @@ reporting:
 #  report-languages:
 #  ui-languages:
 
-#  state:
-#    code: CA
-#    name: California
-
-  # Target Report configuration
-#  target-report:
-
-  # The target reports display "Insufficient Data" when the standard error of the calculation is greater than 0.2.
-  # This is the default value provided by Smarter Balanced in the scoring calculation documentations and should
-  # only be changed if you really know why you are changing it.
-#    insufficient-data-cutoff: 0.2
-
-  # Target reports are only shown when there are a minimum number of students included in the report.
-  # Setting this to 0 means it will always be shown (even with a single student).
-#    min-number-of-students: 0
-
-  # By default the system does not allow users to see test results from institutions outside their
-  # permissions. Setting this property true allows users to see all test results for students
-  # regardless of where the test was administered, if they have PII for the student.
-#  transfer-access-enabled: false
-
-  # Location of translation files (optional).
-  # There is no default value. To use the central configuration server the value will be like
-  # "binary-${spring.cloud.config.uri}/*/*/master/i18n/"
-  # Details for this property are covered in the language runbook.
-#  translation-location:
-
+  # The percentile feature displays percentiles derived from normative data so teachers can better
+  # evaluate the performance of their students. Because this requires additional configuration data
+  # that may not be available to a tenant, this feature is disabled by default.
+#  percentile-display-enabled: false
 
 # SAML/SSO configuration
 # The setting of these properties is covered in more detail in the deployment guide.
@@ -103,46 +66,8 @@ saml:
 #    port: 8080
 #    include-server-port: false
 
-# Server configuration.
-# Use the defaults unless you really know what you're doing.
-server:
-#  port: 8080
-#  tomcat:
-#    max-connections: 0
-#    max-threads: 4
-#    accept-count: 10
-#  compression:
-#    enabled: true
-#    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,text/csv
-
 # Spring application configuration
 spring:
-  # Datasource configuration.
-  # Use defaults for most of the settings, except server, username and password.
-  # The url-server should be set to the host and port, e.g. localhost:3306 or
-  # my-cluster.cluster-cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306.
-  datasource:
-#    url: "\
-#      jdbc:mysql://${spring.datasource.url-server:localhost:3306}/${spring.datasource.url-schema:reporting}\
-#      ?useSSL=${spring.datasource.use-ssl:false}\
-#      &useLegacyDatetimeCode=${spring.datasource.use-legacy-datetime-code:false}\
-#      &characterEncoding=${spring.datasource.character-encoding:utf8}\
-#      &useCompression=${spring.datasource.use-compression:true}\
-#      &connectTimeout=${spring.datasource.connect-timeout:10000}\
-#      &socketTimeout=${spring.datasource.socket-timeout:40000}\
-#      "
-#    jdbcInterceptors: "QueryTimeoutInterceptor(queryTimeout=${spring.datasource.query-timeout:30})"
-    url-server:
-    username:
-    password:
-#    testWhileIdle: true
-#    validationQuery: SELECT 1
-#    validationQueryTimeout: 10000
-#    driverClassName: com.mysql.jdbc.Driver
-#    initialize: false
-#    initialSize: 4
-#    maxActive: 10
-
   # Session cache configuration.
   # The default is to not cache session data. To enable caching (using redis), set the
   # session.store-type to "redis" and set the redis values
@@ -151,12 +76,6 @@ spring:
   redis:
     host:
     port:
-
-  # HTTP configuration. The default values for this should be good.
-#  http:
-#    multipart:
-#      max-file-size: 500MB
-#      max-request-size: 500MB
 
 # Netflix zuul configuration.
 # The URLs must be set to match the environment, e.g. http://admin-service, the other defaults should be fine.

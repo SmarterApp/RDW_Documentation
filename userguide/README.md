@@ -7,6 +7,11 @@ There are a few documents associated with the user guide:
 
 ### Change Log
 
+#### 1.4
+
+* Updated for v1.4.0 features.
+* Add Admin Guide
+
 #### 1.3
 
 * Updated for v1.3.0 features.

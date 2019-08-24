@@ -39,7 +39,7 @@ Please refer to the next section for additional details and clarification.
     * The access token should be stored so it can be used in the next step. How this is done depends on the client
     technology being used. A valid access token looks like a UUID.  
 
-A curl request will look something like:
+A curl request for the OpenAM server will look something like:
 ```bash
 curl -s -X POST --data "grant_type=password&username=user@example.com&password=password&client_id=client_id&client_secret=secret" https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac
 ```
@@ -54,7 +54,28 @@ This is a sample response for an access token:
     "access_token": "8c29ead1-4b46-4411-8102-870590f84451"
 }
 ```
-If the client credentials are wrong:
+
+A curl request for the Okta server is very similar:
+```bash
+curl -s -X POST --data 'grant_type=password&username=user%40example.com&password=passowrd&client_id=client_id&client_secret=client_secret&scope=openid%20profile' https://smarterbalanced.oktapreview.com/oauth2/auslw2qcsmsUgzsqr0h7/v1/token
+```
+Note the addition of "scope" to the data string. In addition, the client ID and secret will be
+different depending on how the Okta password grant application is configured. An Okta response will
+look like:
+
+```json
+{
+    "token_type": "Bearer",
+    "expires_in": 3600,
+    "access_token": "eyjRA ...",
+    "scope": "openid profile",
+    "id_token": "eyJraWQiO ..."eja8FA ..."
+}
+```
+The tokens will be very long strings, much longer than the OpenAM tokens. This is expected.
+
+```
+In either case, if the client credentials are wrong:
 ```json
 {
     "error": "invalid_client",

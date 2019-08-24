@@ -664,3 +664,30 @@ spring:
     username: root
     password: '{cipher}...'
 ```
+
+#### Upgrade v1.4.0 (Okta Integration Edition)
+Both Okta and OpenAM will be supported during a transitional phase, but require different
+configuration in rdw-ingest-import-service.yml. 
+
+OpenAM is still the default, so minimal configuration is needed. For example:
+
+```
+security:
+  oauth2:
+    token-info-url: https://sso.smarterbalanced.org:443/auth/oauth2/tokeninfo?access_token={access_token}
+```
+
+A bit more configuration is needed for Okta configuration. For example:
+
+```
+security:
+  oauth2:
+    provider: okta
+    token-info-url: https://smarterbalanced.oktapreview.com/oauth2/auslw2qcsmsUgzsqr0h7
+    audience: api://staging
+    connection-timeout: 1000
+```
+
+The token-info-url will depend on where the Okta server is displayed and the ID of the
+application. The audience will also vary by environment. The connection timeout is optional
+and defaults to 1000 (ms). It should not be necessary to set it in most cases.

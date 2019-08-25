@@ -20,9 +20,10 @@ Quick Links:
 1. [Status Endpoints](#status-endpoints)
 
 ### Authentication and Authorization
-The import service requires an OAuth2 access token for the data loading end-points. This is a password grant token requested from the OpenAM server by a trusted client for a user of the system (the permissions are associated with the user). 
+The import service requires an OAuth2 access token for the data loading end-points. This is a password grant token requested from the OAuth2 server by a trusted client for a user of the system (the permissions are associated with the user).
+During the first couple years, the OAuth2 server was an OpenAM server. Recently it was migrated to an Okta server. There are instructions for both. 
 
-#### Fetch Password Grant Access Token
+#### Fetch Password Grant Access Token - OpenAM
 Accepts x-www-form-urlencoded data including client and user credentials and returns an access token.
 * Host: OpenAM
 * URL: `/auth/oauth2/access_token`
@@ -70,7 +71,54 @@ ACCESS_TOKEN=`curl -s -X POST \
 ```
 The resulting environment variable may be used in subsequent calls. Where the samples have `{access_token}` substitute `${ACCESS_TOKEN}`.
 
-#### Test Access Token
+#### Fetch Password Grant Access Token - Okta
+Accepts x-www-form-urlencoded data including client and user credentials and returns an access token.
+* Host: Okta
+* URL: `/oauth2/auslw2qcsmsUgzsqr0h7/v1/token` (the exact URL will depend on the installation configuration)
+* Method: `POST`
+* Data Params (values given are examples and should be replaced with real values):
+  * `grant_type=password`
+  * `scope=openid profile`
+  * `username=user@example.com`
+  * `password=UserPassword`
+  * `client_id=client`
+  * `client_secret=ClientSecret`
+* Success Response:
+  * Code: 200 (OK)
+  * Content: 
+    ```json
+    {
+      "scope": "openid profile",
+      "expires_in": 3600,
+      "token_type": "Bearer",
+      "id_token": "eyJraWQi0...",
+      "access_token": "eja8FA..."
+    } 
+    ```
+* Error Response:
+  * Code: 400 (Bad Request)
+  * Content (specific error and description will vary):
+    ```json
+    {
+      "error": "invalid_client",
+      "error_description": "Client authentication failed"
+    }
+    ```
+* Sample Call (curl):
+```bash
+curl -s -X POST \
+  --data "grant_type=password&scope=openid profile&username=user@example.com&password=password&client_id=client&client_secret=secret" \
+  https://okta/oauth2/auslw2qcsmsUgzsqr0h7/v1/token
+```
+* Extracting the access token. A handy util is `jq` which parses json payloads. Using it the access token may be extracted from the payload, something like:
+```bash
+ACCESS_TOKEN=`curl -s -X POST \
+  --data "grant_type=password&scope=openid profile&username=user@example.com&password=password&client_id=client&client_secret=secret" \
+  https://okta/oauth2/auslw2qcsmsUgzsqr0h7/v1/token | jq -r '.access_token'`
+```
+The resulting environment variable may be used in subsequent calls. Where the samples have `{access_token}` substitute `${ACCESS_TOKEN}`.
+
+#### Test Access Token - OpenAM
 Although not needed during normal operations, this call can be used to check an access token.
 * Host: OpenAM
 * URL: `/auth/oauth2/tokeninfo`
@@ -115,6 +163,48 @@ Although not needed during normal operations, this call can be used to check an 
 * Sample Call (curl):
 ```bash
 curl https://openam/auth/oauth2/tokeninfo?access_token=20b55fc2-1b84-4412-8149-88cfa622db01
+```
+
+#### Test Access Token - Okta
+Although not needed during normal operations, this call can be used to check an access token.
+* Host: Okta
+* URL: `/oauth2/auslw2qcsmsUgzsqr0h7info` (the exact URL will depend on the installation configuration)
+* Method: `GET`
+* URL Params: 
+  * `access_token={access_token}`
+* Success Response:
+  * Code: 200 (OK)
+  * Content: 
+    ```json
+    {
+      "sbacUUID": "599758d9e4b0fbecbf5fc586",
+      "mail": "test@example.com",
+      "sn": "Test",
+      "scope": [
+         "openid",
+         "profile"
+      ],
+      "grant_type": "password",
+      "cn": "Test",
+      "sbacTenancyChain": "|CA|ASMTDATALOAD|STATE|1000|ART_DL|||CA|CALIFORNIA|||||||||",
+      "token_type": "Bearer",
+      "expires_in": 35930,
+      "givenName": "Test",
+      "access_token": "20b55fc2-1b84-4412-8149-88cfa622db01"
+    }
+    ```
+* Error Response:
+  * Code: 400 (Bad Request)
+  * Content (specific error and description will vary):
+    ```json
+    {
+      "error": "invalid_request",
+      "error_description": "Access Token not valid"
+    }
+    ```
+* Sample Call (curl):
+```bash
+curl https://okta/oauth2/auslw2qcsmsUgzsqr0h7info?access_token=20b55fc2-1b84-4412-8149-88cfa622db01
 ```
 
 ### Import Endpoints

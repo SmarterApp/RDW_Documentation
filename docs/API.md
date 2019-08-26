@@ -166,46 +166,47 @@ curl https://openam/auth/oauth2/tokeninfo?access_token=20b55fc2-1b84-4412-8149-8
 ```
 
 #### Test Access Token - Okta
-Although not needed during normal operations, this call can be used to check an access token.
-* Host: Okta
-* URL: `/oauth2/auslw2qcsmsUgzsqr0h7info` (the exact URL will depend on the installation configuration)
-* Method: `GET`
-* URL Params: 
-  * `access_token={access_token}`
+Although not needed during normal operations, this curl call can be used to check an access token:
+```bash
+  curl -X POST \
+  --data 'client_id=<client-id>&client_secret=<client-secret>' \
+  'https://smarterbalanced.oktapreview.com/oauth2/auslw2qcsmsUgzsqr0h7/v1/introspect?token=<full-text-of-access-token>&token_type_hint=access_token'
+  ```
 * Success Response:
   * Code: 200 (OK)
   * Content: 
     ```json
     {
-      "sbacUUID": "599758d9e4b0fbecbf5fc586",
-      "mail": "test@example.com",
-      "sn": "Test",
-      "scope": [
-         "openid",
-         "profile"
-      ],
-      "grant_type": "password",
-      "cn": "Test",
-      "sbacTenancyChain": "|CA|ASMTDATALOAD|STATE|1000|ART_DL|||CA|CALIFORNIA|||||||||",
+      "active": true,
+      "scope": "profile openid",
+      "username": "test@example.com",
+      "exp": 1566865091,
+      "iat": 1566861491,
+      "sub": "test@example.com",
+      "aud": "api://staging",
+      "iss": "https://smarterbalanced.oktapreview.com/oauth2/auslw2qcsmsUgzsqr0h7",
       "token_type": "Bearer",
-      "expires_in": 35930,
-      "givenName": "Test",
-      "access_token": "20b55fc2-1b84-4412-8149-88cfa622db01"
+      "client_id": "<client-id>",
+      "uid": "00ukx23x7uJn3O4980h7",
+      "sbacTenancyChain": [
+        "|CA|ASMTDATALOAD|STATE|1000|ART_DL|||CA|CALIFORNIA|||||||||",
+        "|CA|Administrator|STATE|1000|ART_DL|||CA|CALIFORNIA|||||||||",
+        "|CA|State Coordinator|STATE|1000|ART_DL|||CA|CALIFORNIA|||||||||"
+      ],
+      "mail": "test@example.com",
+      "sbacUUID": "59946ee4e4b031dfb7d388ca"
     }
     ```
+    
 * Error Response:
   * Code: 400 (Bad Request)
   * Content (specific error and description will vary):
     ```json
     {
-      "error": "invalid_request",
-      "error_description": "Access Token not valid"
+      "error": "invalid_client",
+      "error_description": "The client secret supplied for a confidential client is invalid."
     }
     ```
-* Sample Call (curl):
-```bash
-curl https://okta/oauth2/auslw2qcsmsUgzsqr0h7info?access_token=20b55fc2-1b84-4412-8149-88cfa622db01
-```
 
 ### Import Endpoints
 The import service provides the end-points for submitting data to the system. All end-points require a valid token, the examples use `{access_token}` as a placeholder. The token must provide appropriate permissions. For most content, this is the `ASMTDATALOAD` role at the client or state level but refer to individual content end-point documentation for specific permissions. There is one diagnostic end-point provided that helps debug permissions issues:

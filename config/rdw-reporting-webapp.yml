@@ -10,6 +10,10 @@ reporting:
   # Used for google analytics.
   analytics-tracking-id:
 
+  # Use for custom redirect URL after logout. (If set and not empty, the single sign-out will be bypassed.)
+  # For example: https://smarterbalanced.okta.com
+#  logout-redirect-url: https://smarterbalanced.okta.com
+
   # The guide URLs are used to provide links on the landing and home pages.
 #  interpretive-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-interpretive-guide.pdf
 #  user-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-user-guide.pdf

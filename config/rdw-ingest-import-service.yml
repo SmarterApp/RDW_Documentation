@@ -10,14 +10,14 @@ security:
     # provider: okta  # integrates with Okta. Any other setting or leaving provider out defaults to OpenAM.
     provider:
     # For Okta, the The OAuth2 URL is used to fetch a key to validate the access token. For example:
-    # token-info-url: https://smarterbalanced.oktapreview.com/oauth2/auslw2qcsmsUgzsqr0h7info
+    # token-info-url: https://smarterbalanced.oktapreview.com/oauth2/auslw2qcsmsUgzsqr0h7
     # For OpenAM, it used to fetch information for the token so it must have a placeholder for the token. For example:
     # token-info-url: https://host/auth/oauth2/tokeninfo?access_token={access_token}.
     # There is no default value for the URL, it must be provided.
     token-info-url:
     # Audience is only relevant for the Okta integration. It must match the audience value delivered in
     # the access token, and will vary by environment. For example: audience: api://staging or
-    # audience: app://production
+    # audience: api://production
     audience:
     # Connection timeout is only relevant for the Okta integration and controls how long Okta will attempt to
     # connect to its server to download the validation keys. This defaults to 1000 (ms) and it should not be

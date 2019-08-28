@@ -767,7 +767,7 @@ To check the status of the import use Get Import Request. Imports with "PROCESSE
 ### Groups Endpoints
 End-point for submitting student group data in the Smarter Balanced Student Group CSV format.
 
-These require the `GROUP_WRITE` permission for the schools involved.
+These require the `GROUP_ADMIN` permission for the schools involved.
 
 #### Create Groups Import Request
 Accepts payloads in the Smarter Balanced Student Group CSV format. This end point can be used to import new groups or update existing ones.

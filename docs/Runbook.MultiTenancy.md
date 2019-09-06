@@ -179,7 +179,7 @@ curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@organiz
 # use submit_helper to submit TRTs (tweak ACCESS_TOKEN in script)
 find ./out/*/*/* -type d | xargs -I FOLDER -P 3 ./scripts/submit_helper.sh FOLDER
 ```    
-* Create groups. This is a tricky. We want a group per school per grade per subject.
+* Create groups. This is tricky. We want a group per school per grade per subject.
 We can use the session id from the data generator to group students, and
 we'll base the groups on summative assessments for the current school year.
 We'll restrict to medium sized groups.

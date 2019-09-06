@@ -10,6 +10,10 @@ reporting:
   # Used for google analytics.
   analytics-tracking-id:
 
+  # Use for custom redirect URL after logout. (If set and not empty, the single sign-out will be bypassed.)
+  # For example: https://smarterbalanced.okta.com
+#  logout-redirect-url: https://smarterbalanced.okta.com
+
   # The guide URLs are used to provide links on the landing and home pages.
 #  interpretive-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-interpretive-guide.pdf
 #  user-guide-url: https://portal.smarterbalanced.org/library/en/reporting-system-user-guide.pdf
@@ -43,6 +47,10 @@ reporting:
   # evaluate the performance of their students. Because this requires additional configuration data
   # that may not be available to a tenant, this feature is disabled by default.
 #  percentile-display-enabled: false
+
+  # By default, the tenant administration UI is enabled.
+  # However, it is a powerful feature that can be disabled if it is unused.
+#  tenant-administration-disabled: false
 
 # SAML/SSO configuration
 # The setting of these properties is covered in more detail in the deployment guide.

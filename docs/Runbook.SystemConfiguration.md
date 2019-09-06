@@ -26,6 +26,8 @@
 
 Once the system is deployed it is necessary to configure the system by loading subjects, assessments, accommodations, instructional resources, student groups, normative data. There are also end-user features that may be enabled or disabled.
 
+NOTE: this document was written before the tenant administration UI was added (v1.4.0). The instructions regarding configuration changes are still valid but many of those changes can be made in the UI instead of directly manipulating the yaml files.
+
 #### School Year
 The system restricts reporting to the "known" school years. Verify that the `school_year` table has all the desired years (usually this means adding the upcoming school year to the table) and trigger a `CODES` migration as described in [Manual Data Modifictions](./Runbook.ManualDataModifications).
 ```sql
@@ -43,12 +45,12 @@ mysql> INSERT INTO school_year (year) VALUES (2019);
 mysql> INSERT INTO import(status, content, contentType, digest) VALUES (1, 3, 'add school year 2019', 'add school year 2019');
 ```
 
-The embargo feature requires the current school year be set. In the common configuration file (usually `application.yml`) set `reporting.school_year` to the appropriate value and restart the migration and reporting applications.
+The embargo feature requires the current school year be set. In the tenant configuration file (`tenant-XX/application.yml`) set `reporting.school_year` to the appropriate value and restart the migration and reporting applications.
 
 #### Subjects
 
 The subject XML defines a subject's attributes for the RDW system. It is the tenant's responsibility to define a subject XML based on the schema, [RDW_Subject.xsd](https://github.com/SmarterApp/RDW_Common/blob/master/model/src/main/resources/RDW_Subject.xsd). SmarterBalanced's [Math](../deploy/Math_subject.xml) and [ELA](../deploy/ELA_subject.xml) subjects XML may be found in the `deploy` folder of this project. Subjects must be loaded into the system before assessment packages. The system allows for subject updates but only for the data attributes that have not been used by the system at the time of the update.
-We have also proved two additional sample subject definition XMLs as samples/templates for additional subjects: [Sample Subject](../deploy/new_subject_config.xml) and [Mini Subject.](../deploy/mini_subject_config.xml)
+We have also proved two additional sample subject definition XMLs as samples/templates for additional subjects: [Sample Subject](../deploy/new_subject_config.xml) and [Mini Subject](../deploy/mini_subject_config.xml).
 Loading the packages is an IT/DevOps function and requires data load permissions:
 ```bash
 export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
@@ -173,16 +175,6 @@ DELETE FROM language WHERE code = 'mkh';
 INSERT INTO import (status, content, contentType, digest) VALUES (1, 3, 'update language', REPLACE(UUID(), '-', ''));
 ```
 
-#### English Learners
-
-There are different systems for categorizing english learners. The system supports two of them, Limited English Proficiency (LEP) and English Language Acquisition Status (ELAS). Only one should be used, the default is ELAS; this should correspond to the other systems in the testing ecosystem, especially the test delivery system. To switch to use LEP, IT/DevOps may change the following property in the `application.yml` configuration file:
-```yml
-reporting:
-  english-learners:
-    - lep
-```
-This setting is used by all the reporting services so they should be restarted: `aggregate-service`, `report-processor`, `reporting-service`, `reporting-webapp`.
-
 #### Ethnicity
 
 Although there are federal standards for student ethnicity, some states have different requirements. To change the list of ethnicities in the system there are two things that must be changed: the allowed ethnicities (in the database) and the ethnicity list in the language file.
@@ -282,6 +274,7 @@ WHERE sg.school_year=2018 AND s.district_id IN (1,3);
 
 UPDATE import SET status=1 WHERE id=@importid;
 ```
+This will trigger the migrate processes to remove the groups from the reporting and olap databases. Once that completes, it may be desirable to hard-delete the groups, see [Delete School Year](Runbook.BulkDeleteExams#delete-school-year).
 
 ---
 [1]: https://github.com/SmarterApp/AccessibilityAccommodationConfigurations/blob/master/AccessibilityConfig.xml

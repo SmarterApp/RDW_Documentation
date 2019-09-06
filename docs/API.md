@@ -20,9 +20,10 @@ Quick Links:
 1. [Status Endpoints](#status-endpoints)
 
 ### Authentication and Authorization
-The import service requires an OAuth2 access token for the data loading end-points. This is a password grant token requested from the OpenAM server by a trusted client for a user of the system (the permissions are associated with the user). 
+The import service requires an OAuth2 access token for the data loading end-points. This is a password grant token requested from the OAuth2 server by a trusted client for a user of the system (the permissions are associated with the user).
+During the first couple years, the OAuth2 server was an OpenAM server. Recently it was migrated to an Okta server. There are instructions for both. 
 
-#### Fetch Password Grant Access Token
+#### Fetch Password Grant Access Token - OpenAM
 Accepts x-www-form-urlencoded data including client and user credentials and returns an access token.
 * Host: OpenAM
 * URL: `/auth/oauth2/access_token`
@@ -70,7 +71,54 @@ ACCESS_TOKEN=`curl -s -X POST \
 ```
 The resulting environment variable may be used in subsequent calls. Where the samples have `{access_token}` substitute `${ACCESS_TOKEN}`.
 
-#### Test Access Token
+#### Fetch Password Grant Access Token - Okta
+Accepts x-www-form-urlencoded data including client and user credentials and returns an access token.
+* Host: Okta
+* URL: `/oauth2/auslw2qcsmsUgzsqr0h7/v1/token` (the exact URL will depend on the installation configuration)
+* Method: `POST`
+* Data Params (values given are examples and should be replaced with real values):
+  * `grant_type=password`
+  * `scope=openid profile`
+  * `username=user@example.com`
+  * `password=UserPassword`
+  * `client_id=client`
+  * `client_secret=ClientSecret`
+* Success Response:
+  * Code: 200 (OK)
+  * Content: 
+    ```json
+    {
+      "scope": "openid profile",
+      "expires_in": 3600,
+      "token_type": "Bearer",
+      "id_token": "eyJraWQi0...",
+      "access_token": "eja8FA..."
+    } 
+    ```
+* Error Response:
+  * Code: 400 (Bad Request)
+  * Content (specific error and description will vary):
+    ```json
+    {
+      "error": "invalid_client",
+      "error_description": "Client authentication failed"
+    }
+    ```
+* Sample Call (curl):
+```bash
+curl -s -X POST \
+  --data "grant_type=password&scope=openid profile&username=user@example.com&password=password&client_id=client&client_secret=secret" \
+  https://okta/oauth2/auslw2qcsmsUgzsqr0h7/v1/token
+```
+* Extracting the access token. A handy util is `jq` which parses json payloads. Using it the access token may be extracted from the payload, something like:
+```bash
+ACCESS_TOKEN=`curl -s -X POST \
+  --data "grant_type=password&scope=openid profile&username=user@example.com&password=password&client_id=client&client_secret=secret" \
+  https://okta/oauth2/auslw2qcsmsUgzsqr0h7/v1/token | jq -r '.access_token'`
+```
+The resulting environment variable may be used in subsequent calls. Where the samples have `{access_token}` substitute `${ACCESS_TOKEN}`.
+
+#### Test Access Token - OpenAM
 Although not needed during normal operations, this call can be used to check an access token.
 * Host: OpenAM
 * URL: `/auth/oauth2/tokeninfo`
@@ -116,6 +164,49 @@ Although not needed during normal operations, this call can be used to check an 
 ```bash
 curl https://openam/auth/oauth2/tokeninfo?access_token=20b55fc2-1b84-4412-8149-88cfa622db01
 ```
+
+#### Test Access Token - Okta
+Although not needed during normal operations, this curl call can be used to check an access token:
+```bash
+  curl -X POST \
+  --data 'client_id=<client-id>&client_secret=<client-secret>' \
+  'https://smarterbalanced.oktapreview.com/oauth2/auslw2qcsmsUgzsqr0h7/v1/introspect?token=<full-text-of-access-token>&token_type_hint=access_token'
+  ```
+* Success Response:
+  * Code: 200 (OK)
+  * Content: 
+    ```json
+    {
+      "active": true,
+      "scope": "profile openid",
+      "username": "test@example.com",
+      "exp": 1566865091,
+      "iat": 1566861491,
+      "sub": "test@example.com",
+      "aud": "api://staging",
+      "iss": "https://smarterbalanced.oktapreview.com/oauth2/auslw2qcsmsUgzsqr0h7",
+      "token_type": "Bearer",
+      "client_id": "<client-id>",
+      "uid": "00ukx23x7uJn3O4980h7",
+      "sbacTenancyChain": [
+        "|CA|ASMTDATALOAD|STATE|1000|ART_DL|||CA|CALIFORNIA|||||||||",
+        "|CA|Administrator|STATE|1000|ART_DL|||CA|CALIFORNIA|||||||||",
+        "|CA|State Coordinator|STATE|1000|ART_DL|||CA|CALIFORNIA|||||||||"
+      ],
+      "mail": "test@example.com",
+      "sbacUUID": "59946ee4e4b031dfb7d388ca"
+    }
+    ```
+    
+* Error Response:
+  * Code: 400 (Bad Request)
+  * Content (specific error and description will vary):
+    ```json
+    {
+      "error": "invalid_client",
+      "error_description": "The client secret supplied for a confidential client is invalid."
+    }
+    ```
 
 ### Import Endpoints
 The import service provides the end-points for submitting data to the system. All end-points require a valid token, the examples use `{access_token}` as a placeholder. The token must provide appropriate permissions. For most content, this is the `ASMTDATALOAD` role at the client or state level but refer to individual content end-point documentation for specific permissions. There is one diagnostic end-point provided that helps debug permissions issues:
@@ -676,7 +767,7 @@ To check the status of the import use Get Import Request. Imports with "PROCESSE
 ### Groups Endpoints
 End-point for submitting student group data in the Smarter Balanced Student Group CSV format.
 
-These require the `GROUP_WRITE` permission for the schools involved.
+These require the `GROUP_ADMIN` permission for the schools involved.
 
 #### Create Groups Import Request
 Accepts payloads in the Smarter Balanced Student Group CSV format. This end point can be used to import new groups or update existing ones.

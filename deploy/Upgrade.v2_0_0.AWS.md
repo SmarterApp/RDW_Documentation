@@ -1,6 +1,8 @@
-## Upgrade v1.4.0 <- v1.3.x
+## Upgrade v2.0.0 <- v1.3.x
 
-**Intended Audience**: this document provides detailed instructions for upgrading the [Reporting Data Warehouse (RDW)](../README.md) applications in an AWS environment from v1.3.x to v1.4.0. Operations and system administrators will find it useful.
+NOTE: v2.0.0 was labelled v1.4.0 during development, UAT, and initial deployment. Specifically v2.0.0 corresponds to v1.4.0-RC23 for ingest and v1.4.0-RC25 for reporting.
+
+**Intended Audience**: this document provides detailed instructions for upgrading the [Reporting Data Warehouse (RDW)](../README.md) applications in an AWS environment from v1.3.x to v2.0.0. Operations and system administrators will find it useful.
 
 It is assume that the official deployment and upgrade instructions were used for the current installation. Please refer to that documentation for general guidelines.
 
@@ -68,7 +70,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
             ```
         * `rabbit-service.yml` - no change required
         * `wkhtmltopdf-service.yml` - no change required
-    * Ingest services, change image version to `1.4.0-RELEASE` in the following files:
+    * Ingest services, change image version to `2.0.0-RELEASE` in the following files:
         * `import-service.yml`
         * `package-processor-service.yml`
         * `group-processor-service.yml`
@@ -77,7 +79,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * `migrate-reporting-service.yml`
         * `task-service.yml`
     * Increase the memory for `migrate-olap-service.yml` from 500M/600M to 800M/800M
-    * Reporting services, change image version to `1.4.0-RELEASE` in the following files:
+    * Reporting services, change image version to `2.0.0-RELEASE` in the following files:
         * `admin-service.yml`
         * `aggregate-service.yml`
         * `report-processor-service.yml`
@@ -87,11 +89,11 @@ The goal of this step is to make changes to everything that doesn't directly aff
         ```bash
         cd ../RDW_Deploy_Opus
         git add *
-        git commit -am "Changes for v1.4.0"
+        git commit -am "Changes for v2.0.0"
         git push 
         ```
 * [ ] There are extensive configuration changes required. Generally this will affect database, archive, ... properties. No new information is needed, it will just be moved around.
-    * `application.yml` - this now contains a lot more configuration since we've made more properties common amongst the services.
+    * `application.yml` - this now contains a lot more configuration since more properties are common amongst the services.
         * The datasource server/db settings are common and should be put here. Copy from existing files.
             * `datasources.migrate_rw` from `spring.migrate_datasource` (look in `rdw-ingest-migrate-olap.yml`)
             * `datasources.olap_ro` from `spring.olap_datasource` (look in `rdw-reporting-aggregate-service.yml`)
@@ -212,16 +214,16 @@ The goal of this step is to make changes to everything that doesn't directly aff
           tenants:
             OT:
               student-fields:
-                EconomicDisadvantage: disabled
-                LimitedEnglishProficiency: disabled
-                MigrantStatus: enabled
-                EnglishLanguageAcquisitionStatus: enabled
-                PrimaryLanguage: enabled
-                Ethnicity: enabled
-                Gender: disabled
-                IndividualEducationPlan: disabled
-                MilitaryStudentIdentifier: disabled
-                Section504: disabled
+                EconomicDisadvantage: Disabled
+                LimitedEnglishProficiency: Disabled
+                MigrantStatus: Enabled
+                EnglishLanguageAcquisitionStatus: Enabled
+                PrimaryLanguage: Enabled
+                Ethnicity: Enabled
+                Gender: Disabled
+                IndividualEducationPlan: Disabled
+                MilitaryStudentIdentifier: Disabled
+                Section504: Disabled
         ```
     * `rdw-ingest-exam-processor.yml`
         * Remove datasource; copied to application.yml as warehouse_rw.
@@ -341,10 +343,9 @@ The goal of this step is to make changes to everything that doesn't directly aff
         ```bash
         cd ../RDW_Config_Opus
         git add *
-        git commit -am "Changes for v1.4.0"
+        git commit -am "Changes for v2.0.0"
         git push
         ```
-* [ ] TODO - Update IRiS files        
 * [ ] Add new roles and permissions for the Reporting component in the permissions application.
     * Role: TENANT_ADMIN. Assignable at CLIENT level only.
         * Permissions: TENANT_READ, TENANT_WRITE
@@ -356,7 +357,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
         * Permissions: INDIVIDUAL_PII_READ, GROUP_PII_READ, GROUP_READ, CUSTOM_AGGREGATE_READ, 
     * Role: SandboxDistrictAdmin (PII, CUSTOM_AGGREGATE_REPORTER, GROUP_ADMIN, EMBARGO_ADMIN, INSTRUCTIONAL_RESOURCE_ADMIN)
         * Permissions: INDIVIDUAL_PII_READ, GROUP_PII_READ, CUSTOM_AGGREGATE_READ, GROUP_READ, GROUP_WRITE, EMBARGO_READ, EMBARGO_WRITE, INSTRUCTIONAL_RESOURCE_WRITE
-        
+* [ ] (Optional, as needed) Update IRiS files. This action is included as a reminder: if new assessment items are available, now is a good time to add the IRiS SAAIF files to the shared folder.        
 * [ ] (Optional) Run data validation scripts. These scripts compare data between the warehouse and the data marts.
     * You'll need the version of RDW_Schema that was used to install the *current* installation; in this case it is
     probably the tagged 1.3.0 commit:
@@ -558,8 +559,8 @@ Smoke 'em if ya got 'em.
 
 ### Hotfixes
 
-#### Upgrade v1.4.0 (Sandbox Edition)
-The Tenant/Sandbox admin functionality caused a delay of the initial 1.4.0 release.
+#### Upgrade v2.0.0 (Sandbox Edition)
+The Tenant/Sandbox admin functionality caused a delay of the initial 2.0.0 release.
 If you are upgrading from 1.4.0-RC19 or earlier the following changes may have to be made:
 * [ ] Verify the TENANT_ADMIN role and related permissions are configured
 (these weren't required before the Sandbox functionality was added).
@@ -665,7 +666,7 @@ spring:
     password: '{cipher}...'
 ```
 
-#### Upgrade v1.4.0 (Okta Integration Edition)
+#### Upgrade v2.0.0 (Okta Integration Edition)
 Both Okta and OpenAM will be supported during a transitional phase, but require different
 configuration in rdw-ingest-import-service.yml. 
 

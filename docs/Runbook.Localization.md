@@ -1,6 +1,6 @@
 ## Localization
 
-**Intended Audience**: This document contains information on how multi-tenancy works in the [Reporting Data Warehouse](../README.md) (RDW). Operations and system administration will find it useful.
+**Intended Audience**: This document contains information on how localization works in the [Reporting Data Warehouse](../README.md) (RDW). Operations and system administration will find it useful.
 
 ### Table of Contents
 
@@ -10,7 +10,7 @@
 
 ### Overview
 
-Localization is the mechanism used to configure text elements within the Reporting Data Warehouse application.  The [default localization](https://github.com/SmarterApp/RDW_Reporting/blob/develop/webapp/src/main/webapp/src/assets/i18n/en.json) localizations can be overridden and are [multi-tenant aware](Runbook.MultiTenancy.md).
+Localization is the mechanism used to configure text elements within the Reporting Data Warehouse application.  The [default localization](https://github.com/SmarterApp/RDW_Reporting/blob/master/webapp/src/main/webapp/src/assets/i18n/en.json) localizations can be overridden and are [multi-tenant aware](Runbook.MultiTenancy.md).
 
 ### Configuration
 
@@ -29,7 +29,6 @@ The typical work-flow to override a localization consists of the following steps
 3. Add an override to localization file.
 
 If there are multiple uses of that text, the following breakdown of the configuration categories may be helpful identifying the correct configuration to change.
-
 
 ### Categories
 

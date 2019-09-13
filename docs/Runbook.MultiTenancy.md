@@ -143,11 +143,14 @@ assessments for ELA and Math using the demo institutions and a state
 code of TS.
 
 * Data generation
-    * collect inputs for data generation
+    * Collect inputs for data generation
         * subject definition files
         * assessment package definition files
         * institution hierarchy
-    * use data generator to create TRTs
+    * Use data generator to create TRTs. Your exact command will vary but something like:
+    ```
+    --gen_iab --gen_ica --gen_sum --gen_item --out_dir out.sb-dataset --xml_out --subject_source ./in/sb-dataset/*_subject.xml --pkg_source ./in/sb-dataset/201*.csv --hier_source ./in/sb-dataset/demo.csv
+    ```
     * spot check the TRTs
 * Configure RDW services. This assumes you are pointing to a configuration with tenant-TS defined.
     * Reset the schema using RDW_Schema. Adjust school_year for generated data.
@@ -174,10 +177,11 @@ curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@ELA_sub
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@Math_subject.xml http://localhost:8080/subjects/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@AccessibilityConfig.2019.xml http://localhost:8080/accommodations/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@2017v3.csv http://localhost:8080/packages/imports
-... repeat for all assessment packages
+... repeat for all assessment packages or do something like
+for f in 201*.csv; do curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@$f http://localhost:8080/packages/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@organizations.json http://localhost:8080/organizations/imports
 # use submit_helper to submit TRTs (tweak ACCESS_TOKEN in script)
-find ./out/*/*/* -type d | xargs -I FOLDER -P 3 ./scripts/submit_helper.sh FOLDER
+find ./out/*/*/* -type d | xargs -I FOLDER -P 3 ./scripts/submit_helper_ts.sh FOLDER
 ```    
 * Create groups. This is tricky. We want a group per school per grade per subject.
 We can use the session id from the data generator to group students, and

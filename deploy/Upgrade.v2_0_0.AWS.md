@@ -559,6 +559,12 @@ Smoke 'em if ya got 'em.
 
 ### Hotfixes
 
+#### Upgrade v2.1.0 <- v2.0.0
+
+This is a bugfix release with no required configuration changes.
+* [ ] Set the image version to `2.1.0-RELEASE` in all deployment yaml files.
+* [ ] Perform a rolling update on all services.
+
 #### Upgrade v2.0.0 (Sandbox Edition)
 The Tenant/Sandbox admin functionality caused a delay of the initial 2.0.0 release.
 If you are upgrading from 1.4.0-RC19 or earlier the following changes may have to be made:

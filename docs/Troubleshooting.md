@@ -453,9 +453,9 @@ DELETE usg FROM upload_student_group usg JOIN import i ON i.id = usg.import_id W
 
 #### Student Group - Timed Out Import
 
-If a student group import shows that it failed in the UI, but the import table shows that it was successful, it
-is probably due to a timeout while validating an extremely large file. The easiest way to work around this issue is to
-break apart large Student Group files into smaller ones. Usuallym files with 50K to 100K entries will be processed
+If a student group import shows that it failed in the UI, but the import table shows that it was successful, it is 
+probably due to a timeout while validating an extremely large file. The easiest way to work around this issue is to
+break apart large Student Group files into smaller ones. Usually, files with 50K to 100K entries will be processed
 without a timeout.
 
 If splitting apart these files is not an option, it will be necessary to increase the timeout value. Both the Zuul 

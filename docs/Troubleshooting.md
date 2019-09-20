@@ -451,6 +451,34 @@ If individual failures were not addressed, deleting all "old" entries may be mor
 DELETE usg FROM upload_student_group usg JOIN import i ON i.id = usg.import_id WHERE i.updated < TIMESTAMPADD(DAY, -3, CURRENT_TIMESTAMP);
 ```
 
+#### Student Group - Timed Out Import
+
+If a student group import shows that it failed in the UI, but the import table shows that it was successful, it is 
+probably due to a timeout while validating an extremely large file. The easiest way to work around this issue is to
+break apart large Student Group files into smaller ones. Usually, files with 50K to 100K entries will be processed
+without a timeout.
+
+If splitting apart these files is not an option, it will be necessary to increase the timeout value. Both the Zuul 
+host timeout and the webapp's load balancer idle timeout need to be configured:
+
+In the config server, update the Zuul configuration in [rdw-reporting-webapp.yml](../config/rdw-reporting-webapp.yml):
+```yaml
+zuul:
+  host:
+    socket-timeout-millis: 300000
+``` 
+
+In the Kubernetes deployment, update [reporting-webapp.yml](../deploy/reporting-webapp.yml) with an extra 
+metadata.annotations value:
+```yaml
+metadata:
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "300"
+```
+
+The above configuration will extend timeouts to 5 minutes (300 seconds), which should be enough to handle Student
+Group files of about 500K to 800K records, depending on the current server load.
+
 <a name="invalid-group"></a>
 #### Student Groups - Invalid Upload Status
 

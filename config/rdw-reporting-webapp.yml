@@ -87,6 +87,11 @@ spring:
 
 # Netflix zuul configuration.
 # The URLs must be set to match the environment, e.g. http://admin-service, the other defaults should be fine.
+#
+# Set zuul.host.socket-timeout-millis to larger value if seeing failures with long running requests, such as
+# uploading very large Student Group files. The load balancer timeout must also be increased. (see
+# configuration in the deploy folder)
+
 zuul:
 #  set-content-length: true
 #  FormBodyWrapperFilter:

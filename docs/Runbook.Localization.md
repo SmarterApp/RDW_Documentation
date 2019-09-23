@@ -58,7 +58,7 @@ Tenant specific overrides can be set with the tenant and sandbox configuration t
 
 The typical work-flow to override a localization consists of the following steps:
 
-1. Identify the text in the user interface that should be changes.
+1. Identify the text in the user interface that should be changed.
 2. Search the existing configuration for that text in the tenant administration tool or the default localization file directly.
 3. Add an override to localization file.
 

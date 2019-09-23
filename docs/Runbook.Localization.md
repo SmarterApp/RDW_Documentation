@@ -12,9 +12,43 @@
 
 Localization is the mechanism used to configure text elements within the Reporting Data Warehouse application.  The [default localization](https://github.com/SmarterApp/RDW_Reporting/blob/master/webapp/src/main/webapp/src/assets/i18n/en.json) localizations can be overridden and are [multi-tenant aware](Runbook.MultiTenancy.md).
 
+```
+
+             +-----------+  
+             |           |  
+             |    Git    |  
+             |           |  
+             |           |  
+             +-----------+  
+                   |        
+                   |        
+                   v              
+             +-----------+  
+             |           |  
+             |  Config   |  
+             |  Server   |  
+             |           |  
+             +-----------+  
+                   |        
+                   |        
+                   v        
+             +-----------+  
+             |           |  
+             |RDW Web App|  
+             |           |  
+             |           |  
+             +-----------+  
+                   |        
+                   |        
+                   v        
+                                
+      /api/translations/{locale}
+
+
+```
 ### Configuration
 
-Localization file locations are described in the [multi-tenancy runbook configuration](Runbook.MultiTenancy.md#configuration) section.
+Localization file locations are described in the [multi-tenancy runbook configuration](Runbook.MultiTenancy.md#configuration) section. 
 
 Instance-level localization is specified in files stored (by convention) in the `i18n` folder.  
 
@@ -29,6 +63,21 @@ The typical work-flow to override a localization consists of the following steps
 3. Add an override to localization file.
 
 If there are multiple uses of that text, the following breakdown of the configuration categories may be helpful identifying the correct configuration to change.
+
+If the Tenant Administration tool is used no service restart is required, but it may take 5-7 minuets before the change propagates to all services.
+
+### Adding / Removing Localization
+
+Adding or removing localizations will require changing the source code and building a new version of the software.  In general the steps would be:
+
+1.  Modify the localization defaults located in [github](https://github.com/SmarterApp/RDW_Reporting/blob/develop/webapp/src/main/webapp/src/assets/i18n/en.json)
+2.  Modify the source code to use the new element or remove the existing element
+3.  Build and deploy the software changes
+
+Some implications to consider:
+
+1. Any new localization may be overridden, but must be configured for each tenant individually if the default is not adequate.
+2. Any removed default localization will no longer be shown in the UI, but any "orphaned" tenant overrides should be removed manually to avoid confusion.
 
 ### Categories
 

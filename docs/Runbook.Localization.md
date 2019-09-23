@@ -64,7 +64,7 @@ The typical work-flow to override a localization consists of the following steps
 
 If there are multiple uses of that text, the following breakdown of the configuration categories may be helpful identifying the correct configuration to change.
 
-If the Tenant Administration tool is used no service restart is required, but it may take 5-7 minuets before the change propagates to all services.
+If the Tenant Administration tool is used no service restart is required, but it may take 5-7 minutes before the change propagates to all services.
 
 ### Adding / Removing Localization
 
@@ -76,7 +76,7 @@ Adding or removing localizations will require changing the source code and build
 
 Some implications to consider:
 
-1. Any new localization may be overridden, but must be configured for each tenant individually if the default is not adequate.
+1. Any new localization may be overridden but must be configured for each tenant individually if the default is not adequate.
 2. Any removed default localization will no longer be shown in the UI, but any "orphaned" tenant overrides should be removed manually to avoid confusion.
 
 ### Categories

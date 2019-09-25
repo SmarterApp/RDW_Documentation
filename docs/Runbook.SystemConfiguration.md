@@ -269,7 +269,7 @@ SELECT LAST_INSERT_ID() into @importid;
 
 UPDATE student_group sg
   JOIN school s ON sg.school_id = s.id
-SET sg.deleted=1, sg.updated=@importid
+SET sg.deleted=1, sg.update_import_id=@importid
 WHERE sg.school_year=2018 AND s.district_id IN (1,3);
 
 UPDATE import SET status=1 WHERE id=@importid;

@@ -49,7 +49,7 @@ mysql> SELECT value FROM setting WHERE name = 'AUDIT_TRIGGER_ENABLE';
 # to turn auditing off
 mysql> UPDATE setting SET value = 'FALSE' WHERE name = 'AUDIT_TRIGGER_ENABLE';
 ```
-4. Find and copy one of the queries that matches your rules for the delete.
+4. Find and copy one of the queries that matches your rules for the delete. Or craft your own using these as guides.
 
     4.1 Delete based on the test administration year
     ```sql
@@ -59,9 +59,12 @@ mysql> UPDATE setting SET value = 'FALSE' WHERE name = 'AUDIT_TRIGGER_ENABLE';
     ```sql
     SELECT id FROM exam WHERE completed_at >= '2017-03-15 09:12:14.729000' AND completed_at <= '2017-03-15 09:12:14.729000'  -- replace with your completed at dates
     ```
-    4.3 Delete based on a specific school
+    4.3 Delete based on a specific school or district
     ```sql
     SELECT e.id FROM exam e JOIN school s ON s.id = e.school_id WHERE s.natural_id = 'school_natural_id_here'; -- replace with your school id
+    ```
+    ```sql
+    SELECT e.id FROM exam e JOIN school s ON s.id = e.school_id JOIN district d ON d.id = s.district_id WHERE d.natural_id = 'district_natural_id_here'; -- replace with your district id
     ```
     4.4 Delete based on a specific assessment
     ```sql

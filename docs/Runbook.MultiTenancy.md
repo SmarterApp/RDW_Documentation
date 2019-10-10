@@ -449,3 +449,36 @@ kubectl exec -it configuration-deployment-<k8s-id> -- curl -d 'path=*' http://lo
 ```
 It takes 20-30 seconds for the change to be loaded and propagated to the services.
 
+### Moving A Single Tenant to a Multi-tenant Instance
+
+Moving a tenant from an instance running a single tenant to a multi-tenant instance is primarily a backup and restore operation.
+
+*Configuration*
+
+* Create a new tenant on the target multi-tenant instance that matches the configuration of the old instance with the tenant administration tool.
+  * The result of this process will be:
+    - Empty Databases
+    - yml configuration
+    - localization files
+
+This is the best opportunity to verify the configuration matches the existing configuration.  The configuration should be double checked for accuracy. 
+
+Take note of the database names as they will be required for the backup and restore process.
+
+*Data*
+
+* [Backup and restore](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html)  the warehouse database from the single tenant instance to the new mulit-tenant intance.
+* Manually clean the `reporting` and `migrate_olap database` `migrate` tables.
+``` SQL
+--  reporting for tenant TS
+TRUNCATE TABLE reporting_ts.migrate;
+--  migrate_olap for tenant TS
+TRUNCATE TABLE migrate_olap_ts.migrate;
+```
+* Run the migrations.  The reporting migration will occur every minute, but it is probably desireable to trigger the olap migration right away
+```bash
+kubectl exec -it migrate-olap-... -- curl -X POST http://localhost:8008/migrate?tenantId=TS
+```
+* Test and validate
+
+If the newly restored tenant looks correct, traffic can be redirected to this new instance and the old instance can be decommissioned.

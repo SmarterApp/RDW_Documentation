@@ -63,6 +63,44 @@ curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@Math_subj
 > 4. Wait for migration from warehouse to reporting to complete
 > 5. Re-start the Reporting services
 
+NOTE: Subject attributes are used during ingest of assessment packages and test results. Because of this, certain subject attributes may NOT be changed after the subject is in use.
+Before accepting an update for a subject, the system checks those restricted attributes and rejects changes if they are in use. 
+In the following breakdown an attribute is marked with (x) if it can't be changed if that subject component is in use.
+Messages (aka translations aka text attributes) can generally be changed even if the subject is in use. Those attributes are indicated with a (/).
+* Subject (matched by code)
+    * (x) code
+    * (/) name
+    * Subject Assessment Type (matched by code)
+        * (x) target report flag
+        * (x) printed report flag
+        * (/) name
+        * (/) long-name
+        * Scoring
+            * (x) min/max score
+            * (x) performance level count
+            * (x) performance level cutoff
+            * (/) name
+            * Performance Level
+                * (/) name
+                * (/) short-name, suffix
+                * (/) color
+    * Depth of Knowledge (matched by level)
+        * (x) reference URI
+        * (/) name
+    * Item Difficulty (matched by gradeCode)
+        * (x) moderate/high LowEnd
+    * (Organizational) Claim
+        * (/) name
+        * (/) icon
+        * (/) description
+        * Target
+            * (/) name
+            * (/) description
+    * Standard 
+        * (/) description
+    * Report Grades
+        * (/) all text                       
+
 #### Assessment Packages
 
 The assessment packages define the tests that are administered to the students. They include performance parameters which enable the student results to be appropriately interpreted.

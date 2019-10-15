@@ -65,41 +65,41 @@ curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@Math_subj
 
 NOTE: Subject attributes are used during ingest of assessment packages and test results. Because of this, certain subject attributes may NOT be changed after the subject is in use.
 Before accepting an update for a subject, the system checks those restricted attributes and rejects changes if they are in use. 
-In the following breakdown an attribute is marked with (x) if it can't be changed if that subject component is in use.
-Messages (aka translations aka text attributes) can generally be changed even if the subject is in use. Those attributes are indicated with a (/).
+In the following breakdown an attribute is marked with :x: if it can't be changed if that subject component is in use.
+Messages (aka translations aka text attributes) can generally be changed even if the subject is in use. Those attributes are indicated with a :heavy_check_mark: 
 * Subject (matched by code)
-    * (x) code
-    * (/) name
+    * :x: code
+    * :heavy_check_mark: name
     * Subject Assessment Type (matched by code)
-        * (x) target report flag
-        * (x) printed report flag
-        * (/) name
-        * (/) long-name
+        * :x: target report flag
+        * :x: printed report flag
+        * :heavy_check_mark: name
+        * :heavy_check_mark: long-name
         * Scoring
-            * (x) min/max score
-            * (x) performance level count
-            * (x) performance level cutoff
-            * (/) name
+            * :x: min/max score
+            * :x: performance level count
+            * :x: performance level cutoff
+            * :heavy_check_mark: name
             * Performance Level
-                * (/) name
-                * (/) short-name, suffix
-                * (/) color
+                * :heavy_check_mark: name
+                * :heavy_check_mark: short-name, suffix
+                * :heavy_check_mark: color
     * Depth of Knowledge (matched by level)
-        * (x) reference URI
-        * (/) name
+        * :x: reference URI
+        * :heavy_check_mark: name
     * Item Difficulty (matched by gradeCode)
-        * (x) moderate/high LowEnd
+        * :x: moderate/high LowEnd
     * (Organizational) Claim
-        * (/) name
-        * (/) icon
-        * (/) description
+        * :heavy_check_mark: name
+        * :heavy_check_mark: icon
+        * :heavy_check_mark: description
         * Target
-            * (/) name
-            * (/) description
+            * :heavy_check_mark: name
+            * :heavy_check_mark: description
     * Standard 
-        * (/) description
+        * :heavy_check_mark: description
     * Report Grades
-        * (/) all text                       
+        * :heavy_check_mark: all text                       
 
 #### Assessment Packages
 

@@ -415,7 +415,7 @@ As the migrate process is invoked and the system is operating as it should the l
 ```
 2017-09-24 17:09:48.638  INFO 7 --- [nio-8080-exec-9] o.o.r.i.m.olap.MigrateOlapEventListener  : Migrate jobRunner called
 ```
-It may be the case that there are no operations to perform because to data has been imported.  In that case this will be the only message.
+It may be the case that there are no operations to perform because no data has been imported.  In that case this will be the only message.
 
 ##### Migrate Disable
 The migrate process will disable itself if it encounters problem. The log entry looks like this:

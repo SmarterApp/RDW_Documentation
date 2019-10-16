@@ -410,6 +410,13 @@ Any failure while processing an exam (aka test result, aka TRT) will produce a l
 ```
 It is important to understand and resolve these failures since the test result will not appear in reports.
 
+##### Migrate Nominal
+As the migrate process is invoked and the system is operating as it should the log message will look like this:
+```
+2017-09-24 17:09:48.638  INFO 7 --- [nio-8080-exec-9] o.o.r.i.m.olap.MigrateOlapEventListener  : Migrate jobRunner called
+```
+It may be the case that there are no operations to perform because no data has been imported.  In that case this will be the only message.
+
 ##### Migrate Disable
 The migrate process will disable itself if it encounters problem. The log entry looks like this:
 ```text

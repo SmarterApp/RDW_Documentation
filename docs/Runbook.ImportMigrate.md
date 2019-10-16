@@ -15,9 +15,9 @@ The warehouse database contains data from different data sources. Every data ele
 | EMBARGO | state_embargo, district_embargo | Embargo settings are edited using the Admin UI. |
 | PACKAGE | **asmt**, asmt_score, item, item_common_core_standard, item_other_target | Ingested using the Import Service API and the output from the tabulator. |
 | ORGANIZATION | **school**, school_group, district, district_group | Uploaded by the Update Organizations task. |
-| EXAM | **exam**, student, exam_item, exam_available_accommodation, exam_claim_score | Ingested from TRTs. |
+| EXAM | **exam**, student, exam_item, exam_available_accommodation, exam_score | Ingested from TRTs. |
 | GROUPS | **student_group**, student, student_group_membership, user_student_group | [Student Groups](StudentGroups.md) |
-| SUBJECT| **subject**, claim, common_core_standard, depth_of_knowledge, item_difficulty_cuts, subject_asmt_type, subject_claim_score, subject_translation, target | [Configurable Subjects](Runbook.md#subjects) |
+| SUBJECT| **subject**, claim, common_core_standard, depth_of_knowledge, item_difficulty_cuts, subject_asmt_type, subject_score, subject_translation, target | [Configurable Subjects](Runbook.md#subjects) |
 
 <a name="import-id"></a>
 #### Import table and Import ID

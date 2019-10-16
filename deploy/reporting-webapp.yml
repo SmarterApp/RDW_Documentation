@@ -7,6 +7,9 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
     service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    # Increase the load balancer timeout in conjunction with webapp's zuul host timeout to prevent long running
+    # requests from timing out before completion. For example, uploading exceptionally large Student Group files.
+    # service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "100"
 spec:
   type: LoadBalancer
   ports:

@@ -467,7 +467,11 @@ Take note of the database names as they will be required for the backup and rest
 
 *Data*
 
-* [Backup and restore](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html)  the warehouse database from the single tenant instance to the new mulit-tenant intance.
+* Disable the following services 
+  * Migrate Service(s)
+  * Task Service
+  * Import Service 
+* [Backup and restore](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html)  the warehouse database from the single tenant instance to the new mulit-tenant instance.
 * Manually clean the `reporting` and `migrate_olap database` `migrate` tables.
 ``` SQL
 --  reporting for tenant TS
@@ -482,3 +486,8 @@ kubectl exec -it migrate-olap-... -- curl -X POST http://localhost:8008/migrate?
 * Test and validate
 
 If the newly restored tenant looks correct, traffic can be redirected to this new instance and the old instance can be decommissioned.
+
+* Re-enable services
+  * Migrate Service(s)
+  * Task Service
+  * Import Service 

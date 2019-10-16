@@ -55,7 +55,7 @@ Warehouse tables audited:
 |------------------------------|---------------------------------------------|-------------|-------------------------------|
 | exam                         | One record per test result                  | Parent      | Update, Soft Delete as Update |
 | exam_available_accommodation | One record per exam available accommodation | Child       | Delete                        |
-| exam_claim_score             | One record per exam claim                   | Child       | Update                        |
+| exam_score                   | One record per exam claim                   | Child       | Update                        |
 | exam_item                    | One record per exam item                    | Child       | Update, Delete                |
 | student                      | One record per student                      | Parent      | Update, Soft Delete as Update |
 | student_ethnicity            | One record per student ethnicity            | Child       | Delete                        |
@@ -995,11 +995,11 @@ Empty set (0.00 sec)
 
 #### Clear all exams for a specific student
 
-**Step 1: Table `audit_exam_claim_score`.  Query records to delete.** 
-The following query outputs the `audit_exam_claim_score` records to be deleted.
+**Step 1: Table `audit_exam_score`.  Query records to delete.** 
+The following query outputs the `audit_exam_score` records to be deleted.
 
 ```mysql
-SELECT aecs.id audit_id, aecs.subject_claim_score_id, student_exams.id exam_id, aecs.action, aecs.audited FROM audit_exam_claim_score aecs
+SELECT aecs.id audit_id, aecs.subject_score_id, student_exams.id exam_id, aecs.action, aecs.audited FROM audit_exam_score aecs
 JOIN (
        SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
      ) student_exams
@@ -1007,22 +1007,22 @@ ON aecs.exam_id = student_exams.id;
 ```
 
 ```text
-+----------+------------------------+---------+--------+----------------------------+
-| audit_id | subject_claim_score_id | exam_id | action | audited                    |
-+----------+------------------------+---------+--------+----------------------------+
-|        1 |                      7 |       2 | update | 2017-12-04 19:12:41.951761 |
-|        2 |                      5 |       2 | update | 2017-12-04 19:12:41.952197 |
-|        3 |                      4 |       2 | update | 2017-12-04 19:12:41.952457 |
-|        4 |                      6 |       2 | update | 2017-12-04 19:12:41.952693 |
-+----------+------------------------+---------+--------+----------------------------+
++----------+------------------+---------+--------+----------------------------+
+| audit_id | subject_score_id | exam_id | action | audited                    |
++----------+------------------+---------+--------+----------------------------+
+|        1 |                7 |       2 | update | 2017-12-04 19:12:41.951761 |
+|        2 |                5 |       2 | update | 2017-12-04 19:12:41.952197 |
+|        3 |                4 |       2 | update | 2017-12-04 19:12:41.952457 |
+|        4 |                6 |       2 | update | 2017-12-04 19:12:41.952693 |
++----------+------------------+---------+--------+----------------------------+
 4 rows in set (0.00 sec)
 ```
 
-**Step 2: Table `audit_exam_claim_score`.  Delete records.** 
+**Step 2: Table `audit_exam_score`.  Delete records.** 
 The following statement deletes records with the same `FROM` clause as the previous statement.
 
 ```mysql
-DELETE aecs FROM audit_exam_claim_score aecs
+DELETE aecs FROM audit_exam_score aecs
 JOIN (
        SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
      ) student_exams
@@ -1033,11 +1033,11 @@ ON aecs.exam_id = student_exams.id;
 Query OK, 4 rows affected (0.01 sec)
 ```
 
-**Step 3: Table `audit_exam_claim_score`.  Validate records deleted.** 
+**Step 3: Table `audit_exam_score`.  Validate records deleted.** 
 Execute the same query used before the `DELETE` step to validate records no longer exist. 
 
 ```mysql
-SELECT aecs.id audit_id, aecs.subject_claim_score_id, student_exams.id exam_id, aecs.action, aecs.audited FROM audit_exam_claim_score aecs
+SELECT aecs.id audit_id, aecs.subject_score_id, student_exams.id exam_id, aecs.action, aecs.audited FROM audit_exam_score aecs
 JOIN (
        SELECT id FROM exam WHERE student_id IN ( SELECT id FROM student WHERE ssid = 'SSID001')
      ) student_exams
@@ -1211,7 +1211,7 @@ Empty set (0.00 sec)
 To clear a specific exams audit records modify the `SELECT` statement that is joined against the audit table and substitute it in the same steps as [Clear all exams for a specific student](#clear-all-exams-for-a-specific-student).
 
 For example the following `JOIN` statement can be substituted for each of the tables,
- `audit_exam_claim_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear one exams audit records by it's `oppId`  
+ `audit_exam_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear one exams audit records by it's `oppId`  
 
 ```mysql
 JOIN (
@@ -1235,7 +1235,7 @@ ON ae.exam_id = specific_exam.id;
 To clear all exam audit records for a specific school modify the `SELECT` statement that is joined against the audit table and substitute it in the same steps as [Clear all exams for a specific student](#clear-all-exams-for-a-specific-student).
 
 For example the following `JOIN` statement can be substituted for each of the tables,
- `audit_exam_claim_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear all exam audit records for the school with a `natural_id` of `TS000001`  
+ `audit_exam_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear all exam audit records for the school with a `natural_id` of `TS000001`  
 
 ```mysql
 JOIN (
@@ -1259,7 +1259,7 @@ ON ae.exam_id = school_exams.id;
 To clear all exam audit records for a specific assessment modify the `SELECT` statement that is joined against the audit table and substitute it in the same steps as [Clear all exams for a specific student](#clear-all-exams-for-a-specific-student).
 
 For example the following `JOIN` statement can be substituted for each of the tables,
- `audit_exam_claim_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear all exam audit records for the assessment with a `natural_id` of `(naturalId)MOCK-ICA-G11-2017-2018`
+ `audit_exam_score`, `audit_exam_available_accommodation`, `audit_exam_item` and `audit_exam` to clear all exam audit records for the assessment with a `natural_id` of `(naturalId)MOCK-ICA-G11-2017-2018`
 
 ```mysql
 JOIN (

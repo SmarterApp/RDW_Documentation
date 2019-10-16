@@ -27,7 +27,7 @@ student |Examinee attributes that define a student: StudentIdentifier, FirstName
 exam |Examinee and ExamineeRelationship attributes that define a student at a time of testing (GradeLevelWhenAssessed, IDEAIndicator, LEPStatus, Section504Status, and so on), as well as Opportunity's attributes, Opportunity's 'overall' ScaleScore and PerformanceLevel data|  ExamineeRelationship refer to the Organizations data.
 exam_item | Items' attributes and data elements | Exam items reference Items definition pre-loaded from the Assessment package.
 exam_available_accommodation |Opportunity's Accommodations | Depends on [SBAC Accessbility Accomodataion Configuration](https://github.com/SmarterApp/AccessibilityAccommodationConfigurations/tree/RDW_DataWarehouse) being preloaded. Only accommodations deninded by this configuration are stored. 
-exam_claim_score |Opportunity's claims ScaleScore and PerformanceLevel data| Depends on the subject being pre-configured with its claim scores.
+exam_score |Opportunity's claims ScaleScore and PerformanceLevel data| Depends on the subject being pre-configured with its claim scores.
 
 ### Marking exams as deleted in the warehouse (aka soft-delete)
 As defined in [Import and Migrate](Runbook.migrate.md#import-id), to soft-delete exams in the warehouse a corresponding `exam` record must be marked with `deleted = 1`.
@@ -113,7 +113,7 @@ The following tables contain exams's data:
 - `exam`: contains ICA and Summative exams
 - `iab_exam`: contains IAB exams
 - `exam_longitudinal`: contains Summative exams
-- `exam_claim_score`: contains scored claim data for ICA and Summative exams
+- `exam_score`: contains scored claim data for ICA and Summative exams
 - `exam_target_score`: contains scored target data for Summative exams
 
 To delete exams bypassing the soft-delete step:
@@ -177,7 +177,7 @@ WHERE e.deleted = 1;
 ```
 3.3 Delete claim scores:
 ```sql 
-DELETE ecs FROM exam_claim_score ecs
+DELETE ecs FROM exam_score ecs
   JOIN exam e ON e.id = ecs.exam_id
 WHERE e.deleted = 1;
 ```

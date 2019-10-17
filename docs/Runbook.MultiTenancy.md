@@ -136,35 +136,86 @@ Unfortunately, at this time, creating the data sets is a manual process.
 The goal is to load the warehouse with all the required data, without 
 allowing the system to migrate the data. Then dump that data and stage 
 it in the data sets folder in S3. Probably the easiest environment to
-do this is a local development system.
+do this in is a local development system.
 
 For this example, we are creating a data set for Smarter Balanced 
 assessments for ELA and Math using the demo institutions and a state
 code of TS.
 
-* Data generation
+* Data collection and generation. The first step is collecting the subject 
+and assessment package definition files, creating an organization hierarchy,
+using those to generate test results, and gathering a few other required
+files.
     * Collect inputs for data generation
-        * subject definition files
-        * assessment package definition files
-        * institution hierarchy
-    * Use data generator to create TRTs. Your exact command will vary but something like:
-    ```
-    --gen_iab --gen_ica --gen_sum --gen_item --out_dir out.sb-dataset --xml_out --subject_source ./in/sb-dataset/*_subject.xml --pkg_source ./in/sb-dataset/201*.csv --hier_source ./in/sb-dataset/demo.csv
-    ```
-    * spot check the TRTs
-* Configure RDW services. This assumes you are pointing to a configuration with tenant-TS defined.
-    * Reset the schema using RDW_Schema. Adjust school_year for generated data.
-    ```
-    RDW_Schema$ gradle -Pschema_prefix=ts_ cleanAll migrateAll
-    RDW_Schema$ echo "DELETE FROM ts_warehouse.school_year WHERE year IN (2015, 2016, 2017)" | mysql -u root ts_warehouse
-    RDW_Schema$ echo "INSERT INTO ts_warehouse.school_year VALUES (2020)" | mysql -u root ts_warehouse
-    RDW_Schema$ echo "INSERT INTO state_embargo (school_year, individual, aggregate, updated_by) VALUES (2020, 0, 0, 'dwtest@example.com')" | mysql -u root ts_warehouse
-    ```
-    * Run ingest services: modify RDW_Ingest docker-compose file, commenting out migrate-reporting and task-service:
-    ```
-    RDW_Ingest$ gradle clean buildImage
-    RDW_Ingest$ docker-compose up -d
-    ```
+        * [Subject definition files](./Runbook.SystemConfiguration.md#subjects). 
+        Use published files, e.g. [SBAC Math](../deploy/Math_subject.xml)
+        or generate new ones using the [subject definition workbook](../tools/SubjectDef.xlsm).
+        * [Assessment package definition files](./Runbook.SystemConfiguration.md#assessment-packages).
+        These must be authored by the test vendor. Please note the assessment
+        package school years, they are used by the data generator to select 
+        the years for the test results.
+        * Institution hierarchy. The data generator can be configured to create
+        a random set of districts and schools, or it can be passed a file
+        that defines specific institutions. To make the experience consistent
+        for users, it is probably best to use a file for the definitions. An
+        example file can be seen [here](https://github.com/SmarterApp/RDW_DataGenerator/blob/master/in/demo.csv). 
+    * Use the [data generator](https://github.com/SmarterApp/RDW_DataGenerator/tree/master) to create TRTs. 
+    Your exact command will vary but something like this will produce TRTs 
+    organized by district and school in the `out.sb-dataset` folder:
+        ```
+        --gen_iab --gen_ica --gen_sum --gen_item --out_dir out.sb-dataset --xml_out --subject_source ./in.sb-dataset/*_subject.xml --pkg_source ./in.sb-dataset/201*.csv --hier_source ./in.sb-dataset/demo.csv
+        ```
+    * [Accommodations file](./Runbook.SystemConfiguration.md#accommodations)
+    This is not needed for data generation but will be needed when loading data.
+    You should get a version for the school year that matches the first school
+    year in the generated data. You may have different versions for different
+    years if you'd like to demonstrate that feature.
+* Set up to run RDW schema and ingest. It is beyond the scope of this document
+to describe how to install tools, pull down code, build the app, etc. However,
+some useful commands and hints will be included.
+* Configure RDW services. 
+    * These instructions assume you are pointing to a configuration with tenant-TS defined.
+    If that is not the case, please [create tenant-TS](#manual-tenant-creation) or
+    modify these instructions to match the available tenant. 
+    *NOTE: these instructions assume a schema **prefix** of "ts_" while the
+    system generally prefers a schema **suffix** of "_ts". This is because the
+    local dev environment uses the prefix. Please adjust for your configuration.*
+    * Reset the schema using RDW_Schema. 
+        ```
+        # pull down Schema project if necessary
+        $ git clone https://github.com/SmarterApp/RDW_Schema.git .
+        $ cd RDW_Schema
+        RDW_Schema$ git checkout master; git pull
+    
+        # reset the schema for ts_warehouse, ts_reporting
+        RDW_Schema$ gradle -Pschema_prefix=ts_ cleanAll migrateAll
+        ```
+    * Adjust school_year based on the generated data. Using the known school years
+    from the assessment packages, load the school_year table. Also release
+    all results for the current school year by clearing the state embargo flag.
+        ```
+        RDW_Schema$ echo "DELETE FROM ts_warehouse.school_year" | mysql -u root ts_warehouse
+        RDW_Schema$ echo "INSERT INTO ts_warehouse.school_year VALUES (2018, 2019, 2020)" | mysql -u root ts_warehouse
+        RDW_Schema$ echo "INSERT INTO state_embargo (school_year, individual, aggregate, updated_by) VALUES (2020, 0, 0, 'dwtest@example.com')" | mysql -u root ts_warehouse
+        ```
+    * Run ingest services.  
+    First modify RDW_Ingest docker-compose file, commenting out `migrate-reporting` and `task-service`.
+        ```
+        # pull down Ingest project
+        $ git clone https://github.com/SmarterApp/RDW_Ingest.git .
+        $ cd RDW_Ingest
+        RDW_Ingest$ git checkout master; git pull
+        
+        # you may build the images locally if you'd like
+        # (if you don't do this, it should pull the images from DockerHub)
+        RDW_Ingest$ ./gradlew clean buildImage -DskipTests
+        
+        # run the services    
+        RDW_Ingest$ docker-compose up -d
+        ```
+    NOTE: the above instructions leave out a **lot** of detail. Please refer
+    to the developer documentation on how to configure the services to run
+    locally.
 * Load data (the usual data load process using curl or Postman and data generator submit scripts). 
 Be sure to use credentials for the `TS` tenant.
 Monitor the package-processor and exam-processor logs to make sure stuff is working.
@@ -188,7 +239,7 @@ curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@ELA_sub
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@2017v3.csv http://localhost:8080/packages/imports
 # ... repeat for all assessment packages or use a bash loop like: for f in 201*.csv; ... file=@$f; done
 
-# import the accessibility file and organization file
+# import the accessibility file(s) and organization file
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@AccessibilityConfig.2019.xml http://localhost:8080/accommodations/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@organizations.json http://localhost:8080/organizations/imports
 

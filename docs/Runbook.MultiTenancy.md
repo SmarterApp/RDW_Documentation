@@ -159,7 +159,7 @@ files.
         that defines specific institutions. To make the experience consistent
         for users, it is probably best to use a file for the definitions. An
         example file can be seen [here](https://github.com/SmarterApp/RDW_DataGenerator/blob/master/in/demo.csv). 
-    * Use the [data generator](https://github.com/SmarterApp/RDW_DataGenerator/tree/master) to create TRTs. 
+    * Use the [data generator](https://github.com/SmarterApp/RDW_DataGenerator/tree/master) to create TRTs.
     Your exact command will vary but something like this will produce TRTs 
     organized by district and school in the `out.sb-dataset` folder:
         ```
@@ -199,7 +199,6 @@ some useful commands and hints will be included.
         RDW_Schema$ echo "INSERT INTO state_embargo (school_year, individual, aggregate, updated_by) VALUES (2020, 0, 0, 'dwtest@example.com')" | mysql -u root ts_warehouse
         ```
     * Run ingest services.  
-    First modify RDW_Ingest docker-compose file, commenting out `migrate-reporting` and `task-service`.
         ```
         # pull down Ingest project
         $ git clone https://github.com/SmarterApp/RDW_Ingest.git .
@@ -210,6 +209,8 @@ some useful commands and hints will be included.
         # (if you don't do this, it should pull the images from DockerHub)
         RDW_Ingest$ ./gradlew clean buildImage -DskipTests
         
+        # modify the docker-compose.yml file, commenting out migrate-reporting and task-service 
+        
         # run the services    
         RDW_Ingest$ docker-compose up -d
         ```
@@ -217,18 +218,14 @@ some useful commands and hints will be included.
     to the developer documentation on how to configure the services to run
     locally.
 * Load data (the usual data load process using curl or Postman and data generator submit scripts). 
+Data includes: subject definitions, accommodations, assessment packages, institutions, TRTs
 Be sure to use credentials for the `TS` tenant.
 Monitor the package-processor and exam-processor logs to make sure stuff is working.
-    * subject definitions
-    * accommodations
-    * assessment packages
-    * institutions
-    * TRTs
 ```
 # monitor package-processor logs (need a separate console)
 docker logs -f rdw_ingest_package-processor_1
 
-# set the access_token
+# set the access_token (this is a stub token that works in local developer deployments)
 export ACCESS_TOKEN="sbac;dwtest@example.com;|TS|ASMTDATALOAD|STATE|SBAC||||TS||||||||||"
 
 # import all subject files
@@ -243,8 +240,11 @@ curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@2017v3.
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@AccessibilityConfig.2019.xml http://localhost:8080/accommodations/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@organizations.json http://localhost:8080/organizations/imports
 
+# adjust submit_helper script, setting HOST and ACCESS_TOKEN appropriately
+# the script can be found at https://github.com/SmarterApp/RDW_DataGenerator/blob/master/scripts/submit_helper.sh
+
 # use submit_helper to submit TRTs (tweak ACCESS_TOKEN in script)
-find ./out/*/*/* -type d | xargs -I FOLDER -P 3 ./scripts/submit_helper_ts.sh FOLDER
+find ./out/*/*/* -type d | xargs -I FOLDER -P 3 submit_helper.sh FOLDER
 ```    
 * Create groups. This is tricky. We want a group per school per grade per subject.
 We can use the session id from the data generator to group students, and

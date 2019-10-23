@@ -163,7 +163,7 @@ files.
     Your exact command will vary but something like this will produce TRTs 
     organized by district and school in the `out.sb-dataset` folder:
         ```
-        --gen_iab --gen_ica --gen_sum --gen_item --out_dir out.sb-dataset --xml_out --subject_source ./in.sb-dataset/*_subject.xml --pkg_source ./in.sb-dataset/201*.csv --hier_source ./in.sb-dataset/demo.csv
+        --gen_iab --gen_ica --gen_sum --gen_item --out_dir out.sb-dataset --xml_out --subject_source ./in.sb-dataset/*_subject.xml --pkg_source ./in.sb-dataset/20*.csv --hier_source ./in.sb-dataset/demo.csv
         ```
     * [Accommodations file](./Runbook.SystemConfiguration.md#accommodations)
     This is not needed for data generation but will be needed when loading data.
@@ -195,7 +195,7 @@ some useful commands and hints will be included.
     all results for the current school year by clearing the state embargo flag.
         ```
         RDW_Schema$ echo "DELETE FROM ts_warehouse.school_year" | mysql -u root ts_warehouse
-        RDW_Schema$ echo "INSERT INTO ts_warehouse.school_year VALUES (2018, 2019, 2020)" | mysql -u root ts_warehouse
+        RDW_Schema$ echo "INSERT INTO ts_warehouse.school_year VALUES (2018), (2019), (2020)" | mysql -u root ts_warehouse
         RDW_Schema$ echo "INSERT INTO state_embargo (school_year, individual, aggregate, updated_by) VALUES (2020, 0, 0, 'dwtest@example.com')" | mysql -u root ts_warehouse
         ```
     * Run ingest services.  
@@ -229,14 +229,13 @@ docker logs -f rdw_ingest_package-processor_1
 export ACCESS_TOKEN="sbac;dwtest@example.com;|TS|ASMTDATALOAD|STATE|SBAC||||TS||||||||||"
 
 # import all subject files
-curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@ELA_subject.xml http://localhost:8080/subjects/imports
-# ... repeat for all subject files
+for f in *_subject.xml; do curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@$f http://localhost:8080/subjects/imports; done
 
 # import all package files
-curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@2017v3.csv http://localhost:8080/packages/imports
-# ... repeat for all assessment packages or use a bash loop like: for f in 201*.csv; ... file=@$f; done
+for f in 20*.csv; do curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@$f http://localhost:8080/packages/imports; done
 
 # import the accessibility file(s) and organization file
+curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@AccessibilityConfig.2018.xml http://localhost:8080/accommodations/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@AccessibilityConfig.2019.xml http://localhost:8080/accommodations/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@organizations.json http://localhost:8080/organizations/imports
 
@@ -244,6 +243,7 @@ curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@organiz
 # the script can be found at https://github.com/SmarterApp/RDW_DataGenerator/blob/master/scripts/submit_helper.sh
 
 # use submit_helper to submit TRTs (tweak ACCESS_TOKEN in script)
+# (might want to monitor the exam-processor log for this bit)
 find ./out/*/*/* -type d | xargs -I FOLDER -P 3 submit_helper.sh FOLDER
 ```    
 * Create groups. This is tricky. We want a group per school per grade per subject.

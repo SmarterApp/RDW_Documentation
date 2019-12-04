@@ -217,17 +217,17 @@ This section records all details that will facilitate configuration and maintena
             * `Reporting`
         * Add/verify roles and the assignable level(s): 
             * `ASMTDATALOAD` - State
-            * `GROUP_ADMIN` - District, GroupOfInstitutions, Institutions
+            * `GROUP_ADMIN` - State, District, GroupOfInstitutions, Institutions
             * `PII` - all but GroupOfStates
             * `PII_GROUP` - all but GroupOfStates 
             * `Instructional Resource Admin` - State, District, GroupOfInstitutions, Institution
-            * `Embargo Admin` - State, District
-            * `Custom Aggregate Reporter` - State, District, GroupOfInstitutions, Institution
+            * `EMBARGO_ADMIN` - State, District
+            * `CUSTOM_AGGREGATE_REPORTER` - State, District, GroupOfInstitutions, Institution
             * `PIPELINE_ADMIN` - State
             * `TENANT_ADMIN` - Client
             * `SandboxTeacher` - Institution
             * `SandboxSchoolAdmin` - Institution
-            * `SandboxDistricAdmin` - District
+            * `SandboxDistrictAdmin` - District
         * Add/verify component permissions for `Reporting`
             * `DATA_WRITE`
             * `GROUP_PII_READ`, `GROUP_READ`, `GROUP_WRITE`, `INDIVIDUAL_PII_READ`
@@ -240,9 +240,9 @@ This section records all details that will facilitate configuration and maintena
             * `GROUP_READ` - `GROUP_ADMIN`, `PII`, `PII_GROUP`, `SandboxTeacher`, `SandboxSchoolAdmin`, `SandboxDistrictAdmin`
             * `GROUP_WRITE` - `GROUP_ADMIN`, `SandboxDistrictAdmin`
             * `INDIVIDUAL_PII_READ` - `PII`, `SandboxSchoolAdmin`, `SandboxDistrictAdmin`
-            * `CUSTOM_AGGREGATE_READ` - `PII`, `Custom Aggregate Reporter`, `SandboxSchoolAdmin`, `SandboxDistrictAdmin`
-            * `EMBARGO_READ` - `Embargo Admin`, `SandboxDistrictAdmin`
-            * `EMBARGO_WRITE` - `Embargo Admin`, `SandboxDistrictAdmin`
+            * `CUSTOM_AGGREGATE_READ` - `PII`, `CUSTOM_AGGREGATE_REPORTER`, `SandboxSchoolAdmin`, `SandboxDistrictAdmin`
+            * `EMBARGO_READ` - `EMBARGO_ADMIN`, `SandboxDistrictAdmin`
+            * `EMBARGO_WRITE` - `EMBARGO_ADMIN`, `SandboxDistrictAdmin`
             * `INSTRUCTIONAL_RESOURCE_WRITE` - `Instructional Resource Admin`, `SandboxDistrictAdmin`
             * `PIPELINE_READ` - `PIPELINE_ADMIN`
             * `PIPELINE_WRITE` - `PIPELINE_ADMIN`

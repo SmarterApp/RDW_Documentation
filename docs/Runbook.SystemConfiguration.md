@@ -63,6 +63,44 @@ curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@Math_subj
 > 4. Wait for migration from warehouse to reporting to complete
 > 5. Re-start the Reporting services
 
+NOTE: Subject attributes are used during ingest of assessment packages and test results. Because of this, certain subject attributes may NOT be changed after the subject is in use.
+Before accepting an update for a subject, the system checks those restricted attributes and rejects changes if they are in use. 
+In the following breakdown an attribute is marked with :x: if it can't be changed if that subject component is in use.
+Messages (aka translations aka text attributes) can generally be changed even if the subject is in use. Those attributes are indicated with a :heavy_check_mark: 
+* Subject (matched by code)
+    * :x: code
+    * :heavy_check_mark: name
+    * Subject Assessment Type (matched by code)
+        * :x: target report flag
+        * :x: printed report flag
+        * :heavy_check_mark: name
+        * :heavy_check_mark: long-name
+        * Scoring
+            * :x: min/max score
+            * :x: performance level count
+            * :x: performance level cutoff
+            * :heavy_check_mark: name
+            * Performance Level
+                * :heavy_check_mark: name
+                * :heavy_check_mark: short-name, suffix
+                * :heavy_check_mark: color
+    * Depth of Knowledge (matched by level)
+        * :x: reference URI
+        * :heavy_check_mark: name
+    * Item Difficulty (matched by gradeCode)
+        * :x: moderate/high LowEnd
+    * (Organizational) Claim
+        * :heavy_check_mark: name
+        * :heavy_check_mark: icon
+        * :heavy_check_mark: description
+        * Target
+            * :heavy_check_mark: name
+            * :heavy_check_mark: description
+    * Standard 
+        * :heavy_check_mark: description
+    * Report Grades
+        * :heavy_check_mark: all text                       
+
 #### Assessment Packages
 
 The assessment packages define the tests that are administered to the students. They include performance parameters which enable the student results to be appropriately interpreted.
@@ -269,7 +307,7 @@ SELECT LAST_INSERT_ID() into @importid;
 
 UPDATE student_group sg
   JOIN school s ON sg.school_id = s.id
-SET sg.deleted=1, sg.updated=@importid
+SET sg.deleted=1, sg.update_import_id=@importid
 WHERE sg.school_year=2018 AND s.district_id IN (1,3);
 
 UPDATE import SET status=1 WHERE id=@importid;

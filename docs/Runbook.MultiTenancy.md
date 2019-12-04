@@ -136,52 +136,115 @@ Unfortunately, at this time, creating the data sets is a manual process.
 The goal is to load the warehouse with all the required data, without 
 allowing the system to migrate the data. Then dump that data and stage 
 it in the data sets folder in S3. Probably the easiest environment to
-do this is a local development system.
+do this in is a local development system.
 
 For this example, we are creating a data set for Smarter Balanced 
 assessments for ELA and Math using the demo institutions and a state
 code of TS.
 
-* Data generation
+* Data collection and generation. The first step is collecting the subject 
+and assessment package definition files, creating an organization hierarchy,
+using those to generate test results, and gathering a few other required
+files.
     * Collect inputs for data generation
-        * subject definition files
-        * assessment package definition files
-        * institution hierarchy
-    * Use data generator to create TRTs. Your exact command will vary but something like:
-    ```
-    --gen_iab --gen_ica --gen_sum --gen_item --out_dir out.sb-dataset --xml_out --subject_source ./in/sb-dataset/*_subject.xml --pkg_source ./in/sb-dataset/201*.csv --hier_source ./in/sb-dataset/demo.csv
-    ```
-    * spot check the TRTs
-* Configure RDW services. This assumes you are pointing to a configuration with tenant-TS defined.
-    * Reset the schema using RDW_Schema. Adjust school_year for generated data.
-    ```
-    RDW_Schema$ gradle -Pschema_prefix=ts_ cleanAll migrateAll
-    RDW_Schema$ echo "DELETE FROM ts_warehouse.school_year WHERE year IN (2015, 2016)" | mysql -u root ts_warehouse
-    RDW_Schema$ echo "INSERT INTO state_embargo (school_year, individual, aggregate, updated_by) VALUES (2019, 0, 0, 'dwtest@example.com')" | mysql -u root ts_warehouse
-    ```
-    * Run ingest services: modify RDW_Ingest docker-compose file, commenting out migrate-reporting and task-service:
-    ```
-    RDW_Ingest$ gradle clean buildImage
-    RDW_Ingest$ docker-compose up -d
-    ```
+        * [Subject definition files](./Runbook.SystemConfiguration.md#subjects). 
+        Use published files, e.g. [SBAC Math](../deploy/Math_subject.xml)
+        or generate new ones using the [subject definition workbook](../tools/SubjectDef.xlsm).
+        * [Assessment package definition files](./Runbook.SystemConfiguration.md#assessment-packages).
+        These must be authored by the test vendor. Please note the assessment
+        package school years, they are used by the data generator to select 
+        the years for the test results.
+        * Institution hierarchy. The data generator can be configured to create
+        a random set of districts and schools, or it can be passed a file
+        that defines specific institutions. To make the experience consistent
+        for users, it is probably best to use a file for the definitions. An
+        example file can be seen [here](https://github.com/SmarterApp/RDW_DataGenerator/blob/master/in/demo.csv). 
+    * Use the [data generator](https://github.com/SmarterApp/RDW_DataGenerator/tree/master) to create TRTs.
+    Your exact command will vary but something like this will produce TRTs 
+    organized by district and school in the `out.sb-dataset` folder:
+        ```
+        --gen_iab --gen_ica --gen_sum --gen_item --out_dir out.sb-dataset --xml_out --subject_source ./in.sb-dataset/*_subject.xml --pkg_source ./in.sb-dataset/20*.csv --hier_source ./in.sb-dataset/demo.csv
+        ```
+    * [Accommodations file](./Runbook.SystemConfiguration.md#accommodations)
+    This is not needed for data generation but will be needed when loading data.
+    You should get a version for the school year that matches the first school
+    year in the generated data. You may have different versions for different
+    years if you'd like to demonstrate that feature.
+* Set up to run RDW schema and ingest. It is beyond the scope of this document
+to describe how to install tools, pull down code, build the app, etc. However,
+some useful commands and hints will be included.
+* Configure RDW services. 
+    * These instructions assume you are pointing to a configuration with tenant-TS defined.
+    If that is not the case, please [create tenant-TS](#manual-tenant-creation) or
+    modify these instructions to match the available tenant. 
+    *NOTE: these instructions assume a schema **prefix** of "ts_" while the
+    system generally prefers a schema **suffix** of "_ts". This is because the
+    local dev environment uses the prefix. Please adjust for your configuration.*
+    * Reset the schema using RDW_Schema. 
+        ```
+        # pull down Schema project if necessary
+        $ git clone https://github.com/SmarterApp/RDW_Schema.git .
+        $ cd RDW_Schema
+        RDW_Schema$ git checkout master; git pull
+    
+        # reset the schema for ts_warehouse, ts_reporting
+        RDW_Schema$ gradle -Pschema_prefix=ts_ cleanAll migrateAll
+        ```
+    * Adjust school_year based on the generated data. Using the known school years
+    from the assessment packages, load the school_year table. Also release
+    all results for the current school year by clearing the state embargo flag.
+        ```
+        RDW_Schema$ echo "DELETE FROM ts_warehouse.school_year" | mysql -u root ts_warehouse
+        RDW_Schema$ echo "INSERT INTO ts_warehouse.school_year VALUES (2018), (2019), (2020)" | mysql -u root ts_warehouse
+        RDW_Schema$ echo "INSERT INTO state_embargo (school_year, individual, aggregate, updated_by) VALUES (2020, 0, 0, 'dwtest@example.com')" | mysql -u root ts_warehouse
+        ```
+    * Run ingest services.  
+        ```
+        # pull down Ingest project
+        $ git clone https://github.com/SmarterApp/RDW_Ingest.git .
+        $ cd RDW_Ingest
+        RDW_Ingest$ git checkout master; git pull
+        
+        # you may build the images locally if you'd like
+        # (if you don't do this, it should pull the images from DockerHub)
+        RDW_Ingest$ ./gradlew clean buildImage -DskipTests
+        
+        # modify the docker-compose.yml file, commenting out migrate-reporting and task-service 
+        
+        # run the services    
+        RDW_Ingest$ docker-compose up -d
+        ```
+    NOTE: the above instructions leave out a **lot** of detail. Please refer
+    to the developer documentation on how to configure the services to run
+    locally.
 * Load data (the usual data load process using curl or Postman and data generator submit scripts). 
+Data includes: subject definitions, accommodations, assessment packages, institutions, TRTs
 Be sure to use credentials for the `TS` tenant.
-    * subject definitions
-    * accommodations
-    * assessment packages
-    * institutions
-    * TRTs
+Monitor the package-processor and exam-processor logs to make sure stuff is working.
 ```
+# monitor package-processor logs (need a separate console)
+docker logs -f rdw_ingest_package-processor_1
+
+# set the access_token (this is a stub token that works in local developer deployments)
 export ACCESS_TOKEN="sbac;dwtest@example.com;|TS|ASMTDATALOAD|STATE|SBAC||||TS||||||||||"
-curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@ELA_subject.xml http://localhost:8080/subjects/imports
-curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@Math_subject.xml http://localhost:8080/subjects/imports
+
+# import all subject files
+for f in *_subject.xml; do curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@$f http://localhost:8080/subjects/imports; done
+
+# import all package files
+for f in 20*.csv; do curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@$f http://localhost:8080/packages/imports; done
+
+# import the accessibility file(s) and organization file
+curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@AccessibilityConfig.2018.xml http://localhost:8080/accommodations/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@AccessibilityConfig.2019.xml http://localhost:8080/accommodations/imports
-curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@2017v3.csv http://localhost:8080/packages/imports
-... repeat for all assessment packages or do something like
-for f in 201*.csv; do curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@$f http://localhost:8080/packages/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@organizations.json http://localhost:8080/organizations/imports
+
+# adjust submit_helper script, setting HOST and ACCESS_TOKEN appropriately
+# the script can be found at https://github.com/SmarterApp/RDW_DataGenerator/blob/master/scripts/submit_helper.sh
+
 # use submit_helper to submit TRTs (tweak ACCESS_TOKEN in script)
-find ./out/*/*/* -type d | xargs -I FOLDER -P 3 ./scripts/submit_helper_ts.sh FOLDER
+# (might want to monitor the exam-processor log for this bit)
+find ./out/*/*/* -type d | xargs -I FOLDER -P 3 submit_helper.sh FOLDER
 ```    
 * Create groups. This is tricky. We want a group per school per grade per subject.
 We can use the session id from the data generator to group students, and
@@ -197,12 +260,12 @@ CREATE TEMPORARY TABLE school_grade_session
 (tmpid INTEGER NOT NULL AUTO_INCREMENT, PRIMARY KEY (tmpid), INDEX(tmpid), UNIQUE (school_id, grade_id, subject_id))
 IGNORE SELECT e.school_id, e.grade_id, a.subject_id, LEFT(e.session_id, 3) AS session, count(*) AS cnt
  FROM exam e JOIN asmt a ON e.asmt_id = a.id
- WHERE e.school_year=2019 AND a.type_id=3
+ WHERE e.school_year=2020 AND a.type_id=3
  GROUP BY e.school_id, e.grade_id, a.subject_id, LEFT(e.session_id,3)
  HAVING cnt > 20 and cnt < 50;
 
 INSERT INTO student_group (id, name, school_id, school_year, subject_id, active, creator, import_id, update_import_id)
-SELECT tmpid, CONCAT_WS(' ', sc.name, 'Grade', TRIM(LEADING '0' FROM g.code), su.code) as name, school_id, 2019 as school_year, subject_id, 1 as active, 'dwtest@example.com' as creator, @importid as import_id, @importid as update_import_id
+SELECT tmpid, CONCAT_WS(' ', sc.name, 'Grade', TRIM(LEADING '0' FROM g.code), su.code) as name, school_id, 2020 as school_year, subject_id, 1 as active, 'dwtest@example.com' as creator, @importid as import_id, @importid as update_import_id
 FROM school_grade_session sgs
 JOIN school sc ON sgs.school_id = sc.id
 JOIN grade g ON sgs.grade_id = g.id
@@ -211,7 +274,7 @@ JOIN subject su ON sgs.subject_id = su.id;
 INSERT IGNORE INTO student_group_membership (student_group_id, student_id)
 SELECT tmpid as student_group_id, e.student_id
 FROM school_grade_session sgs
-JOIN exam e ON sgs.school_id = e.school_id AND sgs.grade_id = e.grade_id AND e.school_year = 2019 AND LEFT(e.session_id, 3) = sgs.session
+JOIN exam e ON sgs.school_id = e.school_id AND sgs.grade_id = e.grade_id AND e.school_year = 2020 AND LEFT(e.session_id, 3) = sgs.session
 JOIN asmt a ON e.asmt_id = a.id AND a.type_id = 3 AND sgs.subject_id = a.subject_id;
 
 UPDATE import SET status=1 WHERE id=@importid;
@@ -233,7 +296,7 @@ find *.txt > manifest.txt
 ```
 Generated by mlaffoon, 2019-08-16
 
-ELA, Math: IAB, ICA, SUM for 2016-17, 2017-18, 2018-19
+ELA, Math: IAB, ICA, SUM for 2017-18, 2018-19, 2019-20
 Latin: SUM for 2017-18
 TS state, demo schools
 About 30,000 test results
@@ -437,3 +500,45 @@ kubectl exec -it configuration-deployment-<k8s-id> -- curl -d 'path=*' http://lo
 ```
 It takes 20-30 seconds for the change to be loaded and propagated to the services.
 
+### Moving A Single Tenant to a Multi-tenant Instance
+
+Moving a tenant from an instance running a single tenant to a multi-tenant instance is primarily a backup and restore operation.
+
+*Configuration*
+
+* Create a new tenant on the target multi-tenant instance that matches the configuration of the old instance with the tenant administration tool.
+  * The result of this process will be:
+    - Empty Databases
+    - yml configuration
+    - localization files
+
+This is the best opportunity to verify the configuration matches the existing configuration.  The configuration should be double checked for accuracy. 
+
+Take note of the database names as they will be required for the backup and restore process.
+
+*Data*
+
+* Disable the following services 
+  * Migrate Service(s)
+  * Task Service
+  * Import Service 
+* [Backup and restore](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html)  the warehouse database from the single tenant instance to the new mulit-tenant instance.
+* Manually clean the `reporting` and `migrate_olap database` `migrate` tables.
+``` SQL
+--  reporting for tenant TS
+TRUNCATE TABLE reporting_ts.migrate;
+--  migrate_olap for tenant TS
+TRUNCATE TABLE migrate_olap_ts.migrate;
+```
+* Run the migrations.  The reporting migration will occur every minute, but it is probably desireable to trigger the olap migration right away
+```bash
+kubectl exec -it migrate-olap-... -- curl -X POST http://localhost:8008/migrate?tenantId=TS
+```
+* Test and validate
+
+If the newly restored tenant looks correct, traffic can be redirected to this new instance and the old instance can be decommissioned.
+
+* Re-enable services
+  * Migrate Service(s)
+  * Task Service
+  * Import Service 

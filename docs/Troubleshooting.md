@@ -220,6 +220,7 @@ $ kubectl exec -it migrate-reporting[k8s-randomization] -- curl -X POST http://l
 true
 ```
 
+<a name="restart-migrate"></a>
 ##### Restart Migrations
 The migrate reporting service will disable itself if there is an error during processing. You can see this by getting the status (see above) which will contain `"lifecycle": "running,disabled"`. Once the cause of the problem has been resolved the service can be enabled by adjusting the status of the most recent migrate task in the reporting database. Connect with your favorite SQL client using a write-enabled account and change the status to `-10` setting a message to explain. Note: if the status of the most recent migrate entry is not `10` or `-20` there is something else wrong, please contact a system administrator to help.
 
@@ -263,6 +264,22 @@ It is important to resolve the underlying problem before you [Restart Migrations
 
 ###### Zombie Migrate
 A migrate job may not complete. Although this should not happen during normal operation, if the status of the most recent migrate remains at `10` for a long time, it may be a zombie. You may be able to glean some information by looking at the batch table as with [Failed Migrate](#failed-migrate). It is safe to simply abandon the migrate record and [Restart Migrations](#restart-migrations).
+
+###### Migrate Failures Related to Tenant/Sandbox Changes
+There is a known issue that can occur during creation or changing sandboxes and tenants that will cause migrations to fail and become disabled.
+
+An error in either of the migrate services that looks similar to this will be indicative of this problem.
+
+```
+java.lang.IllegalStateException: No value for key [org.opentestsystem.rdw.multitenant.datasource.TenantDynamicRoutingDataSource@<arbitrary id>] bound to thread
+```
+
+The remediation for this error is the following steps
+
+ - Wait until all Tenant and Sandbox changes are complete
+ - Restart the Kubernetes pod that has failed 
+ - Enable the disabled migration 
+ - Restart the migration a migration run
 
 
 <a name="reconciliation-report"></a>

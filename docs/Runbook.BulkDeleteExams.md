@@ -83,7 +83,7 @@ mysql> UPDATE setting SET value = 'FALSE' WHERE name = 'AUDIT_TRIGGER_ENABLE';
     SELECT e.id FROM exam e JOIN school s ON s.id = e.school_id JOIN district d ON d.id = s.district_id WHERE d.natural_id = "district_id here ";
     ```
 
-5. Open SQL script for bulk delete exams ([RDW_Schema](https://github.com/SmarterApp/RDW_Schema) as `warehouse/sql/bulk_delete_exam.sql`) and replace the placeholder in STEP 1 with the copied query.
+5. Open SQL script for bulk delete exams ([RDW_Schema](https://github.com/SmarterApp/RDW_Schema) as `/migrations/warehouse/sql/bulk_delete_exam.sql `) and replace the placeholder in STEP 1 with the copied query.
 Continue with the steps in the SQL file.
 6. Verify that the migrate processes are running and wait for them to complete.
 

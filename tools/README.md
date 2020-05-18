@@ -18,6 +18,20 @@ Once complete, press the XML button to copy the generated XML to the clipboard. 
     * `Select locked cells`
     * `Select unlocked cells`
     * `Format rows` - so the macro can show/hide rows
+* In some of the worksheets, rows are conditionally hidden until specific data is
+entered into the visible cells. To edit these rows in development, first unhide them
+by selecting the rows above and below the hidden rows, right-clicking, and selecting
+`Unhide` from the context menu. After making edits, remember to hide the rows that
+were previously hidden.
+* The palette of colors is defined in the Reference worksheet. The names of these
+colors are used on several of the other worksheets to define drop down selectors.
+The range for these color names is defined by a named range `colorlist` in the
+Reference worksheet. If colors are added (or removed), this range needs to be
+updated. Select `Formula` from the Excel Ribbon, and then select `Define Name`.
+Select `colorlist` and adjust the range as needed. Note: only the Reference
+worksheet needs to be unprotected for this operation. The worksheets that use the
+range can remain protected.
+![Range Edit Dialog](images/colorlist_range_edit.png)
 * Changes to the template workbook may need to be repeated in copies.
 * Things to work on:
     * Improve instructions.

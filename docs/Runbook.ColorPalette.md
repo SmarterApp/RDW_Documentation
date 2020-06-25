@@ -185,7 +185,7 @@ to the project.
 ### How to Add, Remove, or Rename Colors
 
 Adding or removing colors or modifying their names requires some extra steps beyond those needed
-for modifying color codes of existing colors. It is import to ote that renaming or removing colors 
+for modifying color codes of existing colors. It is important to note that renaming or removing colors 
 is a dangerous operation. Some of the existing colors are used directly by the RDW UI and any of them
 may be used in existing subject definitions. Care must be taken not to modify or delete a color name
 that has an existing reference.
@@ -237,13 +237,13 @@ and push out the changes.
 #### Changes to the XSD Schema
 The `RDW_Subject.xsd` file defines the colors that can be used in subject definitions. It contains
 the color names, so it does not need to change when only the color codes are changed. However, when
-colors are renamed, added, or removed, then the xsd schema must be updated to refect this.
+colors are renamed, added, or removed, then the xsd schema must be updated to reflect this.
 
 The file is located in [RDW_Common](https://github.com/SmarterApp/RDW_Common) at
 `./model/src/main/resources/RDW_Subject.xsd`. 
 
 Locate the color enumerations in this file and make the necessary adjustments. In the example of
-adding an `orange-bright` defintion, edit the enumeration:
+adding an `orange-bright` definition, edit the enumeration:
 ```xml
 <xs:simpleType name="Color">
   <xs:restriction base="xs:string">

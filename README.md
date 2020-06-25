@@ -20,11 +20,11 @@ RDW is a suite of applications with lots of moving parts. These documents provid
 ## Project Repositories
 RDW is separated into multiple project repositories. Each repo has documentation for building and testing.
 
-* [Ingest](https://github.com/SmarterApp/RDW_Ingest) is the primary data store for the system and is responsible for accepting and processing most data coming into the system.
-* [Reporting](https://github.com/SmarterApp/RDW_Reporting) is the UI (and supporting stack) for end-users to view test results.
-* [Common](https://github.com/SmarterApp/RDW_Common) is a collection of modules shared by multiple projects.
-* [Schema](https://github.com/SmarterApp/RDW_Schema) has scripts for creating the various database schemas.
-
+* [RDW_Ingest](https://github.com/SmarterApp/RDW_Ingest) is the primary data store for the system and is responsible for accepting and processing most data coming into the system.
+* [RDW_Reporting](https://github.com/SmarterApp/RDW_Reporting) is the UI (and supporting stack) for end-users to view test results.
+* [RDW_Common](https://github.com/SmarterApp/RDW_Common) is a collection of modules shared by multiple projects.
+* [RDW_Schema](https://github.com/SmarterApp/RDW_Schema) has scripts for creating the various database schemas.
+* [SBAC-Global-UI-Kit](https://github.com/SmarterApp/SBAC-Global-UI-Kit) has common UI styles used by Smarter Balanced applications.
 
 ## License
 RDW is owned by Smarter Balanced and covered by the Educational Community License:

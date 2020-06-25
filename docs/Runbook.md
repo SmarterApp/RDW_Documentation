@@ -318,7 +318,7 @@ The results will be grouped by several criteria: State, School Year, District, S
 allow permissioned users to change the status of a single group or multiple groups simultaneously.
 
 Only users with special Test Results Availability Write permissions will be able to access the
-Manage Test Results Availablity UI. This is expected to include District and State Admins and 
+Manage Test Results Availability UI. This is expected to include District and State Admins and 
 DevOps users. Only DevOps users will have the ability to move test results from LOADING to REVIEWING
 or REVIEWING back to LOADING, and they will also be the only users able to view audit reports of previous status
 changes. District and State Admins, as well as DevOps, will be able to change results from REVIEWING

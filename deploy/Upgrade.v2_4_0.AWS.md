@@ -35,7 +35,6 @@ The goal of this step is to make changes to everything that doesn't directly aff
     git clone https://github.com/SmarterApp/RDW.git
     ```
 * [ ] Branch the deployment and configuration repositories. All changes to these files will be made in the branch which can be quickly merged during the upgrade.
-TODO - will there be configuration changes?
     ```bash
     cd ~
     git clone https://github.com/SmarterApp/RDW_Deploy_Opus.git
@@ -59,8 +58,10 @@ TODO - will there be configuration changes?
     ```
 * [ ] (Optional) It is a good idea to go through the rest of this document, updating the configuration, credentials, etc. to match the environment. If you don't you'll just have to do it as you go along and there will be an extra commit to do when merging the deploy branch.    
 * [ ] Changes to deployment files in `RDW_Deploy_Opus`. There are sample deployment files in the `deploy` folder in the `RDW` repository; use those to copy and help guide edits.
-TODO - will there be any changes to deployment files?
-    * Make changes
+    * Update `deployment` definitions for all deployments
+        * `apiVersion: apps/v1`
+        * add `spec.selector.matchLabels` to match the label in `spec.template.metadata.labels`
+    * Change image versions to 2.4.0-RELEASE
     * Commit changes
         ```bash
         cd ../RDW_Deploy_Opus
@@ -79,7 +80,14 @@ TODO - will there be any changes to configuration files?
         git push
         ```
 * [ ] Add new roles and permissions for the Reporting component in the permissions application.
-TODO - new roles, permissions
+    * There are four new permissions to add:
+        * TEST_DATA_LOADING_READ
+        * TEST_DATA_LOADING_WRITE
+        * TEST_DATA_REVIEWING_READ
+        * TEST_DATA_REVIEWING_WRITE
+    * The two reviewing permissions should be granted to the roles EMBARGO_ADMIN, SandboxDistrictAdmin
+    * A new role should be created, DevOps, assignable at CLIENT level, and granted all four new permissions.
+        * Consider adding other dev ops permissions: PIPELINE_READ/WRITE, TENANT_READ/WRITE
 * [ ] (Optional) "Before" Smoke Test. You may want to go through some of the steps of the smoke test before doing the
 upgrade, just to make sure any problems are new. This may require temporarily providing access for your QA volunteers.
 
@@ -131,19 +139,19 @@ tenant and sandbox. The following instructions use two fake tenants, OT and TS, 
     cd ../RDW_Schema
     git checkout master; git pull
 
-    # test credentials and state of OLAP databases
+    # test credentials and state of databases
     for s in _OT _TS _OT_S001; do ./gradlew -Pschema_suffix=$s \
       -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password \
       -Predshift_url=jdbc:redshift://rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus -Predshift_user=root -Predshift_password=password \
-      infoMigrate_olap infoReporting_olap; done
+      infoReporting infoWarehouse infoMigrate_olap infoReporting_olap; done
     ```
-    * Continue, clearing the OLAP data.
+    * Continue, migrate reporting and warehouse, and clear the OLAP data.
         * Reporting OLAP.
         ```bash
         for s in _OT _TS _OT_S001; do ./gradlew -Pschema_suffix=$s \
           -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password \
           -Predshift_url=jdbc:redshift://rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus -Predshift_user=root -Predshift_password=password \
-          cleanMigrate_olap cleanReporting_olap migrateMigrate_olap migrateReporting_olap
+          migrateReporting migrateWarehouse cleanMigrate_olap cleanReporting_olap migrateMigrate_olap migrateReporting_olap
         ```
     * After migrating the reporting olap database you'll need to re-grant permissions because there are some new tables.
     You'll need to verify the user names by inspecting the configuration repo for each tenant and sandbox.
@@ -155,3 +163,73 @@ tenant and sandbox. The following instructions use two fake tenants, OT and TS, 
     ```
 
 TODO - the rest of this document (copy from V2_0_0 and edit)
+
+TODO - update ELA subject XML to include trait definitions, name/description messages; reload
+TODO - datasets must be regenerated or migrated. Instructions to regenerate a dataset from an existing deployment
+
+
+
+
+
+Our permissions server UI was broken, so i made the changes directly to the permissions db:
+```mysql
+-- The goal is to create the new roles and permissions for RDW Phase 6.
+--
+-- All changes apply to only the Reporting component.
+--
+-- There are four new permissions for allowing changes to test data visibility.
+-- One each for read/write of loading/reviewing state. This will replace the
+-- existing EMBARGO_READ/WRITE permissions.
+--
+-- The existing EMBARGO_ADMIN role can be granted at State or District level.
+-- It should be granted the (two) read/write reviewing permissions.
+--
+-- The existing SandboxDistrictAdmin role can be granted at District level.
+-- It should be granted the (two) read/write reviewing permissions.
+--
+-- There is a new role, DevOps. It should be at Client level only.
+-- It should be granted all four new permissions.
+
+SELECT r.name as Role, p.name as Permission FROM permission_role pr
+    LEFT JOIN role r on pr._fk_rid = r._id
+    JOIN permission p on pr._fk_pid = p._id
+    JOIN component c on pr._fk_cid = c._id
+WHERE c.name = 'Reporting'
+ORDER BY r._id, p._id;
+
+SELECT _id FROM component WHERE name = 'Reporting';
+-- 15
+SELECT _id FROM role WHERE name = 'EMBARGO_ADMIN';
+-- 39
+SELECT _id FROM role WHERE name = 'SandboxDistrictAdmin';
+-- 2000010
+SELECT _id FROM entitytype WHERE name = 'Client';
+-- 1
+
+
+INSERT INTO permission (_id, name) VALUES
+ (100, 'TEST_DATA_LOADING_WRITE'),
+ (101, 'TEST_DATA_LOADING_READ'),
+ (102, 'TEST_DATA_REVIEWING_WRITE'),
+ (103, 'TEST_DATA_REVIEWING_READ');
+
+INSERT INTO role (_id, name) VALUES
+  (100, 'DevOps');
+
+INSERT INTO role_entity (_fk_rid, _fk_etuk) VALUES
+  (100, 'CLIENT');
+
+INSERT INTO permission_role (_fk_cid, _fk_rid, _fk_pid) VALUES
+  (15, 100, 100),
+  (15, 100, 101),
+  (15, 100, 102),
+  (15, 100, 103),
+  (15, 100, 2000006),
+  (15, 100, 2000007),
+  (15, 100, 2000008),
+  (15, 100, 2000009),
+  (15, 39, 102),
+  (15, 39, 103),
+  (15, 2000010, 102),
+  (15, 2000010, 103);
+```

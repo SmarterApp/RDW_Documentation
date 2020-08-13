@@ -491,6 +491,9 @@ A hint for generating all the `LOAD DATA` commands (not quite right since the ta
 ```bash
 cat manifest.txt | xargs -n 1 -I FILE echo "LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/FILE' INTO TABLE warehouse_ts_s001.FILE"
 ```
+* And, just a reminder, to login to a sandbox tweak the base URL:
+    * To select any sandbox, append `/sandbox-login`
+    * To restrict to a particular sandbox, append `/sandbox-login?sandbox=<sandbox-key>`
 
 ### Manual Configuration Change
 

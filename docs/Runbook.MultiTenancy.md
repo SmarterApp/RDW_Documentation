@@ -521,12 +521,18 @@ Take note of the database names as they will be required for the backup and rest
 
 *Data*
 
-* Disable the following services 
+* Run an olap migration first on the source instance, example:
+`kubectl exec -it migrate-olap-... -- curl -X POST http://localhost:8008/migrate?tenantId=TS`
+
+* Disable the following services on the source and target instance
   * Migrate Service(s)
   * Task Service
   * Import Service 
 * [Backup and restore](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html)  the warehouse database from the single tenant instance to the new mulit-tenant instance.
-* Manually clean the `reporting` and `migrate_olap database` `migrate` tables.
+* Backup the source instance using the -R flag to backup store procedures:
+`mysqldump -R warehouse > warehouse_nv`
+
+* Manually clean the `reporting` and `migrate_olap database` `migrate` tables on the target instance:
 ``` SQL
 --  reporting for tenant TS
 TRUNCATE TABLE reporting_ts.migrate;

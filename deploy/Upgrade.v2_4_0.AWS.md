@@ -233,3 +233,24 @@ INSERT INTO permission_role (_fk_cid, _fk_rid, _fk_pid) VALUES
   (15, 2000010, 102),
   (15, 2000010, 103);
 ```
+
+
+### Migrate Scripts Notes
+* TODO - clean these up based on experience upgrading staging/production environments
+
+* Dev issue with warehouse/sql/V2_4_0_3__wer_purpose.sql
+Not sure why, since i don't see any modification history, but i did see this:
+```
+Execution failed for task ':migrateWarehouse'.
+> Error occurred while executing migrateWarehouse
+  Validate failed: Migration checksum mismatch for migration version 2.4.0.3
+  -> Applied to database : 707681325
+  -> Resolved locally    : -1187190027
+```
+
+* warehouse/sql/V2_4_0_4__test_results_availability.sql
+This script had to be modified well after the initial checkin. Check the schema_version
+table: if the script was successful, you'll need to update the checksum. If the script
+was not successful, then delete that row in the schema_version. 
+The original checksum was `-385633165`.
+The updated checksum is `-1901338595`.

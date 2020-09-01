@@ -4,12 +4,12 @@
 
 It is assume that the official deployment and upgrade instructions were used for the current installation. Please refer to that documentation for general guidelines.
 
-> Although these are generic instructions, having an example makes it easier to document and understand. Throughout this document we'll use `opus` as the sample environment name; this might correspond to `staging` or `production` in the real world. We'll use `sbac.org` as the domain/organization. Any other ids, usernames or other system-generated values are products of the author's imagination. The reader is strongly encouraged to use their own consistent naming conventions. **Avoid putting real environment-specific details _especially secrets and sensitive information_ in this document.**
+> Although these are generic instructions, having an example makes it easier to document and understand. Throughout this document we'll use `opus` as the sample environment name; this might correspond to `staging` or `production` in the real world. We'll use `sbac.org` as the domain/organization. Any other ids, usernames or other system-generated values are products of the author's imagination. The reader is strongly encouraged to use their own consistent naming conventions. 
+> **Avoid putting real environment-specific details _especially secrets and sensitive information_ in this document.**
 
 ### Overview
 
 This is an upgrade to RDW that requires some database modification.
-Because the OLAP database must be completely remigrated there will be significant downtime. 
 
 The high level steps for the upgrade include:
 * [Notification](#notification)
@@ -58,7 +58,7 @@ The goal of this step is to make changes to everything that doesn't directly aff
     ```
 * [ ] (Optional) It is a good idea to go through the rest of this document, updating the configuration, credentials, etc. to match the environment. If you don't you'll just have to do it as you go along and there will be an extra commit to do when merging the deploy branch.    
 * [ ] Changes to deployment files in `RDW_Deploy_Opus`. There are sample deployment files in the `deploy` folder in the `RDW` repository; use those to copy and help guide edits.
-    * Update `deployment` definitions for all deployments
+    * The vendor upgraded Kubernetes during this upgrade and so had to update `deployment` definitions for all deployments.
         * `apiVersion: apps/v1`
         * add `spec.selector.matchLabels` to match the label in `spec.template.metadata.labels`
     * Change image versions to 2.4.0-RELEASE
@@ -69,9 +69,8 @@ The goal of this step is to make changes to everything that doesn't directly aff
         git commit -am "Changes for v2.4.0"
         git push 
         ```
-* [ ] There are extensive configuration changes required. Generally this will affect database, archive, ... properties. No new information is needed, it will just be moved around.
-TODO - will there be any changes to configuration files?
-    * Make changes
+* [ ] There are minimal configuration changes for this upgrade.
+    * TODO - make changes; not sure if there are any required configuration changes?
     * Commit changes
         ```bash
         cd ../RDW_Config_Opus
@@ -80,14 +79,24 @@ TODO - will there be any changes to configuration files?
         git push
         ```
 * [ ] Add new roles and permissions for the Reporting component in the permissions application.
-    * There are four new permissions to add:
+    * There are new permissions to add:
         * TEST_DATA_LOADING_READ
         * TEST_DATA_LOADING_WRITE
         * TEST_DATA_REVIEWING_READ
         * TEST_DATA_REVIEWING_WRITE
-    * The two reviewing permissions should be granted to the roles EMBARGO_ADMIN, SandboxDistrictAdmin
-    * A new role should be created, DevOps, assignable at CLIENT level, and granted all four new permissions.
-        * Consider adding other dev ops permissions: PIPELINE_READ/WRITE, TENANT_READ/WRITE
+        * REPORT_TEMPLATE_WRITE
+    * The existing roles EMBARGO_ADMIN, SandboxDistrictAdmin should be granted:
+        * TEST_DATA_REVIEWING_READ
+        * TEST_DATA_REVIEWING_WRITE
+    * A new role, DevOps, should be created, assignable at CLIENT level, and granted:
+        * TEST_DATA_LOADING_READ
+        * TEST_DATA_LOADING_WRITE
+        * TEST_DATA_REVIEWING_READ
+        * TEST_DATA_REVIEWING_WRITE
+        * REPORT_TEMPLATE_WRITE
+        * (Optional) PIPELINE_READ/WRITE, TENANT_READ/WRITE
+    * A new role, ISR_TEMPLATE_ADMIN, should be created, assignable at the CLIENT and STATE level, and granted:    
+        * REPORT_TEMPLATE_WRITE
 * [ ] (Optional) "Before" Smoke Test. You may want to go through some of the steps of the smoke test before doing the
 upgrade, just to make sure any problems are new. This may require temporarily providing access for your QA volunteers.
 
@@ -130,9 +139,9 @@ All cluster deployment and configuration is stored in version control, so nothin
 ### Upgrade
 
 * [ ] Gentle reminder to start `screen` on the ops machine so steps may be run in parallel.
-* [ ] Apply schema changes. This update requires the OLAP database to be rebuilt which is most easily accomplished 
-by clearing the data and re-migrating it. In a multi-tenant installation, the schema changes must be applied for every
-tenant and sandbox. The following instructions use two fake tenants, OT and TS, and one sandbox, OT_S001 to demonstrate.
+* [ ] Apply schema changes. In a multi-tenant installation, the schema changes must be applied for every
+tenant and sandbox. The following instructions use two fake tenants, OT and TS, and one sandbox, OT_S001 
+to demonstrate.
     * Get the latest version of the schema and check the state of the databases.
     ```bash
     # get latest version of the schema
@@ -151,7 +160,7 @@ tenant and sandbox. The following instructions use two fake tenants, OT and TS, 
         for s in _OT _TS _OT_S001; do ./gradlew -Pschema_suffix=$s \
           -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password \
           -Predshift_url=jdbc:redshift://rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus -Predshift_user=root -Predshift_password=password \
-          migrateReporting migrateWarehouse cleanMigrate_olap cleanReporting_olap migrateMigrate_olap migrateReporting_olap
+          migrateReporting migrateWarehouse migrateMigrate_olap migrateReporting_olap
         ```
     * After migrating the reporting olap database you'll need to re-grant permissions because there are some new tables.
     You'll need to verify the user names by inspecting the configuration repo for each tenant and sandbox.
@@ -161,16 +170,68 @@ tenant and sandbox. The following instructions use two fake tenants, OT and TS, 
     GRANT ALL ON ALL TABLES IN SCHEMA reporting_ts TO rdw_ts;
     GRANT ALL ON ALL TABLES IN SCHEMA reporting_ot_s001 TO ots001;
     ```
+* [ ] Wipe embargo tables?
+    * TODO - this may have been handled by the flyway migration scripts, not sure yet.
+* [ ] Redeploy ingest services but not the migrate services just yet.
+    ```bash
+    kubectl apply -f package-processor-service.yml
+    kubectl apply -f exam-processor-service.yml
+    kubectl apply -f group-processor-service.yml
+    kubectl apply -f import-service.yml
+    ```
+* [ ] Reload the ELA subject file. This is necessary because it has additional metadata that needs to be ingested and migrated. The updated subject file can be found in this deploy folder.
+    ```bash
+    export ACCESS_TOKEN=`curl -s -X POST --data 'grant_type=password&username=rdw-ingest-opus@sbac.org&password=password&client_id=rdw&client_secret=password' 'https://sso.sbac.org/auth/oauth2/access_token?realm=/sbac' | jq -r '.access_token'`
+    curl -X POST --header "Authorization: Bearer ${ACCESS_TOKEN}" -F file=@ELA_subject.xml https://import.sbac.org/subjects/imports
+    ```    
+* [ ] Redeploy the remaining ingest services.
+    ```bash
+    kubectl apply -f migrate-reporting-service.yml
+    kubectl apply -f migrate-olap-service.yml
+    kubectl apply -f task-service.yml
+    ```
+    The migrate services will take a little time to migrate the subject updates.
+* [ ] Redeploy reporting services.
+    ```bash
+    cd ~/RDW_Deploy_Opus
+    # reporting services
+    kubectl apply -f aggregate-service.yml
+    kubectl apply -f reporting-service.yml
+    kubectl apply -f report-processor-service.yml
+    kubectl apply -f admin-service.yml
+    kubectl apply -f reporting-webapp.yml
+   ```
+Check the logs of the services.
+* [ ] (Optional) Run data validation scripts. Once the data migration is complete (you can see this by monitoring the
+log for the migrate-reporting and migrate-olap service), you may re-run the validation scripts.
+    ```bash
+    cd ../RDW_Schema
+    git checkout master; git pull
+    cd validation
+    ./validate-migration.sh secrets/opus.sh reporting
+    ```
+* [ ] Miscellaneous cleanup
+    * [ ] Restore traffic to site (from static web page)
+    * [ ] Notify 3rd party to restore data feeds
+    * [ ] Reenable any ops monitoring
+    * [ ] Deploy new User Guide and Interpretive Guide
+* [ ] Dataset changes. All datasets must be regenerated or migrated.
+This can happen after the upgrade with the services running; any attempt to create a sandbox from an existing (old)
+dataset will fail until the dataset is regenerated.
+    * TODO - simplest is to regenerate datasets from existing (now migrated) deployments
+* [ ] Embargo settings. 
+    * TODO - depending on previous steps it may be necessary for DevOps to set embargo settings, not sure yet
 
-TODO - the rest of this document (copy from V2_0_0 and edit)
 
-TODO - update ELA subject XML to include trait definitions, name/description messages; reload
-TODO - datasets must be regenerated or migrated. Instructions to regenerate a dataset from an existing deployment
-
+### Smoke Test
+Smoke 'em if ya got 'em.         
 
 
 
 
+
+TODO - after making the additional permissions changes, update this section for:
+    * REPORT_TEMPLATE_WRITE
 Our permissions server UI was broken, so i made the changes directly to the permissions db:
 ```mysql
 -- The goal is to create the new roles and permissions for RDW Phase 6.
@@ -236,7 +297,8 @@ INSERT INTO permission_role (_fk_cid, _fk_rid, _fk_pid) VALUES
 
 
 ### Migrate Scripts Notes
-* TODO - clean these up based on experience upgrading staging/production environments
+* TODO - clean these up based on experience upgrading staging/production environments.
+My best guess is that this section will *not* apply to staging/production and can be deleted.
 
 * Dev issue with warehouse/sql/V2_4_0_3__wer_purpose.sql
 Not sure why, since i don't see any modification history, but i did see this:

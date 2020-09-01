@@ -301,7 +301,7 @@ Latin: SUM for 2017-18
 TS state, demo schools
 About 30,000 test results
 ```
-* Upload the files to S3, e.g. `s3://rdw-qa-archive/sandbox-datasets/sbac-dataset/warehouse`
+* Upload the files to S3, e.g. `s3://rdw-opus-archive/sandbox-datasets/sbac-dataset/warehouse`
 * Annotate the dataset in the admin service configuration file, e.g.
 ```
 # in rdw-reporting-admin-service.yml
@@ -310,6 +310,20 @@ sandbox-properties:
     - label: SB Dataset (ELA, Math, Latin)
       id: sb-dataset
 ```
+
+##### Sandbox ISR Templates
+
+A sandbox does not have access to all tenant-level admin functionality. Because of this, there 
+is no way to use the UI to install custom ISR templates. If there is need for custom ISR templates 
+in a sandbox, the templates must be installed manually. For example, if the sandbox dataset was 
+created with a subject other than Math or ELA, and that subject has ISR reports enabled, then 
+custom templates are probably desired (otherwise, and generated ISR's will use the default 
+"Under Construction" template).
+
+Templates are stored in the S3 bucket under a TEMPLATES subfolder, and are named using the subject
+code and assessment type. For example, working in the TS sandbox, to install a Latin template for 
+summative assessments, create the file s3://rdw-opus-archive/ts_s001/TEMPLATES/Latin_sum.html. 
+
 
 ### Manual Tenant Creation
 

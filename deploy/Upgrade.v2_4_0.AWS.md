@@ -219,8 +219,9 @@ log for the migrate-reporting and migrate-olap service), you may re-run the vali
 This can happen after the upgrade with the services running; any attempt to create a sandbox from an existing (old)
 dataset will fail until the dataset is regenerated.
     * TODO - simplest is to regenerate datasets from existing (now migrated) deployments
-* [ ] Embargo settings. 
-    * TODO - depending on previous steps it may be necessary for DevOps to set embargo settings, not sure yet
+* [ ] Embargo settings. The data migration scripts set all previous years results for all subjects to "Released", 
+and all current year results to "Loading". If that is not correct, a DevOps user should use the admin UI to set 
+the desired embargo settings.
 
 
 ### Smoke Test

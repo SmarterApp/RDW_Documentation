@@ -102,24 +102,6 @@
     <ItemDifficulty gradeCode="10" moderateLowEnd="-0.38186" difficultLowEnd="1.5479"/>
     <ItemDifficulty gradeCode="11" moderateLowEnd="-0.38186" difficultLowEnd="1.5479"/>
   </ItemDifficulties>
-  <Traits>
-    <!-- see Messages for purpose/category names, description and performance text -->
-    <Trait code="SOCK_ARGU_ORG" purpose="ARGU" category="ORG" maxScore="4" />
-    <Trait code="SOCK_ARGU_CON" purpose="ARGU" category="CON" maxScore="2" />
-    <Trait code="SOCK_ARGU_EVI" purpose="ARGU" category="EVI" maxScore="4" />
-    <Trait code="SOCK_EXPL_ORG" purpose="EXPL" category="ORG" maxScore="4" />
-    <Trait code="SOCK_EXPL_CON" purpose="EXPL" category="CON" maxScore="2" />
-    <Trait code="SOCK_EXPL_EVI" purpose="EXPL" category="EVI" maxScore="4" />
-    <Trait code="SOCK_INFO_ORG" purpose="INFO" category="ORG" maxScore="4" />
-    <Trait code="SOCK_INFO_CON" purpose="INFO" category="CON" maxScore="2" />
-    <Trait code="SOCK_INFO_EVI" purpose="INFO" category="EVI" maxScore="4" />
-    <Trait code="SOCK_NARR_ORG" purpose="NARR" category="ORG" maxScore="4" />
-    <Trait code="SOCK_NARR_CON" purpose="NARR" category="CON" maxScore="2" />
-    <Trait code="SOCK_NARR_EVI" purpose="NARR" category="EVI" maxScore="4" />
-    <Trait code="SOCK_OPIN_ORG" purpose="OPIN" category="ORG" maxScore="4" />
-    <Trait code="SOCK_OPIN_CON" purpose="OPIN" category="CON" maxScore="2" />
-    <Trait code="SOCK_OPIN_EVI" purpose="OPIN" category="EVI" maxScore="4" />
-  </Traits>
   <ReportGrades>
     <ReportGrade code="03">
       <ReportAssessmentTypes>
@@ -878,6 +860,24 @@
       </ReportAssessmentTypes>
     </ReportGrade>
   </ReportGrades>
+  <Traits>
+    <!-- see Messages for purpose/category names, description and performance text -->
+    <Trait code="SOCK_ARGU_ORG" purpose="ARGU" category="ORG" maxScore="4" />
+    <Trait code="SOCK_ARGU_CON" purpose="ARGU" category="CON" maxScore="2" />
+    <Trait code="SOCK_ARGU_EVI" purpose="ARGU" category="EVI" maxScore="4" />
+    <Trait code="SOCK_EXPL_ORG" purpose="EXPL" category="ORG" maxScore="4" />
+    <Trait code="SOCK_EXPL_CON" purpose="EXPL" category="CON" maxScore="2" />
+    <Trait code="SOCK_EXPL_EVI" purpose="EXPL" category="EVI" maxScore="4" />
+    <Trait code="SOCK_INFO_ORG" purpose="INFO" category="ORG" maxScore="4" />
+    <Trait code="SOCK_INFO_CON" purpose="INFO" category="CON" maxScore="2" />
+    <Trait code="SOCK_INFO_EVI" purpose="INFO" category="EVI" maxScore="4" />
+    <Trait code="SOCK_NARR_ORG" purpose="NARR" category="ORG" maxScore="4" />
+    <Trait code="SOCK_NARR_CON" purpose="NARR" category="CON" maxScore="2" />
+    <Trait code="SOCK_NARR_EVI" purpose="NARR" category="EVI" maxScore="4" />
+    <Trait code="SOCK_OPIN_ORG" purpose="OPIN" category="ORG" maxScore="4" />
+    <Trait code="SOCK_OPIN_CON" purpose="OPIN" category="CON" maxScore="2" />
+    <Trait code="SOCK_OPIN_EVI" purpose="OPIN" category="EVI" maxScore="4" />
+  </Traits>
   <Claims>
     <Claim code="SOCK_R" name="Reading" organizational="false" displayOrder="1">
       <Icon>fa-book</Icon>

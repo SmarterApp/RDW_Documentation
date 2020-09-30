@@ -4,4 +4,7 @@ userguide/~\$porting-system-user-guide\.docx
 
 userguide/~\$w-admin-guide\.docx
 
-tools/~$SubjectDef.xlsm
+tools/~\$*.xlsm
+
+.DS_Store
+

@@ -1,6 +1,6 @@
 ## Upgrade v2.4.0 <- v2.x.y
 
-**Intended Audience**: this document provides detailed instructions for upgrading the [Reporting Data Warehouse (RDW)](../README.md) applications in an AWS environment from v1.3.x to v2.0.0. Operations and system administrators will find it useful.
+**Intended Audience**: this document provides detailed instructions for upgrading the [Reporting Data Warehouse (RDW)](../README.md) applications in an AWS environment from v1.3.x to v2.4.0. Operations and system administrators will find it useful.
 
 It is assume that the official deployment and upgrade instructions were used for the current installation. Please refer to that documentation for general guidelines.
 
@@ -80,23 +80,22 @@ The goal of this step is to make changes to everything that doesn't directly aff
         ```
 * [ ] Add new roles and permissions for the Reporting component in the permissions application.
     * There are new permissions to add:
-        * TEST_DATA_LOADING_READ
-        * TEST_DATA_LOADING_WRITE
-        * TEST_DATA_REVIEWING_READ
-        * TEST_DATA_REVIEWING_WRITE
-        * REPORT_TEMPLATE_WRITE
-    * The existing roles EMBARGO_ADMIN, SandboxDistrictAdmin should be granted:
-        * TEST_DATA_REVIEWING_READ
-        * TEST_DATA_REVIEWING_WRITE
+        * ISR_TEMPLATE_READ
+        * ISR_TEMPLATE_WRITE
+    * A new role, ISR_TEMPLATE_ADMIN, should be created, assignable at STATE level, and granted:
+        * ISR_TEMPLATE_READ
+        * ISR_TEMPLATE_WRITE
+    * A new role, ISR_TEMPLATE_READONLY, should be created, assignable at STATE level, and granted:
+        * ISR_TEMPLATE_READ
+    * The existing role SandboxDistrictAdmin should be granted:
+        * ISR_TEMPLATE_READ
     * A new role, DevOps, should be created, assignable at CLIENT level, and granted:
-        * TEST_DATA_LOADING_READ
-        * TEST_DATA_LOADING_WRITE
-        * TEST_DATA_REVIEWING_READ
-        * TEST_DATA_REVIEWING_WRITE
-        * REPORT_TEMPLATE_WRITE
+        * EMBARGO_READ
+        * EMBARGO_WRITE
+        * ISR_TEMPLATE_READ
+        * ISR_TEMPLATE_WRITE
         * (Optional) PIPELINE_READ/WRITE, TENANT_READ/WRITE
-    * A new role, ISR_TEMPLATE_ADMIN, should be created, assignable at the CLIENT and STATE level, and granted:    
-        * REPORT_TEMPLATE_WRITE
+        
 * [ ] (Optional) "Before" Smoke Test. You may want to go through some of the steps of the smoke test before doing the
 upgrade, just to make sure any problems are new. This may require temporarily providing access for your QA volunteers.
 
@@ -170,8 +169,6 @@ to demonstrate.
     GRANT ALL ON ALL TABLES IN SCHEMA reporting_ts TO rdw_ts;
     GRANT ALL ON ALL TABLES IN SCHEMA reporting_ot_s001 TO ots001;
     ```
-* [ ] Wipe embargo tables?
-    * TODO - this may have been handled by the flyway migration scripts, not sure yet.
 * [ ] Redeploy ingest services but not the migrate services just yet.
     ```bash
     kubectl apply -f package-processor-service.yml
@@ -213,7 +210,7 @@ log for the migrate-reporting and migrate-olap service), you may re-run the vali
 * [ ] Miscellaneous cleanup
     * [ ] Restore traffic to site (from static web page)
     * [ ] Notify 3rd party to restore data feeds
-    * [ ] Reenable any ops monitoring
+    * [ ] Re-enable any ops monitoring
     * [ ] Deploy new User Guide and Interpretive Guide
 * [ ] Dataset changes. All datasets must be regenerated or migrated.
 This can happen after the upgrade with the services running; any attempt to create a sandbox from an existing (old)
@@ -231,27 +228,25 @@ Smoke 'em if ya got 'em.
 
 
 
-TODO - after making the additional permissions changes, update this section for:
-    * REPORT_TEMPLATE_WRITE
-Our permissions server UI was broken, so i made the changes directly to the permissions db:
+Our permissions server UI was broken, so we made the changes directly to the permission db:
 ```mysql
 -- The goal is to create the new roles and permissions for RDW Phase 6.
 --
 -- All changes apply to only the Reporting component.
 --
--- There are four new permissions for allowing changes to test data visibility.
--- One each for read/write of loading/reviewing state. This will replace the
--- existing EMBARGO_READ/WRITE permissions.
+-- There are two new permissions for viewing and editing the new custom ISR Templates: 
+-- ISR_TEMPLATE_READ and ISR_TEMPLATE_WRITE.
+-- There are two new roles ISR_TEMPLATE_ADMIN and ISR_TEMPLATE_READONLY. The admin role will be assigned
+-- both the read and write template permission, and the readonly role will be assigned read permission only.
+-- The SandboxDistrictAdmin will also be assigned the template readonly permission.
 --
--- The existing EMBARGO_ADMIN role can be granted at State or District level.
--- It should be granted the (two) read/write reviewing permissions.
+-- There is another new role, DevOps, used as a convenient way to assign a number of the admin permissions.
+-- It should be at Client level only and will be granted the permissions: 
+-- EMBARGO_READ, EMBARGO_WRITE,
+-- PIPELINE_READ, PIPELINE_WRITE,
+-- TENANT_READ, TENANT_WRITE,
+-- ISR_TEMPLATE_READ, ISR_TEMPLATE_WRITE
 --
--- The existing SandboxDistrictAdmin role can be granted at District level.
--- It should be granted the (two) read/write reviewing permissions.
---
--- There is a new role, DevOps. It should be at Client level only.
--- It should be granted all four new permissions.
-
 SELECT r.name as Role, p.name as Permission FROM permission_role pr
     LEFT JOIN role r on pr._fk_rid = r._id
     JOIN permission p on pr._fk_pid = p._id
@@ -261,39 +256,48 @@ ORDER BY r._id, p._id;
 
 SELECT _id FROM component WHERE name = 'Reporting';
 -- 15
-SELECT _id FROM role WHERE name = 'EMBARGO_ADMIN';
--- 39
 SELECT _id FROM role WHERE name = 'SandboxDistrictAdmin';
 -- 2000010
-SELECT _id FROM entitytype WHERE name = 'Client';
--- 1
-
-
-INSERT INTO permission (_id, name) VALUES
- (100, 'TEST_DATA_LOADING_WRITE'),
- (101, 'TEST_DATA_LOADING_READ'),
- (102, 'TEST_DATA_REVIEWING_WRITE'),
- (103, 'TEST_DATA_REVIEWING_READ');
+SELECT _id FROM permission WHERE name = 'EMBARGO_READ';
+-- 89
+SELECT _id FROM permission WHERE name = 'EMBARGO_WRITE';
+-- 90
+SELECT _id FROM permission WHERE name = 'PIPELINE_READ';
+-- 2000006
+SELECT _id FROM permission WHERE name = 'PIPELINE_WRITE';
+-- 2000007
+SELECT _id FROM permission WHERE name = 'TENANT_READ';
+-- 2000008
+SELECT _id FROM permission WHERE name = 'TENANT_WRITE';
+-- 2000009
 
 INSERT INTO role (_id, name) VALUES
-  (100, 'DevOps');
+  (100, 'DevOps'),
+  (2000011, 'ISR_TEMPLATE_ADMIN'),
+  (2000012, 'ISR_TEMPLATE_READONLY');
 
 INSERT INTO role_entity (_fk_rid, _fk_etuk) VALUES
-  (100, 'CLIENT');
+  (100, 'CLIENT'),
+  (2000011, 'STATE'),
+  (2000012, 'STATE');
+
+INSERT INTO permission (_id, name) VALUES
+    (2000010, 'ISR_TEMPLATE_READ'),
+    (2000011, 'ISR_TEMPLATE_WRITE');
 
 INSERT INTO permission_role (_fk_cid, _fk_rid, _fk_pid) VALUES
-  (15, 100, 100),
-  (15, 100, 101),
-  (15, 100, 102),
-  (15, 100, 103),
+  (15, 100, 89),
+  (15, 100, 90),
   (15, 100, 2000006),
   (15, 100, 2000007),
   (15, 100, 2000008),
   (15, 100, 2000009),
-  (15, 39, 102),
-  (15, 39, 103),
-  (15, 2000010, 102),
-  (15, 2000010, 103);
+  (15, 100, 2000010),
+  (15, 100, 2000011),
+  (15, 2000010, 2000010),
+  (15, 2000011, 2000010),
+  (15, 2000011, 2000011),
+  (15, 2000012, 2000010);
 ```
 
 

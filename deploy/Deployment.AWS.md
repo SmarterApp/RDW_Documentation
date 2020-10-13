@@ -228,12 +228,16 @@ This section records all details that will facilitate configuration and maintena
             * `SandboxTeacher` - Institution
             * `SandboxSchoolAdmin` - Institution
             * `SandboxDistrictAdmin` - District
+            * `ISR_TEMPLATE_ADMIN` - State
+            * `ISR_TEMPLATE_READONLY` - State
+            * `DevOps` - Client
         * Add/verify component permissions for `Reporting`
             * `DATA_WRITE`
             * `GROUP_PII_READ`, `GROUP_READ`, `GROUP_WRITE`, `INDIVIDUAL_PII_READ`
             * `CUSTOM_AGGREGATE_READ`, `EMBARGO_READ`, `EMBARGO_WRITE`, `INSTRUCTIONAL_RESOURCE_WRITE`
             * `PIPELINE_READ`, `PIPELINE_WRITE`
             * `TENANT_READ`, `TENANT_WRITE`
+            * `ISR_TEMPLATE_READ`, `ISR_TEMPLATE_WRITE`
         * Add/verify mappings of Reporting component permissions (rows) to roles (columns)
             * `DATA_WRITE` - `ASMTDATALOAD` 
             * `GROUP_PII_READ` - `PII`, `PII_GROUP`, `SandboxTeacher`, `SandboxSchoolAdmin`, `SandboxDistrictAdmin`
@@ -241,13 +245,15 @@ This section records all details that will facilitate configuration and maintena
             * `GROUP_WRITE` - `GROUP_ADMIN`, `SandboxDistrictAdmin`
             * `INDIVIDUAL_PII_READ` - `PII`, `SandboxSchoolAdmin`, `SandboxDistrictAdmin`
             * `CUSTOM_AGGREGATE_READ` - `PII`, `CUSTOM_AGGREGATE_REPORTER`, `SandboxSchoolAdmin`, `SandboxDistrictAdmin`
-            * `EMBARGO_READ` - `EMBARGO_ADMIN`, `SandboxDistrictAdmin`
-            * `EMBARGO_WRITE` - `EMBARGO_ADMIN`, `SandboxDistrictAdmin`
+            * `EMBARGO_READ` - `EMBARGO_ADMIN`, `SandboxDistrictAdmin`, `DevOps`
+            * `EMBARGO_WRITE` - `EMBARGO_ADMIN`, `SandboxDistrictAdmin`, `DevOps`
             * `INSTRUCTIONAL_RESOURCE_WRITE` - `Instructional Resource Admin`, `SandboxDistrictAdmin`
-            * `PIPELINE_READ` - `PIPELINE_ADMIN`
-            * `PIPELINE_WRITE` - `PIPELINE_ADMIN`
-            * `TENANT_READ` - `TENANT_ADMIN`
-            * `TENANT_WRITE` - `TENANT_ADMIN`
+            * `PIPELINE_READ` - `PIPELINE_ADMIN`, `DevOps`
+            * `PIPELINE_WRITE` - `PIPELINE_ADMIN`, `DevOps`
+            * `TENANT_READ` - `TENANT_ADMIN`, `DevOps`
+            * `TENANT_WRITE` - `TENANT_ADMIN`, `DevOps`
+            * `ISR_TEMPLATE_READ` - `ISR_TEMPLATE_ADMIN`, `ISR_TEMPLATE_READONLY`, `SandboxDistrictAdmin`, `DevOps`
+            * `ISR_TEMPLATE_WRITE` - `ISR_TEMPLATE_ADMIN`, `DevOps`
     * [ ] IRiS. 
         * Follow directions for setting up [IRiS](IRIS.AWS.md).
         * *Record IRiS hosts, IRiS ELB and IRiS EFS in the reference.*

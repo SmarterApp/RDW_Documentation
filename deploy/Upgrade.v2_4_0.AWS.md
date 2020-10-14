@@ -159,7 +159,7 @@ to demonstrate.
         for s in _OT _TS _OT_S001; do ./gradlew -Pschema_suffix=$s \
           -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password \
           -Predshift_url=jdbc:redshift://rdw.cs909ohc4ovd.us-west-2.redshift.amazonaws.com:5439/opus -Predshift_user=root -Predshift_password=password \
-          migrateReporting migrateWarehouse migrateMigrate_olap migrateReporting_olap
+          migrateReporting migrateWarehouse migrateMigrate_olap migrateReporting_olap; done
         ```
     * After migrating the reporting olap database you'll need to re-grant permissions because there are some new tables.
     You'll need to verify the user names by inspecting the configuration repo for each tenant and sandbox.

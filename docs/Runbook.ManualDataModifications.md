@@ -20,8 +20,16 @@ mysql> INSERT INTO import(status, content, contentType, digest) VALUES (1, 3, 'i
 ```
 * The migrate will pick this up. It will migrate all tables from this category.
 
-#### Modify EMBARGO settings
-* Update/insert data in the EMBARGO tables.
+#### Modify EMBARGO (Test Data Availability) settings
+* Update/insert data in the district_embargo table. 0 = Loading, 1 = Reviewing, 2 = Released.
+```mysql
+INSERT INTO district_embargo (school_year, district_id, subject_id, individual, aggregate) VALUES
+(2020, 1, 1, 2, 2),
+(2010, 1, 2, 2, 2);
+
+UPDATE district_embargo set individual = 0, aggregate = 0
+WHERE (school_year = 2020 AND district_id = 1 AND subject_id = 2);
+```
 * Insert an entry in to the import table with the `EMBARGO` content type:
 ```sql
 mysql> USE warehouse;

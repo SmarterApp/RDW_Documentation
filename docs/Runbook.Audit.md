@@ -37,14 +37,14 @@
 
 
 ### What is audited?
-1. All actions to release or embargo results are audited. 
+1. All actions to change embargo (test data availability) status are audited. The defined statuses are 
+Loading, Reviewing, and Released. All events, create, update, and delete, are audited.
 
 Warehouse tables audited:
 
-| Table                        | Description                                                        | Audited actions        |
-|------------------------------|--------------------------------------------------------------------|------------------------|
-| district_embargo             | Individual and aggregate embargo flags per district and school year| Create, Update, Delete |
-| state_embargo                | Statewide individual and aggregate embargo flags per school year   | Create, Update, Delete |
+| Table                        | Description                                                                  | Audited actions        |
+|------------------------------|------------------------------------------------------------------------------|------------------------|
+| district_embargo             | Individual and aggregate embargo flags per school year, district, and subject| Create, Update, Delete |
 
 
 2. Changes for the existing exams and student information.
@@ -102,11 +102,6 @@ UPDATE setting s SET s.value = 'FALSE' WHERE s.name = 'AUDIT_TRIGGER_ENABLE';
 
 ### How can audit data be queried?
 Sample queries are provided for analyzing audit data combining the warehouse import table, the table being audited, the audit_ table, and joining other relations in the warehouse for lookup values.
-
-#### Query state embargo
-```mysql
-SELECT * FROM audit_state_embargo
-```
 
 #### Query district embargo
 ```mysql

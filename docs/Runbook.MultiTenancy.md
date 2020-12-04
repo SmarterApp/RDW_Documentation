@@ -281,6 +281,44 @@ UPDATE import SET status=1 WHERE id=@importid;
 
 DROP TABLE school_grade_session;
 ```
+* Create embargo (test results availability) records.
+The embargo status is contained in the district_embargo table, which contains one record for each school year,
+district, and subject. Each record has status for both individual and aggregates. The status values are
+0 for loading, 1 for reviewing, and 2 for released. Any combinations of school year, district, and subject not
+in the district_embargo table are considered to be in loading status. 
+
+The following sets all districts and all subjects to released status for the year 2020.
+```mysql
+INSERT IGNORE INTO district_embargo (school_year, district_id, subject_id, individual, aggregate)
+SELECT  y.year, d.id, s.id, 2, 2
+FROM school_year y
+         JOIN district d
+         JOIN subject s
+WHERE (y.year = 2020);
+
+UPDATE district_embargo
+SET individual = 2, aggregate = 2
+WHERE (school_year = 2020);
+```
+The combination of "INSERT IGNORE" and "UPDATE" ensures that both existing and non-existing records are handled.
+
+The following updates individual status to reviewing and aggregate status to released for 2020, distric 1 and subject 2
+only.
+```mysql
+INSERT IGNORE INTO district_embargo (school_year, district_id, subject_id, individual, aggregate)
+SELECT  y.year, d.id, s.id, 1, 2
+FROM school_year y
+         JOIN district d
+         JOIN subject s
+WHERE (y.year = 2020 AND d.id = 1 AND s.id = 2);
+
+UPDATE district_embargo
+SET individual = 1, aggregate = 2
+WHERE (WHERE (y.year = 2020 AND d.id = 1 AND s.id = 2);
+``` 
+
+(Note: also see the following optional section for adding embargo records to existing sandbox datasets.)
+
 * Dump data, cleanup and create manifest
 ```
 mkdir -p /tmp/sbac-dataset
@@ -301,6 +339,7 @@ Latin: SUM for 2017-18
 TS state, demo schools
 About 30,000 test results
 ```
+
 * Upload the files to S3, e.g. `s3://rdw-opus-archive/sandbox-datasets/sbac-dataset/warehouse`
 * Annotate the dataset in the admin service configuration file, e.g.
 ```
@@ -311,7 +350,22 @@ sandbox-properties:
       id: sb-dataset
 ```
 
-##### Sandbox ISR Templates
+* (Optional) Add embargo records to an existing sandbox dataset. 
+Create a `district_embargo.txt` file either by using inserts/updates on a sandbox already built from the dataset and then
+dumping the data to files as described above, or by manually creating an equivalent file by hand. Upload this
+`district_embargo.txt` file into the existing dataset, e.g., `s3://rdw-opus-archive/sandbox-datasets/sbac-dataset/warehouse`
+Edit the `manifest.txt` file in the dataset to be sure it contains the district_embargo.txt file in its list.
+```text
+...
+depth_of_knowledge.txt
+district.txt
+district_embargo.txt
+elas.txt
+ethnicity.txt
+..
+```
+ 
+ Sandbox ISR Templates
 
 A sandbox does not have access to all tenant-level admin functionality. Because of this, there 
 is no way to use the UI to install custom ISR templates. If there is need for custom ISR templates 

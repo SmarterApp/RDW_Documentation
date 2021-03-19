@@ -30,6 +30,313 @@
       </ClaimScoring>
     </AssessmentType>
   </AssessmentTypes>
+  <ReportGrades>
+    <ReportGrade code="03">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0}, grade 3, placeholder for overall message. {0} is the student.]]></OverallAchievementMessage>
+          <AltScoreAchievementMessage><![CDATA[{0}, grade 3, placeholder for alt score message. {0} is the student.]]></AltScoreAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}, grade 3, place holder for claim message. {0} is the student.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 3, level 1 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 3, level 2 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 3, level 3 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0}, grade 3, level 4 overall placeholder.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportAltScores>
+            <ReportAltScore code="1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 3, level 1 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 3, level 2 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 3, level 3 alt-score placeholder.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportAltScore>
+            <ReportAltScore code="2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 3, level 1 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 3, level 2 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 3, level 3 alt-score placeholder.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportAltScore>
+          </ReportAltScores>
+          <ReportClaims>
+            <ReportClaim code="1-L">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 3, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 3, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 3, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="1-S">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 3, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 3, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 3, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-R">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 3, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 3, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 3, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-W">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 3, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 3, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 3, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 3.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
+    <ReportGrade code="04">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0}, grade 4, placeholder for overall message. {0} is the student.]]></OverallAchievementMessage>
+          <AltScoreAchievementMessage><![CDATA[{0}, grade 4, placeholder for alt score message. {0} is the student.]]></AltScoreAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}, grade 4, place holder for claim message. {0} is the student.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 4, level 1 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 4, level 2 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 4, level 3 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0}, grade 4, level 4 overall placeholder.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportAltScores>
+            <ReportAltScore code="1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 4, level 1 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 4, level 2 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 4, level 3 alt-score placeholder.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportAltScore>
+            <ReportAltScore code="2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 4, level 1 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 4, level 2 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 4, level 3 alt-score placeholder.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportAltScore>
+          </ReportAltScores>
+          <ReportClaims>
+            <ReportClaim code="1-L">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 4, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 4, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 4, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="1-S">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 4, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 4, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 4, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-R">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 4, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 4, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 4, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-W">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 4, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 4, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 4, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 4.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
+    <ReportGrade code="05">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0}, grade 5, placeholder for overall message. {0} is the student.]]></OverallAchievementMessage>
+          <AltScoreAchievementMessage><![CDATA[{0}, grade 5, placeholder for alt score message. {0} is the student.]]></AltScoreAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}, grade 5, place holder for claim message. {0} is the student.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 5, level 1 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 5, level 2 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 5, level 3 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0}, grade 5, level 4 overall placeholder.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportAltScores>
+            <ReportAltScore code="1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 5, level 1 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 5, level 2 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 5, level 3 alt-score placeholder.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportAltScore>
+            <ReportAltScore code="2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 5, level 1 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 5, level 2 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 5, level 3 alt-score placeholder.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportAltScore>
+          </ReportAltScores>
+          <ReportClaims>
+            <ReportClaim code="1-L">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 5, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 5, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 5, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="1-S">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 5, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 5, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 5, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-R">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 5, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 5, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 5, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-W">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 5, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 5, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 5, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 5.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
+    <ReportGrade code="08">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0}, grade 8, placeholder for overall message. {0} is the student.]]></OverallAchievementMessage>
+          <AltScoreAchievementMessage><![CDATA[{0}, grade 8, placeholder for alt score message. {0} is the student.]]></AltScoreAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}, grade 8, place holder for claim message. {0} is the student.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 8, level 1 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 8, level 2 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 8, level 3 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0}, grade 8, level 4 overall placeholder.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportAltScores>
+            <ReportAltScore code="1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 8, level 1 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 8, level 2 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 8, level 3 alt-score placeholder.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportAltScore>
+            <ReportAltScore code="2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 8, level 1 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 8, level 2 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 8, level 3 alt-score placeholder.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportAltScore>
+          </ReportAltScores>
+          <ReportClaims>
+            <ReportClaim code="1-L">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 8, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 8, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 8, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="1-S">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 8, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 8, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 8, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-R">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 8, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 8, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 8, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-W">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 8, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 8, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 8, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 8.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
+    <ReportGrade code="11">
+      <ReportAssessmentTypes>
+        <ReportAssessmentType code="sum">
+          <OverallAchievementMessage><![CDATA[{0}, grade 11, placeholder for overall message. {0} is the student.]]></OverallAchievementMessage>
+          <AltScoreAchievementMessage><![CDATA[{0}, grade 11, placeholder for alt score message. {0} is the student.]]></AltScoreAchievementMessage>
+          <ClaimAchievementMessage><![CDATA[{0}, grade 11, place holder for claim message. {0} is the student.]]></ClaimAchievementMessage>
+          <ReportPerformanceLevels>
+            <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 11, level 1 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 11, level 2 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 11, level 3 overall placeholder.]]></ReportPerformanceLevel>
+            <ReportPerformanceLevel level="4"><![CDATA[{0}, grade 11, level 4 overall placeholder.]]></ReportPerformanceLevel>
+          </ReportPerformanceLevels>
+          <ReportAltScores>
+            <ReportAltScore code="1">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 11, level 1 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 11, level 2 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 11, level 3 alt-score placeholder.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportAltScore>
+            <ReportAltScore code="2">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 11, level 1 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 11, level 2 alt-score placeholder.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 11, level 3 alt-score placeholder.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportAltScore>
+          </ReportAltScores>
+          <ReportClaims>
+            <ReportClaim code="1-L">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 11, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 11, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 11, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="1-S">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 11, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 11, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 11, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-R">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 11, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 11, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 11, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+            <ReportClaim code="2-W">
+              <ReportPerformanceLevels>
+                <ReportPerformanceLevel level="1"><![CDATA[{0}, grade 11, level 1 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="2"><![CDATA[{0}, grade 11, level 2 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+                <ReportPerformanceLevel level="3"><![CDATA[{0}, grade 11, level 3 claim placeholder.]]><![CDATA[{0}, claim placeholder for grade 11.]]></ReportPerformanceLevel>
+              </ReportPerformanceLevels>
+            </ReportClaim>
+          </ReportClaims>
+        </ReportAssessmentType>
+      </ReportAssessmentTypes>
+    </ReportGrade>
+  </ReportGrades>
   <AltScores>
     <AltScore code="1" name="Oral Language" displayOrder=" 1">
       <Icon>fa-comment</Icon>

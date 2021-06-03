@@ -3,3 +3,8 @@
 userguide/~\$porting-system-user-guide\.docx
 
 userguide/~\$w-admin-guide\.docx
+
+tools/~\$*.xlsm
+
+.DS_Store
+

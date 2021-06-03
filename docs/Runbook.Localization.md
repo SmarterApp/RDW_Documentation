@@ -111,10 +111,7 @@ The localization file is a hierarchy organized JSON document, the categories her
 | delete-group-modal                  | Groups administration delete popup UI component elements.                          |
 | delete-instructional-resource-modal | Instructional resource administration, delete popup UI component elements.         |
 | delete-modal                        | Common “Are you sure?” style prompt for delete operations.                         |
-| embargo                             | Embargo administration common labels used in embargo components.                   |
 | embargo-alert                       | Embargo administration alert component, alert message label.                       |
-| embargo-confirmation-modal          | Embargo administration conformation popup, label titles and messages.              |
-| embargo-table                       | Embargo administration table column headers and other elements.                    |
 | exam-filter                         | Assessment exam filter elements.                                                   |
 | file-format                         | Groups administration file format UI labels.                                       |
 | group-dashboard                     | Group dashboard heading and name.                                                  |
@@ -184,6 +181,8 @@ The localization file is a hierarchy organized JSON document, the categories her
 | tenant-metrics                      | Tenant administration metrics common labels.                                       |
 | tenant-type                         | Tenant administration form element.                                                |
 | tenants                             | Tenant administration common labels.                                               |
+| test-results-availability           | Test results availability management common labels and messages.                   |
+| test-results-availability-change-status | Test results availability change status dialog common labels and messages.     |
 | update-instructional-resource-modal | Instructional resource administration update form elements.                        |
 | user-group                          | User group common title, headings and labels.                                      |
 | user-group-form                     | User group form labels.                                                            |

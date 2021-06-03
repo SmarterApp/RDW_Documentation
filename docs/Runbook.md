@@ -19,7 +19,7 @@
     * [Aggregate Service](#aggregate-service)
     * [Admin Service](#admin-service)
     * [PDF Generator](#pdf-generator)
-* [Embargo](#embargo)
+    * [Test Results Availability](#test-results-availability)
 * Advanced Resources
     * [System Configuration](Runbook.SystemConfiguration.md)
     * [Pipeline](Runbook.Pipeline.md)
@@ -272,7 +272,7 @@ The [Sample Kubernetes Spec](../deploy/aggregate-service.yml) runs a single repl
 
 <a name="admin-service"></a>
 ## Admin Service
-This service provides the back-end API for administrative functionality including management of student groups, instructional resource links, embargo settings. It is horizontally scalable, however administrative management is limited in scope and a single instance is usually sufficient.
+This service provides the back-end API for administrative functionality including management of student groups, instructional resource links, test results availability (embargo) settings. It is horizontally scalable, however administrative management is limited in scope and a single instance is usually sufficient.
 
 ![Admin Service](admin-service.png)
 
@@ -302,23 +302,32 @@ The [Sample Kubernetes Spec](../deploy/wkhtmltopdf-service.yml) runs four replic
 
 > This section has been moved to a dedicated document: [System Configuration](Runbook.SystemConfiguration.md). Please update any saved links.
 
-## Embargo
+## Test Results Availability
 
-Embargo is a feature where summative test results are held back until all the data is available and validated. An embargo affects the viewing of individual test results separately from aggregate report data. Lifting the embargo releases test results.
+Summative test results are partially hidden from view until they have been marked as fully loaded
+and reviewed. When summative test results are first processed by RDW, they will be in a LOADING
+status, and only visible to permissioned DevOps users. A **Manage Test Results Availability** UI will
+allow the DevOps users to change the status of these results to REVIEWING when they are completely
+loaded. This will make the results visible to correctly permissioned District and State Admins as
+well. These admins can review the results and then change them to RELEASED status, using
+the same Availability UI. Once given a RELEASED status, the results will be visible to all 
+permissioned users.
 
-When individual test results are embargoed, those results will not be visible in the reporting UI to normal users. Similarly, when aggregate test results are embargoed, those reports will not be visible in the aggregate reporting UI to normal users. Embargo administrators will be able to see the results (and the UI will have a notice to that effect) regardless of embargo settings.
+The results will be grouped by several criteria: State, School Year, District, Subject, Report Type
+(Individual or Aggregate), and current Status. By providing filters, the Availability UI will
+allow permissioned users to change the status of a single group or multiple groups simultaneously.
 
-Embargo is set at the state and district levels. Districts may release test results while the state is still embargoed. However, once a state releases test results (i.e. lifts the embargo), all results for all districts are released, regardless of the district embargo settings.
+Only users with special Test Results Availability Write permissions will be able to access the
+Manage Test Results Availability UI. This is expected to include District and State Admins and 
+DevOps users. Only DevOps users will have the ability to move test results from LOADING to REVIEWING
+or REVIEWING back to LOADING, and they will also be the only users able to view audit reports of previous status
+changes. District and State Admins, as well as DevOps, will be able to change results from REVIEWING
+to RELEASED or RELEASED back to REVIEWING. 
 
-Embargo settings are managed in the Admin UI. The functionality will be available if a user has embargo write permissions for the state or districts.
-
-#### Import and Migrate
-As discussed in the [Import and Migrate](Runbook.migrate.md) the embargo setting is migrated as part of the general ingest process. Although not recommended, it is possible to manually modify embargo settings. For example, to lift the statewide embargo on individual test results for the school year 2018, then trigger the migration:
-```sql
-UPDATE state_embargo SET individual=0 WHERE school_year=2018;
-INSERT INTO import (status, content, contentType, digest) VALUES (1, 6, 'lift embargo', 'lift embargo 2017-12-12');
-```
-
+Test results availability is set at the District and State level. District Admins will only be able
+to change statuses for their own districts, while State Admin will be able to change statuses for
+all the state's districts. However, changes made by District Admins will override earlier changes made by
+State admins and vice versa.
 
 ---
 [1]: https://docs.spring.io/spring-boot/docs/1.5.2.RELEASE/reference/htmlsingle/#boot-features-external-config

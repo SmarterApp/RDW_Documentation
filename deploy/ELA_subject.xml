@@ -5,6 +5,32 @@
     <Message key="iab.performance-info"><![CDATA[Student scores on each Interim Assessment Block are assigned to one of three reporting categories. The standard is based on the minimum scale score for the 'Level 3' achievement level on the Interim Comprehensive and summative assessments (the score that separates Levels 2 and 3). See the Interpretive Guide for more information on how placement into the reporting categories is determined.]]></Message>
     <Message key="ica.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of four achievement levels based on the scale score.]]></Message>
     <Message key="sum.performance-info"><![CDATA[Student scores on the Summative and Interim Comprehensive assessments are assigned to one of four achievement levels based on the scale score.]]></Message>
+    <Message key="trait.purpose.ARGU.name">Argumentative</Message>
+    <Message key="trait.purpose.ARGU.description">Argumentative</Message>
+    <Message key="trait.purpose.EXPL.name">Explanatory</Message>
+    <Message key="trait.purpose.EXPL.description">Explanatory</Message>
+    <Message key="trait.purpose.INFO.name">Informative</Message>
+    <Message key="trait.purpose.INFO.description">Informative</Message>
+    <Message key="trait.purpose.NARR.name">Narrative</Message>
+    <Message key="trait.purpose.NARR.description">Narrative</Message>
+    <Message key="trait.purpose.OPIN.name">Opinion</Message>
+    <Message key="trait.purpose.OPIN.description">Opinion</Message>
+    <Message key="trait.category.CON.name">Conventions</Message>
+    <Message key="trait.category.CON.0">The response demonstrates little or no command of conventions.</Message>
+    <Message key="trait.category.CON.1">The response demonstrates a partial command of conventions.</Message>
+    <Message key="trait.category.CON.2">The response demonstrates an adequate command of conventions.</Message>
+    <Message key="trait.category.EVI.name">Evidence / Elaboration</Message>
+    <Message key="trait.category.EVI.0">The evidence in the response is insufficient.</Message>
+    <Message key="trait.category.EVI.1">The response provides minimal elaboration of the support/evidence for the thesis that includes little or no use of source material. The response is vague, lacks clarity, or is confusing.</Message>
+    <Message key="trait.category.EVI.2">The response provides uneven, cursory elaboration of the support/evidence for the thesis that includes some reasoned analysis and partial or uneven use of source material. The response develops ideas unevenly, using simplistic language.</Message>
+    <Message key="trait.category.EVI.3">The response provides adequate elaboration of the support/evidence for the thesis that includes reasoned analysis and the use of source material. The response adequately develops ideas, employing a mix of precise with more general language.</Message>
+    <Message key="trait.category.EVI.4">The response provides thorough and convincing elaboration of the support/evidence for the thesis including reasoned, in depth analysis and the effective use of source material. The response clearly and effectively develops ideas, using precise language.</Message>
+    <Message key="trait.category.ORG.name">Organization / Purpose</Message>
+    <Message key="trait.category.ORG.0">The organization of the response is insufficient.</Message>
+    <Message key="trait.category.ORG.1">The response has little or no discernible organizational structure. The response may be related to the topic but may provide little or no focus.</Message>
+    <Message key="trait.category.ORG.2">The response has an inconsistent organizational structure. Some flaws are evident, and some ideas may be loosely connected. The organization is somewhat sustained between and within paragraphs. The response may have a minor drift in focus.</Message>
+    <Message key="trait.category.ORG.3">The response has an evident organizational structure and a sense of completeness. Though there may be minor flaws, they do not interfere with the overall coherence. The organization is adequately sustained between and within paragraphs. The response is generally focused.</Message>
+    <Message key="trait.category.ORG.4">The response has a clear and effective organizational structure, creating a sense of unity and completeness. The organization is fully sustained between and within paragraphs. The response is consistently and purposefully focused.</Message>
   </Messages>
   <AssessmentTypes>
     <AssessmentType code="ica" name="ICA" longName="Interim Comprehensive Assessment">
@@ -33,7 +59,7 @@
         </PerformanceLevels>
       </OverallScoring>
     </AssessmentType>
-    <AssessmentType code="sum" name="Summative" longName="Summative Assessment">
+    <AssessmentType code="sum" name="Summative" longName="Summative Assessment" traitReport="true">
       <OverallScoring name="Overall" minScore="1000" maxScore="3500">
         <PerformanceLevels standardCutoff="3">
           <PerformanceLevel level="1" name="Level 1" shortName="Level 1" suffix="" color="maroon"/>
@@ -834,6 +860,24 @@
       </ReportAssessmentTypes>
     </ReportGrade>
   </ReportGrades>
+  <Traits>
+    <!-- see Messages for purpose/category names, description and performance text -->
+    <Trait code="SOCK_ARGU_ORG" purpose="ARGU" category="ORG" maxScore="4" />
+    <Trait code="SOCK_ARGU_CON" purpose="ARGU" category="CON" maxScore="2" />
+    <Trait code="SOCK_ARGU_EVI" purpose="ARGU" category="EVI" maxScore="4" />
+    <Trait code="SOCK_EXPL_ORG" purpose="EXPL" category="ORG" maxScore="4" />
+    <Trait code="SOCK_EXPL_CON" purpose="EXPL" category="CON" maxScore="2" />
+    <Trait code="SOCK_EXPL_EVI" purpose="EXPL" category="EVI" maxScore="4" />
+    <Trait code="SOCK_INFO_ORG" purpose="INFO" category="ORG" maxScore="4" />
+    <Trait code="SOCK_INFO_CON" purpose="INFO" category="CON" maxScore="2" />
+    <Trait code="SOCK_INFO_EVI" purpose="INFO" category="EVI" maxScore="4" />
+    <Trait code="SOCK_NARR_ORG" purpose="NARR" category="ORG" maxScore="4" />
+    <Trait code="SOCK_NARR_CON" purpose="NARR" category="CON" maxScore="2" />
+    <Trait code="SOCK_NARR_EVI" purpose="NARR" category="EVI" maxScore="4" />
+    <Trait code="SOCK_OPIN_ORG" purpose="OPIN" category="ORG" maxScore="4" />
+    <Trait code="SOCK_OPIN_CON" purpose="OPIN" category="CON" maxScore="2" />
+    <Trait code="SOCK_OPIN_EVI" purpose="OPIN" category="EVI" maxScore="4" />
+  </Traits>
   <Claims>
     <Claim code="SOCK_R" name="Reading" organizational="false" displayOrder="1">
       <Icon>fa-book</Icon>

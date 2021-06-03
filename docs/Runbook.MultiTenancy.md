@@ -136,64 +136,115 @@ Unfortunately, at this time, creating the data sets is a manual process.
 The goal is to load the warehouse with all the required data, without 
 allowing the system to migrate the data. Then dump that data and stage 
 it in the data sets folder in S3. Probably the easiest environment to
-do this is a local development system.
+do this in is a local development system.
 
 For this example, we are creating a data set for Smarter Balanced 
 assessments for ELA and Math using the demo institutions and a state
 code of TS.
 
-* Data generation
+* Data collection and generation. The first step is collecting the subject 
+and assessment package definition files, creating an organization hierarchy,
+using those to generate test results, and gathering a few other required
+files.
     * Collect inputs for data generation
-        * subject definition files
-        * assessment package definition files
-        * institution hierarchy
-    * Use data generator to create TRTs. Your exact command will vary but something like:
-    ```
-    --gen_iab --gen_ica --gen_sum --gen_item --out_dir out.sb-dataset --xml_out --subject_source ./in/sb-dataset/*_subject.xml --pkg_source ./in/sb-dataset/201*.csv --hier_source ./in/sb-dataset/demo.csv
-    ```
-    * spot check the TRTs
-* Configure RDW services. This assumes you are pointing to a configuration with tenant-TS defined.
-    * Reset the schema using RDW_Schema. Adjust school_year for generated data.
-    ```
-    RDW_Schema$ gradle -Pschema_prefix=ts_ cleanAll migrateAll
-    RDW_Schema$ echo "DELETE FROM ts_warehouse.school_year WHERE year IN (2015, 2016, 2017)" | mysql -u root ts_warehouse
-    RDW_Schema$ echo "INSERT INTO ts_warehouse.school_year VALUES (2020)" | mysql -u root ts_warehouse
-    RDW_Schema$ echo "INSERT INTO state_embargo (school_year, individual, aggregate, updated_by) VALUES (2020, 0, 0, 'dwtest@example.com')" | mysql -u root ts_warehouse
-    ```
-    * Run ingest services: modify RDW_Ingest docker-compose file, commenting out migrate-reporting and task-service:
-    ```
-    RDW_Ingest$ gradle clean buildImage
-    RDW_Ingest$ docker-compose up -d
-    ```
+        * [Subject definition files](./Runbook.SystemConfiguration.md#subjects). 
+        Use published files, e.g. [SBAC Math](../deploy/Math_subject.xml)
+        or generate new ones using the [subject definition workbook](../tools/SubjectDef.xlsm).
+        * [Assessment package definition files](./Runbook.SystemConfiguration.md#assessment-packages).
+        These must be authored by the test vendor. Please note the assessment
+        package school years, they are used by the data generator to select 
+        the years for the test results.
+        * Institution hierarchy. The data generator can be configured to create
+        a random set of districts and schools, or it can be passed a file
+        that defines specific institutions. To make the experience consistent
+        for users, it is probably best to use a file for the definitions. An
+        example file can be seen [here](https://github.com/SmarterApp/RDW_DataGenerator/blob/master/in/demo.csv). 
+    * Use the [data generator](https://github.com/SmarterApp/RDW_DataGenerator/tree/master) to create TRTs.
+    Your exact command will vary but something like this will produce TRTs 
+    organized by district and school in the `out.sb-dataset` folder:
+        ```
+        --gen_iab --gen_ica --gen_sum --gen_item --out_dir out.sb-dataset --xml_out --subject_source ./in.sb-dataset/*_subject.xml --pkg_source ./in.sb-dataset/20*.csv --hier_source ./in.sb-dataset/demo.csv
+        ```
+    * [Accommodations file](./Runbook.SystemConfiguration.md#accommodations)
+    This is not needed for data generation but will be needed when loading data.
+    You should get a version for the school year that matches the first school
+    year in the generated data. You may have different versions for different
+    years if you'd like to demonstrate that feature.
+* Set up to run RDW schema and ingest. It is beyond the scope of this document
+to describe how to install tools, pull down code, build the app, etc. However,
+some useful commands and hints will be included.
+* Configure RDW services. 
+    * These instructions assume you are pointing to a configuration with tenant-TS defined.
+    If that is not the case, please [create tenant-TS](#manual-tenant-creation) or
+    modify these instructions to match the available tenant. 
+    *NOTE: these instructions assume a schema **prefix** of "ts_" while the
+    system generally prefers a schema **suffix** of "_ts". This is because the
+    local dev environment uses the prefix. Please adjust for your configuration.*
+    * Reset the schema using RDW_Schema. 
+        ```
+        # pull down Schema project if necessary
+        $ git clone https://github.com/SmarterApp/RDW_Schema.git .
+        $ cd RDW_Schema
+        RDW_Schema$ git checkout master; git pull
+    
+        # reset the schema for ts_warehouse, ts_reporting
+        RDW_Schema$ gradle -Pschema_prefix=ts_ cleanAll migrateAll
+        ```
+    * Adjust school_year based on the generated data. Using the known school years
+    from the assessment packages, load the school_year table. Also release
+    all results for the current school year by clearing the state embargo flag.
+        ```
+        RDW_Schema$ echo "DELETE FROM ts_warehouse.school_year" | mysql -u root ts_warehouse
+        RDW_Schema$ echo "INSERT INTO ts_warehouse.school_year VALUES (2018), (2019), (2020)" | mysql -u root ts_warehouse
+        RDW_Schema$ echo "INSERT INTO state_embargo (school_year, individual, aggregate, updated_by) VALUES (2020, 0, 0, 'dwtest@example.com')" | mysql -u root ts_warehouse
+        ```
+    * Run ingest services.  
+        ```
+        # pull down Ingest project
+        $ git clone https://github.com/SmarterApp/RDW_Ingest.git .
+        $ cd RDW_Ingest
+        RDW_Ingest$ git checkout master; git pull
+        
+        # you may build the images locally if you'd like
+        # (if you don't do this, it should pull the images from DockerHub)
+        RDW_Ingest$ ./gradlew clean buildImage -DskipTests
+        
+        # modify the docker-compose.yml file, commenting out migrate-reporting and task-service 
+        
+        # run the services    
+        RDW_Ingest$ docker-compose up -d
+        ```
+    NOTE: the above instructions leave out a **lot** of detail. Please refer
+    to the developer documentation on how to configure the services to run
+    locally.
 * Load data (the usual data load process using curl or Postman and data generator submit scripts). 
+Data includes: subject definitions, accommodations, assessment packages, institutions, TRTs
 Be sure to use credentials for the `TS` tenant.
 Monitor the package-processor and exam-processor logs to make sure stuff is working.
-    * subject definitions
-    * accommodations
-    * assessment packages
-    * institutions
-    * TRTs
 ```
 # monitor package-processor logs (need a separate console)
 docker logs -f rdw_ingest_package-processor_1
 
-# set the access_token
+# set the access_token (this is a stub token that works in local developer deployments)
 export ACCESS_TOKEN="sbac;dwtest@example.com;|TS|ASMTDATALOAD|STATE|SBAC||||TS||||||||||"
 
 # import all subject files
-curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@ELA_subject.xml http://localhost:8080/subjects/imports
-# ... repeat for all subject files
+for f in *_subject.xml; do curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@$f http://localhost:8080/subjects/imports; done
 
 # import all package files
-curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@2017v3.csv http://localhost:8080/packages/imports
-# ... repeat for all assessment packages or use a bash loop like: for f in 201*.csv; ... file=@$f; done
+for f in 20*.csv; do curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@$f http://localhost:8080/packages/imports; done
 
-# import the accessibility file and organization file
+# import the accessibility file(s) and organization file
+curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@AccessibilityConfig.2018.xml http://localhost:8080/accommodations/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@AccessibilityConfig.2019.xml http://localhost:8080/accommodations/imports
 curl -X POST -s --header "Authorization:Bearer ${ACCESS_TOKEN}" -F file=@organizations.json http://localhost:8080/organizations/imports
 
+# adjust submit_helper script, setting HOST and ACCESS_TOKEN appropriately
+# the script can be found at https://github.com/SmarterApp/RDW_DataGenerator/blob/master/scripts/submit_helper.sh
+
 # use submit_helper to submit TRTs (tweak ACCESS_TOKEN in script)
-find ./out/*/*/* -type d | xargs -I FOLDER -P 3 ./scripts/submit_helper_ts.sh FOLDER
+# (might want to monitor the exam-processor log for this bit)
+find ./out/*/*/* -type d | xargs -I FOLDER -P 3 submit_helper.sh FOLDER
 ```    
 * Create groups. This is tricky. We want a group per school per grade per subject.
 We can use the session id from the data generator to group students, and
@@ -230,6 +281,44 @@ UPDATE import SET status=1 WHERE id=@importid;
 
 DROP TABLE school_grade_session;
 ```
+* Create embargo (test results availability) records.
+The embargo status is contained in the district_embargo table, which contains one record for each school year,
+district, and subject. Each record has status for both individual and aggregates. The status values are
+0 for loading, 1 for reviewing, and 2 for released. Any combinations of school year, district, and subject not
+in the district_embargo table are considered to be in loading status. 
+
+The following sets all districts and all subjects to released status for the year 2020.
+```mysql
+INSERT IGNORE INTO district_embargo (school_year, district_id, subject_id, individual, aggregate)
+SELECT  y.year, d.id, s.id, 2, 2
+FROM school_year y
+         JOIN district d
+         JOIN subject s
+WHERE (y.year = 2020);
+
+UPDATE district_embargo
+SET individual = 2, aggregate = 2
+WHERE (school_year = 2020);
+```
+The combination of "INSERT IGNORE" and "UPDATE" ensures that both existing and non-existing records are handled.
+
+The following updates individual status to reviewing and aggregate status to released for 2020, distric 1 and subject 2
+only.
+```mysql
+INSERT IGNORE INTO district_embargo (school_year, district_id, subject_id, individual, aggregate)
+SELECT  y.year, d.id, s.id, 1, 2
+FROM school_year y
+         JOIN district d
+         JOIN subject s
+WHERE (y.year = 2020 AND d.id = 1 AND s.id = 2);
+
+UPDATE district_embargo
+SET individual = 1, aggregate = 2
+WHERE (WHERE (y.year = 2020 AND d.id = 1 AND s.id = 2);
+``` 
+
+(Note: also see the following optional section for adding embargo records to existing sandbox datasets.)
+
 * Dump data, cleanup and create manifest
 ```
 mkdir -p /tmp/sbac-dataset
@@ -250,7 +339,8 @@ Latin: SUM for 2017-18
 TS state, demo schools
 About 30,000 test results
 ```
-* Upload the files to S3, e.g. `s3://rdw-qa-archive/sandbox-datasets/sbac-dataset/warehouse`
+
+* Upload the files to S3, e.g. `s3://rdw-opus-archive/sandbox-datasets/sbac-dataset/warehouse`
 * Annotate the dataset in the admin service configuration file, e.g.
 ```
 # in rdw-reporting-admin-service.yml
@@ -259,6 +349,35 @@ sandbox-properties:
     - label: SB Dataset (ELA, Math, Latin)
       id: sb-dataset
 ```
+
+* (Optional) Add embargo records to an existing sandbox dataset. 
+Create a `district_embargo.txt` file either by using inserts/updates on a sandbox already built from the dataset and then
+dumping the data to files as described above, or by manually creating an equivalent file by hand. Upload this
+`district_embargo.txt` file into the existing dataset, e.g., `s3://rdw-opus-archive/sandbox-datasets/sbac-dataset/warehouse`
+Edit the `manifest.txt` file in the dataset to be sure it contains the district_embargo.txt file in its list.
+```text
+...
+depth_of_knowledge.txt
+district.txt
+district_embargo.txt
+elas.txt
+ethnicity.txt
+..
+```
+ 
+ Sandbox ISR Templates
+
+A sandbox does not have access to all tenant-level admin functionality. Because of this, there 
+is no way to use the UI to install custom ISR templates. If there is need for custom ISR templates 
+in a sandbox, the templates must be installed manually. For example, if the sandbox dataset was 
+created with a subject other than Math or ELA, and that subject has ISR reports enabled, then 
+custom templates are probably desired (otherwise, and generated ISR's will use the default 
+"Under Construction" template).
+
+Templates are stored in the S3 bucket under a TEMPLATES subfolder, and are named using the subject
+code and assessment type. For example, working in the TS sandbox, to install a Latin template for 
+summative assessments, create the file s3://rdw-opus-archive/ts_s001/TEMPLATES/Latin_sum.html. 
+
 
 ### Manual Tenant Creation
 
@@ -440,6 +559,9 @@ A hint for generating all the `LOAD DATA` commands (not quite right since the ta
 ```bash
 cat manifest.txt | xargs -n 1 -I FILE echo "LOAD DATA FROM S3 's3://rdw-opus-archive/sandbox-datasets/demo-dataset/warehouse/FILE' INTO TABLE warehouse_ts_s001.FILE"
 ```
+* And, just a reminder, to login to a sandbox tweak the base URL:
+    * To select any sandbox, append `/sandbox-login`
+    * To restrict to a particular sandbox, append `/sandbox-login?sandbox=<sandbox-key>`
 
 ### Manual Configuration Change
 
@@ -467,12 +589,18 @@ Take note of the database names as they will be required for the backup and rest
 
 *Data*
 
-* Disable the following services 
+* Run an olap migration first on the source instance, example:
+`kubectl exec -it migrate-olap-... -- curl -X POST http://localhost:8008/migrate?tenantId=TS`
+
+* Disable the following services on the source and target instance
   * Migrate Service(s)
   * Task Service
   * Import Service 
 * [Backup and restore](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html)  the warehouse database from the single tenant instance to the new mulit-tenant instance.
-* Manually clean the `reporting` and `migrate_olap database` `migrate` tables.
+* Backup the source instance using the -R flag to backup store procedures:
+`mysqldump -R warehouse > warehouse_nv`
+
+* Manually clean the `reporting` and `migrate_olap database` `migrate` tables on the target instance:
 ``` SQL
 --  reporting for tenant TS
 TRUNCATE TABLE reporting_ts.migrate;

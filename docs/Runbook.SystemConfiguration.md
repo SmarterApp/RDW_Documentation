@@ -45,8 +45,6 @@ mysql> INSERT INTO school_year (year) VALUES (2019);
 mysql> INSERT INTO import(status, content, contentType, digest) VALUES (1, 3, 'add school year 2019', 'add school year 2019');
 ```
 
-The embargo feature requires the current school year be set. In the tenant configuration file (`tenant-XX/application.yml`) set `reporting.school_year` to the appropriate value and restart the migration and reporting applications.
-
 #### Subjects
 
 The subject XML defines a subject's attributes for the RDW system. It is the tenant's responsibility to define a subject XML based on the schema, [RDW_Subject.xsd](https://github.com/SmarterApp/RDW_Common/blob/master/model/src/main/resources/RDW_Subject.xsd). SmarterBalanced's [Math](../deploy/Math_subject.xml) and [ELA](../deploy/ELA_subject.xml) subjects XML may be found in the `deploy` folder of this project. Subjects must be loaded into the system before assessment packages. The system allows for subject updates but only for the data attributes that have not been used by the system at the time of the update.

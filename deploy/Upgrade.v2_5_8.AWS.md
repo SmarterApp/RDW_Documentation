@@ -1,4 +1,4 @@
-## Upgrade v2.5.6 <- v2.5.x
+## Upgrade v2.5.8 <- v2.5.x
 
 **Intended Audience**: this document provides detailed instructions for upgrading the [Reporting Data Warehouse (RDW)](../README.md) applications in an AWS environment. Operations and system administrators will find it useful.
 
@@ -42,13 +42,13 @@ The goal of this step is to make changes to everything that doesn't directly aff
 
     cd RDW_Deploy_Opus
     git checkout master; git pull
-    git checkout -b v2_5_6 master
-    git push -u origin v2_5_6
+    git checkout -b v2_5_8 master
+    git push -u origin v2_5_8
 
     cd ../RDW_Config_Opus
     git checkout master; git pull
-    git checkout -b v2_5_6 master
-    git push -u origin v2_5_6
+    git checkout -b v2_5_8 master
+    git push -u origin v2_5_8
     ```
   
 > Remember that `Opus` here is a placeholder here for the actual environment name, e.g., `Staging` or `Production`.
@@ -56,20 +56,20 @@ The goal of this step is to make changes to everything that doesn't directly aff
 * [ ] Add a copy of this checklist to deployment and switch to that copy.
     ```bash
     cd ../RDW_Deploy_Opus
-    cp ../RDW/Upgrade.v2_5_6.AWS.md .
-    git add Upgrade.v2_5_6.AWS.md
+    cp ../RDW/Upgrade.v2_5_8.AWS.md .
+    git add Upgrade.v2_5_8.AWS.md
     ```
 * [ ] (Optional) It is a good idea to go through the rest of this document, updating the configuration, credentials, etc. to match the environment. If you don't you'll just have to do it as you go along and there will be an extra commit to do when merging the deploy branch.    
 * [ ] Changes to deployment files in `RDW_Deploy_Opus`. There are sample deployment files in the `deploy` folder in the `RDW` repository; use those to copy and help guide edits.
     * The vendor upgraded Kubernetes during the 2.4.0 upgrade, and so we had to update `deployment` definitions for all deployments. Do this now if hasn't been done yet.
         * `apiVersion: apps/v1`
         * add `spec.selector.matchLabels` to match the label in `spec.template.metadata.labels`
-    * Change image versions to 2.5.6-RELEASE
+    * Change image versions to 2.5.8-RELEASE
     * Commit changes
         ```bash
         cd ../RDW_Deploy_Opus
         git add *
-        git commit -am "Changes for v2.5.6"
+        git commit -am "Changes for v2.5.8"
         git push 
         ```
 * [ ] There are new no roles and permissions since the 2.5.0 release. If you are upgrading from an earlier version
@@ -129,14 +129,14 @@ to demonstrate.
     git checkout master; git pull
 
     # test credentials and state of databases
-    for s in _OT _TS _OT_S001; do ./gradlew -Pschema_suffix=$s \
+    for s in '' _OT _TS _OT_S001; do ./gradlew -Pschema_suffix=$s \
       -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password \
       infoReporting infoWarehouse; done
     ```
-    * Continue, migrate reporting and warehouse, and clear the OLAP data.
+    * Continue, migrate reporting and warehouse.
         * Reporting OLAP.
         ```bash
-        for s in _OT _TS _OT_S001; do ./gradlew -Pschema_suffix=$s \
+        for s in '' _OT _TS _OT_S001; do ./gradlew -Pschema_suffix=$s \
           -Pdatabase_url="jdbc:mysql://rdw-opus-warehouse.cimuvo5urx1e.us-west-2.rds.amazonaws.com:3306/" -Pdatabase_user=root -Pdatabase_password=password \
           migrateReporting migrateWarehouse 
         ```
